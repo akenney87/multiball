@@ -1,0 +1,40 @@
+name: Smoke Test
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show repo layout
+        run: |
+          pwd
+          ls -la
+          echo "---- recursive ----"
+          ls -laR
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Print Python & pip
+        run: |
+          python --version
+          pip --version
+
+      - name: Try to run test (don’t fail build)
+        run: |
+          set +e
+          python test_multiball_basketball.py || true
+          python ./multiball/test_multiball_basketball.py || true
+
+      - name: List expected log file
+        run: |
+          echo "Looking for play_by_play_log.txt..."
+          find . -maxdepth 3 -name "play_by_play_log.txt" -print || true
