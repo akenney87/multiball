@@ -1,0 +1,65 @@
+name: Sim auto-fix loop
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      goal:
+        description: "Optional one-off goal/instruction override"
+        required: false
+        type: string
+
+permissions:
+  contents: write  # allow committing fixes back to the repo
+
+jobs:
+  run-and-fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests
+
+      - name: Run sim
+        run: python test_multiball_basketball.py
+
+      - name: Validate log
+        id: validate
+        run: python tools/validate_log.py play_by_play_log.txt
+
+      - name: Upload log artifact (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: play_by_play_log
+          path: play_by_play_log.txt
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: LLM auto-fix (only when validator fails)
+        if: failure()  # run this step only if previous step failed
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AI_FIX_GOAL: ${{ github.event.inputs.goal }}
+          AI_FIX_MAX_ATTEMPTS: "5"
+        run: |
+          python tools/ai_fix.py
+
+      # Optional: fail the run if we did a fix, so the push we just made triggers a fresh run
+      - name: End with neutral/failure to re-run after fix
+        if: failure()
+        run: |
+          echo "Fixes applied (or attempted). New run will trigger on push."
+          exit 1
