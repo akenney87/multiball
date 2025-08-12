@@ -1,19 +1,11 @@
 # Goal: Realistic basketball play-by-play and box scores
 
-Make the simulation produce a plausible basketball game log and box scores.
+Tighten the basketball simulation so the validator passes:
 
-Hard requirements (validator enforces these):
-- Scoreboard never decreases.
-- Every scoring event updates the right team by the right amount:
-  - “Made 3PT …” = +3
-  - “Made Free Throw” = +1
-  - All other “Made …” shots = +2
-- The running scoreboard shown in brackets on lines that display it is correct after that event.
-- The final scoreboard line matches the last running scoreboard.
-- Per-player tallies from the PBP match their box score for FGM, FGA, 3PM, FTM, FTA, and PTS.
+- Possession must flip after made field goals and turnovers.
+- After a missed shot, a rebound must occur within the next 2 events and to the correct team.
+- Free-throw sequences: 2 FTs for shooting fouls on 2PT, 3 FTs for 3PT; 1 FT for and-1. Possession resumes after final FT unless there’s a rebound on a missed FT.
+- Inline score brackets must always match the running total.
+- Box score tallies (FGM/FGA/3PM/FTM/FTA/PTS) must match play-by-play.
 
-Nice-to-haves (improve if easy):
-- Fewer illegal sequences (eg, “Possession” bouncing wrong without rebounds/turnovers).
-- Reasonable foul counts and team-foul usage per quarter.
-
-When changing code, prefer small, targeted fixes. Return exact file rewrites in the response format the CI expects.
+Modify `multiball_basketball.py` and/or `test_multiball_basketball.py` accordingly (don’t change the validator).
