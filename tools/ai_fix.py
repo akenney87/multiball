@@ -6,7 +6,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 MODEL = os.environ.get("AI_FIX_MODEL", "gpt-4o-mini")
-GOAL = os.environ.get("AI_FIX_GOAL") or ""
+#GOAL = os.environ.get("AI_FIX_GOAL") or ""
 MAX_ATTEMPTS = int(os.environ.get("AI_FIX_MAX_ATTEMPTS", "5"))
 
 if not OPENAI_API_KEY:
@@ -138,9 +138,18 @@ def apply_changes(json_text):
     return True
 
 def main():
-    # Use goal.md if GOAL env not set
-    if not GOAL:
-        GOAL = read(".ai-fix/goal.md")
+    # Pull goal from env or goal.md; if neither exists, use a sane default
+    goal = os.environ.get("AI_FIX_GOAL") or read(".ai-fix/goal.md")
+    if not goal:
+        goal = (
+            "Fix the basketball simulation so tools/validate_log.py passes. "
+            "Priorities: (1) rebounds only after a miss and to the correct team; "
+            "(2) possession flips on makes/turnovers; "
+            "(3) free-throw sequences valid (count, shooter, and possession handling); "
+            "(4) inline score totals consistent with PBP. "
+            "Change only code (not validator). Keep edits minimal and runnable on Python 3.11."
+        )
+
     attempts = 0
     while attempts < MAX_ATTEMPTS:
         attempts += 1
@@ -149,20 +158,27 @@ def main():
         if "VALIDATION PASSED" in validator_output:
             print("Validator already passes. Nothing to do.")
             return 0
+
         file_bundle = gather_files()
-        prompt = build_user_prompt(GOAL, validator_output, log_text, file_bundle)
+        prompt = build_user_prompt(goal, validator_output, log_text, file_bundle)
+
         try:
             reply = call_openai(SYSTEM_MSG, prompt)
         except Exception as e:
             print("OpenAI call failed:", e)
+            # Exit cleanly; the workflow will still mark failure for this run
             return 0
+
         ok = apply_changes(reply)
         if not ok:
             print("No valid changes applied; stopping.")
             return 0
-        # Give the workflow a chance to re-run on push; exit here
+
+        # We pushed a commit; let the workflow re-run on that push
         return 0
+
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
