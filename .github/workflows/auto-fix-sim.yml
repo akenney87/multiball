@@ -52,11 +52,12 @@ jobs:
           retention-days: 7
 
       - name: LLM auto-fix (only when validator fails)
-        if: failure()  # run this step only if previous step failed
+        if: failure()
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           AI_FIX_GOAL: ${{ github.event.inputs.goal }}
-          AI_FIX_MAX_ATTEMPTS: "5"
+          AI_FIX_MAX_ATTEMPTS: "10"         # ⬅ bump attempts
+          AI_FIX_MODEL: "gpt-4o"            # ⬅ use a stronger model
         run: |
           python tools/ai_fix.py
 
