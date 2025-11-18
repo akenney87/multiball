@@ -563,7 +563,7 @@ export function simulateRebound(
       defensiveRebounders[Math.floor(Math.random() * defensiveRebounders.length)];
 
     // Check for loose ball foul
-    const looseBallFoul = foulSystem.check_non_shooting_foul(
+    const looseBallFoul = foulSystem.checkNonShootingFoul(
       offensiveRebounderForFoul,
       defensiveRebounderForFoul,
       'rebound',
