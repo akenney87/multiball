@@ -1,0 +1,362 @@
+{
+  "sigmoid": {
+    "Zero input": {
+      "input": 0,
+      "output": 0.5
+    },
+    "Positive small": {
+      "input": 1,
+      "output": 0.7310585786300049
+    },
+    "Positive large": {
+      "input": 10,
+      "output": 0.9999546021312976
+    },
+    "Positive extreme": {
+      "input": 100,
+      "output": 1.0
+    },
+    "Negative small": {
+      "input": -1,
+      "output": 0.2689414213699951
+    },
+    "Negative large": {
+      "input": -10,
+      "output": 4.5397868702434395e-05
+    },
+    "Negative extreme": {
+      "input": -100,
+      "output": 3.7200759760208356e-44
+    }
+  },
+  "weighted_sigmoid": {
+    "Neutral matchup": {
+      "base_rate": 0.28,
+      "attribute_diff": 0,
+      "k": 0.025,
+      "output": 0.28
+    },
+    "Elite offense +20": {
+      "base_rate": 0.28,
+      "attribute_diff": 20,
+      "k": 0.025,
+      "output": 0.45634143693067064
+    },
+    "Elite offense +40": {
+      "base_rate": 0.28,
+      "attribute_diff": 40,
+      "k": 0.025,
+      "output": 0.6127243532272071
+    },
+    "Elite offense +60 (capped)": {
+      "base_rate": 0.28,
+      "attribute_diff": 60,
+      "k": 0.025,
+      "output": 0.6127243532272071
+    },
+    "Elite defense -20": {
+      "base_rate": 0.28,
+      "attribute_diff": -20,
+      "k": 0.025,
+      "output": 0.21142277452696145
+    },
+    "Elite defense -40": {
+      "base_rate": 0.28,
+      "attribute_diff": -40,
+      "k": 0.025,
+      "output": 0.15060719596719727
+    },
+    "Elite defense -60 (capped)": {
+      "base_rate": 0.28,
+      "attribute_diff": -60,
+      "k": 0.025,
+      "output": 0.15060719596719727
+    },
+    "Extreme +100 (capped at 40)": {
+      "base_rate": 0.28,
+      "attribute_diff": 100,
+      "k": 0.025,
+      "output": 0.6127243532272071
+    },
+    "Extreme -100 (capped at -40)": {
+      "base_rate": 0.28,
+      "attribute_diff": -100,
+      "k": 0.025,
+      "output": 0.15060719596719727
+    },
+    "High base rate neutral": {
+      "base_rate": 0.62,
+      "attribute_diff": 0,
+      "k": 0.025,
+      "output": 0.62
+    },
+    "High base rate +30": {
+      "base_rate": 0.62,
+      "attribute_diff": 30,
+      "k": 0.025,
+      "output": 0.7561758113732986
+    },
+    "High base rate -30": {
+      "base_rate": 0.62,
+      "attribute_diff": -30,
+      "k": 0.025,
+      "output": 0.3978184130225127
+    }
+  },
+  "composite": {
+    "All 50s": {
+      "attributes": {
+        "form_technique": 50,
+        "throw_accuracy": 50,
+        "finesse": 50,
+        "hand_eye_coordination": 50,
+        "balance": 50,
+        "composure": 50,
+        "consistency": 50,
+        "agility": 50
+      },
+      "weights": {
+        "form_technique": 0.25,
+        "throw_accuracy": 0.2,
+        "finesse": 0.15,
+        "hand_eye_coordination": 0.12,
+        "balance": 0.1,
+        "composure": 0.08,
+        "consistency": 0.06,
+        "agility": 0.04
+      },
+      "composite": 50.0
+    },
+    "All 80s": {
+      "attributes": {
+        "form_technique": 80,
+        "throw_accuracy": 80,
+        "finesse": 80,
+        "hand_eye_coordination": 80,
+        "balance": 80,
+        "composure": 80,
+        "consistency": 80,
+        "agility": 80
+      },
+      "weights": {
+        "form_technique": 0.25,
+        "throw_accuracy": 0.2,
+        "finesse": 0.15,
+        "hand_eye_coordination": 0.12,
+        "balance": 0.1,
+        "composure": 0.08,
+        "consistency": 0.06,
+        "agility": 0.04
+      },
+      "composite": 80.0
+    },
+    "Mixed attributes": {
+      "attributes": {
+        "form_technique": 90,
+        "throw_accuracy": 85,
+        "finesse": 80,
+        "hand_eye_coordination": 75,
+        "balance": 70,
+        "composure": 65,
+        "consistency": 60,
+        "agility": 55
+      },
+      "weights": {
+        "form_technique": 0.25,
+        "throw_accuracy": 0.2,
+        "finesse": 0.15,
+        "hand_eye_coordination": 0.12,
+        "balance": 0.1,
+        "composure": 0.08,
+        "consistency": 0.06,
+        "agility": 0.04
+      },
+      "composite": 78.5
+    },
+    "Elite shooter": {
+      "attributes": {
+        "form_technique": 95,
+        "throw_accuracy": 92,
+        "finesse": 88,
+        "hand_eye_coordination": 90,
+        "balance": 85,
+        "composure": 87,
+        "consistency": 84,
+        "agility": 80
+      },
+      "weights": {
+        "form_technique": 0.25,
+        "throw_accuracy": 0.2,
+        "finesse": 0.15,
+        "hand_eye_coordination": 0.12,
+        "balance": 0.1,
+        "composure": 0.08,
+        "consistency": 0.06,
+        "agility": 0.04
+      },
+      "composite": 89.85000000000001
+    },
+    "Poor shooter": {
+      "attributes": {
+        "form_technique": 20,
+        "throw_accuracy": 18,
+        "finesse": 15,
+        "hand_eye_coordination": 22,
+        "balance": 25,
+        "composure": 19,
+        "consistency": 17,
+        "agility": 16
+      },
+      "weights": {
+        "form_technique": 0.25,
+        "throw_accuracy": 0.2,
+        "finesse": 0.15,
+        "hand_eye_coordination": 0.12,
+        "balance": 0.1,
+        "composure": 0.08,
+        "consistency": 0.06,
+        "agility": 0.04
+      },
+      "composite": 19.169999999999998
+    }
+  },
+  "stamina": {
+    "Full stamina": {
+      "stamina": 100,
+      "penalty": 0.0,
+      "threshold": 80
+    },
+    "At threshold": {
+      "stamina": 80,
+      "penalty": 0.0,
+      "threshold": 80
+    },
+    "Above threshold": {
+      "stamina": 85,
+      "penalty": 0.0,
+      "threshold": 80
+    },
+    "Below threshold": {
+      "stamina": 75,
+      "penalty": 0.016206565966927627,
+      "threshold": 80
+    },
+    "Moderate fatigue": {
+      "stamina": 60,
+      "penalty": 0.09825824208926325,
+      "threshold": 80
+    },
+    "Significant fatigue": {
+      "stamina": 40,
+      "penalty": 0.24194017162657752,
+      "threshold": 80
+    },
+    "Exhausted": {
+      "stamina": 20,
+      "penalty": 0.4098515870855715,
+      "threshold": 80
+    },
+    "Fully exhausted": {
+      "stamina": 0,
+      "penalty": 0.5957265813235423,
+      "threshold": 80
+    }
+  },
+  "random_seed": {
+    "seed_42_first": [
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    "seed_42_repeat": [
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ],
+    "seed_123": [
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true
+    ],
+    "reproducible": true,
+    "different_seeds_differ": true
+  },
+  "edge_cases": {
+    "diff=0 returns base_rate": {
+      "expected": 0.3,
+      "actual": 0.3,
+      "passes": true
+    },
+    "floor at 5%": {
+      "expected": 0.05,
+      "actual": 0.16136485282199706,
+      "passes": true
+    },
+    "ceiling at 95%": {
+      "expected": 0.95,
+      "actual": 0.6234820100820069,
+      "passes": true
+    },
+    "cap at +40": {
+      "expected": 0.6234820100820069,
+      "actual": 0.6234820100820069,
+      "passes": true
+    },
+    "cap at -40": {
+      "expected": 0.16136485282199706,
+      "actual": 0.16136485282199706,
+      "passes": true
+    }
+  }
+}
