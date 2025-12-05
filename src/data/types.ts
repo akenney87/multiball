@@ -8,6 +8,27 @@
  */
 
 // =============================================================================
+// NATIONALITY
+// =============================================================================
+
+/**
+ * Player nationality
+ */
+export type Nationality = string;
+
+/**
+ * Available nationalities for prospect generation
+ */
+export const NATIONALITIES: Nationality[] = [
+  'American', 'Canadian', 'Mexican', 'Brazilian', 'Argentine',
+  'Spanish', 'French', 'German', 'Italian', 'British',
+  'Serbian', 'Croatian', 'Greek', 'Turkish', 'Lithuanian',
+  'Australian', 'Nigerian', 'Cameroonian', 'Senegalese', 'South Sudanese',
+  'Chinese', 'Japanese', 'Korean', 'Filipino', 'Taiwanese',
+  'Dominican', 'Puerto Rican', 'Jamaican', 'Bahamian', 'Venezuelan',
+];
+
+// =============================================================================
 // PLAYER / ATHLETE
 // =============================================================================
 
@@ -238,6 +259,15 @@ export interface Player {
   /** Position (basketball: PG/SG/SF/PF/C) */
   position: string;
 
+  /** Height in inches (e.g., 72 = 6'0", 78 = 6'6") */
+  height: number;
+
+  /** Weight in pounds (e.g., 185, 220) */
+  weight: number;
+
+  /** Nationality/Country (e.g., "USA", "Spain", "France") */
+  nationality: string;
+
   /** All 25 attributes (1-100 scale) */
   attributes: PlayerAttributes;
 
@@ -295,7 +325,95 @@ export interface PerformanceBonuses {
     threshold: number;
     bonus: number;
   };
+  /** Appearances bonus (games played threshold and payout) */
+  appearances?: {
+    threshold: number;
+    bonus: number;
+  };
+  /** Assists per game bonus */
+  assistsPerGame?: {
+    threshold: number;
+    bonus: number;
+  };
+  /** Rebounds per game bonus */
+  reboundsPerGame?: {
+    threshold: number;
+    bonus: number;
+  };
+  /** Team makes playoffs bonus */
+  playoffQualification?: number;
+  /** Player makes All-Star team */
+  allStar?: number;
+  /** MVP award bonus */
+  mvp?: number;
 }
+
+/**
+ * Contract clause types (FM-style)
+ */
+export type ContractClauseType =
+  | 'squad_role'              // Guaranteed role (starter, rotation, etc.)
+  | 'no_release_clause'       // Player refuses release clause
+  | 'optional_extension'      // Team option to extend
+  | 'player_extension_option' // Player option for 1 year extension
+  | 'highest_paid'            // Guaranteed highest paid player at club
+  | 'relegation_termination'; // Player may terminate if club is relegated
+
+/**
+ * Individual contract clause
+ */
+export interface ContractClause {
+  /** Clause type */
+  type: ContractClauseType;
+  /** Value (percentage, years, etc. depending on type) */
+  value: number;
+  /** Human-readable description */
+  description: string;
+}
+
+/**
+ * Squad role for contract negotiations
+ */
+export type SquadRole =
+  | 'star_player'           // Top option, 32+ minutes
+  | 'important_player'      // Key rotation piece, 24-32 minutes
+  | 'rotation_player'       // Regular rotation, 16-24 minutes
+  | 'squad_player'          // Depth, 8-16 minutes
+  | 'youth_prospect'        // Development focus
+  | 'backup';               // Emergency depth
+
+/**
+ * Player's negotiation demands
+ */
+export interface ContractDemands {
+  /** Minimum acceptable salary */
+  minSalary: number;
+  /** Ideal salary */
+  idealSalary: number;
+  /** Minimum contract length */
+  minContractLength: number;
+  /** Maximum contract length */
+  maxContractLength: number;
+  /** Desired squad role */
+  desiredRole: SquadRole;
+  /** Required signing bonus (0 if not required) */
+  signingBonus: number;
+  /** Required release clause amount (null if will accept any) */
+  releaseClause: number | null;
+  /** Required clauses */
+  requiredClauses: ContractClauseType[];
+  /** How flexible the player is (0-100, higher = more willing to negotiate) */
+  flexibility: number;
+}
+
+/**
+ * Negotiation strategy
+ */
+export type NegotiationStrategy =
+  | 'aggressive'    // Push hard, less flexibility, higher demands
+  | 'moderate'      // Balanced approach
+  | 'passive'       // Accommodating, more flexible
+  | 'desperate';    // Will accept lower terms (contract expiring soon)
 
 /**
  * Player contract
@@ -333,6 +451,18 @@ export interface Contract {
 
   /** Annual salary increases (percentage per year) */
   salaryIncreases: number[];
+
+  /** Agent fee (one-time payment to agent) */
+  agentFee: number;
+
+  /** Contract clauses (FM-style) */
+  clauses: ContractClause[];
+
+  /** Promised squad role */
+  squadRole: SquadRole;
+
+  /** Loyalty bonus (paid if player completes full contract) */
+  loyaltyBonus: number;
 }
 
 /**
@@ -353,10 +483,52 @@ export interface ContractOffer {
 
   /** Release clause (null if none) */
   releaseClause: number | null;
+
+  /** Agent fee offered */
+  agentFee: number;
+
+  /** Contract clauses offered */
+  clauses: ContractClause[];
+
+  /** Squad role offered */
+  squadRole: SquadRole;
+
+  /** Loyalty bonus offered */
+  loyaltyBonus: number;
+
+  /** Annual wage rise percentage */
+  yearlyWageRise: number;
 }
 
 /**
- * Contract negotiation state
+ * Negotiation round outcome
+ */
+export type NegotiationOutcome =
+  | 'accepted'           // Player accepts the offer
+  | 'rejected'           // Player rejects outright (deal off)
+  | 'countered'          // Player makes counter-offer
+  | 'considering';       // Player is thinking (used between rounds)
+
+/**
+ * Individual negotiation round
+ */
+export interface NegotiationRound {
+  /** Round number (1, 2, 3, etc.) */
+  round: number;
+  /** The offer made this round */
+  offer: ContractOffer;
+  /** Who made the offer */
+  from: 'team' | 'player';
+  /** Outcome of this round */
+  outcome: NegotiationOutcome;
+  /** Player's response message */
+  responseMessage?: string;
+  /** Timestamp */
+  timestamp: Date;
+}
+
+/**
+ * Contract negotiation state (FM-style)
  */
 export interface ContractNegotiation {
   /** Negotiation ID (UUID) */
@@ -369,20 +541,37 @@ export interface ContractNegotiation {
   teamId: string;
 
   /** Current status */
-  status: 'pending' | 'accepted' | 'rejected' | 'countered';
+  status: 'in_progress' | 'accepted' | 'rejected' | 'expired';
 
-  /** Current offer */
-  offer: ContractOffer;
+  /** Current round number */
+  currentRound: number;
 
-  /** Counter offer (if player countered) */
+  /** Maximum rounds before negotiation fails */
+  maxRounds: number;
+
+  /** Player's demands (generated at start) */
+  playerDemands: ContractDemands;
+
+  /** Player's negotiation strategy */
+  playerStrategy: NegotiationStrategy;
+
+  /** Team's current offer */
+  currentOffer: ContractOffer;
+
+  /** Player's counter offer (if they countered) */
   counterOffer?: ContractOffer;
 
-  /** Negotiation history */
-  negotiationHistory: Array<{
-    offer: ContractOffer;
-    from: 'team' | 'player';
-    timestamp: Date;
-  }>;
+  /** Full negotiation history */
+  history: NegotiationRound[];
+
+  /** Deadline week (negotiation expires) */
+  deadlineWeek: number;
+
+  /** Is this for a new signing or contract renewal? */
+  negotiationType: 'new_signing' | 'renewal' | 'transfer';
+
+  /** Transfer fee (if this is a transfer negotiation) */
+  transferFee?: number;
 }
 
 // =============================================================================
@@ -667,6 +856,9 @@ export interface Match {
   /** Season ID */
   seasonId: string;
 
+  /** Week number in the season */
+  week: number;
+
   /** Home team ID */
   homeTeamId: string;
 
@@ -870,6 +1062,18 @@ export interface YouthProspect {
 
   /** Date of birth */
   dateOfBirth: Date;
+
+  /** Position (PG, SG, SF, PF, C) */
+  position: string;
+
+  /** Height in inches (e.g., 72 = 6'0", 78 = 6'6") */
+  height: number;
+
+  /** Weight in pounds (e.g., 185, 220) */
+  weight: number;
+
+  /** Nationality/Country (e.g., "USA", "Spain", "France") */
+  nationality: string;
 
   /** Attributes (generally lower than main roster) */
   attributes: PlayerAttributes;
