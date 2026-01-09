@@ -135,7 +135,10 @@ export function ConnectedTransferMarketScreen({
     const overall = calculatePlayerOverall(player);
     const salary = player.contract?.salary || 0;
     const perfMultiplier = calculatePerformanceMultiplier(player);
-    const askingPrice = calculateMarketValue(overall, player.age, salary, perfMultiplier);
+
+    // Free agents show $0 market value to avoid tipping off their quality
+    const isFreeAgent = player.teamId === 'free_agent';
+    const askingPrice = isFreeAgent ? 0 : calculateMarketValue(overall, player.age, salary, perfMultiplier);
 
     // Find which team the player is on
     const team = state.league.teams.find((t) => t.rosterIds.includes(player.id));

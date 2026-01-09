@@ -185,8 +185,11 @@ export function ConnectedPlayerDetailScreen({
   // Philosophy: Transfer value should reflect acquisition cost, not arbitrary inflation
   // A free agent costing $40k in fees shouldn't have a $900k transfer value
   // BUT proven performers (awards, games played) can exceed this cap
+  // Free agents show $0 until signed to avoid tipping off their quality
   const estimatedTransferValue = useMemo(() => {
     if (!player) return 0;
+    // Free agents show $0 market value
+    if (player.teamId === 'free_agent') return 0;
     const rating = overalls.overall;
     const age = player.age;
     const salary = player.contract?.salary || 0;
