@@ -1,0 +1,4586 @@
+[
+  {
+    "attribute": "grip_strength",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 8.6,
+      "fg_pct": 7.789779101826399,
+      "fg3_pct": 4.414588193758033,
+      "ft_pct": 0.9788098375054887,
+      "turnovers": 1.6,
+      "offensive_rebounds": 2.2,
+      "assists": 0.8,
+      "fouls": -0.6
+    },
+    "individual_results": [
+      {
+        "attribute": "grip_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 53.42465753424658,
+          "fg3_pct": 37.03703703703704,
+          "ft_pct": 81.25,
+          "turnovers": 14,
+          "offensive_rebounds": 11,
+          "assists": 17,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 98,
+          "fg_pct": 51.28205128205128,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 91.30434782608695,
+          "turnovers": 11,
+          "offensive_rebounds": 11,
+          "assists": 18,
+          "fouls": 22
+        },
+        "differences": {
+          "points": -2,
+          "fg_pct": 2.1426062521953,
+          "fg3_pct": -5.820105820105816,
+          "ft_pct": -10.054347826086953,
+          "turnovers": 3,
+          "offensive_rebounds": 0,
+          "assists": -1,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "grip_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 101,
+          "fg_pct": 61.111111111111114,
+          "fg3_pct": 53.84615384615385,
+          "ft_pct": 73.91304347826086,
+          "turnovers": 12,
+          "offensive_rebounds": 13,
+          "assists": 22,
+          "fouls": 22
+        },
+        "low_stats": {
+          "points": 104,
+          "fg_pct": 50.588235294117645,
+          "fg3_pct": 40.0,
+          "ft_pct": 90.9090909090909,
+          "turnovers": 5,
+          "offensive_rebounds": 9,
+          "assists": 25,
+          "fouls": 25
+        },
+        "differences": {
+          "points": -3,
+          "fg_pct": 10.52287581699347,
+          "fg3_pct": 13.846153846153847,
+          "ft_pct": -16.996047430830046,
+          "turnovers": 7,
+          "offensive_rebounds": 4,
+          "assists": -3,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "grip_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 109,
+          "fg_pct": 52.4390243902439,
+          "fg3_pct": 30.0,
+          "ft_pct": 79.16666666666666,
+          "turnovers": 11,
+          "offensive_rebounds": 13,
+          "assists": 18,
+          "fouls": 12
+        },
+        "low_stats": {
+          "points": 92,
+          "fg_pct": 48.10126582278481,
+          "fg3_pct": 34.21052631578947,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 14,
+          "offensive_rebounds": 7,
+          "assists": 22,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 17,
+          "fg_pct": 4.33775856745909,
+          "fg3_pct": -4.210526315789473,
+          "ft_pct": 12.5,
+          "turnovers": -3,
+          "offensive_rebounds": 6,
+          "assists": -4,
+          "fouls": -7
+        }
+      },
+      {
+        "attribute": "grip_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 120,
+          "fg_pct": 66.23376623376623,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 94.44444444444444,
+          "turnovers": 13,
+          "offensive_rebounds": 11,
+          "assists": 26,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 84,
+          "fg_pct": 47.2972972972973,
+          "fg3_pct": 20.689655172413794,
+          "ft_pct": 73.68421052631578,
+          "turnovers": 13,
+          "offensive_rebounds": 14,
+          "assists": 16,
+          "fouls": 13
+        },
+        "differences": {
+          "points": 36,
+          "fg_pct": 18.936468936468934,
+          "fg3_pct": 22.16748768472906,
+          "ft_pct": 20.760233918128662,
+          "turnovers": 0,
+          "offensive_rebounds": -3,
+          "assists": 10,
+          "fouls": 8
+        }
+      },
+      {
+        "attribute": "grip_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 49.35064935064935,
+          "fg3_pct": 35.483870967741936,
+          "ft_pct": 73.68421052631578,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 22,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 101,
+          "fg_pct": 46.34146341463415,
+          "fg3_pct": 39.39393939393939,
+          "ft_pct": 75.0,
+          "turnovers": 11,
+          "offensive_rebounds": 7,
+          "assists": 20,
+          "fouls": 16
+        },
+        "differences": {
+          "points": -5,
+          "fg_pct": 3.0091859360152,
+          "fg3_pct": -3.910068426197455,
+          "ft_pct": -1.3157894736842195,
+          "turnovers": 1,
+          "offensive_rebounds": 4,
+          "assists": 2,
+          "fouls": 0
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "arm_strength",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 5.4,
+      "fg_pct": 2.3948466479212884,
+      "fg3_pct": -3.514337847171433,
+      "ft_pct": 3.286723802513272,
+      "turnovers": 0.0,
+      "offensive_rebounds": 2.6,
+      "assists": 3.2,
+      "fouls": -0.2
+    },
+    "individual_results": [
+      {
+        "attribute": "arm_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 113,
+          "fg_pct": 59.25925925925925,
+          "fg3_pct": 48.148148148148145,
+          "ft_pct": 63.1578947368421,
+          "turnovers": 8,
+          "offensive_rebounds": 13,
+          "assists": 30,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 100,
+          "fg_pct": 50.617283950617285,
+          "fg3_pct": 46.15384615384615,
+          "ft_pct": 76.19047619047619,
+          "turnovers": 10,
+          "offensive_rebounds": 8,
+          "assists": 22,
+          "fouls": 11
+        },
+        "differences": {
+          "points": 13,
+          "fg_pct": 8.641975308641968,
+          "fg3_pct": 1.994301994301992,
+          "ft_pct": -13.032581453634087,
+          "turnovers": -2,
+          "offensive_rebounds": 5,
+          "assists": 8,
+          "fouls": 9
+        }
+      },
+      {
+        "attribute": "arm_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 121,
+          "fg_pct": 62.33766233766234,
+          "fg3_pct": 66.66666666666666,
+          "ft_pct": 80.0,
+          "turnovers": 15,
+          "offensive_rebounds": 9,
+          "assists": 33,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 121,
+          "fg_pct": 61.8421052631579,
+          "fg3_pct": 69.23076923076923,
+          "ft_pct": 70.83333333333334,
+          "turnovers": 12,
+          "offensive_rebounds": 10,
+          "assists": 23,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 0,
+          "fg_pct": 0.49555707450443975,
+          "fg3_pct": -2.564102564102569,
+          "ft_pct": 9.166666666666657,
+          "turnovers": 3,
+          "offensive_rebounds": -1,
+          "assists": 10,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "arm_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 87,
+          "fg_pct": 49.36708860759494,
+          "fg3_pct": 17.391304347826086,
+          "ft_pct": 80.76923076923077,
+          "turnovers": 9,
+          "offensive_rebounds": 14,
+          "assists": 16,
+          "fouls": 14
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 50.63291139240506,
+          "fg3_pct": 45.45454545454545,
+          "ft_pct": 65.0,
+          "turnovers": 10,
+          "offensive_rebounds": 7,
+          "assists": 24,
+          "fouls": 20
+        },
+        "differences": {
+          "points": -10,
+          "fg_pct": -1.2658227848101262,
+          "fg3_pct": -28.063241106719367,
+          "ft_pct": 15.769230769230774,
+          "turnovers": -1,
+          "offensive_rebounds": 7,
+          "assists": -8,
+          "fouls": -6
+        }
+      },
+      {
+        "attribute": "arm_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 116,
+          "fg_pct": 59.49367088607595,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 86.36363636363636,
+          "turnovers": 12,
+          "offensive_rebounds": 10,
+          "assists": 28,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 103,
+          "fg_pct": 57.333333333333336,
+          "fg3_pct": 40.909090909090914,
+          "ft_pct": 95.83333333333334,
+          "turnovers": 15,
+          "offensive_rebounds": 8,
+          "assists": 25,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 13,
+          "fg_pct": 2.160337552742611,
+          "fg3_pct": 1.9480519480519405,
+          "ft_pct": -9.469696969696983,
+          "turnovers": -3,
+          "offensive_rebounds": 2,
+          "assists": 3,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "arm_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 117,
+          "fg_pct": 59.25925925925925,
+          "fg3_pct": 44.827586206896555,
+          "ft_pct": 90.0,
+          "turnovers": 11,
+          "offensive_rebounds": 6,
+          "assists": 23,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 106,
+          "fg_pct": 57.3170731707317,
+          "fg3_pct": 35.714285714285715,
+          "ft_pct": 76.0,
+          "turnovers": 8,
+          "offensive_rebounds": 6,
+          "assists": 20,
+          "fouls": 20
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 1.9421860885275493,
+          "fg3_pct": 9.11330049261084,
+          "ft_pct": 14.0,
+          "turnovers": 3,
+          "offensive_rebounds": 0,
+          "assists": 3,
+          "fouls": 0
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "core_strength",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -3.2,
+      "fg_pct": -0.1811918636232946,
+      "fg3_pct": 2.0664829020922597,
+      "ft_pct": -0.613419913419915,
+      "turnovers": 3.4,
+      "offensive_rebounds": -2.4,
+      "assists": -1.2,
+      "fouls": 2.8
+    },
+    "individual_results": [
+      {
+        "attribute": "core_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 90,
+          "fg_pct": 54.929577464788736,
+          "fg3_pct": 55.55555555555556,
+          "ft_pct": 64.28571428571429,
+          "turnovers": 16,
+          "offensive_rebounds": 11,
+          "assists": 20,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 91,
+          "fg_pct": 50.66666666666667,
+          "fg3_pct": 31.57894736842105,
+          "ft_pct": 70.83333333333334,
+          "turnovers": 14,
+          "offensive_rebounds": 14,
+          "assists": 19,
+          "fouls": 15
+        },
+        "differences": {
+          "points": -1,
+          "fg_pct": 4.262910798122064,
+          "fg3_pct": 23.976608187134506,
+          "ft_pct": -6.547619047619051,
+          "turnovers": 2,
+          "offensive_rebounds": -3,
+          "assists": 1,
+          "fouls": 3
+        }
+      },
+      {
+        "attribute": "core_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 107,
+          "fg_pct": 55.84415584415584,
+          "fg3_pct": 47.368421052631575,
+          "ft_pct": 76.47058823529412,
+          "turnovers": 15,
+          "offensive_rebounds": 12,
+          "assists": 19,
+          "fouls": 25
+        },
+        "low_stats": {
+          "points": 85,
+          "fg_pct": 46.666666666666664,
+          "fg3_pct": 26.923076923076923,
+          "ft_pct": 76.47058823529412,
+          "turnovers": 11,
+          "offensive_rebounds": 15,
+          "assists": 17,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 22,
+          "fg_pct": 9.177489177489178,
+          "fg3_pct": 20.445344129554652,
+          "ft_pct": 0.0,
+          "turnovers": 4,
+          "offensive_rebounds": -3,
+          "assists": 2,
+          "fouls": 7
+        }
+      },
+      {
+        "attribute": "core_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 85,
+          "fg_pct": 49.333333333333336,
+          "fg3_pct": 25.925925925925924,
+          "ft_pct": 77.77777777777779,
+          "turnovers": 17,
+          "offensive_rebounds": 8,
+          "assists": 19,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 107,
+          "fg_pct": 60.526315789473685,
+          "fg3_pct": 39.130434782608695,
+          "ft_pct": 86.36363636363636,
+          "turnovers": 12,
+          "offensive_rebounds": 12,
+          "assists": 24,
+          "fouls": 16
+        },
+        "differences": {
+          "points": -22,
+          "fg_pct": -11.19298245614035,
+          "fg3_pct": -13.204508856682772,
+          "ft_pct": -8.585858585858574,
+          "turnovers": 5,
+          "offensive_rebounds": -4,
+          "assists": -5,
+          "fouls": 4
+        }
+      },
+      {
+        "attribute": "core_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 115,
+          "fg_pct": 62.96296296296296,
+          "fg3_pct": 50.0,
+          "ft_pct": 78.57142857142857,
+          "turnovers": 10,
+          "offensive_rebounds": 9,
+          "assists": 26,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 107,
+          "fg_pct": 56.41025641025641,
+          "fg3_pct": 46.15384615384615,
+          "ft_pct": 72.72727272727273,
+          "turnovers": 12,
+          "offensive_rebounds": 9,
+          "assists": 19,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 8,
+          "fg_pct": 6.552706552706553,
+          "fg3_pct": 3.8461538461538467,
+          "ft_pct": 5.844155844155836,
+          "turnovers": -2,
+          "offensive_rebounds": 0,
+          "assists": 7,
+          "fouls": 0
+        }
+      },
+      {
+        "attribute": "core_strength",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 97,
+          "fg_pct": 52.63157894736842,
+          "fg3_pct": 33.33333333333333,
+          "ft_pct": 84.0,
+          "turnovers": 16,
+          "offensive_rebounds": 9,
+          "assists": 18,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 120,
+          "fg_pct": 62.33766233766234,
+          "fg3_pct": 58.06451612903226,
+          "ft_pct": 77.77777777777779,
+          "turnovers": 8,
+          "offensive_rebounds": 11,
+          "assists": 29,
+          "fouls": 16
+        },
+        "differences": {
+          "points": -23,
+          "fg_pct": -9.70608339029392,
+          "fg3_pct": -24.731182795698935,
+          "ft_pct": 6.222222222222214,
+          "turnovers": 8,
+          "offensive_rebounds": -2,
+          "assists": -11,
+          "fouls": 0
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "agility",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -1.8,
+      "fg_pct": 1.0004915716628857,
+      "fg3_pct": 5.999775883345864,
+      "ft_pct": 8.005662614358274,
+      "turnovers": 3.2,
+      "offensive_rebounds": 0.2,
+      "assists": -0.8,
+      "fouls": 3.2
+    },
+    "individual_results": [
+      {
+        "attribute": "agility",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 97,
+          "fg_pct": 56.16438356164384,
+          "fg3_pct": 40.0,
+          "ft_pct": 75.0,
+          "turnovers": 11,
+          "offensive_rebounds": 15,
+          "assists": 19,
+          "fouls": 22
+        },
+        "low_stats": {
+          "points": 94,
+          "fg_pct": 49.39759036144578,
+          "fg3_pct": 32.0,
+          "ft_pct": 69.56521739130434,
+          "turnovers": 7,
+          "offensive_rebounds": 7,
+          "assists": 21,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 3,
+          "fg_pct": 6.766793200198059,
+          "fg3_pct": 8.0,
+          "ft_pct": 5.434782608695656,
+          "turnovers": 4,
+          "offensive_rebounds": 8,
+          "assists": -2,
+          "fouls": 4
+        }
+      },
+      {
+        "attribute": "agility",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 110,
+          "fg_pct": 54.32098765432099,
+          "fg3_pct": 41.37931034482759,
+          "ft_pct": 80.76923076923077,
+          "turnovers": 9,
+          "offensive_rebounds": 4,
+          "assists": 19,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 57.333333333333336,
+          "fg3_pct": 35.0,
+          "ft_pct": 56.41025641025641,
+          "turnovers": 9,
+          "offensive_rebounds": 13,
+          "assists": 20,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": -3.0123456790123484,
+          "fg3_pct": 6.379310344827587,
+          "ft_pct": 24.358974358974365,
+          "turnovers": 0,
+          "offensive_rebounds": -9,
+          "assists": -1,
+          "fouls": 4
+        }
+      },
+      {
+        "attribute": "agility",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 89,
+          "fg_pct": 51.35135135135135,
+          "fg3_pct": 36.0,
+          "ft_pct": 52.17391304347826,
+          "turnovers": 15,
+          "offensive_rebounds": 8,
+          "assists": 14,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 100,
+          "fg_pct": 53.84615384615385,
+          "fg3_pct": 50.0,
+          "ft_pct": 73.07692307692307,
+          "turnovers": 11,
+          "offensive_rebounds": 8,
+          "assists": 19,
+          "fouls": 14
+        },
+        "differences": {
+          "points": -11,
+          "fg_pct": -2.4948024948024994,
+          "fg3_pct": -14.0,
+          "ft_pct": -20.903010033444808,
+          "turnovers": 4,
+          "offensive_rebounds": 0,
+          "assists": -5,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "agility",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 95,
+          "fg_pct": 56.71641791044776,
+          "fg3_pct": 54.54545454545454,
+          "ft_pct": 90.0,
+          "turnovers": 20,
+          "offensive_rebounds": 15,
+          "assists": 25,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 102,
+          "fg_pct": 53.65853658536586,
+          "fg3_pct": 31.03448275862069,
+          "ft_pct": 60.71428571428571,
+          "turnovers": 10,
+          "offensive_rebounds": 15,
+          "assists": 22,
+          "fouls": 14
+        },
+        "differences": {
+          "points": -7,
+          "fg_pct": 3.057881325081901,
+          "fg3_pct": 23.51097178683385,
+          "ft_pct": 29.285714285714292,
+          "turnovers": 10,
+          "offensive_rebounds": 0,
+          "assists": 3,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "agility",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 91,
+          "fg_pct": 50.0,
+          "fg3_pct": 38.46153846153847,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 14,
+          "offensive_rebounds": 13,
+          "assists": 17,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 96,
+          "fg_pct": 49.31506849315068,
+          "fg3_pct": 32.35294117647059,
+          "ft_pct": 81.48148148148148,
+          "turnovers": 16,
+          "offensive_rebounds": 11,
+          "assists": 16,
+          "fouls": 23
+        },
+        "differences": {
+          "points": -5,
+          "fg_pct": 0.6849315068493169,
+          "fg3_pct": 6.10859728506788,
+          "ft_pct": 1.8518518518518619,
+          "turnovers": -2,
+          "offensive_rebounds": 2,
+          "assists": 1,
+          "fouls": -4
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "acceleration",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 1.4,
+      "fg_pct": 0.1845642988064526,
+      "fg3_pct": 3.89331554633097,
+      "ft_pct": 7.052471731200018,
+      "turnovers": -1.2,
+      "offensive_rebounds": -1.8,
+      "assists": -0.8,
+      "fouls": 4.2
+    },
+    "individual_results": [
+      {
+        "attribute": "acceleration",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 106,
+          "fg_pct": 55.55555555555556,
+          "fg3_pct": 46.15384615384615,
+          "ft_pct": 76.47058823529412,
+          "turnovers": 9,
+          "offensive_rebounds": 7,
+          "assists": 27,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 53.246753246753244,
+          "fg3_pct": 41.66666666666667,
+          "ft_pct": 78.57142857142857,
+          "turnovers": 13,
+          "offensive_rebounds": 11,
+          "assists": 19,
+          "fouls": 10
+        },
+        "differences": {
+          "points": 7,
+          "fg_pct": 2.3088023088023135,
+          "fg3_pct": 4.487179487179482,
+          "ft_pct": -2.1008403361344534,
+          "turnovers": -4,
+          "offensive_rebounds": -4,
+          "assists": 8,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "acceleration",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 91,
+          "fg_pct": 52.0,
+          "fg3_pct": 26.08695652173913,
+          "ft_pct": 68.0,
+          "turnovers": 15,
+          "offensive_rebounds": 10,
+          "assists": 20,
+          "fouls": 22
+        },
+        "low_stats": {
+          "points": 118,
+          "fg_pct": 63.51351351351351,
+          "fg3_pct": 36.0,
+          "ft_pct": 82.6086956521739,
+          "turnovers": 13,
+          "offensive_rebounds": 12,
+          "assists": 28,
+          "fouls": 15
+        },
+        "differences": {
+          "points": -27,
+          "fg_pct": -11.513513513513509,
+          "fg3_pct": -9.913043478260871,
+          "ft_pct": -14.608695652173907,
+          "turnovers": 2,
+          "offensive_rebounds": -2,
+          "assists": -8,
+          "fouls": 7
+        }
+      },
+      {
+        "attribute": "acceleration",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 105,
+          "fg_pct": 56.75675675675676,
+          "fg3_pct": 48.148148148148145,
+          "ft_pct": 87.5,
+          "turnovers": 14,
+          "offensive_rebounds": 9,
+          "assists": 22,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 102,
+          "fg_pct": 60.273972602739725,
+          "fg3_pct": 43.47826086956522,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 18,
+          "offensive_rebounds": 14,
+          "assists": 23,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 3,
+          "fg_pct": -3.5172158459829674,
+          "fg3_pct": 4.669887278582927,
+          "ft_pct": 20.833333333333343,
+          "turnovers": -4,
+          "offensive_rebounds": -5,
+          "assists": -1,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "acceleration",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 111,
+          "fg_pct": 54.87804878048781,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 93.10344827586206,
+          "turnovers": 10,
+          "offensive_rebounds": 13,
+          "assists": 21,
+          "fouls": 13
+        },
+        "low_stats": {
+          "points": 106,
+          "fg_pct": 53.65853658536586,
+          "fg3_pct": 48.38709677419355,
+          "ft_pct": 67.85714285714286,
+          "turnovers": 12,
+          "offensive_rebounds": 7,
+          "assists": 25,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 5,
+          "fg_pct": 1.2195121951219505,
+          "fg3_pct": -5.5299539170506975,
+          "ft_pct": 25.246305418719203,
+          "turnovers": -2,
+          "offensive_rebounds": 6,
+          "assists": -4,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "acceleration",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 53.52112676056338,
+          "fg3_pct": 56.52173913043478,
+          "ft_pct": 74.07407407407408,
+          "turnovers": 14,
+          "offensive_rebounds": 9,
+          "assists": 16,
+          "fouls": 24
+        },
+        "low_stats": {
+          "points": 77,
+          "fg_pct": 41.0958904109589,
+          "fg3_pct": 30.76923076923077,
+          "ft_pct": 68.18181818181817,
+          "turnovers": 12,
+          "offensive_rebounds": 13,
+          "assists": 15,
+          "fouls": 13
+        },
+        "differences": {
+          "points": 19,
+          "fg_pct": 12.425236349604475,
+          "fg3_pct": 25.75250836120401,
+          "ft_pct": 5.892255892255903,
+          "turnovers": 2,
+          "offensive_rebounds": -4,
+          "assists": 1,
+          "fouls": 11
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "top_speed",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -11.6,
+      "fg_pct": -1.1674992705343457,
+      "fg3_pct": -2.925061539767423,
+      "ft_pct": -5.486253942136297,
+      "turnovers": 4.4,
+      "offensive_rebounds": -0.4,
+      "assists": 1.0,
+      "fouls": 1.8
+    },
+    "individual_results": [
+      {
+        "attribute": "top_speed",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 105,
+          "fg_pct": 53.75,
+          "fg3_pct": 50.0,
+          "ft_pct": 64.70588235294117,
+          "turnovers": 8,
+          "offensive_rebounds": 14,
+          "assists": 25,
+          "fouls": 25
+        },
+        "low_stats": {
+          "points": 111,
+          "fg_pct": 56.9620253164557,
+          "fg3_pct": 44.44444444444444,
+          "ft_pct": 69.23076923076923,
+          "turnovers": 7,
+          "offensive_rebounds": 12,
+          "assists": 18,
+          "fouls": 15
+        },
+        "differences": {
+          "points": -6,
+          "fg_pct": -3.2120253164557013,
+          "fg3_pct": 5.555555555555557,
+          "ft_pct": -4.524886877828052,
+          "turnovers": 1,
+          "offensive_rebounds": 2,
+          "assists": 7,
+          "fouls": 10
+        }
+      },
+      {
+        "attribute": "top_speed",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 95,
+          "fg_pct": 48.10126582278481,
+          "fg3_pct": 33.33333333333333,
+          "ft_pct": 82.35294117647058,
+          "turnovers": 10,
+          "offensive_rebounds": 15,
+          "assists": 21,
+          "fouls": 14
+        },
+        "low_stats": {
+          "points": 111,
+          "fg_pct": 53.65853658536586,
+          "fg3_pct": 32.142857142857146,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 8,
+          "offensive_rebounds": 10,
+          "assists": 18,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -16,
+          "fg_pct": -5.557270762581048,
+          "fg3_pct": 1.1904761904761827,
+          "ft_pct": -0.9803921568627629,
+          "turnovers": 2,
+          "offensive_rebounds": 5,
+          "assists": 3,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "top_speed",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 86,
+          "fg_pct": 52.112676056338024,
+          "fg3_pct": 38.095238095238095,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 21,
+          "offensive_rebounds": 9,
+          "assists": 16,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 48.148148148148145,
+          "fg3_pct": 32.35294117647059,
+          "ft_pct": 54.54545454545454,
+          "turnovers": 10,
+          "offensive_rebounds": 14,
+          "assists": 17,
+          "fouls": 13
+        },
+        "differences": {
+          "points": -13,
+          "fg_pct": 3.964527908189879,
+          "fg3_pct": 5.742296918767508,
+          "ft_pct": 12.121212121212118,
+          "turnovers": 11,
+          "offensive_rebounds": -5,
+          "assists": -1,
+          "fouls": 8
+        }
+      },
+      {
+        "attribute": "top_speed",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 92,
+          "fg_pct": 50.68493150684932,
+          "fg3_pct": 31.25,
+          "ft_pct": 68.75,
+          "turnovers": 16,
+          "offensive_rebounds": 8,
+          "assists": 20,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 116,
+          "fg_pct": 56.79012345679012,
+          "fg3_pct": 50.0,
+          "ft_pct": 84.61538461538461,
+          "turnovers": 12,
+          "offensive_rebounds": 6,
+          "assists": 23,
+          "fouls": 17
+        },
+        "differences": {
+          "points": -24,
+          "fg_pct": -6.105191949940803,
+          "fg3_pct": -18.75,
+          "ft_pct": -15.865384615384613,
+          "turnovers": 4,
+          "offensive_rebounds": 2,
+          "assists": -3,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "top_speed",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 88,
+          "fg_pct": 55.072463768115945,
+          "fg3_pct": 28.000000000000004,
+          "ft_pct": 72.72727272727273,
+          "turnovers": 15,
+          "offensive_rebounds": 12,
+          "assists": 24,
+          "fouls": 23
+        },
+        "low_stats": {
+          "points": 87,
+          "fg_pct": 50.0,
+          "fg3_pct": 36.36363636363637,
+          "ft_pct": 90.9090909090909,
+          "turnovers": 11,
+          "offensive_rebounds": 18,
+          "assists": 25,
+          "fouls": 29
+        },
+        "differences": {
+          "points": 1,
+          "fg_pct": 5.072463768115945,
+          "fg3_pct": -8.363636363636363,
+          "ft_pct": -18.181818181818173,
+          "turnovers": 4,
+          "offensive_rebounds": -6,
+          "assists": -1,
+          "fouls": -6
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "jumping",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 14.4,
+      "fg_pct": 5.533971319793089,
+      "fg3_pct": -0.41668331668331715,
+      "ft_pct": -5.740001713685922,
+      "turnovers": 1.2,
+      "offensive_rebounds": -1.6,
+      "assists": 3.4,
+      "fouls": -1.0
+    },
+    "individual_results": [
+      {
+        "attribute": "jumping",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 86,
+          "fg_pct": 48.05194805194805,
+          "fg3_pct": 26.923076923076923,
+          "ft_pct": 76.92307692307693,
+          "turnovers": 13,
+          "offensive_rebounds": 9,
+          "assists": 18,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 95,
+          "fg_pct": 48.19277108433735,
+          "fg3_pct": 48.0,
+          "ft_pct": 61.904761904761905,
+          "turnovers": 4,
+          "offensive_rebounds": 11,
+          "assists": 21,
+          "fouls": 18
+        },
+        "differences": {
+          "points": -9,
+          "fg_pct": -0.14082303238929939,
+          "fg3_pct": -21.076923076923077,
+          "ft_pct": 15.018315018315029,
+          "turnovers": 9,
+          "offensive_rebounds": -2,
+          "assists": -3,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "jumping",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 125,
+          "fg_pct": 64.19753086419753,
+          "fg3_pct": 37.5,
+          "ft_pct": 70.37037037037037,
+          "turnovers": 9,
+          "offensive_rebounds": 12,
+          "assists": 33,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 94,
+          "fg_pct": 47.61904761904761,
+          "fg3_pct": 33.33333333333333,
+          "ft_pct": 89.47368421052632,
+          "turnovers": 7,
+          "offensive_rebounds": 10,
+          "assists": 17,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 31,
+          "fg_pct": 16.57848324514992,
+          "fg3_pct": 4.166666666666671,
+          "ft_pct": -19.10331384015595,
+          "turnovers": 2,
+          "offensive_rebounds": 2,
+          "assists": 16,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "jumping",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 131,
+          "fg_pct": 60.49382716049383,
+          "fg3_pct": 57.14285714285714,
+          "ft_pct": 81.48148148148148,
+          "turnovers": 9,
+          "offensive_rebounds": 8,
+          "assists": 27,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 107,
+          "fg_pct": 58.44155844155844,
+          "fg3_pct": 38.095238095238095,
+          "ft_pct": 80.0,
+          "turnovers": 12,
+          "offensive_rebounds": 10,
+          "assists": 21,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 24,
+          "fg_pct": 2.0522687189353874,
+          "fg3_pct": 19.047619047619044,
+          "ft_pct": 1.481481481481481,
+          "turnovers": -3,
+          "offensive_rebounds": -2,
+          "assists": 6,
+          "fouls": 0
+        }
+      },
+      {
+        "attribute": "jumping",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 94,
+          "fg_pct": 54.666666666666664,
+          "fg3_pct": 29.166666666666668,
+          "ft_pct": 73.68421052631578,
+          "turnovers": 13,
+          "offensive_rebounds": 9,
+          "assists": 21,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 57.14285714285714,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 78.94736842105263,
+          "turnovers": 13,
+          "offensive_rebounds": 10,
+          "assists": 20,
+          "fouls": 23
+        },
+        "differences": {
+          "points": -3,
+          "fg_pct": -2.4761904761904745,
+          "fg3_pct": -13.690476190476186,
+          "ft_pct": -5.26315789473685,
+          "turnovers": 0,
+          "offensive_rebounds": -1,
+          "assists": 1,
+          "fouls": -7
+        }
+      },
+      {
+        "attribute": "jumping",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 122,
+          "fg_pct": 65.82278481012658,
+          "fg3_pct": 45.83333333333333,
+          "ft_pct": 58.333333333333336,
+          "turnovers": 13,
+          "offensive_rebounds": 10,
+          "assists": 13,
+          "fouls": 24
+        },
+        "low_stats": {
+          "points": 93,
+          "fg_pct": 54.166666666666664,
+          "fg3_pct": 36.36363636363637,
+          "ft_pct": 79.16666666666666,
+          "turnovers": 15,
+          "offensive_rebounds": 15,
+          "assists": 16,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 29,
+          "fg_pct": 11.656118143459913,
+          "fg3_pct": 9.469696969696962,
+          "ft_pct": -20.83333333333332,
+          "turnovers": -2,
+          "offensive_rebounds": -5,
+          "assists": -3,
+          "fouls": 6
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "reactions",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -4.0,
+      "fg_pct": -2.0422919171672076,
+      "fg3_pct": -4.804399574714418,
+      "ft_pct": -2.805766320546239,
+      "turnovers": 0.2,
+      "offensive_rebounds": 1.6,
+      "assists": 4.0,
+      "fouls": 2.2
+    },
+    "individual_results": [
+      {
+        "attribute": "reactions",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 92,
+          "fg_pct": 50.0,
+          "fg3_pct": 43.24324324324324,
+          "ft_pct": 86.66666666666667,
+          "turnovers": 18,
+          "offensive_rebounds": 12,
+          "assists": 23,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 106,
+          "fg_pct": 57.14285714285714,
+          "fg3_pct": 39.130434782608695,
+          "ft_pct": 82.6086956521739,
+          "turnovers": 9,
+          "offensive_rebounds": 10,
+          "assists": 20,
+          "fouls": 21
+        },
+        "differences": {
+          "points": -14,
+          "fg_pct": -7.142857142857139,
+          "fg3_pct": 4.112808460634547,
+          "ft_pct": 4.0579710144927645,
+          "turnovers": 9,
+          "offensive_rebounds": 2,
+          "assists": 3,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "reactions",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 109,
+          "fg_pct": 56.9620253164557,
+          "fg3_pct": 52.17391304347826,
+          "ft_pct": 89.47368421052632,
+          "turnovers": 11,
+          "offensive_rebounds": 10,
+          "assists": 26,
+          "fouls": 24
+        },
+        "low_stats": {
+          "points": 121,
+          "fg_pct": 61.53846153846154,
+          "fg3_pct": 48.0,
+          "ft_pct": 87.5,
+          "turnovers": 13,
+          "offensive_rebounds": 9,
+          "assists": 16,
+          "fouls": 13
+        },
+        "differences": {
+          "points": -12,
+          "fg_pct": -4.576436222005839,
+          "fg3_pct": 4.173913043478258,
+          "ft_pct": 1.973684210526315,
+          "turnovers": -2,
+          "offensive_rebounds": 1,
+          "assists": 10,
+          "fouls": 11
+        }
+      },
+      {
+        "attribute": "reactions",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 113,
+          "fg_pct": 56.79012345679012,
+          "fg3_pct": 40.74074074074074,
+          "ft_pct": 82.35294117647058,
+          "turnovers": 6,
+          "offensive_rebounds": 13,
+          "assists": 22,
+          "fouls": 14
+        },
+        "low_stats": {
+          "points": 116,
+          "fg_pct": 61.53846153846154,
+          "fg3_pct": 58.333333333333336,
+          "ft_pct": 84.0,
+          "turnovers": 11,
+          "offensive_rebounds": 10,
+          "assists": 19,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -3,
+          "fg_pct": -4.74833808167142,
+          "fg3_pct": -17.592592592592595,
+          "ft_pct": -1.6470588235294201,
+          "turnovers": -5,
+          "offensive_rebounds": 3,
+          "assists": 3,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "reactions",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 94,
+          "fg_pct": 50.68493150684932,
+          "fg3_pct": 38.88888888888889,
+          "ft_pct": 54.54545454545454,
+          "turnovers": 16,
+          "offensive_rebounds": 13,
+          "assists": 26,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 96,
+          "fg_pct": 50.0,
+          "fg3_pct": 48.275862068965516,
+          "ft_pct": 76.47058823529412,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 21,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -2,
+          "fg_pct": 0.6849315068493169,
+          "fg3_pct": -9.386973180076623,
+          "ft_pct": -21.925133689839576,
+          "turnovers": 5,
+          "offensive_rebounds": 4,
+          "assists": 5,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "reactions",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 92,
+          "fg_pct": 51.94805194805194,
+          "fg3_pct": 31.03448275862069,
+          "ft_pct": 73.07692307692307,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 15,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 81,
+          "fg_pct": 46.3768115942029,
+          "fg3_pct": 36.36363636363637,
+          "ft_pct": 69.56521739130434,
+          "turnovers": 18,
+          "offensive_rebounds": 13,
+          "assists": 16,
+          "fouls": 13
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 5.571240353849042,
+          "fg3_pct": -5.3291536050156765,
+          "ft_pct": 3.511705685618722,
+          "turnovers": -6,
+          "offensive_rebounds": -2,
+          "assists": -1,
+          "fouls": 6
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "stamina",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 6.4,
+      "fg_pct": 0.5168041651817432,
+      "fg3_pct": 5.523744974831933,
+      "ft_pct": -10.761319839580706,
+      "turnovers": -2.6,
+      "offensive_rebounds": 4.2,
+      "assists": 3.2,
+      "fouls": -2.0
+    },
+    "individual_results": [
+      {
+        "attribute": "stamina",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 103,
+          "fg_pct": 52.56410256410257,
+          "fg3_pct": 50.0,
+          "ft_pct": 81.81818181818183,
+          "turnovers": 14,
+          "offensive_rebounds": 9,
+          "assists": 27,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 51.24999999999999,
+          "fg3_pct": 28.125,
+          "ft_pct": 91.66666666666666,
+          "turnovers": 8,
+          "offensive_rebounds": 9,
+          "assists": 23,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 6,
+          "fg_pct": 1.3141025641025763,
+          "fg3_pct": 21.875,
+          "ft_pct": -9.84848484848483,
+          "turnovers": 6,
+          "offensive_rebounds": 0,
+          "assists": 4,
+          "fouls": -2
+        }
+      },
+      {
+        "attribute": "stamina",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 85,
+          "fg_pct": 45.56962025316456,
+          "fg3_pct": 26.666666666666668,
+          "ft_pct": 61.53846153846154,
+          "turnovers": 8,
+          "offensive_rebounds": 12,
+          "assists": 21,
+          "fouls": 11
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 56.33802816901409,
+          "fg3_pct": 45.83333333333333,
+          "ft_pct": 76.92307692307693,
+          "turnovers": 12,
+          "offensive_rebounds": 14,
+          "assists": 20,
+          "fouls": 12
+        },
+        "differences": {
+          "points": -14,
+          "fg_pct": -10.76840791584953,
+          "fg3_pct": -19.16666666666666,
+          "ft_pct": -15.384615384615394,
+          "turnovers": -4,
+          "offensive_rebounds": -2,
+          "assists": 1,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "stamina",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 108,
+          "fg_pct": 53.75,
+          "fg3_pct": 40.909090909090914,
+          "ft_pct": 56.52173913043478,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 25,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 87,
+          "fg_pct": 51.388888888888886,
+          "fg3_pct": 37.5,
+          "ft_pct": 100.0,
+          "turnovers": 17,
+          "offensive_rebounds": 6,
+          "assists": 18,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 21,
+          "fg_pct": 2.3611111111111143,
+          "fg3_pct": 3.4090909090909136,
+          "ft_pct": -43.47826086956522,
+          "turnovers": -6,
+          "offensive_rebounds": 3,
+          "assists": 7,
+          "fouls": -2
+        }
+      },
+      {
+        "attribute": "stamina",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 99,
+          "fg_pct": 57.534246575342465,
+          "fg3_pct": 44.44444444444444,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 9,
+          "offensive_rebounds": 21,
+          "assists": 24,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 98,
+          "fg_pct": 53.94736842105263,
+          "fg3_pct": 30.76923076923077,
+          "ft_pct": 72.0,
+          "turnovers": 15,
+          "offensive_rebounds": 4,
+          "assists": 20,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 1,
+          "fg_pct": 3.5868781542898347,
+          "fg3_pct": 13.675213675213673,
+          "ft_pct": 11.333333333333343,
+          "turnovers": -6,
+          "offensive_rebounds": 17,
+          "assists": 4,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "stamina",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 101,
+          "fg_pct": 55.4054054054054,
+          "fg3_pct": 47.82608695652174,
+          "ft_pct": 61.904761904761905,
+          "turnovers": 9,
+          "offensive_rebounds": 16,
+          "assists": 24,
+          "fouls": 26
+        },
+        "low_stats": {
+          "points": 83,
+          "fg_pct": 49.31506849315068,
+          "fg3_pct": 40.0,
+          "ft_pct": 58.333333333333336,
+          "turnovers": 12,
+          "offensive_rebounds": 13,
+          "assists": 24,
+          "fouls": 26
+        },
+        "differences": {
+          "points": 18,
+          "fg_pct": 6.09033691225472,
+          "fg3_pct": 7.826086956521742,
+          "ft_pct": 3.5714285714285694,
+          "turnovers": -3,
+          "offensive_rebounds": 3,
+          "assists": 0,
+          "fouls": 0
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "balance",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -3.2,
+      "fg_pct": -0.4866848579007595,
+      "fg3_pct": 0.3320176721711263,
+      "ft_pct": 10.031257631257628,
+      "turnovers": 2.4,
+      "offensive_rebounds": -4.4,
+      "assists": 0.8,
+      "fouls": -0.6
+    },
+    "individual_results": [
+      {
+        "attribute": "balance",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 79,
+          "fg_pct": 40.845070422535215,
+          "fg3_pct": 35.294117647058826,
+          "ft_pct": 86.66666666666667,
+          "turnovers": 16,
+          "offensive_rebounds": 9,
+          "assists": 17,
+          "fouls": 15
+        },
+        "low_stats": {
+          "points": 89,
+          "fg_pct": 45.23809523809524,
+          "fg3_pct": 25.925925925925924,
+          "ft_pct": 52.38095238095239,
+          "turnovers": 3,
+          "offensive_rebounds": 14,
+          "assists": 22,
+          "fouls": 15
+        },
+        "differences": {
+          "points": -10,
+          "fg_pct": -4.393024815560025,
+          "fg3_pct": 9.368191721132902,
+          "ft_pct": 34.285714285714285,
+          "turnovers": 13,
+          "offensive_rebounds": -5,
+          "assists": -5,
+          "fouls": 0
+        }
+      },
+      {
+        "attribute": "balance",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 100,
+          "fg_pct": 54.43037974683544,
+          "fg3_pct": 32.432432432432435,
+          "ft_pct": 73.07692307692307,
+          "turnovers": 12,
+          "offensive_rebounds": 6,
+          "assists": 20,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 104,
+          "fg_pct": 53.75,
+          "fg3_pct": 39.130434782608695,
+          "ft_pct": 72.0,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 20,
+          "fouls": 21
+        },
+        "differences": {
+          "points": -4,
+          "fg_pct": 0.6803797468354418,
+          "fg3_pct": -6.69800235017626,
+          "ft_pct": 1.076923076923066,
+          "turnovers": 1,
+          "offensive_rebounds": -6,
+          "assists": 0,
+          "fouls": 0
+        }
+      },
+      {
+        "attribute": "balance",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 100,
+          "fg_pct": 54.666666666666664,
+          "fg3_pct": 44.44444444444444,
+          "ft_pct": 70.0,
+          "turnovers": 13,
+          "offensive_rebounds": 11,
+          "assists": 20,
+          "fouls": 14
+        },
+        "low_stats": {
+          "points": 89,
+          "fg_pct": 48.57142857142857,
+          "fg3_pct": 40.0,
+          "ft_pct": 71.42857142857143,
+          "turnovers": 11,
+          "offensive_rebounds": 24,
+          "assists": 19,
+          "fouls": 13
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 6.095238095238095,
+          "fg3_pct": 4.444444444444443,
+          "ft_pct": -1.4285714285714306,
+          "turnovers": 2,
+          "offensive_rebounds": -13,
+          "assists": 1,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "balance",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 88,
+          "fg_pct": 50.0,
+          "fg3_pct": 40.74074074074074,
+          "ft_pct": 72.22222222222221,
+          "turnovers": 13,
+          "offensive_rebounds": 15,
+          "assists": 17,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 100,
+          "fg_pct": 54.166666666666664,
+          "fg3_pct": 45.45454545454545,
+          "ft_pct": 76.0,
+          "turnovers": 16,
+          "offensive_rebounds": 10,
+          "assists": 19,
+          "fouls": 20
+        },
+        "differences": {
+          "points": -12,
+          "fg_pct": -4.166666666666664,
+          "fg3_pct": -4.713804713804713,
+          "ft_pct": -3.7777777777777857,
+          "turnovers": -3,
+          "offensive_rebounds": 5,
+          "assists": -2,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "balance",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 50.0,
+          "fg3_pct": 40.0,
+          "ft_pct": 100.0,
+          "turnovers": 8,
+          "offensive_rebounds": 7,
+          "assists": 29,
+          "fouls": 15
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 50.649350649350644,
+          "fg3_pct": 40.74074074074074,
+          "ft_pct": 80.0,
+          "turnovers": 9,
+          "offensive_rebounds": 10,
+          "assists": 19,
+          "fouls": 16
+        },
+        "differences": {
+          "points": -1,
+          "fg_pct": -0.6493506493506445,
+          "fg3_pct": -0.7407407407407405,
+          "ft_pct": 20.0,
+          "turnovers": -1,
+          "offensive_rebounds": -3,
+          "assists": 10,
+          "fouls": -1
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "height",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 4.2,
+      "fg_pct": 1.9518525861902263,
+      "fg3_pct": 3.7952948956721277,
+      "ft_pct": 11.457830446243335,
+      "turnovers": 0.8,
+      "offensive_rebounds": -2.8,
+      "assists": -2.8,
+      "fouls": 3.2
+    },
+    "individual_results": [
+      {
+        "attribute": "height",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 112,
+          "fg_pct": 59.756097560975604,
+          "fg3_pct": 48.484848484848484,
+          "ft_pct": 75.75757575757575,
+          "turnovers": 9,
+          "offensive_rebounds": 7,
+          "assists": 21,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 90,
+          "fg_pct": 48.05194805194805,
+          "fg3_pct": 35.483870967741936,
+          "ft_pct": 78.94736842105263,
+          "turnovers": 11,
+          "offensive_rebounds": 10,
+          "assists": 14,
+          "fouls": 22
+        },
+        "differences": {
+          "points": 22,
+          "fg_pct": 11.704149509027552,
+          "fg3_pct": 13.000977517106548,
+          "ft_pct": -3.1897926634768794,
+          "turnovers": -2,
+          "offensive_rebounds": -3,
+          "assists": 7,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "height",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 98,
+          "fg_pct": 52.56410256410257,
+          "fg3_pct": 37.03703703703704,
+          "ft_pct": 68.42105263157895,
+          "turnovers": 12,
+          "offensive_rebounds": 10,
+          "assists": 17,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 87,
+          "fg_pct": 49.333333333333336,
+          "fg3_pct": 23.076923076923077,
+          "ft_pct": 69.56521739130434,
+          "turnovers": 11,
+          "offensive_rebounds": 14,
+          "assists": 22,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 3.2307692307692335,
+          "fg3_pct": 13.960113960113961,
+          "ft_pct": -1.144164759725399,
+          "turnovers": 1,
+          "offensive_rebounds": -4,
+          "assists": -5,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "height",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 102,
+          "fg_pct": 57.333333333333336,
+          "fg3_pct": 32.142857142857146,
+          "ft_pct": 70.58823529411765,
+          "turnovers": 14,
+          "offensive_rebounds": 7,
+          "assists": 19,
+          "fouls": 23
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 46.913580246913575,
+          "fg3_pct": 37.5,
+          "ft_pct": 54.54545454545454,
+          "turnovers": 10,
+          "offensive_rebounds": 5,
+          "assists": 31,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 5,
+          "fg_pct": 10.41975308641976,
+          "fg3_pct": -5.357142857142854,
+          "ft_pct": 16.042780748663112,
+          "turnovers": 4,
+          "offensive_rebounds": 2,
+          "assists": -12,
+          "fouls": 8
+        }
+      },
+      {
+        "attribute": "height",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 97,
+          "fg_pct": 48.78048780487805,
+          "fg3_pct": 34.48275862068966,
+          "ft_pct": 87.5,
+          "turnovers": 12,
+          "offensive_rebounds": 5,
+          "assists": 20,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 116,
+          "fg_pct": 57.3170731707317,
+          "fg3_pct": 42.42424242424242,
+          "ft_pct": 80.64516129032258,
+          "turnovers": 10,
+          "offensive_rebounds": 9,
+          "assists": 22,
+          "fouls": 24
+        },
+        "differences": {
+          "points": -19,
+          "fg_pct": -8.536585365853654,
+          "fg3_pct": -7.941483803552764,
+          "ft_pct": 6.8548387096774235,
+          "turnovers": 2,
+          "offensive_rebounds": -4,
+          "assists": -2,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "height",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 111,
+          "fg_pct": 52.94117647058824,
+          "fg3_pct": 44.44444444444444,
+          "ft_pct": 91.66666666666666,
+          "turnovers": 10,
+          "offensive_rebounds": 7,
+          "assists": 24,
+          "fouls": 29
+        },
+        "low_stats": {
+          "points": 109,
+          "fg_pct": 60.0,
+          "fg3_pct": 39.130434782608695,
+          "ft_pct": 52.94117647058824,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 26,
+          "fouls": 12
+        },
+        "differences": {
+          "points": 2,
+          "fg_pct": -7.058823529411761,
+          "fg3_pct": 5.3140096618357475,
+          "ft_pct": 38.72549019607842,
+          "turnovers": -1,
+          "offensive_rebounds": -5,
+          "assists": -2,
+          "fouls": 17
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "awareness",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 10.2,
+      "fg_pct": 3.9016710519701063,
+      "fg3_pct": -3.181532432312072,
+      "ft_pct": -1.5321140212444546,
+      "turnovers": -3.4,
+      "offensive_rebounds": -2.0,
+      "assists": -0.2,
+      "fouls": -5.2
+    },
+    "individual_results": [
+      {
+        "attribute": "awareness",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 98,
+          "fg_pct": 54.054054054054056,
+          "fg3_pct": 36.0,
+          "ft_pct": 78.26086956521739,
+          "turnovers": 14,
+          "offensive_rebounds": 9,
+          "assists": 19,
+          "fouls": 11
+        },
+        "low_stats": {
+          "points": 100,
+          "fg_pct": 51.94805194805194,
+          "fg3_pct": 51.515151515151516,
+          "ft_pct": 76.19047619047619,
+          "turnovers": 14,
+          "offensive_rebounds": 12,
+          "assists": 20,
+          "fouls": 21
+        },
+        "differences": {
+          "points": -2,
+          "fg_pct": 2.1060021060021157,
+          "fg3_pct": -15.515151515151516,
+          "ft_pct": 2.070393374741201,
+          "turnovers": 0,
+          "offensive_rebounds": -3,
+          "assists": -1,
+          "fouls": -10
+        }
+      },
+      {
+        "attribute": "awareness",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 108,
+          "fg_pct": 56.41025641025641,
+          "fg3_pct": 39.130434782608695,
+          "ft_pct": 73.07692307692307,
+          "turnovers": 10,
+          "offensive_rebounds": 9,
+          "assists": 23,
+          "fouls": 24
+        },
+        "low_stats": {
+          "points": 96,
+          "fg_pct": 54.929577464788736,
+          "fg3_pct": 38.46153846153847,
+          "ft_pct": 88.88888888888889,
+          "turnovers": 19,
+          "offensive_rebounds": 11,
+          "assists": 17,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 12,
+          "fg_pct": 1.4806789454676732,
+          "fg3_pct": 0.6688963210702283,
+          "ft_pct": -15.81196581196582,
+          "turnovers": -9,
+          "offensive_rebounds": -2,
+          "assists": 6,
+          "fouls": 7
+        }
+      },
+      {
+        "attribute": "awareness",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 118,
+          "fg_pct": 62.82051282051282,
+          "fg3_pct": 52.94117647058824,
+          "ft_pct": 81.81818181818183,
+          "turnovers": 12,
+          "offensive_rebounds": 6,
+          "assists": 23,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 90,
+          "fg_pct": 49.31506849315068,
+          "fg3_pct": 37.5,
+          "ft_pct": 84.61538461538461,
+          "turnovers": 15,
+          "offensive_rebounds": 9,
+          "assists": 16,
+          "fouls": 28
+        },
+        "differences": {
+          "points": 28,
+          "fg_pct": 13.505444327362135,
+          "fg3_pct": 15.441176470588239,
+          "ft_pct": -2.797202797202786,
+          "turnovers": -3,
+          "offensive_rebounds": -3,
+          "assists": 7,
+          "fouls": -7
+        }
+      },
+      {
+        "attribute": "awareness",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 115,
+          "fg_pct": 60.256410256410255,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 86.66666666666667,
+          "turnovers": 14,
+          "offensive_rebounds": 8,
+          "assists": 21,
+          "fouls": 11
+        },
+        "low_stats": {
+          "points": 104,
+          "fg_pct": 56.75675675675676,
+          "fg3_pct": 41.935483870967744,
+          "ft_pct": 93.75,
+          "turnovers": 16,
+          "offensive_rebounds": 9,
+          "assists": 22,
+          "fouls": 16
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 3.4996534996534976,
+          "fg3_pct": 0.9216589861751103,
+          "ft_pct": -7.083333333333329,
+          "turnovers": -2,
+          "offensive_rebounds": -1,
+          "assists": -1,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "awareness",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 98,
+          "fg_pct": 53.84615384615385,
+          "fg3_pct": 40.909090909090914,
+          "ft_pct": 77.5,
+          "turnovers": 11,
+          "offensive_rebounds": 16,
+          "assists": 14,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 96,
+          "fg_pct": 54.929577464788736,
+          "fg3_pct": 58.333333333333336,
+          "ft_pct": 61.53846153846154,
+          "turnovers": 14,
+          "offensive_rebounds": 17,
+          "assists": 26,
+          "fouls": 28
+        },
+        "differences": {
+          "points": 2,
+          "fg_pct": -1.083423618634889,
+          "fg3_pct": -17.424242424242422,
+          "ft_pct": 15.96153846153846,
+          "turnovers": -3,
+          "offensive_rebounds": -1,
+          "assists": -12,
+          "fouls": -11
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "creativity",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -5.0,
+      "fg_pct": -0.13043185910050853,
+      "fg3_pct": 7.625634796157601,
+      "ft_pct": -0.6571530321530303,
+      "turnovers": 0.6,
+      "offensive_rebounds": 3.8,
+      "assists": 1.4,
+      "fouls": 0.8
+    },
+    "individual_results": [
+      {
+        "attribute": "creativity",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 54.666666666666664,
+          "fg3_pct": 44.0,
+          "ft_pct": 84.375,
+          "turnovers": 13,
+          "offensive_rebounds": 17,
+          "assists": 17,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 120,
+          "fg_pct": 63.63636363636363,
+          "fg3_pct": 46.15384615384615,
+          "ft_pct": 80.76923076923077,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 24,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -24,
+          "fg_pct": -8.969696969696969,
+          "fg3_pct": -2.1538461538461533,
+          "ft_pct": 3.6057692307692264,
+          "turnovers": 2,
+          "offensive_rebounds": 8,
+          "assists": -7,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "creativity",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 89,
+          "fg_pct": 47.94520547945205,
+          "fg3_pct": 41.37931034482759,
+          "ft_pct": 91.66666666666666,
+          "turnovers": 13,
+          "offensive_rebounds": 15,
+          "assists": 17,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 70,
+          "fg_pct": 38.35616438356164,
+          "fg3_pct": 28.57142857142857,
+          "ft_pct": 76.19047619047619,
+          "turnovers": 12,
+          "offensive_rebounds": 14,
+          "assists": 11,
+          "fouls": 23
+        },
+        "differences": {
+          "points": 19,
+          "fg_pct": 9.589041095890408,
+          "fg3_pct": 12.807881773399018,
+          "ft_pct": 15.476190476190467,
+          "turnovers": 1,
+          "offensive_rebounds": 1,
+          "assists": 6,
+          "fouls": -6
+        }
+      },
+      {
+        "attribute": "creativity",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 103,
+          "fg_pct": 54.54545454545454,
+          "fg3_pct": 48.38709677419355,
+          "ft_pct": 75.0,
+          "turnovers": 9,
+          "offensive_rebounds": 15,
+          "assists": 23,
+          "fouls": 24
+        },
+        "low_stats": {
+          "points": 122,
+          "fg_pct": 60.256410256410255,
+          "fg3_pct": 45.83333333333333,
+          "ft_pct": 95.23809523809523,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 26,
+          "fouls": 18
+        },
+        "differences": {
+          "points": -19,
+          "fg_pct": -5.710955710955716,
+          "fg3_pct": 2.553763440860223,
+          "ft_pct": -20.238095238095227,
+          "turnovers": -3,
+          "offensive_rebounds": 4,
+          "assists": -3,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "creativity",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 106,
+          "fg_pct": 57.89473684210527,
+          "fg3_pct": 50.0,
+          "ft_pct": 80.0,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 21,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 119,
+          "fg_pct": 58.333333333333336,
+          "fg3_pct": 39.39393939393939,
+          "ft_pct": 79.16666666666666,
+          "turnovers": 6,
+          "offensive_rebounds": 6,
+          "assists": 19,
+          "fouls": 17
+        },
+        "differences": {
+          "points": -13,
+          "fg_pct": -0.43859649122806843,
+          "fg3_pct": 10.606060606060609,
+          "ft_pct": 0.8333333333333428,
+          "turnovers": 6,
+          "offensive_rebounds": 5,
+          "assists": 2,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "creativity",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 128,
+          "fg_pct": 60.97560975609756,
+          "fg3_pct": 51.35135135135135,
+          "ft_pct": 70.37037037037037,
+          "turnovers": 6,
+          "offensive_rebounds": 12,
+          "assists": 29,
+          "fouls": 22
+        },
+        "low_stats": {
+          "points": 116,
+          "fg_pct": 56.09756097560976,
+          "fg3_pct": 37.03703703703704,
+          "ft_pct": 73.33333333333333,
+          "turnovers": 9,
+          "offensive_rebounds": 11,
+          "assists": 20,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 12,
+          "fg_pct": 4.878048780487802,
+          "fg3_pct": 14.31431431431431,
+          "ft_pct": -2.962962962962962,
+          "turnovers": -3,
+          "offensive_rebounds": 1,
+          "assists": 9,
+          "fouls": 1
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "determination",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 5.0,
+      "fg_pct": 1.87449457891629,
+      "fg3_pct": 13.696886446886447,
+      "ft_pct": 4.782676567666425,
+      "turnovers": 1.4,
+      "offensive_rebounds": 2.4,
+      "assists": 1.2,
+      "fouls": 2.8
+    },
+    "individual_results": [
+      {
+        "attribute": "determination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 116,
+          "fg_pct": 58.97435897435898,
+          "fg3_pct": 57.14285714285714,
+          "ft_pct": 68.18181818181817,
+          "turnovers": 10,
+          "offensive_rebounds": 11,
+          "assists": 25,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 105,
+          "fg_pct": 56.75675675675676,
+          "fg3_pct": 34.61538461538461,
+          "ft_pct": 60.71428571428571,
+          "turnovers": 11,
+          "offensive_rebounds": 11,
+          "assists": 26,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 2.21760221760222,
+          "fg3_pct": 22.527472527472526,
+          "ft_pct": 7.467532467532465,
+          "turnovers": -1,
+          "offensive_rebounds": 0,
+          "assists": -1,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "determination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 83,
+          "fg_pct": 47.14285714285714,
+          "fg3_pct": 42.30769230769231,
+          "ft_pct": 91.66666666666666,
+          "turnovers": 14,
+          "offensive_rebounds": 14,
+          "assists": 21,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 95,
+          "fg_pct": 48.717948717948715,
+          "fg3_pct": 31.25,
+          "ft_pct": 57.14285714285714,
+          "turnovers": 12,
+          "offensive_rebounds": 7,
+          "assists": 19,
+          "fouls": 11
+        },
+        "differences": {
+          "points": -12,
+          "fg_pct": -1.5750915750915766,
+          "fg3_pct": 11.057692307692307,
+          "ft_pct": 34.52380952380952,
+          "turnovers": 2,
+          "offensive_rebounds": 7,
+          "assists": 2,
+          "fouls": 9
+        }
+      },
+      {
+        "attribute": "determination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 110,
+          "fg_pct": 55.12820512820513,
+          "fg3_pct": 53.84615384615385,
+          "ft_pct": 72.41379310344827,
+          "turnovers": 10,
+          "offensive_rebounds": 17,
+          "assists": 21,
+          "fouls": 27
+        },
+        "low_stats": {
+          "points": 88,
+          "fg_pct": 50.66666666666667,
+          "fg3_pct": 30.0,
+          "ft_pct": 76.47058823529412,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 18,
+          "fouls": 20
+        },
+        "differences": {
+          "points": 22,
+          "fg_pct": 4.46153846153846,
+          "fg3_pct": 23.846153846153847,
+          "ft_pct": -4.0567951318458455,
+          "turnovers": -1,
+          "offensive_rebounds": 8,
+          "assists": 3,
+          "fouls": 7
+        }
+      },
+      {
+        "attribute": "determination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 108,
+          "fg_pct": 56.9620253164557,
+          "fg3_pct": 37.5,
+          "ft_pct": 74.07407407407408,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 22,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 110,
+          "fg_pct": 58.22784810126582,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 90.47619047619048,
+          "turnovers": 9,
+          "offensive_rebounds": 12,
+          "assists": 21,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -2,
+          "fg_pct": -1.2658227848101191,
+          "fg3_pct": -5.357142857142854,
+          "ft_pct": -16.402116402116405,
+          "turnovers": 2,
+          "offensive_rebounds": -3,
+          "assists": 1,
+          "fouls": -2
+        }
+      },
+      {
+        "attribute": "determination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 102,
+          "fg_pct": 57.534246575342465,
+          "fg3_pct": 43.333333333333336,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 17,
+          "offensive_rebounds": 11,
+          "assists": 22,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 96,
+          "fg_pct": 52.0,
+          "fg3_pct": 26.923076923076923,
+          "ft_pct": 80.95238095238095,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 21,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 6,
+          "fg_pct": 5.534246575342465,
+          "fg3_pct": 16.410256410256412,
+          "ft_pct": 2.380952380952394,
+          "turnovers": 5,
+          "offensive_rebounds": 0,
+          "assists": 1,
+          "fouls": -1
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "bravery",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -0.6,
+      "fg_pct": -2.1912520200151633,
+      "fg3_pct": -0.6277504105090287,
+      "ft_pct": 2.0329232171337437,
+      "turnovers": 1.2,
+      "offensive_rebounds": -0.2,
+      "assists": 0.8,
+      "fouls": -2.0
+    },
+    "individual_results": [
+      {
+        "attribute": "bravery",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 107,
+          "fg_pct": 50.602409638554214,
+          "fg3_pct": 34.48275862068966,
+          "ft_pct": 72.72727272727273,
+          "turnovers": 7,
+          "offensive_rebounds": 8,
+          "assists": 31,
+          "fouls": 15
+        },
+        "low_stats": {
+          "points": 110,
+          "fg_pct": 63.51351351351351,
+          "fg3_pct": 55.172413793103445,
+          "ft_pct": 76.31578947368422,
+          "turnovers": 12,
+          "offensive_rebounds": 12,
+          "assists": 20,
+          "fouls": 20
+        },
+        "differences": {
+          "points": -3,
+          "fg_pct": -12.911103874959295,
+          "fg3_pct": -20.689655172413786,
+          "ft_pct": -3.5885167464114858,
+          "turnovers": -5,
+          "offensive_rebounds": -4,
+          "assists": 11,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "bravery",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 111,
+          "fg_pct": 63.013698630136986,
+          "fg3_pct": 58.333333333333336,
+          "ft_pct": 81.25,
+          "turnovers": 13,
+          "offensive_rebounds": 14,
+          "assists": 24,
+          "fouls": 13
+        },
+        "low_stats": {
+          "points": 115,
+          "fg_pct": 60.0,
+          "fg3_pct": 55.172413793103445,
+          "ft_pct": 80.95238095238095,
+          "turnovers": 11,
+          "offensive_rebounds": 17,
+          "assists": 22,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -4,
+          "fg_pct": 3.013698630136986,
+          "fg3_pct": 3.160919540229891,
+          "ft_pct": 0.297619047619051,
+          "turnovers": 2,
+          "offensive_rebounds": -3,
+          "assists": 2,
+          "fouls": -6
+        }
+      },
+      {
+        "attribute": "bravery",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 102,
+          "fg_pct": 54.54545454545454,
+          "fg3_pct": 57.14285714285714,
+          "ft_pct": 63.1578947368421,
+          "turnovers": 13,
+          "offensive_rebounds": 8,
+          "assists": 21,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 88,
+          "fg_pct": 50.66666666666667,
+          "fg3_pct": 27.586206896551722,
+          "ft_pct": 78.57142857142857,
+          "turnovers": 11,
+          "offensive_rebounds": 8,
+          "assists": 20,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 14,
+          "fg_pct": 3.8787878787878682,
+          "fg3_pct": 29.556650246305416,
+          "ft_pct": -15.413533834586467,
+          "turnovers": 2,
+          "offensive_rebounds": 0,
+          "assists": 1,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "bravery",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 84,
+          "fg_pct": 46.478873239436616,
+          "fg3_pct": 33.33333333333333,
+          "ft_pct": 85.71428571428571,
+          "turnovers": 15,
+          "offensive_rebounds": 11,
+          "assists": 20,
+          "fouls": 22
+        },
+        "low_stats": {
+          "points": 104,
+          "fg_pct": 55.69620253164557,
+          "fg3_pct": 54.166666666666664,
+          "ft_pct": 71.42857142857143,
+          "turnovers": 11,
+          "offensive_rebounds": 8,
+          "assists": 25,
+          "fouls": 20
+        },
+        "differences": {
+          "points": -20,
+          "fg_pct": -9.217329292208952,
+          "fg3_pct": -20.833333333333336,
+          "ft_pct": 14.285714285714278,
+          "turnovers": 4,
+          "offensive_rebounds": 3,
+          "assists": -5,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "bravery",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 102,
+          "fg_pct": 51.89873417721519,
+          "fg3_pct": 41.66666666666667,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 11,
+          "offensive_rebounds": 13,
+          "assists": 14,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 92,
+          "fg_pct": 47.61904761904761,
+          "fg3_pct": 36.0,
+          "ft_pct": 68.75,
+          "turnovers": 8,
+          "offensive_rebounds": 10,
+          "assists": 19,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 10,
+          "fg_pct": 4.279686558167576,
+          "fg3_pct": 5.666666666666671,
+          "ft_pct": 14.583333333333343,
+          "turnovers": 3,
+          "offensive_rebounds": 3,
+          "assists": -5,
+          "fouls": -2
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "consistency",
+    "games_tested": 5,
+    "average_differences": {
+      "points": -0.2,
+      "fg_pct": -2.63695342285597,
+      "fg3_pct": -6.694467346517792,
+      "ft_pct": -2.402910026887011,
+      "turnovers": -1.6,
+      "offensive_rebounds": -0.6,
+      "assists": 1.8,
+      "fouls": -1.2
+    },
+    "individual_results": [
+      {
+        "attribute": "consistency",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 118,
+          "fg_pct": 59.49367088607595,
+          "fg3_pct": 48.275862068965516,
+          "ft_pct": 82.6086956521739,
+          "turnovers": 14,
+          "offensive_rebounds": 11,
+          "assists": 23,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 86,
+          "fg_pct": 46.666666666666664,
+          "fg3_pct": 29.629629629629626,
+          "ft_pct": 78.26086956521739,
+          "turnovers": 13,
+          "offensive_rebounds": 8,
+          "assists": 16,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 32,
+          "fg_pct": 12.827004219409282,
+          "fg3_pct": 18.64623243933589,
+          "ft_pct": 4.347826086956516,
+          "turnovers": 1,
+          "offensive_rebounds": 3,
+          "assists": 7,
+          "fouls": 5
+        }
+      },
+      {
+        "attribute": "consistency",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 91,
+          "fg_pct": 45.0,
+          "fg3_pct": 35.294117647058826,
+          "ft_pct": 75.0,
+          "turnovers": 11,
+          "offensive_rebounds": 7,
+          "assists": 18,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 87,
+          "fg_pct": 50.68493150684932,
+          "fg3_pct": 30.76923076923077,
+          "ft_pct": 69.23076923076923,
+          "turnovers": 15,
+          "offensive_rebounds": 12,
+          "assists": 21,
+          "fouls": 22
+        },
+        "differences": {
+          "points": 4,
+          "fg_pct": -5.684931506849317,
+          "fg3_pct": 4.524886877828056,
+          "ft_pct": 5.769230769230774,
+          "turnovers": -4,
+          "offensive_rebounds": -5,
+          "assists": -3,
+          "fouls": -4
+        }
+      },
+      {
+        "attribute": "consistency",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 93,
+          "fg_pct": 50.66666666666667,
+          "fg3_pct": 22.22222222222222,
+          "ft_pct": 53.125,
+          "turnovers": 12,
+          "offensive_rebounds": 16,
+          "assists": 21,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 84,
+          "fg_pct": 49.35064935064935,
+          "fg3_pct": 48.0,
+          "ft_pct": 65.21739130434783,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 16,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 9,
+          "fg_pct": 1.316017316017323,
+          "fg3_pct": -25.77777777777778,
+          "ft_pct": -12.092391304347828,
+          "turnovers": 1,
+          "offensive_rebounds": 4,
+          "assists": 5,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "consistency",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 81,
+          "fg_pct": 42.857142857142854,
+          "fg3_pct": 31.03448275862069,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 12,
+          "offensive_rebounds": 13,
+          "assists": 21,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 52.0,
+          "fg3_pct": 40.0,
+          "ft_pct": 72.0,
+          "turnovers": 14,
+          "offensive_rebounds": 18,
+          "assists": 17,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -18,
+          "fg_pct": -9.142857142857146,
+          "fg3_pct": -8.96551724137931,
+          "ft_pct": -5.333333333333343,
+          "turnovers": -2,
+          "offensive_rebounds": -5,
+          "assists": 4,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "consistency",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 65,
+          "fg_pct": 38.88888888888889,
+          "fg3_pct": 25.925925925925924,
+          "ft_pct": 60.0,
+          "turnovers": 13,
+          "offensive_rebounds": 14,
+          "assists": 16,
+          "fouls": 15
+        },
+        "low_stats": {
+          "points": 93,
+          "fg_pct": 51.388888888888886,
+          "fg3_pct": 47.82608695652174,
+          "ft_pct": 64.70588235294117,
+          "turnovers": 17,
+          "offensive_rebounds": 14,
+          "assists": 20,
+          "fouls": 20
+        },
+        "differences": {
+          "points": -28,
+          "fg_pct": -12.499999999999993,
+          "fg3_pct": -21.900161030595818,
+          "ft_pct": -4.705882352941174,
+          "turnovers": -4,
+          "offensive_rebounds": 0,
+          "assists": -4,
+          "fouls": -5
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "composure",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 10.4,
+      "fg_pct": 3.3942642157112375,
+      "fg3_pct": -1.4275829550550951,
+      "ft_pct": -9.245076179858792,
+      "turnovers": -3.8,
+      "offensive_rebounds": 2.8,
+      "assists": -1.4,
+      "fouls": 1.4
+    },
+    "individual_results": [
+      {
+        "attribute": "composure",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 100,
+          "fg_pct": 50.0,
+          "fg3_pct": 44.44444444444444,
+          "ft_pct": 62.5,
+          "turnovers": 8,
+          "offensive_rebounds": 14,
+          "assists": 24,
+          "fouls": 25
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 52.56410256410257,
+          "fg3_pct": 46.42857142857143,
+          "ft_pct": 77.77777777777779,
+          "turnovers": 13,
+          "offensive_rebounds": 7,
+          "assists": 23,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 1,
+          "fg_pct": -2.564102564102569,
+          "fg3_pct": -1.9841269841269877,
+          "ft_pct": -15.277777777777786,
+          "turnovers": -5,
+          "offensive_rebounds": 7,
+          "assists": 1,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "composure",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 98,
+          "fg_pct": 59.72222222222222,
+          "fg3_pct": 29.411764705882355,
+          "ft_pct": 73.33333333333333,
+          "turnovers": 10,
+          "offensive_rebounds": 16,
+          "assists": 27,
+          "fouls": 14
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 54.666666666666664,
+          "fg3_pct": 34.375,
+          "ft_pct": 93.33333333333333,
+          "turnovers": 8,
+          "offensive_rebounds": 12,
+          "assists": 24,
+          "fouls": 23
+        },
+        "differences": {
+          "points": 1,
+          "fg_pct": 5.055555555555557,
+          "fg3_pct": -4.963235294117645,
+          "ft_pct": -20.0,
+          "turnovers": 2,
+          "offensive_rebounds": 4,
+          "assists": 3,
+          "fouls": -9
+        }
+      },
+      {
+        "attribute": "composure",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 115,
+          "fg_pct": 57.831325301204814,
+          "fg3_pct": 31.57894736842105,
+          "ft_pct": 70.0,
+          "turnovers": 8,
+          "offensive_rebounds": 10,
+          "assists": 17,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 100,
+          "fg_pct": 55.4054054054054,
+          "fg3_pct": 41.37931034482759,
+          "ft_pct": 53.84615384615385,
+          "turnovers": 15,
+          "offensive_rebounds": 8,
+          "assists": 20,
+          "fouls": 14
+        },
+        "differences": {
+          "points": 15,
+          "fg_pct": 2.42591989579941,
+          "fg3_pct": -9.800362976406536,
+          "ft_pct": 16.153846153846153,
+          "turnovers": -7,
+          "offensive_rebounds": 2,
+          "assists": -3,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "composure",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 108,
+          "fg_pct": 53.65853658536586,
+          "fg3_pct": 30.76923076923077,
+          "ft_pct": 70.0,
+          "turnovers": 8,
+          "offensive_rebounds": 13,
+          "assists": 20,
+          "fouls": 26
+        },
+        "low_stats": {
+          "points": 108,
+          "fg_pct": 56.57894736842105,
+          "fg3_pct": 43.333333333333336,
+          "ft_pct": 86.66666666666667,
+          "turnovers": 12,
+          "offensive_rebounds": 14,
+          "assists": 28,
+          "fouls": 23
+        },
+        "differences": {
+          "points": 0,
+          "fg_pct": -2.920410783055189,
+          "fg3_pct": -12.564102564102566,
+          "ft_pct": -16.66666666666667,
+          "turnovers": -4,
+          "offensive_rebounds": -1,
+          "assists": -8,
+          "fouls": 3
+        }
+      },
+      {
+        "attribute": "composure",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 114,
+          "fg_pct": 58.97435897435898,
+          "fg3_pct": 52.17391304347826,
+          "ft_pct": 69.56521739130434,
+          "turnovers": 10,
+          "offensive_rebounds": 13,
+          "assists": 20,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 79,
+          "fg_pct": 44.0,
+          "fg3_pct": 30.0,
+          "ft_pct": 80.0,
+          "turnovers": 15,
+          "offensive_rebounds": 11,
+          "assists": 20,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 35,
+          "fg_pct": 14.974358974358978,
+          "fg3_pct": 22.173913043478258,
+          "ft_pct": -10.434782608695656,
+          "turnovers": -5,
+          "offensive_rebounds": 2,
+          "assists": 0,
+          "fouls": 1
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "patience",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 5.0,
+      "fg_pct": 3.329039524775702,
+      "fg3_pct": 3.7575611325611336,
+      "ft_pct": 4.373567703089321,
+      "turnovers": -0.8,
+      "offensive_rebounds": -0.6,
+      "assists": 3.4,
+      "fouls": 1.4
+    },
+    "individual_results": [
+      {
+        "attribute": "patience",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 106,
+          "fg_pct": 52.56410256410257,
+          "fg3_pct": 50.0,
+          "ft_pct": 70.0,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 25,
+          "fouls": 25
+        },
+        "low_stats": {
+          "points": 102,
+          "fg_pct": 55.26315789473685,
+          "fg3_pct": 40.0,
+          "ft_pct": 82.35294117647058,
+          "turnovers": 13,
+          "offensive_rebounds": 10,
+          "assists": 19,
+          "fouls": 12
+        },
+        "differences": {
+          "points": 4,
+          "fg_pct": -2.6990553306342804,
+          "fg3_pct": 10.0,
+          "ft_pct": -12.35294117647058,
+          "turnovers": -2,
+          "offensive_rebounds": 2,
+          "assists": 6,
+          "fouls": 13
+        }
+      },
+      {
+        "attribute": "patience",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 116,
+          "fg_pct": 64.47368421052632,
+          "fg3_pct": 45.83333333333333,
+          "ft_pct": 93.75,
+          "turnovers": 11,
+          "offensive_rebounds": 11,
+          "assists": 29,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 99,
+          "fg_pct": 52.77777777777778,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 81.25,
+          "turnovers": 14,
+          "offensive_rebounds": 15,
+          "assists": 19,
+          "fouls": 20
+        },
+        "differences": {
+          "points": 17,
+          "fg_pct": 11.695906432748536,
+          "fg3_pct": 2.9761904761904745,
+          "ft_pct": 12.5,
+          "turnovers": -3,
+          "offensive_rebounds": -4,
+          "assists": 10,
+          "fouls": -4
+        }
+      },
+      {
+        "attribute": "patience",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 109,
+          "fg_pct": 59.45945945945946,
+          "fg3_pct": 39.285714285714285,
+          "ft_pct": 95.0,
+          "turnovers": 11,
+          "offensive_rebounds": 15,
+          "assists": 24,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 92,
+          "fg_pct": 45.0,
+          "fg3_pct": 32.432432432432435,
+          "ft_pct": 77.77777777777779,
+          "turnovers": 10,
+          "offensive_rebounds": 7,
+          "assists": 22,
+          "fouls": 22
+        },
+        "differences": {
+          "points": 17,
+          "fg_pct": 14.45945945945946,
+          "fg3_pct": 6.85328185328185,
+          "ft_pct": 17.222222222222214,
+          "turnovers": 1,
+          "offensive_rebounds": 8,
+          "assists": 2,
+          "fouls": -3
+        }
+      },
+      {
+        "attribute": "patience",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 89,
+          "fg_pct": 50.66666666666667,
+          "fg3_pct": 41.66666666666667,
+          "ft_pct": 73.68421052631578,
+          "turnovers": 13,
+          "offensive_rebounds": 5,
+          "assists": 23,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 103,
+          "fg_pct": 54.666666666666664,
+          "fg3_pct": 34.375,
+          "ft_pct": 80.76923076923077,
+          "turnovers": 11,
+          "offensive_rebounds": 13,
+          "assists": 26,
+          "fouls": 21
+        },
+        "differences": {
+          "points": -14,
+          "fg_pct": -3.999999999999993,
+          "fg3_pct": 7.291666666666671,
+          "ft_pct": -7.085020242914993,
+          "turnovers": 2,
+          "offensive_rebounds": -8,
+          "assists": -3,
+          "fouls": -4
+        }
+      },
+      {
+        "attribute": "patience",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 111,
+          "fg_pct": 58.22784810126582,
+          "fg3_pct": 41.66666666666667,
+          "ft_pct": 95.45454545454545,
+          "turnovers": 10,
+          "offensive_rebounds": 10,
+          "assists": 23,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 110,
+          "fg_pct": 61.038961038961034,
+          "fg3_pct": 50.0,
+          "ft_pct": 83.87096774193549,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 21,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 1,
+          "fg_pct": -2.8111129376952135,
+          "fg3_pct": -8.333333333333329,
+          "ft_pct": 11.583577712609966,
+          "turnovers": -2,
+          "offensive_rebounds": -1,
+          "assists": 2,
+          "fouls": 5
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "hand_eye_coordination",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 4.2,
+      "fg_pct": 3.1654136899329557,
+      "fg3_pct": 3.9226115704424935,
+      "ft_pct": -7.766666666666666,
+      "turnovers": -0.6,
+      "offensive_rebounds": 0.0,
+      "assists": -0.4,
+      "fouls": -0.6
+    },
+    "individual_results": [
+      {
+        "attribute": "hand_eye_coordination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 108,
+          "fg_pct": 53.086419753086425,
+          "fg3_pct": 36.36363636363637,
+          "ft_pct": 84.0,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 20,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 90,
+          "fg_pct": 50.0,
+          "fg3_pct": 40.74074074074074,
+          "ft_pct": 85.71428571428571,
+          "turnovers": 14,
+          "offensive_rebounds": 13,
+          "assists": 21,
+          "fouls": 20
+        },
+        "differences": {
+          "points": 18,
+          "fg_pct": 3.0864197530864246,
+          "fg3_pct": -4.377104377104374,
+          "ft_pct": -1.7142857142857082,
+          "turnovers": -3,
+          "offensive_rebounds": -4,
+          "assists": -1,
+          "fouls": -2
+        }
+      },
+      {
+        "attribute": "hand_eye_coordination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 111,
+          "fg_pct": 63.013698630136986,
+          "fg3_pct": 57.14285714285714,
+          "ft_pct": 72.0,
+          "turnovers": 10,
+          "offensive_rebounds": 17,
+          "assists": 22,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 86,
+          "fg_pct": 45.0,
+          "fg3_pct": 25.0,
+          "ft_pct": 87.5,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 17,
+          "fouls": 22
+        },
+        "differences": {
+          "points": 25,
+          "fg_pct": 18.013698630136986,
+          "fg3_pct": 32.14285714285714,
+          "ft_pct": -15.5,
+          "turnovers": -1,
+          "offensive_rebounds": 5,
+          "assists": 5,
+          "fouls": -2
+        }
+      },
+      {
+        "attribute": "hand_eye_coordination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 103,
+          "fg_pct": 59.45945945945946,
+          "fg3_pct": 52.0,
+          "ft_pct": 76.0,
+          "turnovers": 13,
+          "offensive_rebounds": 12,
+          "assists": 18,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 101,
+          "fg_pct": 54.794520547945204,
+          "fg3_pct": 40.909090909090914,
+          "ft_pct": 90.47619047619048,
+          "turnovers": 14,
+          "offensive_rebounds": 10,
+          "assists": 18,
+          "fouls": 22
+        },
+        "differences": {
+          "points": 2,
+          "fg_pct": 4.664938911514255,
+          "fg3_pct": 11.090909090909086,
+          "ft_pct": -14.476190476190482,
+          "turnovers": -1,
+          "offensive_rebounds": 2,
+          "assists": 0,
+          "fouls": -6
+        }
+      },
+      {
+        "attribute": "hand_eye_coordination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 97,
+          "fg_pct": 49.36708860759494,
+          "fg3_pct": 37.5,
+          "ft_pct": 78.94736842105263,
+          "turnovers": 11,
+          "offensive_rebounds": 6,
+          "assists": 18,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 113,
+          "fg_pct": 56.25,
+          "fg3_pct": 48.275862068965516,
+          "ft_pct": 90.47619047619048,
+          "turnovers": 9,
+          "offensive_rebounds": 8,
+          "assists": 21,
+          "fouls": 16
+        },
+        "differences": {
+          "points": -16,
+          "fg_pct": -6.882911392405063,
+          "fg3_pct": -10.775862068965516,
+          "ft_pct": -11.528822055137852,
+          "turnovers": 2,
+          "offensive_rebounds": -2,
+          "assists": -3,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "hand_eye_coordination",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 105,
+          "fg_pct": 53.57142857142857,
+          "fg3_pct": 29.03225806451613,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 9,
+          "offensive_rebounds": 7,
+          "assists": 26,
+          "fouls": 25
+        },
+        "low_stats": {
+          "points": 113,
+          "fg_pct": 56.62650602409639,
+          "fg3_pct": 37.5,
+          "ft_pct": 78.94736842105263,
+          "turnovers": 9,
+          "offensive_rebounds": 8,
+          "assists": 29,
+          "fouls": 19
+        },
+        "differences": {
+          "points": -8,
+          "fg_pct": -3.055077452667824,
+          "fg3_pct": -8.467741935483868,
+          "ft_pct": 4.385964912280713,
+          "turnovers": 0,
+          "offensive_rebounds": -1,
+          "assists": -3,
+          "fouls": 6
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "throw_accuracy",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 15.2,
+      "fg_pct": 9.624441155911416,
+      "fg3_pct": 12.49192421847419,
+      "ft_pct": 6.369886914509342,
+      "turnovers": 1.0,
+      "offensive_rebounds": 1.8,
+      "assists": 2.2,
+      "fouls": -2.0
+    },
+    "individual_results": [
+      {
+        "attribute": "throw_accuracy",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 115,
+          "fg_pct": 61.33333333333333,
+          "fg3_pct": 55.00000000000001,
+          "ft_pct": 73.91304347826086,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 22,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 111,
+          "fg_pct": 55.84415584415584,
+          "fg3_pct": 50.0,
+          "ft_pct": 55.55555555555556,
+          "turnovers": 14,
+          "offensive_rebounds": 8,
+          "assists": 25,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 4,
+          "fg_pct": 5.489177489177486,
+          "fg3_pct": 5.000000000000007,
+          "ft_pct": 18.357487922705303,
+          "turnovers": -3,
+          "offensive_rebounds": 4,
+          "assists": -3,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "throw_accuracy",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 110,
+          "fg_pct": 60.49382716049383,
+          "fg3_pct": 41.66666666666667,
+          "ft_pct": 80.76923076923077,
+          "turnovers": 13,
+          "offensive_rebounds": 8,
+          "assists": 27,
+          "fouls": 13
+        },
+        "low_stats": {
+          "points": 87,
+          "fg_pct": 43.75,
+          "fg3_pct": 25.806451612903224,
+          "ft_pct": 57.14285714285714,
+          "turnovers": 11,
+          "offensive_rebounds": 9,
+          "assists": 20,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 23,
+          "fg_pct": 16.74382716049383,
+          "fg3_pct": 15.860215053763447,
+          "ft_pct": 23.626373626373635,
+          "turnovers": 2,
+          "offensive_rebounds": -1,
+          "assists": 7,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "throw_accuracy",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 103,
+          "fg_pct": 57.74647887323944,
+          "fg3_pct": 41.37931034482759,
+          "ft_pct": 71.42857142857143,
+          "turnovers": 17,
+          "offensive_rebounds": 20,
+          "assists": 24,
+          "fouls": 13
+        },
+        "low_stats": {
+          "points": 93,
+          "fg_pct": 53.84615384615385,
+          "fg3_pct": 21.052631578947366,
+          "ft_pct": 73.68421052631578,
+          "turnovers": 11,
+          "offensive_rebounds": 12,
+          "assists": 16,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 10,
+          "fg_pct": 3.900325027085593,
+          "fg3_pct": 20.32667876588022,
+          "ft_pct": -2.25563909774435,
+          "turnovers": 6,
+          "offensive_rebounds": 8,
+          "assists": 8,
+          "fouls": -4
+        }
+      },
+      {
+        "attribute": "throw_accuracy",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 113,
+          "fg_pct": 58.44155844155844,
+          "fg3_pct": 54.166666666666664,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 10,
+          "offensive_rebounds": 12,
+          "assists": 21,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 102,
+          "fg_pct": 53.16455696202531,
+          "fg3_pct": 37.5,
+          "ft_pct": 70.0,
+          "turnovers": 10,
+          "offensive_rebounds": 12,
+          "assists": 21,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 5.2770014795331335,
+          "fg3_pct": 16.666666666666664,
+          "ft_pct": 13.333333333333343,
+          "turnovers": 0,
+          "offensive_rebounds": 0,
+          "assists": 0,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "throw_accuracy",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 118,
+          "fg_pct": 60.75949367088608,
+          "fg3_pct": 44.0,
+          "ft_pct": 78.78787878787878,
+          "turnovers": 8,
+          "offensive_rebounds": 11,
+          "assists": 19,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 90,
+          "fg_pct": 44.047619047619044,
+          "fg3_pct": 39.39393939393939,
+          "ft_pct": 100.0,
+          "turnovers": 8,
+          "offensive_rebounds": 13,
+          "assists": 20,
+          "fouls": 15
+        },
+        "differences": {
+          "points": 28,
+          "fg_pct": 16.711874623267036,
+          "fg3_pct": 4.606060606060609,
+          "ft_pct": -21.212121212121218,
+          "turnovers": 0,
+          "offensive_rebounds": -2,
+          "assists": -1,
+          "fouls": 1
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "form_technique",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 13.8,
+      "fg_pct": 3.7616662981400895,
+      "fg3_pct": 3.445641168249621,
+      "ft_pct": -5.150643475254855,
+      "turnovers": -2.6,
+      "offensive_rebounds": -2.0,
+      "assists": 2.6,
+      "fouls": -0.6
+    },
+    "individual_results": [
+      {
+        "attribute": "form_technique",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 52.56410256410257,
+          "fg3_pct": 34.61538461538461,
+          "ft_pct": 68.0,
+          "turnovers": 13,
+          "offensive_rebounds": 6,
+          "assists": 21,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 102,
+          "fg_pct": 52.63157894736842,
+          "fg3_pct": 41.935483870967744,
+          "ft_pct": 80.0,
+          "turnovers": 13,
+          "offensive_rebounds": 12,
+          "assists": 22,
+          "fouls": 21
+        },
+        "differences": {
+          "points": -6,
+          "fg_pct": -0.06747638326584848,
+          "fg3_pct": -7.320099255583131,
+          "ft_pct": -12.0,
+          "turnovers": 0,
+          "offensive_rebounds": -6,
+          "assists": -1,
+          "fouls": -4
+        }
+      },
+      {
+        "attribute": "form_technique",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 97,
+          "fg_pct": 52.56410256410257,
+          "fg3_pct": 44.827586206896555,
+          "ft_pct": 85.71428571428571,
+          "turnovers": 11,
+          "offensive_rebounds": 11,
+          "assists": 24,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 95,
+          "fg_pct": 53.42465753424658,
+          "fg3_pct": 41.66666666666667,
+          "ft_pct": 86.66666666666667,
+          "turnovers": 13,
+          "offensive_rebounds": 14,
+          "assists": 27,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 2,
+          "fg_pct": -0.8605549701440083,
+          "fg3_pct": 3.1609195402298838,
+          "ft_pct": -0.9523809523809632,
+          "turnovers": -2,
+          "offensive_rebounds": -3,
+          "assists": -3,
+          "fouls": 4
+        }
+      },
+      {
+        "attribute": "form_technique",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 96,
+          "fg_pct": 45.78313253012048,
+          "fg3_pct": 27.586206896551722,
+          "ft_pct": 68.42105263157895,
+          "turnovers": 6,
+          "offensive_rebounds": 10,
+          "assists": 22,
+          "fouls": 12
+        },
+        "low_stats": {
+          "points": 93,
+          "fg_pct": 54.54545454545454,
+          "fg3_pct": 42.30769230769231,
+          "ft_pct": 58.333333333333336,
+          "turnovers": 15,
+          "offensive_rebounds": 10,
+          "assists": 16,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 3,
+          "fg_pct": -8.762322015334057,
+          "fg3_pct": -14.721485411140584,
+          "ft_pct": 10.08771929824561,
+          "turnovers": -9,
+          "offensive_rebounds": 0,
+          "assists": 6,
+          "fouls": -6
+        }
+      },
+      {
+        "attribute": "form_technique",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 109,
+          "fg_pct": 52.5,
+          "fg3_pct": 35.483870967741936,
+          "ft_pct": 65.21739130434783,
+          "turnovers": 14,
+          "offensive_rebounds": 5,
+          "assists": 21,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 85,
+          "fg_pct": 43.037974683544306,
+          "fg3_pct": 23.333333333333332,
+          "ft_pct": 86.95652173913044,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 16,
+          "fouls": 19
+        },
+        "differences": {
+          "points": 24,
+          "fg_pct": 9.462025316455694,
+          "fg3_pct": 12.150537634408604,
+          "ft_pct": -21.73913043478261,
+          "turnovers": 2,
+          "offensive_rebounds": -6,
+          "assists": 5,
+          "fouls": 0
+        }
+      },
+      {
+        "attribute": "form_technique",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 131,
+          "fg_pct": 67.08860759493672,
+          "fg3_pct": 53.125,
+          "ft_pct": 65.51724137931035,
+          "turnovers": 9,
+          "offensive_rebounds": 9,
+          "assists": 27,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 85,
+          "fg_pct": 48.05194805194805,
+          "fg3_pct": 29.166666666666668,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 13,
+          "offensive_rebounds": 4,
+          "assists": 21,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 46,
+          "fg_pct": 19.036659542988666,
+          "fg3_pct": 23.958333333333332,
+          "ft_pct": -1.1494252873563084,
+          "turnovers": -4,
+          "offensive_rebounds": 5,
+          "assists": 6,
+          "fouls": 3
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "finesse",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 28.4,
+      "fg_pct": 11.438445047168909,
+      "fg3_pct": 13.567309953923097,
+      "ft_pct": 9.094687712590527,
+      "turnovers": -2.2,
+      "offensive_rebounds": -2.4,
+      "assists": 7.4,
+      "fouls": 1.0
+    },
+    "individual_results": [
+      {
+        "attribute": "finesse",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 105,
+          "fg_pct": 54.666666666666664,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 82.14285714285714,
+          "turnovers": 16,
+          "offensive_rebounds": 6,
+          "assists": 19,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 94,
+          "fg_pct": 46.25,
+          "fg3_pct": 31.03448275862069,
+          "ft_pct": 75.0,
+          "turnovers": 13,
+          "offensive_rebounds": 10,
+          "assists": 16,
+          "fouls": 17
+        },
+        "differences": {
+          "points": 11,
+          "fg_pct": 8.416666666666664,
+          "fg3_pct": 11.822660098522164,
+          "ft_pct": 7.142857142857139,
+          "turnovers": 3,
+          "offensive_rebounds": -4,
+          "assists": 3,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "finesse",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 105,
+          "fg_pct": 53.75,
+          "fg3_pct": 38.70967741935484,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 10,
+          "offensive_rebounds": 10,
+          "assists": 28,
+          "fouls": 23
+        },
+        "low_stats": {
+          "points": 65,
+          "fg_pct": 37.142857142857146,
+          "fg3_pct": 21.428571428571427,
+          "ft_pct": 82.35294117647058,
+          "turnovers": 17,
+          "offensive_rebounds": 12,
+          "assists": 11,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 40,
+          "fg_pct": 16.607142857142854,
+          "fg3_pct": 17.281105990783413,
+          "ft_pct": 0.9803921568627629,
+          "turnovers": -7,
+          "offensive_rebounds": -2,
+          "assists": 17,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "finesse",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 121,
+          "fg_pct": 59.210526315789465,
+          "fg3_pct": 43.333333333333336,
+          "ft_pct": 74.07407407407408,
+          "turnovers": 10,
+          "offensive_rebounds": 16,
+          "assists": 20,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 83,
+          "fg_pct": 50.68493150684932,
+          "fg3_pct": 25.925925925925924,
+          "ft_pct": 72.0,
+          "turnovers": 12,
+          "offensive_rebounds": 16,
+          "assists": 15,
+          "fouls": 16
+        },
+        "differences": {
+          "points": 38,
+          "fg_pct": 8.525594808940149,
+          "fg3_pct": 17.407407407407412,
+          "ft_pct": 2.074074074074076,
+          "turnovers": -2,
+          "offensive_rebounds": 0,
+          "assists": 5,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "finesse",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 117,
+          "fg_pct": 59.25925925925925,
+          "fg3_pct": 34.78260869565217,
+          "ft_pct": 92.85714285714286,
+          "turnovers": 9,
+          "offensive_rebounds": 11,
+          "assists": 23,
+          "fouls": 19
+        },
+        "low_stats": {
+          "points": 84,
+          "fg_pct": 43.83561643835616,
+          "fg3_pct": 36.36363636363637,
+          "ft_pct": 56.00000000000001,
+          "turnovers": 12,
+          "offensive_rebounds": 12,
+          "assists": 14,
+          "fouls": 20
+        },
+        "differences": {
+          "points": 33,
+          "fg_pct": 15.42364282090309,
+          "fg3_pct": -1.5810276679841948,
+          "ft_pct": 36.857142857142854,
+          "turnovers": -3,
+          "offensive_rebounds": -1,
+          "assists": 9,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "finesse",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 109,
+          "fg_pct": 60.273972602739725,
+          "fg3_pct": 58.620689655172406,
+          "ft_pct": 63.63636363636363,
+          "turnovers": 14,
+          "offensive_rebounds": 12,
+          "assists": 24,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 89,
+          "fg_pct": 52.054794520547944,
+          "fg3_pct": 35.714285714285715,
+          "ft_pct": 65.21739130434783,
+          "turnovers": 16,
+          "offensive_rebounds": 17,
+          "assists": 21,
+          "fouls": 16
+        },
+        "differences": {
+          "points": 20,
+          "fg_pct": 8.219178082191782,
+          "fg3_pct": 22.90640394088669,
+          "ft_pct": -1.5810276679841948,
+          "turnovers": -2,
+          "offensive_rebounds": -5,
+          "assists": 3,
+          "fouls": 2
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "deception",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 8.0,
+      "fg_pct": -0.8483875492737368,
+      "fg3_pct": -0.6842373312961548,
+      "ft_pct": 1.7010212010212,
+      "turnovers": -3.8,
+      "offensive_rebounds": 1.2,
+      "assists": -2.4,
+      "fouls": 3.4
+    },
+    "individual_results": [
+      {
+        "attribute": "deception",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 112,
+          "fg_pct": 57.692307692307686,
+          "fg3_pct": 48.148148148148145,
+          "ft_pct": 80.76923076923077,
+          "turnovers": 6,
+          "offensive_rebounds": 12,
+          "assists": 28,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 106,
+          "fg_pct": 55.69620253164557,
+          "fg3_pct": 46.666666666666664,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 14,
+          "offensive_rebounds": 4,
+          "assists": 23,
+          "fouls": 18
+        },
+        "differences": {
+          "points": 6,
+          "fg_pct": 1.9961051606621183,
+          "fg3_pct": 1.481481481481481,
+          "ft_pct": 14.102564102564116,
+          "turnovers": -8,
+          "offensive_rebounds": 8,
+          "assists": 5,
+          "fouls": 3
+        }
+      },
+      {
+        "attribute": "deception",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 70,
+          "fg_pct": 38.35616438356164,
+          "fg3_pct": 28.57142857142857,
+          "ft_pct": 76.19047619047619,
+          "turnovers": 12,
+          "offensive_rebounds": 14,
+          "assists": 11,
+          "fouls": 23
+        },
+        "low_stats": {
+          "points": 97,
+          "fg_pct": 54.43037974683544,
+          "fg3_pct": 37.5,
+          "ft_pct": 86.36363636363636,
+          "turnovers": 10,
+          "offensive_rebounds": 10,
+          "assists": 23,
+          "fouls": 18
+        },
+        "differences": {
+          "points": -27,
+          "fg_pct": -16.0742153632738,
+          "fg3_pct": -8.92857142857143,
+          "ft_pct": -10.17316017316017,
+          "turnovers": 2,
+          "offensive_rebounds": 4,
+          "assists": -12,
+          "fouls": 5
+        }
+      },
+      {
+        "attribute": "deception",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 122,
+          "fg_pct": 60.256410256410255,
+          "fg3_pct": 45.83333333333333,
+          "ft_pct": 95.23809523809523,
+          "turnovers": 12,
+          "offensive_rebounds": 11,
+          "assists": 26,
+          "fouls": 18
+        },
+        "low_stats": {
+          "points": 85,
+          "fg_pct": 50.0,
+          "fg3_pct": 23.52941176470588,
+          "ft_pct": 88.88888888888889,
+          "turnovers": 13,
+          "offensive_rebounds": 16,
+          "assists": 23,
+          "fouls": 12
+        },
+        "differences": {
+          "points": 37,
+          "fg_pct": 10.256410256410255,
+          "fg3_pct": 22.303921568627448,
+          "ft_pct": 6.349206349206341,
+          "turnovers": -1,
+          "offensive_rebounds": -5,
+          "assists": 3,
+          "fouls": 6
+        }
+      },
+      {
+        "attribute": "deception",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 119,
+          "fg_pct": 58.333333333333336,
+          "fg3_pct": 39.39393939393939,
+          "ft_pct": 79.16666666666666,
+          "turnovers": 6,
+          "offensive_rebounds": 6,
+          "assists": 19,
+          "fouls": 17
+        },
+        "low_stats": {
+          "points": 103,
+          "fg_pct": 59.154929577464785,
+          "fg3_pct": 51.85185185185185,
+          "ft_pct": 65.38461538461539,
+          "turnovers": 16,
+          "offensive_rebounds": 11,
+          "assists": 22,
+          "fouls": 22
+        },
+        "differences": {
+          "points": 16,
+          "fg_pct": -0.8215962441314488,
+          "fg3_pct": -12.457912457912457,
+          "ft_pct": 13.78205128205127,
+          "turnovers": -10,
+          "offensive_rebounds": -5,
+          "assists": -3,
+          "fouls": -5
+        }
+      },
+      {
+        "attribute": "deception",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 116,
+          "fg_pct": 56.09756097560976,
+          "fg3_pct": 37.03703703703704,
+          "ft_pct": 73.33333333333333,
+          "turnovers": 9,
+          "offensive_rebounds": 11,
+          "assists": 20,
+          "fouls": 21
+        },
+        "low_stats": {
+          "points": 108,
+          "fg_pct": 55.69620253164557,
+          "fg3_pct": 42.857142857142854,
+          "ft_pct": 88.88888888888889,
+          "turnovers": 11,
+          "offensive_rebounds": 7,
+          "assists": 25,
+          "fouls": 13
+        },
+        "differences": {
+          "points": 8,
+          "fg_pct": 0.40135844396419174,
+          "fg3_pct": -5.820105820105816,
+          "ft_pct": -15.555555555555557,
+          "turnovers": -2,
+          "offensive_rebounds": 4,
+          "assists": -5,
+          "fouls": 8
+        }
+      }
+    ]
+  },
+  {
+    "attribute": "teamwork",
+    "games_tested": 5,
+    "average_differences": {
+      "points": 6.8,
+      "fg_pct": 1.5511189155073624,
+      "fg3_pct": 0.527514371335883,
+      "ft_pct": 4.7310008532918815,
+      "turnovers": 0.6,
+      "offensive_rebounds": -1.2,
+      "assists": 2.4,
+      "fouls": -0.4
+    },
+    "individual_results": [
+      {
+        "attribute": "teamwork",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 108,
+          "fg_pct": 57.333333333333336,
+          "fg3_pct": 50.0,
+          "ft_pct": 42.10526315789473,
+          "turnovers": 11,
+          "offensive_rebounds": 8,
+          "assists": 27,
+          "fouls": 13
+        },
+        "low_stats": {
+          "points": 106,
+          "fg_pct": 53.65853658536586,
+          "fg3_pct": 43.75,
+          "ft_pct": 75.75757575757575,
+          "turnovers": 7,
+          "offensive_rebounds": 8,
+          "assists": 23,
+          "fouls": 21
+        },
+        "differences": {
+          "points": 2,
+          "fg_pct": 3.674796747967477,
+          "fg3_pct": 6.25,
+          "ft_pct": -33.65231259968102,
+          "turnovers": 4,
+          "offensive_rebounds": 0,
+          "assists": 4,
+          "fouls": -8
+        }
+      },
+      {
+        "attribute": "teamwork",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 92,
+          "fg_pct": 46.666666666666664,
+          "fg3_pct": 37.83783783783784,
+          "ft_pct": 70.58823529411765,
+          "turnovers": 12,
+          "offensive_rebounds": 12,
+          "assists": 23,
+          "fouls": 13
+        },
+        "low_stats": {
+          "points": 96,
+          "fg_pct": 51.80722891566265,
+          "fg3_pct": 42.10526315789473,
+          "ft_pct": 79.16666666666666,
+          "turnovers": 7,
+          "offensive_rebounds": 10,
+          "assists": 22,
+          "fouls": 14
+        },
+        "differences": {
+          "points": -4,
+          "fg_pct": -5.140562248995984,
+          "fg3_pct": -4.267425320056894,
+          "ft_pct": -8.578431372549005,
+          "turnovers": 5,
+          "offensive_rebounds": 2,
+          "assists": 1,
+          "fouls": -1
+        }
+      },
+      {
+        "attribute": "teamwork",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 89,
+          "fg_pct": 46.05263157894737,
+          "fg3_pct": 30.303030303030305,
+          "ft_pct": 78.57142857142857,
+          "turnovers": 12,
+          "offensive_rebounds": 6,
+          "assists": 22,
+          "fouls": 16
+        },
+        "low_stats": {
+          "points": 98,
+          "fg_pct": 59.154929577464785,
+          "fg3_pct": 39.130434782608695,
+          "ft_pct": 66.66666666666666,
+          "turnovers": 17,
+          "offensive_rebounds": 16,
+          "assists": 22,
+          "fouls": 15
+        },
+        "differences": {
+          "points": -9,
+          "fg_pct": -13.102297998517415,
+          "fg3_pct": -8.82740447957839,
+          "ft_pct": 11.904761904761912,
+          "turnovers": -5,
+          "offensive_rebounds": -10,
+          "assists": 0,
+          "fouls": 1
+        }
+      },
+      {
+        "attribute": "teamwork",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 111,
+          "fg_pct": 60.256410256410255,
+          "fg3_pct": 47.61904761904761,
+          "ft_pct": 83.33333333333334,
+          "turnovers": 11,
+          "offensive_rebounds": 11,
+          "assists": 26,
+          "fouls": 15
+        },
+        "low_stats": {
+          "points": 79,
+          "fg_pct": 48.57142857142857,
+          "fg3_pct": 28.57142857142857,
+          "ft_pct": 55.55555555555556,
+          "turnovers": 13,
+          "offensive_rebounds": 15,
+          "assists": 18,
+          "fouls": 13
+        },
+        "differences": {
+          "points": 32,
+          "fg_pct": 11.684981684981686,
+          "fg3_pct": 19.047619047619044,
+          "ft_pct": 27.777777777777786,
+          "turnovers": -2,
+          "offensive_rebounds": -4,
+          "assists": 8,
+          "fouls": 2
+        }
+      },
+      {
+        "attribute": "teamwork",
+        "high_value": 90,
+        "low_value": 30,
+        "high_stats": {
+          "points": 98,
+          "fg_pct": 54.794520547945204,
+          "fg3_pct": 30.434782608695656,
+          "ft_pct": 90.9090909090909,
+          "turnovers": 12,
+          "offensive_rebounds": 13,
+          "assists": 21,
+          "fouls": 20
+        },
+        "low_stats": {
+          "points": 85,
+          "fg_pct": 44.15584415584416,
+          "fg3_pct": 40.0,
+          "ft_pct": 64.70588235294117,
+          "turnovers": 11,
+          "offensive_rebounds": 7,
+          "assists": 22,
+          "fouls": 16
+        },
+        "differences": {
+          "points": 13,
+          "fg_pct": 10.638676392101047,
+          "fg3_pct": -9.565217391304344,
+          "ft_pct": 26.203208556149733,
+          "turnovers": 1,
+          "offensive_rebounds": 6,
+          "assists": -1,
+          "fouls": 4
+        }
+      }
+    ]
+  }
+]

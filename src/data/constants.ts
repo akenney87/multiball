@@ -12,7 +12,7 @@
 // =============================================================================
 
 /**
- * All 25 player attributes (must match basketball-sim exactly)
+ * All 26 player attributes (must match types.ts exactly)
  */
 export const ALL_ATTRIBUTES = [
   // Physical (12)
@@ -29,7 +29,7 @@ export const ALL_ATTRIBUTES = [
   'height',
   'durability',
 
-  // Mental (7)
+  // Mental (8)
   'awareness',
   'creativity',
   'determination',
@@ -37,6 +37,7 @@ export const ALL_ATTRIBUTES = [
   'consistency',
   'composure',
   'patience',
+  'teamwork',
 
   // Technical (6)
   'hand_eye_coordination',
@@ -44,7 +45,7 @@ export const ALL_ATTRIBUTES = [
   'form_technique',
   'finesse',
   'deception',
-  'teamwork',
+  'footwork',
 ] as const;
 
 /** Physical attributes */
@@ -63,7 +64,7 @@ export const PHYSICAL_ATTRIBUTES = [
   'durability',
 ] as const;
 
-/** Mental attributes */
+/** Mental attributes (8) */
 export const MENTAL_ATTRIBUTES = [
   'awareness',
   'creativity',
@@ -72,20 +73,21 @@ export const MENTAL_ATTRIBUTES = [
   'consistency',
   'composure',
   'patience',
+  'teamwork',
 ] as const;
 
-/** Technical attributes */
+/** Technical attributes (6) */
 export const TECHNICAL_ATTRIBUTES = [
   'hand_eye_coordination',
   'throw_accuracy',
   'form_technique',
   'finesse',
   'deception',
-  'teamwork',
+  'footwork',
 ] as const;
 
 /** Total attribute count */
-export const ATTRIBUTE_COUNT = 25;
+export const ATTRIBUTE_COUNT = 26;
 
 /** Minimum attribute value */
 export const ATTRIBUTE_MIN = 1;
@@ -99,6 +101,26 @@ export const ATTRIBUTE_MAX = 100;
 
 /** Basketball positions */
 export const BASKETBALL_POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C'] as const;
+
+/** Baseball positions */
+export const BASEBALL_POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'] as const;
+
+/** Baseball position suitability weights for auto-assignment */
+export const BASEBALL_POSITION_WEIGHTS: Record<string, Record<string, number>> = {
+  'P': { arm_strength: 0.30, stamina: 0.25, throw_accuracy: 0.25, composure: 0.20 },
+  'C': { durability: 0.25, throw_accuracy: 0.25, reactions: 0.25, awareness: 0.25 },
+  '1B': { height: 0.30, hand_eye_coordination: 0.30, footwork: 0.20, reactions: 0.20 },
+  '2B': { agility: 0.30, reactions: 0.25, throw_accuracy: 0.25, awareness: 0.20 },
+  '3B': { reactions: 0.30, arm_strength: 0.30, bravery: 0.20, throw_accuracy: 0.20 },
+  'SS': { agility: 0.25, reactions: 0.25, throw_accuracy: 0.25, arm_strength: 0.25 },
+  'LF': { top_speed: 0.30, arm_strength: 0.25, awareness: 0.25, acceleration: 0.20 },
+  'CF': { top_speed: 0.35, acceleration: 0.25, awareness: 0.25, reactions: 0.15 },
+  'RF': { arm_strength: 0.35, top_speed: 0.25, awareness: 0.20, acceleration: 0.20 },
+  'DH': {}, // No fielding - batting only
+};
+
+/** Soccer positions */
+export const SOCCER_POSITIONS = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST'] as const;
 
 /** Minimum player age */
 export const PLAYER_AGE_MIN = 15;
@@ -123,7 +145,13 @@ export const PEAK_AGE_RANGES = {
 } as const;
 
 /** Starting roster size */
-export const STARTING_ROSTER_SIZE = 50;
+export const STARTING_ROSTER_SIZE = 35;
+
+/** Maximum pro roster size */
+export const MAX_ROSTER_SIZE = 50;
+
+/** Maximum academy roster size */
+export const MAX_ACADEMY_ROSTER_SIZE = 15;
 
 /** Starting player attribute range (poor quality) */
 export const STARTING_PLAYER_ATTRIBUTES = {
@@ -136,13 +164,25 @@ export const STARTING_PLAYER_ATTRIBUTES = {
 // =============================================================================
 
 /** Number of divisions */
-export const DIVISION_COUNT = 5;
+export const DIVISION_COUNT = 10;
 
 /** Teams per division */
 export const TEAMS_PER_DIVISION = 20;
 
+/** Total teams in the league (all divisions) */
+export const TOTAL_TEAMS = DIVISION_COUNT * TEAMS_PER_DIVISION; // 200 teams
+
+/** User's starting division (middle-ish, with room to go up or down) */
+export const USER_STARTING_DIVISION = 7;
+
 /** User's team ID */
 export const USER_TEAM_ID = 'user';
+
+/** AI teams to process per week (batch processing) */
+export const AI_TEAMS_PER_WEEK_BATCH = 25;
+
+/** Divisions that share player pool with user's division (adjacent + user's) */
+export const SHARED_POOL_RADIUS = 2; // e.g., if user in div 7, shares with 5-9
 
 /** Teams promoted per season */
 export const TEAMS_PROMOTED = 3;
@@ -154,8 +194,8 @@ export const TEAMS_RELEGATED = 3;
 // BUDGET CONSTANTS
 // =============================================================================
 
-/** Starting budget (Division 5) */
-export const STARTING_BUDGET = 1_000_000;
+/** Starting budget (Division 5) - $20M for normal difficulty */
+export const STARTING_BUDGET = 20_000_000;
 
 /** Minimum youth academy budget */
 export const YOUTH_ACADEMY_MIN_BUDGET = 100_000;
@@ -265,7 +305,14 @@ export const NEWS_TYPES = [
   'match',
   'youth',
   'general',
+  'award',        // Player of Week/Month/Year
+  'progression',  // Attribute changes
+  'stat_line',    // Notable performances (hat tricks, triple doubles, etc.)
+  'window',       // Transfer window events
 ] as const;
+
+/** Alert scopes for dashboard filtering */
+export const ALERT_SCOPES = ['team', 'division', 'global'] as const;
 
 /** News priorities */
 export const NEWS_PRIORITIES = ['critical', 'important', 'info'] as const;
@@ -356,11 +403,14 @@ export type PhysicalAttributeName = typeof PHYSICAL_ATTRIBUTES[number];
 export type MentalAttributeName = typeof MENTAL_ATTRIBUTES[number];
 export type TechnicalAttributeName = typeof TECHNICAL_ATTRIBUTES[number];
 export type BasketballPosition = typeof BASKETBALL_POSITIONS[number];
+export type BaseballPosition = typeof BASEBALL_POSITIONS[number];
+export type SoccerPosition = typeof SOCCER_POSITIONS[number];
 export type PaceSetting = typeof PACE_SETTINGS[number];
 export type ReboundingStrategy = typeof REBOUNDING_STRATEGIES[number];
 export type TimeoutStrategy = typeof TIMEOUT_STRATEGIES[number];
 export type InjuryType = typeof INJURY_TYPES[number];
 export type NewsType = typeof NEWS_TYPES[number];
 export type NewsPriority = typeof NEWS_PRIORITIES[number];
+export type AlertScope = typeof ALERT_SCOPES[number];
 export type Sport = typeof SPORTS[number];
 export type SeasonStatus = typeof SEASON_STATUSES[number];

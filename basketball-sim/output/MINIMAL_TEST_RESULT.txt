@@ -1,0 +1,68 @@
+================================================================================
+MINIMAL 3PT FORMULA TEST
+================================================================================
+
+Testing pure shooter vs defender signal with 10000 shots
+Formula: P = BASE_RATE + sigmoid(k × (shooter_comp - defender_comp))
+BASE_RATE: 0.33
+SIGMOID_K: 0.025
+
+Loading teams...
+Loaded 100 teams
+
+Total players: 1000
+
+Simulating 10000 shots...
+  1000/10000...
+  2000/10000...
+  3000/10000...
+  4000/10000...
+  5000/10000...
+  6000/10000...
+  7000/10000...
+  8000/10000...
+  9000/10000...
+  10000/10000...
+
+================================================================================
+RESULTS
+================================================================================
+
+Total shots: 10000
+Total makes: 3453
+Overall 3PT%: 34.5%
+
+**Pearson correlation (shooter_comp vs outcome): 0.077**
+
+================================================================================
+FG% BY SHOOTER COMPOSITE
+================================================================================
+
+Composite Range      Attempts      Makes        FG%
+--------------------------------------------------------------------------------
+30-40                      36         10      27.8%
+40-50                    1185        350      29.5%
+50-55                    2006        633      31.6%
+55-60                    2384        800      33.6%
+60-65                    2489        875      35.2%
+65-70                    1358        550      40.5%
+70-80                     542        235      43.4%
+80+                         0          0        N/A
+
+Spread (min to max bucket): 15.6 percentage points
+
+================================================================================
+INTERPRETATION
+================================================================================
+
+Traceback (most recent call last):
+  File "C:\Users\alexa\desktop\projects\simulator\test_minimal_correlation.py", line 277, in <module>
+    run_minimal_test(num_shots=10000)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\alexa\desktop\projects\simulator\test_minimal_correlation.py", line 240, in run_minimal_test
+    print(f"\u2717 VERY WEAK correlation ({correlation:.3f})")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2717' in position 0: character maps to <undefined>

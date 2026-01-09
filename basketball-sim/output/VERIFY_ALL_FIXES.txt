@@ -1,0 +1,30 @@
+Selected teams:
+  Team_001: Rating 62.0
+  Team_050: Rating 58.9
+  Rating differential: 3.1
+
+Simulating game...
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_001 19, Team_050 16
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_001 33, Team_050 34
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_001 57, Team_050 62
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_001 75, Team_050 78
+\nGame complete!
+Final Score: Team_001 75, Team_050 78
+Margin: 3 points
+
+Play-by-play saved to: output/SAMPLE_GAME_NEW_ATTRIBUTES.txt
+Box score saved to: output/SAMPLE_GAME_BOX_SCORE.json

@@ -5,30 +5,38 @@
  * Uses Connected screens that integrate with GameContext.
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef, useMemo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, StyleSheet, Modal, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors, layout, spacing } from '../theme';
 import type { TabParamList } from './types';
+import {
+  type BaseballGameStrategy,
+  DEFAULT_GAME_STRATEGY as DEFAULT_BASEBALL_STRATEGY,
+} from '../../simulation/baseball';
+
+// Tab Container Screens (new 2-tab structure)
+import { PlayTabScreen } from '../screens/PlayTabScreen';
+import { ManageTabScreen } from '../screens/ManageTabScreen';
 
 // Connected Screens (integrate with GameContext)
-import { ConnectedDashboardScreen } from '../screens/ConnectedDashboardScreen';
-import { ConnectedRosterScreen } from '../screens/ConnectedRosterScreen';
-import { ConnectedScheduleScreen } from '../screens/ConnectedScheduleScreen';
-import { ConnectedTransferMarketScreen } from '../screens/ConnectedTransferMarketScreen';
 import { ConnectedSettingsScreen } from '../screens/ConnectedSettingsScreen';
 import { ConnectedPlayerDetailScreen } from '../screens/ConnectedPlayerDetailScreen';
 import { ConnectedMatchResultScreen } from '../screens/ConnectedMatchResultScreen';
 import { ConnectedScoutingScreen } from '../screens/ConnectedScoutingScreen';
 import { ConnectedYouthAcademyScreen } from '../screens/ConnectedYouthAcademyScreen';
-import { ConnectedStandingsScreen } from '../screens/ConnectedStandingsScreen';
-import { ConnectedStatsScreen } from '../screens/ConnectedStatsScreen';
 import { ConnectedMatchPreviewScreen } from '../screens/ConnectedMatchPreviewScreen';
 import { ConnectedBudgetScreen } from '../screens/ConnectedBudgetScreen';
 import { ConnectedContractNegotiationScreen } from '../screens/ConnectedContractNegotiationScreen';
+import { ConnectedLineupEditorScreen } from '../screens/ConnectedLineupEditorScreen';
+import { MatchSimulationScreen } from '../screens/MatchSimulationScreen';
+import { ThemePreviewScreen } from '../screens/ThemePreviewScreen';
 import { PlayerSearchModal } from '../components/search';
+import { BudgetAllocationModal } from '../components/budget';
+import { HeaderGear } from '../components/common';
 import { useGame } from '../context/GameContext';
+import type { OperationsBudget } from '../context/types';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -37,12 +45,50 @@ const TabIcon = ({ label, color }: { label: string; focused?: boolean; color: st
   <Text style={[styles.icon, { color }]}>{label}</Text>
 );
 
+// Basketball strategy type matching ConnectedMatchPreviewScreen
+type BasketballPace = 'standard' | 'fast' | 'slow';
+type BasketballDefense = 'man' | 'zone' | 'mixed';
+type BasketballRebounding = 'crash_glass' | 'standard' | 'prevent_transition';
+
+interface BasketballStrategy {
+  pace: BasketballPace;
+  defense: BasketballDefense;
+  rebounding: BasketballRebounding;
+  scoringOptions: string[];
+}
+
+// Convert global TacticalSettings to local BasketballStrategy
+function tacticsToBasketballStrategy(tactics: {
+  pace: 'fast' | 'standard' | 'slow';
+  manDefensePct: number;
+  scoringOptions: [string?, string?, string?];
+  reboundingStrategy: 'crash_glass' | 'standard' | 'prevent_transition';
+}): BasketballStrategy {
+  // Map manDefensePct to defense type
+  let defense: BasketballDefense = 'mixed';
+  if (tactics.manDefensePct >= 80) defense = 'man';
+  else if (tactics.manDefensePct <= 20) defense = 'zone';
+
+  return {
+    pace: tactics.pace,
+    defense,
+    rebounding: tactics.reboundingStrategy,
+    scoringOptions: tactics.scoringOptions.filter((id): id is string => id !== undefined),
+  };
+}
+
 export function TabNavigator() {
   const colors = useColors();
-  const { state } = useGame();
+  const { state, addScoutingTarget, setOperationsBudget, confirmBudgetAllocation, setTactics, setBaseballStrategy } = useGame();
 
   // Modal state for player detail
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  // Track where player detail was opened from so we can return there
+  const [playerDetailReturnTo, setPlayerDetailReturnTo] = useState<{
+    type: 'matchPreview' | 'matchResult' | 'lineupEditor' | 'scouting' | 'search' | null;
+    matchId?: string;
+    sport?: 'basketball' | 'baseball' | 'soccer';
+  }>({ type: null });
 
   // Modal state for match
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
@@ -59,8 +105,7 @@ export function TabNavigator() {
   // Modal state for youth academy
   const [showYouthAcademy, setShowYouthAcademy] = useState(false);
 
-  // Modal state for standings
-  const [showStandings, setShowStandings] = useState(false);
+  // Standings modal removed - now embedded in PlayTabScreen
 
   // Modal state for budget
   const [showBudget, setShowBudget] = useState(false);
@@ -71,9 +116,87 @@ export function TabNavigator() {
   // Modal state for contract negotiation
   const [showNegotiation, setShowNegotiation] = useState(false);
 
+  // Modal state for lineup editor
+  const [showLineupEditor, setShowLineupEditor] = useState(false);
+  const [lineupEditorSport, setLineupEditorSport] = useState<'basketball' | 'baseball' | 'soccer'>('basketball');
+  const pendingMatchIdRef = useRef<string | null>(null);
+
+  // Modal state for live match simulation
+  const [showMatchSimulation, setShowMatchSimulation] = useState(false);
+  const [simulatingMatchId, setSimulatingMatchId] = useState<string | null>(null);
+
+  // Modal state for theme preview
+  const [showThemePreview, setShowThemePreview] = useState(false);
+
+  // Modal state for settings (gear icon)
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Baseball strategy - derived from global state for persistence
+  const baseballStrategy = state.userTeam.baseballStrategy || DEFAULT_BASEBALL_STRATEGY;
+
+  // Soccer strategy type (matching ConnectedMatchPreviewScreen)
+  type SoccerAttackingStyle = 'possession' | 'direct' | 'counter';
+  type SoccerPressing = 'high' | 'balanced' | 'low';
+  type SoccerWidth = 'wide' | 'balanced' | 'tight';
+  interface SoccerStrategy {
+    attackingStyle: SoccerAttackingStyle;
+    pressing: SoccerPressing;
+    width: SoccerWidth;
+  }
+
+  // Soccer strategy - derived from global state for persistence (like basketball)
+  const soccerStrategy: SoccerStrategy = useMemo(() => ({
+    attackingStyle: state.userTeam.tactics.soccerAttackingStyle || 'direct',
+    pressing: state.userTeam.tactics.soccerPressing || 'balanced',
+    width: state.userTeam.tactics.soccerWidth || 'balanced',
+  }), [state.userTeam.tactics.soccerAttackingStyle, state.userTeam.tactics.soccerPressing, state.userTeam.tactics.soccerWidth]);
+
+  // Update global tactics when soccer strategy changes
+  const handleSoccerStrategyChange = useCallback((strategy: SoccerStrategy) => {
+    setTactics({
+      ...state.userTeam.tactics,
+      soccerAttackingStyle: strategy.attackingStyle,
+      soccerPressing: strategy.pressing,
+      soccerWidth: strategy.width,
+    });
+  }, [state.userTeam.tactics, setTactics]);
+
+  // Basketball strategy - derived from global state for persistence
+  const basketballStrategy = tacticsToBasketballStrategy(state.userTeam.tactics);
+
+  // Update global tactics when basketball strategy changes
+  const handleBasketballStrategyChange = useCallback((strategy: BasketballStrategy) => {
+    // Map defense type back to manDefensePct
+    let manDefensePct = 70; // mixed
+    if (strategy.defense === 'man') manDefensePct = 100;
+    else if (strategy.defense === 'zone') manDefensePct = 0;
+
+    // Build scoring options tuple
+    const scoringOptions: [string?, string?, string?] = [
+      strategy.scoringOptions[0],
+      strategy.scoringOptions[1],
+      strategy.scoringOptions[2],
+    ];
+
+    setTactics({
+      ...state.userTeam.tactics,
+      pace: strategy.pace,
+      manDefensePct,
+      reboundingStrategy: strategy.rebounding,
+      scoringOptions,
+    });
+  }, [state.userTeam.tactics, setTactics]);
+
   // Handler for navigating to match preview
   const handleNavigateToMatch = useCallback((matchId: string) => {
     setSelectedMatchId(matchId);
+  }, []);
+
+  // Handler for starting live match simulation (Watch Match button)
+  const handleStartMatch = useCallback((matchId: string) => {
+    setSelectedMatchId(null); // Close the preview modal
+    setSimulatingMatchId(matchId);
+    setShowMatchSimulation(true);
   }, []);
 
   // Handler for player press
@@ -96,10 +219,7 @@ export function TabNavigator() {
     setShowYouthAcademy(true);
   }, []);
 
-  // Handler for standings navigation
-  const handleNavigateToStandings = useCallback(() => {
-    setShowStandings(true);
-  }, []);
+  // Standings navigation removed - now handled by PlayTabScreen internally
 
   // Handler for budget navigation
   const handleNavigateToBudget = useCallback(() => {
@@ -122,6 +242,51 @@ export function TabNavigator() {
     }, 100);
   }, []);
 
+  // Handler for lineup editor navigation
+  const handleEditLineup = useCallback((sport: 'basketball' | 'baseball' | 'soccer') => {
+    setLineupEditorSport(sport);
+    setShowLineupEditor(true);
+  }, []);
+
+  // Theme preview navigation is now inlined in Settings modal
+
+  // Handler for settings navigation (from gear icon)
+  const handleOpenSettings = useCallback(() => {
+    setShowSettings(true);
+  }, []);
+
+  // Handler for closing player detail and returning to previous screen
+  const handleClosePlayerDetail = useCallback(() => {
+    const returnTo = playerDetailReturnTo;
+    setSelectedPlayerId(null);
+    setPlayerDetailReturnTo({ type: null });
+
+    // Reopen the previous modal after a short delay
+    setTimeout(() => {
+      switch (returnTo.type) {
+        case 'matchPreview':
+        case 'matchResult':
+          if (returnTo.matchId) {
+            setSelectedMatchId(returnTo.matchId);
+          }
+          break;
+        case 'lineupEditor':
+          if (returnTo.sport) {
+            setLineupEditorSport(returnTo.sport);
+          }
+          setShowLineupEditor(true);
+          break;
+        case 'scouting':
+          setShowScouting(true);
+          break;
+        case 'search':
+          setShowSearch(true);
+          break;
+        // null or unhandled - just close, don't reopen anything
+      }
+    }, 150);
+  }, [playerDetailReturnTo]);
+
   // Get all players and teams for search
   const allPlayers = state.initialized && state.players ? Object.values(state.players) : [];
   const allTeams = state.initialized && state.league?.teams
@@ -142,76 +307,56 @@ export function TabNavigator() {
           paddingTop: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '500',
+          fontSize: 12,
+          fontWeight: '600',
+          letterSpacing: 0.5,
         },
         headerStyle: {
           backgroundColor: colors.card,
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
-          fontWeight: '600',
+          fontWeight: '700',
+          fontSize: 18,
         },
+        headerRight: () => <HeaderGear onPress={handleOpenSettings} />,
       }}
     >
       <Tab.Screen
-        name="HomeTab"
+        name="PlayTab"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ focused, color }) => <TabIcon label="H" focused={focused} color={color} />,
-          headerTitle: 'Dashboard',
+          title: 'Play',
+          tabBarIcon: ({ color }) => <TabIcon label="▶" color={color} />,
+          headerTitle: 'Multiball',
         }}
       >
-        {() => <ConnectedDashboardScreen onNavigateToMatch={handleNavigateToMatch} onNavigateToScouting={handleNavigateToScouting} onNavigateToYouthAcademy={handleNavigateToYouthAcademy} onNavigateToStandings={handleNavigateToStandings} onNavigateToBudget={handleNavigateToBudget} onNavigateToSearch={handleNavigateToSearch} />}
+        {() => (
+          <PlayTabScreen
+            onNavigateToMatch={handleNavigateToMatch}
+            onNavigateToBudget={handleNavigateToBudget}
+            onNavigateToSearch={handleNavigateToSearch}
+            onNavigateToScouting={handleNavigateToScouting}
+            onNavigateToYouthAcademy={handleNavigateToYouthAcademy}
+            onMatchPress={handleMatchPress}
+            onPlayerPress={handlePlayerPress}
+          />
+        )}
       </Tab.Screen>
       <Tab.Screen
-        name="RosterTab"
+        name="ManageTab"
         options={{
-          title: 'Roster',
-          tabBarIcon: ({ focused, color }) => <TabIcon label="R" focused={focused} color={color} />,
-          headerTitle: 'Team Roster',
+          title: 'Manage',
+          tabBarIcon: ({ color }) => <TabIcon label="📋" color={color} />,
+          headerTitle: 'Multiball',
         }}
       >
-        {() => <ConnectedRosterScreen onPlayerPress={handlePlayerPress} />}
+        {() => (
+          <ManageTabScreen
+            onPlayerPress={handlePlayerPress}
+            onNavigateToBudget={handleNavigateToBudget}
+          />
+        )}
       </Tab.Screen>
-      <Tab.Screen
-        name="SeasonTab"
-        options={{
-          title: 'Season',
-          tabBarIcon: ({ focused, color }) => <TabIcon label="S" focused={focused} color={color} />,
-          headerTitle: 'Schedule',
-        }}
-      >
-        {() => <ConnectedScheduleScreen onMatchPress={handleMatchPress} />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="StatsTab"
-        options={{
-          title: 'Stats',
-          tabBarIcon: ({ focused, color }) => <TabIcon label="T" focused={focused} color={color} />,
-          headerTitle: 'League Stats',
-        }}
-      >
-        {() => <ConnectedStatsScreen onPlayerPress={handlePlayerPress} />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="MarketTab"
-        component={ConnectedTransferMarketScreen}
-        options={{
-          title: 'Market',
-          tabBarIcon: ({ focused, color }) => <TabIcon label="M" focused={focused} color={color} />,
-          headerTitle: 'Transfer Market',
-        }}
-      />
-      <Tab.Screen
-        name="SettingsTab"
-        component={ConnectedSettingsScreen}
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({ focused, color }) => <TabIcon label="G" focused={focused} color={color} />,
-          headerTitle: 'Settings',
-        }}
-      />
     </Tab.Navigator>
 
     {/* Match Modal - Shows Preview for scheduled, Result for completed */}
@@ -236,7 +381,9 @@ export function TabNavigator() {
             matchId={selectedMatchId}
             onContinue={() => setSelectedMatchId(null)}
             onPlayerPress={(playerId) => {
+              const matchId = selectedMatchId;
               setSelectedMatchId(null);
+              setPlayerDetailReturnTo({ type: 'matchResult', matchId });
               setSelectedPlayerId(playerId);
             }}
           />
@@ -244,12 +391,40 @@ export function TabNavigator() {
           <ConnectedMatchPreviewScreen
             matchId={selectedMatchId}
             onBack={() => setSelectedMatchId(null)}
+            onStartMatch={handleStartMatch}
             onQuickSimComplete={() => {
               // After quick sim, the match is completed - stay on modal to show result
               // Force re-render by setting match ID again
               const matchId = selectedMatchId;
               setSelectedMatchId(null);
               setTimeout(() => setSelectedMatchId(matchId), 50);
+              // Reset baseball strategy to defaults after sim completes
+              // (Soccer strategy persists in global state and should NOT be reset)
+              setBaseballStrategy(DEFAULT_BASEBALL_STRATEGY);
+            }}
+            onEditLineup={() => {
+              const match = state.season.matches.find((m) => m.id === selectedMatchId);
+              if (match) {
+                // Close match preview first to avoid nested modal issues
+                pendingMatchIdRef.current = selectedMatchId;
+                setSelectedMatchId(null);
+                // Small delay to let modal close, then open lineup editor
+                setTimeout(() => {
+                  handleEditLineup(match.sport);
+                }, 150);
+              }
+            }}
+            baseballStrategy={baseballStrategy}
+            onBaseballStrategyChange={setBaseballStrategy}
+            basketballStrategy={basketballStrategy}
+            onBasketballStrategyChange={handleBasketballStrategyChange}
+            soccerStrategy={soccerStrategy}
+            onSoccerStrategyChange={handleSoccerStrategyChange}
+            onPlayerPress={(playerId) => {
+              const matchId = selectedMatchId;
+              setSelectedMatchId(null);
+              setPlayerDetailReturnTo({ type: 'matchPreview', matchId: matchId || undefined });
+              setSelectedPlayerId(playerId);
             }}
           />
         ) : null}
@@ -275,6 +450,7 @@ export function TabNavigator() {
           onBack={() => setShowScouting(false)}
           onPlayerPress={(playerId) => {
             setShowScouting(false);
+            setPlayerDetailReturnTo({ type: 'scouting' });
             setSelectedPlayerId(playerId);
           }}
         />
@@ -300,24 +476,7 @@ export function TabNavigator() {
       </SafeAreaView>
     </Modal>
 
-    {/* Standings Modal */}
-    <Modal
-      visible={showStandings}
-      animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={() => setShowStandings(false)}
-    >
-      <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-        <View style={[styles.modalHeader, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
-          <TouchableOpacity onPress={() => setShowStandings(false)} style={styles.closeButton}>
-            <Text style={[styles.closeText, { color: colors.primary }]}>Close</Text>
-          </TouchableOpacity>
-          <Text style={[styles.modalTitle, { color: colors.text }]}>Standings</Text>
-          <View style={styles.closeButton} />
-        </View>
-        <ConnectedStandingsScreen onPlayerPress={handlePlayerPress} />
-      </SafeAreaView>
-    </Modal>
+    {/* Standings Modal removed - now embedded in PlayTabScreen */}
 
     {/* Budget Modal */}
     <Modal
@@ -360,6 +519,70 @@ export function TabNavigator() {
       </SafeAreaView>
     </Modal>
 
+    {/* Lineup Editor Modal */}
+    <Modal
+      visible={showLineupEditor}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={() => {
+        setShowLineupEditor(false);
+        // Reopen match preview after closing lineup editor
+        if (pendingMatchIdRef.current) {
+          const matchId = pendingMatchIdRef.current;
+          pendingMatchIdRef.current = null;
+          setTimeout(() => setSelectedMatchId(matchId), 150);
+        }
+      }}
+    >
+      <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+        <View style={[styles.modalHeader, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowLineupEditor(false);
+              // Reopen match preview after closing lineup editor
+              if (pendingMatchIdRef.current) {
+                const matchId = pendingMatchIdRef.current;
+                pendingMatchIdRef.current = null;
+                setTimeout(() => setSelectedMatchId(matchId), 150);
+              }
+            }}
+            style={styles.closeButton}
+          >
+            <Text style={[styles.closeText, { color: colors.primary }]}>Close</Text>
+          </TouchableOpacity>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>Edit Lineup</Text>
+          <View style={styles.closeButton} />
+        </View>
+        <ConnectedLineupEditorScreen
+          sport={lineupEditorSport}
+          onSave={() => {
+            setShowLineupEditor(false);
+            // Reopen match preview after saving
+            if (pendingMatchIdRef.current) {
+              const matchId = pendingMatchIdRef.current;
+              pendingMatchIdRef.current = null;
+              setTimeout(() => setSelectedMatchId(matchId), 150);
+            }
+          }}
+          onCancel={() => {
+            setShowLineupEditor(false);
+            // Reopen match preview after canceling
+            if (pendingMatchIdRef.current) {
+              const matchId = pendingMatchIdRef.current;
+              pendingMatchIdRef.current = null;
+              setTimeout(() => setSelectedMatchId(matchId), 150);
+            }
+          }}
+          onPlayerPress={(playerId) => {
+            const sport = lineupEditorSport;
+            setShowLineupEditor(false);
+            setPlayerDetailReturnTo({ type: 'lineupEditor', sport });
+            setSelectedPlayerId(playerId);
+          }}
+        />
+      </SafeAreaView>
+    </Modal>
+
     {/* Player Search Modal - rendered before Player Detail so detail appears on top */}
     <PlayerSearchModal
       visible={showSearch}
@@ -368,16 +591,21 @@ export function TabNavigator() {
         // Close search modal first, then open player detail
         // This avoids nested modal issues on some platforms
         setShowSearch(false);
+        setPlayerDetailReturnTo({ type: 'search' });
         // Small delay to allow search modal to close first
         setTimeout(() => {
           setSelectedPlayerId(playerId);
         }, 100);
+      }}
+      onScoutPlayer={(playerId) => {
+        addScoutingTarget(playerId);
       }}
       players={allPlayers}
       teams={allTeams}
       userTeamId="user"
       scoutingReports={state.scoutingReports || []}
       scoutedPlayerIds={state.scoutedPlayerIds || []}
+      scoutingTargetIds={state.scoutingTargetIds || []}
     />
 
     {/* Player Detail Modal - rendered last to appear on top of everything */}
@@ -385,11 +613,11 @@ export function TabNavigator() {
       visible={selectedPlayerId !== null}
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={() => setSelectedPlayerId(null)}
+      onRequestClose={handleClosePlayerDetail}
     >
       <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
         <View style={[styles.modalHeader, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
-          <TouchableOpacity onPress={() => setSelectedPlayerId(null)} style={styles.closeButton}>
+          <TouchableOpacity onPress={handleClosePlayerDetail} style={styles.closeButton}>
             <Text style={[styles.closeText, { color: colors.primary }]}>Close</Text>
           </TouchableOpacity>
           <Text style={[styles.modalTitle, { color: colors.text }]}>Player Details</Text>
@@ -398,11 +626,110 @@ export function TabNavigator() {
         {selectedPlayerId && (
           <ConnectedPlayerDetailScreen
             playerId={selectedPlayerId}
-            onBack={() => setSelectedPlayerId(null)}
-            onRelease={() => setSelectedPlayerId(null)}
+            onBack={handleClosePlayerDetail}
+            onRelease={handleClosePlayerDetail}
             onNavigateToNegotiation={handleNavigateToNegotiation}
           />
         )}
+      </SafeAreaView>
+    </Modal>
+
+    {/* Match Simulation Modal */}
+    <Modal
+      visible={showMatchSimulation}
+      animationType="slide"
+      presentationStyle="fullScreen"
+      onRequestClose={() => {
+        setShowMatchSimulation(false);
+        setSimulatingMatchId(null);
+      }}
+    >
+      <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+        <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowMatchSimulation(false);
+              setSimulatingMatchId(null);
+            }}
+            style={styles.closeButton}
+          >
+            <Text style={{ color: colors.primary, fontSize: 16 }}>Close</Text>
+          </TouchableOpacity>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>Live Match</Text>
+          <View style={styles.closeButton} />
+        </View>
+        {simulatingMatchId && (
+          <MatchSimulationScreen
+            matchId={simulatingMatchId}
+            onBack={() => {
+              setShowMatchSimulation(false);
+              setSimulatingMatchId(null);
+            }}
+            onComplete={() => {
+              setShowMatchSimulation(false);
+              // Show the match result
+              setSelectedMatchId(simulatingMatchId);
+              setSimulatingMatchId(null);
+              // Soccer strategy persists in global state - no reset needed
+            }}
+            soccerStrategy={soccerStrategy}
+          />
+        )}
+      </SafeAreaView>
+    </Modal>
+
+    {/* Budget Allocation Modal - Required at game start before scouting/simming */}
+    <BudgetAllocationModal
+      visible={state.initialized && !state.budgetConfigured}
+      totalBudget={state.userTeam.totalBudget}
+      salaryCommitment={state.userTeam.salaryCommitment}
+      initialAllocation={state.userTeam.operationsBudget}
+      onConfirm={(allocation: OperationsBudget) => {
+        setOperationsBudget(allocation);
+        confirmBudgetAllocation();
+      }}
+    />
+
+    {/* Theme Preview Modal */}
+    <Modal
+      visible={showThemePreview}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={() => setShowThemePreview(false)}
+    >
+      <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+        <View style={[styles.modalHeader, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+          <TouchableOpacity onPress={() => setShowThemePreview(false)} style={styles.closeButton}>
+            <Text style={[styles.closeText, { color: colors.primary }]}>Close</Text>
+          </TouchableOpacity>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>Theme Preview</Text>
+          <View style={styles.closeButton} />
+        </View>
+        <ThemePreviewScreen />
+      </SafeAreaView>
+    </Modal>
+
+    {/* Settings Modal (opened via gear icon) */}
+    <Modal
+      visible={showSettings}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={() => setShowSettings(false)}
+    >
+      <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+        <View style={[styles.modalHeader, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+          <TouchableOpacity onPress={() => setShowSettings(false)} style={styles.closeButton}>
+            <Text style={[styles.closeText, { color: colors.primary }]}>Close</Text>
+          </TouchableOpacity>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>Settings</Text>
+          <View style={styles.closeButton} />
+        </View>
+        <ConnectedSettingsScreen
+          onPreviewThemes={() => {
+            setShowSettings(false);
+            setTimeout(() => setShowThemePreview(true), 150);
+          }}
+        />
       </SafeAreaView>
     </Modal>
     </>

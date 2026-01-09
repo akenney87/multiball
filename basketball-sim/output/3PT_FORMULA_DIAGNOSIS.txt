@@ -1,0 +1,132 @@
+================================================================================
+3PT SHOOTING FORMULA DIAGNOSTIC
+================================================================================
+
+Loading teams...
+Loaded 200 players from 20 teams
+
+3PT Shooting Composites:
+  Min: 41.9
+  Max: 76.2
+  Mean: 58.8
+  StdDev: 7.2
+  Range: 34.4
+
+Contest Defense Composites:
+  Min: 40.3
+  Max: 76.2
+  Mean: 58.7
+  StdDev: 6.3
+
+================================================================================
+FORMULA BEHAVIOR ANALYSIS
+================================================================================
+
+Scenarios (BASE_RATE_3PT = 0.33, k = 0.015):
+Scenario                        ShooterComp  DefenderComp   Diff  BaseSuccess%
+--------------------------------------------------------------------------------
+Elite shooter vs poor defense          65.0          45.0   20.0         43.0%
+Elite shooter vs elite defense         65.0          65.0    0.0         33.0%
+Average vs average                     58.0          58.0    0.0         33.0%
+Poor shooter vs elite defense          50.0          65.0  -15.0         29.3%
+Best possible (65 vs 45)               65.0          45.0   20.0         43.0%
+Worst possible (50 vs 65)              50.0          65.0  -15.0         29.3%
+
+================================================================================
+CONTEST PENALTY IMPACT
+================================================================================
+
+Contest penalties (estimated from code):
+  Wide Open (6+ ft): 0%
+  Contested (2-6 ft): ~-8%
+  Heavily Contested (<2 ft): ~-15%
+
+Scenario                          Base%  Contested      Heavy
+--------------------------------------------------------------------------------
+Elite shooter vs poor defense     43.0%      35.0%      28.0%
+Elite shooter vs elite defense    33.0%      25.0%      18.0%
+Average vs average                33.0%      25.0%      18.0%
+Poor shooter vs elite defense     29.3%      21.3%      14.3%
+Best possible (65 vs 45)          43.0%      35.0%      28.0%
+Worst possible (50 vs 65)         29.3%      21.3%      14.3%
+
+================================================================================
+THEORETICAL CORRELATION
+================================================================================
+
+Average Base Success % by Shooter Composite:
+ Composite   Count   Avg Success%
+----------------------------------------
+        43     100          29.3%
+        46     100          30.1%
+        47     500          30.3%
+        48     500          30.6%
+        50     200          31.2%
+        51     300          31.4%
+        52     200          31.6%
+        53     900          31.9%
+        54     400          32.3%
+        55     500          32.6%
+        56     400          32.9%
+        57     500          33.2%
+        58     600          33.7%
+        59     100          33.9%
+        60     600          34.3%
+        61     500          34.8%
+        62     400          35.3%
+        63     900          35.6%
+        64     300          36.0%
+        65     400          36.4%
+        66     300          37.0%
+        67     200          37.5%
+        69     300          38.4%
+        70     400          38.9%
+        71     100          39.4%
+        72     200          39.8%
+        76     100          41.7%
+
+================================================================================
+ROOT CAUSE ANALYSIS
+================================================================================
+
+Issue #1: Narrow Composite Range
+  3PT composite range: 34.4 points (min 41.9 to max 76.2)
+  Problem: Only 15 points separates best from worst shooter!
+
+Issue #2: Shallow Sigmoid Steepness
+  k = 0.015
+  Max diff: 34.4
+  Sigmoid impact: 0.126
+  Problem: k=0.015 is too shallow for a 34.4 point range
+
+Issue #3: Contest Penalty Dominates
+  Base success variance from attributes: ~24.9%
+  Contest penalty range: 0% to -15%
+  Problem: Random contest distances (-8% avg) swamp attribute differences (24.9%)
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+Option 1: Increase sigmoid steepness
+  Change k from 0.015 to 0.03-0.04
+  Effect: Doubles attribute impact
+  Risk: May increase blowout rate
+
+Option 2: Widen composite range
+  Regenerate teams with more attribute variance
+  Effect: Creates clearer shooter skill tiers
+  Risk: Requires regenerating all 100 teams
+
+Option 3: Reduce base rate, increase attribute impact
+  Lower BASE_RATE_3PT from 0.33 to 0.25
+  Increase k from 0.015 to 0.025
+  Effect: Attributes matter more, base rate matters less
+  Risk: Need to rebalance everything
+
+Option 4: Reduce contest penalty magnitude
+  Reduce contest penalties from -8%/-15% to -5%/-10%
+  Effect: Attributes have more relative impact
+  Risk: May break overall shooting percentages
+
+Diagnostic complete. Report saved to: output\3PT_FORMULA_DIAGNOSIS.txt

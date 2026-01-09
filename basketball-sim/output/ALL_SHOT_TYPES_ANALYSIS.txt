@@ -1,0 +1,92 @@
+================================================================================
+CONTEST PENALTY ANALYSIS - ALL SHOT TYPES
+================================================================================
+
+## Current State After Option A
+
+Shot Type          Contested    Heavy      Defender Modifier
+----------------------------------------------------------------
+3PT (UPDATED)      -0.048       -0.09      ±2.5% (0.0005)  ✓
+Midrange Short     -0.08        -0.15      ±2.5% (0.0005)  ✗
+Midrange Long      -0.08        -0.15      ±2.5% (0.0005)  ✗
+Rim (layup/dunk)   -0.06        -0.12      ±2.5% (0.0005)  ✗
+
+Note: Defender modifier was reduced globally (0.001 → 0.0005) ✓
+
+================================================================================
+PROBLEM ANALYSIS
+================================================================================
+
+3PT Correlation Results:
+- BEFORE Option A: r = 0.276 (defensive washout)
+- AFTER Option A:  r = 0.788 (excellent correlation)
+
+Key Insight:
+The same defensive washout issue that affected 3PT shots likely exists for 
+midrange and rim shots, since they use:
+1. Same defender modifier scale (now fixed globally)
+2. HIGHER contest penalties than 3PT (after Option A)
+
+Midrange penalties are 67% HIGHER than updated 3PT:
+- Contested: -0.08 vs -0.048 (67% higher)
+- Heavy: -0.15 vs -0.09 (67% higher)
+
+Rim penalties are 25-33% HIGHER than updated 3PT:
+- Contested: -0.06 vs -0.048 (25% higher)
+- Heavy: -0.12 vs -0.09 (33% higher)
+
+================================================================================
+RECOMMENDED CHANGES (OPTION A PARITY)
+================================================================================
+
+Apply same -40% reduction to midrange and rim shots for consistency:
+
+MIDRANGE (both short and long):
+Current:  contested = -0.08,  heavy = -0.15
+Proposed: contested = -0.048, heavy = -0.09  (-40% reduction)
+
+RIM (layups and dunks):
+Current:  contested = -0.06,  heavy = -0.12
+Proposed: contested = -0.036, heavy = -0.072 (-40% reduction)
+
+Rationale:
+- Same defensive washout mechanism affects all shot types
+- Contest sensitivity differences already built into base rates:
+  * 3PT base: ~33% (most variance from contests matters more)
+  * Midrange base: ~40-45% (moderate variance)
+  * Rim base: ~70% (least variance, but still affected)
+- Reducing penalties allows shooter skill to shine through for ALL shots
+
+================================================================================
+ALTERNATIVE: SHOT-TYPE-SPECIFIC REDUCTIONS
+================================================================================
+
+If we want to preserve contest sensitivity hierarchy:
+
+3PT:      -40% reduction (DONE)           → -0.048 / -0.09
+Midrange: -35% reduction (moderate)      → -0.052 / -0.098
+Rim:      -30% reduction (less sensitive) → -0.042 / -0.084
+
+This maintains relative contest sensitivity while reducing washout.
+
+However, simpler approach is uniform -40% reduction across all shot types.
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+Apply uniform -40% reduction to midrange and rim shots to match 3PT fix.
+
+This ensures:
+✓ Shooter skill predicts performance for ALL shot types
+✓ Consistent defensive balance across the board
+✓ Simpler to understand and maintain
+✓ Can fine-tune later if specific shot types need adjustment
+
+Next steps:
+1. Update midrange_short penalties: -0.08 → -0.048, -0.15 → -0.09
+2. Update midrange_long penalties: -0.08 → -0.048, -0.15 → -0.09
+3. Update rim penalties: -0.06 → -0.036, -0.12 → -0.072
+4. Test with correlation analysis (optional but recommended)
+
+================================================================================

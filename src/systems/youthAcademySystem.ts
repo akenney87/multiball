@@ -5,7 +5,7 @@
  *
  * Key Concepts:
  * - Academy starts EMPTY - user signs prospects to fill it
- * - Every 4 weeks, new scouting reports are presented
+ * - Every 2 weeks, new scouting reports are presented
  * - Attributes shown as RANGES (e.g., 20-40), not exact values
  * - User can "Continue Scouting" to narrow ranges (risk: rival may sign)
  * - Signing costs $100k/year (~$2k/week) per prospect
@@ -14,12 +14,13 @@
  *
  * Scouting Timeline:
  * - Week 0: Initial report (20-point range)
- * - Week 4: First refinement (14-point range)
- * - Week 8: Second refinement (10-point range)
- * - Week 12: Final refinement (6-point range)
+ * - Week 2: First refinement (14-point range)
+ * - Week 4: Second refinement (10-point range)
+ * - Week 6: Final refinement (6-point range)
  */
 
 import { Nationality, NATIONALITIES } from '../data/types';
+import { generateSeededName } from '../data/nameGenerator';
 
 // =============================================================================
 // TYPES
@@ -88,6 +89,16 @@ export interface AcademyProspect {
     technical: number;
   };
 
+  // Training progress
+  weeklyXP: {
+    physical: number;
+    mental: number;
+    technical: number;
+  };
+
+  // Snapshot of attributes when signed (for progress tracking)
+  seasonStartAttributes: Record<string, number>;
+
   // Academy tracking
   signedWeek: number;                    // When signed to academy
   yearsInAcademy: number;
@@ -117,18 +128,18 @@ export const SLOTS_PER_BUDGET_TIER = 2;            // Additional slots per budge
 export const BUDGET_TIER_COST = 100000;            // $100k per tier
 
 // Scouting
-export const SCOUTING_CYCLE_WEEKS = 4;             // New reports every 4 weeks
+export const SCOUTING_CYCLE_WEEKS = 2;             // New reports every 2 weeks
 export const BASE_REPORTS_PER_CYCLE = 2;           // Minimum reports shown
 export const MAX_REPORTS_PER_CYCLE = 6;            // Maximum reports shown
-export const MAX_SCOUTING_WEEKS = 12;              // Maximum scouting duration
+export const MAX_SCOUTING_WEEKS = 6;               // Maximum scouting duration
 
 // Attribute range narrowing (points of uncertainty)
 export const INITIAL_RANGE = 20;                   // Starting range (e.g., 30-50)
-export const RANGE_AFTER_4_WEEKS = 14;
-export const RANGE_AFTER_8_WEEKS = 10;
-export const RANGE_AFTER_12_WEEKS = 6;
+export const RANGE_AFTER_2_WEEKS = 14;
+export const RANGE_AFTER_4_WEEKS = 10;
+export const RANGE_AFTER_6_WEEKS = 6;
 
-// Rival signing risk (per 4-week period while scouting)
+// Rival signing risk (per 2-week period while scouting)
 export const RIVAL_SIGN_CHANCE_BASE = 0.10;        // 10% base chance
 export const RIVAL_SIGN_CHANCE_HIGH_POTENTIAL = 0.20; // 20% for high potential
 
@@ -156,20 +167,22 @@ export const YOUTH_HEIGHT_MIN_INCHES = 60;         // 5'0" minimum
 export const YOUTH_HEIGHT_MAX_INCHES = 80;         // 6'8" maximum (youth rarely taller)
 
 // Attribute categories
+// NOTE: 'height' is a special case - it's a 1-100 rating derived from physical height
+// The physical height (in cm/inches) is stored separately on the prospect
 export const PHYSICAL_ATTRIBUTES = [
   'grip_strength', 'arm_strength', 'core_strength', 'agility',
   'acceleration', 'top_speed', 'jumping', 'reactions',
-  'stamina', 'balance', 'durability',
+  'stamina', 'balance', 'durability', 'height',
 ];
 
 export const MENTAL_ATTRIBUTES = [
   'awareness', 'creativity', 'determination', 'bravery',
-  'consistency', 'composure', 'patience',
+  'consistency', 'composure', 'patience', 'teamwork',
 ];
 
 export const TECHNICAL_ATTRIBUTES = [
   'hand_eye_coordination', 'throw_accuracy', 'form_technique',
-  'finesse', 'deception', 'teamwork',
+  'finesse', 'deception', 'footwork',
 ];
 
 export const ALL_ATTRIBUTES = [
@@ -179,20 +192,157 @@ export const ALL_ATTRIBUTES = [
 ];
 
 // =============================================================================
-// NAME GENERATION
+// SPORT-SPECIFIC SCOUT WEIGHT TABLES
 // =============================================================================
 
-const FIRST_NAMES = [
-  'Liam', 'Noah', 'Ethan', 'Mason', 'Lucas', 'Oliver', 'James', 'Benjamin', 'Elijah', 'William',
-  'Michael', 'Alexander', 'Daniel', 'Matthew', 'Anthony', 'Joseph', 'David', 'Andrew', 'Joshua', 'Christopher',
-  'Marcus', 'Jordan', 'Tyler', 'Brandon', 'Austin', 'Jaylen', 'Malik', 'Darius', 'Terrence', 'Isaiah',
-];
+/**
+ * Sport focus options for scouting
+ */
+export type ScoutSportFocus = 'basketball' | 'baseball' | 'soccer' | 'balanced';
 
-const LAST_NAMES = [
-  'Wilson', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez',
-  'Robinson', 'Clark', 'Rodriguez', 'Lewis', 'Lee', 'Walker', 'Hall', 'Allen', 'Young', 'King',
-  'Wright', 'Scott', 'Green', 'Baker', 'Adams', 'Nelson', 'Hill', 'Moore', 'Taylor', 'Johnson',
-];
+/**
+ * Weight multipliers for sport-specific scouting
+ * Values > 1.0 mean the attribute is more important for that sport
+ * Used to score prospects and select the best matches for the focus
+ */
+export const SCOUT_WEIGHTS_BASKETBALL: Record<string, number> = {
+  // Physical - height and jumping are king in basketball
+  height: 1.5,
+  jumping: 1.4,
+  agility: 1.2,
+  reactions: 1.2,
+  acceleration: 1.1,
+  top_speed: 1.0,
+  stamina: 1.1,
+  balance: 1.0,
+  grip_strength: 1.0,
+  arm_strength: 1.0,
+  core_strength: 1.1,
+  durability: 1.0,
+  // Mental
+  awareness: 1.2,
+  composure: 1.2,
+  consistency: 1.1,
+  teamwork: 1.1,
+  creativity: 1.0,
+  determination: 1.0,
+  bravery: 1.0,
+  patience: 1.0,
+  // Technical - shooting and ball handling
+  hand_eye_coordination: 1.3,
+  throw_accuracy: 1.3,
+  form_technique: 1.2,
+  footwork: 1.1,
+  finesse: 1.1,
+  deception: 1.0,
+};
+
+export const SCOUT_WEIGHTS_BASEBALL: Record<string, number> = {
+  // Physical - arm strength and reactions crucial
+  arm_strength: 1.4,
+  reactions: 1.3,
+  grip_strength: 1.2,
+  core_strength: 1.2,
+  agility: 1.1,
+  top_speed: 1.1,
+  acceleration: 1.0,
+  jumping: 1.0,
+  height: 1.0,
+  stamina: 1.0,
+  balance: 1.1,
+  durability: 1.0,
+  // Mental - patience and composure for batting
+  patience: 1.3,
+  composure: 1.2,
+  consistency: 1.2,
+  awareness: 1.1,
+  determination: 1.0,
+  creativity: 1.0,
+  teamwork: 1.0,
+  bravery: 1.0,
+  // Technical - hand-eye and throw accuracy
+  hand_eye_coordination: 1.5,
+  throw_accuracy: 1.4,
+  form_technique: 1.1,
+  finesse: 1.0,
+  deception: 1.2,
+  footwork: 1.0,
+};
+
+export const SCOUT_WEIGHTS_SOCCER: Record<string, number> = {
+  // Physical - stamina and speed dominate
+  stamina: 1.5,
+  top_speed: 1.3,
+  agility: 1.4,
+  acceleration: 1.2,
+  balance: 1.2,
+  core_strength: 1.1,
+  jumping: 1.0,
+  height: 1.0,
+  reactions: 1.1,
+  grip_strength: 1.0,
+  arm_strength: 1.0,
+  durability: 1.1,
+  // Mental - awareness and teamwork key
+  awareness: 1.3,
+  teamwork: 1.3,
+  creativity: 1.2,
+  composure: 1.1,
+  determination: 1.1,
+  bravery: 1.0,
+  consistency: 1.0,
+  patience: 1.0,
+  // Technical - footwork is essential
+  footwork: 1.4,
+  finesse: 1.2,
+  deception: 1.1,
+  hand_eye_coordination: 1.0,
+  throw_accuracy: 1.0,
+  form_technique: 1.0,
+};
+
+/**
+ * Get scout weights for a given sport focus
+ */
+export function getScoutWeights(focus: ScoutSportFocus): Record<string, number> {
+  switch (focus) {
+    case 'basketball':
+      return SCOUT_WEIGHTS_BASKETBALL;
+    case 'baseball':
+      return SCOUT_WEIGHTS_BASEBALL;
+    case 'soccer':
+      return SCOUT_WEIGHTS_SOCCER;
+    case 'balanced':
+    default:
+      // Return all weights as 1.0 for balanced
+      return ALL_ATTRIBUTES.reduce((acc, attr) => {
+        acc[attr] = 1.0;
+        return acc;
+      }, {} as Record<string, number>);
+  }
+}
+
+/**
+ * Calculate a prospect's sport-specific score using weight tables
+ * Higher scores mean better suited for that sport
+ */
+export function calculateProspectSportScore(
+  attributes: Record<string, number>,
+  focus: ScoutSportFocus
+): number {
+  const weights = getScoutWeights(focus);
+  let totalScore = 0;
+  let totalWeight = 0;
+
+  for (const attr of ALL_ATTRIBUTES) {
+    const value = attributes[attr] ?? 50;
+    const weight = weights[attr] ?? 1.0;
+    totalScore += value * weight;
+    totalWeight += weight;
+  }
+
+  return totalWeight > 0 ? totalScore / totalWeight : 50;
+}
 
 // =============================================================================
 // HELPER FUNCTIONS
@@ -274,12 +424,30 @@ function lbsToKg(lbs: number): number {
 }
 
 /**
+ * Calculate height attribute rating (1-100) from physical height in inches
+ *
+ * Uses the same formula as factories.ts for consistency:
+ * - 66" (5'6") → 1
+ * - 77" (6'5") → 50
+ * - 88" (7'4") → 99
+ *
+ * This makes taller players have higher height ratings, which is
+ * used in simulation for rebounding, blocking, etc.
+ */
+export function calculateHeightRating(heightInches: number): number {
+  // Formula from factories.ts: ((heightInches - 66) * 98 / 22) + 1
+  // Range: 66" (5'6") to 88" (7'4")
+  const heightAttr = Math.round(((heightInches - 66) * 98 / 22) + 1);
+  return Math.max(1, Math.min(99, heightAttr));
+}
+
+/**
  * Calculate range width based on weeks scouted
  */
 export function getRangeWidth(weeksScouted: number): number {
-  if (weeksScouted >= 12) return RANGE_AFTER_12_WEEKS;
-  if (weeksScouted >= 8) return RANGE_AFTER_8_WEEKS;
+  if (weeksScouted >= 6) return RANGE_AFTER_6_WEEKS;
   if (weeksScouted >= 4) return RANGE_AFTER_4_WEEKS;
+  if (weeksScouted >= 2) return RANGE_AFTER_2_WEEKS;
   return INITIAL_RANGE;
 }
 
@@ -352,12 +520,8 @@ export function generateScoutingReport(
   const nationalityIndex = randomInt(0, NATIONALITIES.length - 1, seed + 3);
   const nationality = NATIONALITIES[nationalityIndex] || 'American';
 
-  // Generate name
-  const firstNameIndex = randomInt(0, FIRST_NAMES.length - 1, seed + 4);
-  const lastNameIndex = randomInt(0, LAST_NAMES.length - 1, seed + 5);
-  const firstName = FIRST_NAMES[firstNameIndex] || 'John';
-  const lastName = LAST_NAMES[lastNameIndex] || 'Smith';
-  const name = `${firstName} ${lastName}`;
+  // Generate nationality-appropriate name using seeded generation
+  const name = generateSeededName(nationality, seed + 4);
 
   // Generate actual attributes (hidden from user)
   const baseMin = Math.round(YOUTH_ATTRIBUTE_MIN * qualityMultiplier);
@@ -365,11 +529,16 @@ export function generateScoutingReport(
 
   const actualAttributes: Record<string, number> = {};
   ALL_ATTRIBUTES.forEach((attr, index) => {
-    actualAttributes[attr] = randomInt(
-      Math.max(1, baseMin),
-      Math.min(99, baseMax),
-      seed + 100 + index
-    );
+    if (attr === 'height') {
+      // Height attribute is derived from physical height, not randomly generated
+      actualAttributes[attr] = calculateHeightRating(heightInches);
+    } else {
+      actualAttributes[attr] = randomInt(
+        Math.max(1, baseMin),
+        Math.min(99, baseMax),
+        seed + 100 + index
+      );
+    }
   });
 
   // Generate potentials (hidden from user)
@@ -408,24 +577,55 @@ export function generateScoutingReport(
 
 /**
  * Generate batch of scouting reports for a cycle
+ *
+ * Uses weighted selection based on sport focus:
+ * - Generates 2x the requested count of prospects
+ * - Scores each against sport-specific weight tables
+ * - Returns the top N that best match the focus
+ *
+ * @param currentWeek - Current game week
+ * @param count - Number of reports to return
+ * @param qualityMultiplier - Quality modifier based on budget
+ * @param seed - Random seed for reproducibility
+ * @param sportFocus - Which sport to prioritize (default: balanced)
  */
 export function generateScoutingReports(
   currentWeek: number,
   count: number,
   qualityMultiplier: number,
-  seed: number
+  seed: number,
+  sportFocus: ScoutSportFocus = 'balanced'
 ): ScoutingReport[] {
-  const reports: ScoutingReport[] = [];
-  for (let i = 0; i < count; i++) {
+  // Generate 2x prospects for selection pool
+  const poolSize = count * 2;
+  const candidateReports: ScoutingReport[] = [];
+
+  for (let i = 0; i < poolSize; i++) {
     const report = generateScoutingReport(
       `scout_${currentWeek}_${i}`,
       currentWeek,
       qualityMultiplier,
       seed + i * 1000
     );
-    reports.push(report);
+    candidateReports.push(report);
   }
-  return reports;
+
+  // If balanced, just return the first N (no preference)
+  if (sportFocus === 'balanced') {
+    return candidateReports.slice(0, count);
+  }
+
+  // Score each prospect against sport weights and sort
+  const scoredReports = candidateReports.map((report) => ({
+    report,
+    score: calculateProspectSportScore(report.actualAttributes, sportFocus),
+  }));
+
+  // Sort by score descending (best matches first)
+  scoredReports.sort((a, b) => b.score - a.score);
+
+  // Return top N prospects that best match the sport focus
+  return scoredReports.slice(0, count).map((sr) => sr.report);
 }
 
 // =============================================================================
@@ -541,6 +741,8 @@ export function signProspectToAcademy(
     nationality: report.nationality,
     attributes: { ...report.actualAttributes },
     potentials: { ...report.potentials },
+    weeklyXP: { physical: 0, mental: 0, technical: 0 },
+    seasonStartAttributes: { ...report.actualAttributes },
     signedWeek: currentWeek,
     yearsInAcademy: 0,
     weeklyCost: WEEKLY_PROSPECT_COST,
@@ -617,9 +819,10 @@ export function advanceProspectAge(prospect: AcademyProspect): AcademyProspect {
 
 /**
  * Get prospects that need action (turning 19)
+ * Only returns prospects who are 18+ (about to turn 19 and must be promoted or released)
  */
 export function getProspectsNeedingAction(prospects: AcademyProspect[]): AcademyProspect[] {
-  return prospects.filter(p => p.age >= MAX_PROSPECT_AGE && p.status === 'active');
+  return prospects.filter(p => p.age >= PROMOTION_AGE && p.status === 'active');
 }
 
 // =============================================================================

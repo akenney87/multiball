@@ -1,0 +1,46 @@
+================================================================================
+PHASE 1 CORRELATION ANALYSIS
+================================================================================
+
+BEFORE Phase 1 (M4.1 baseline):
+  Validation: validation_m41_test1
+  Teams: teams_m41
+  Correlation: 0.274
+  Games: 100
+  Mean attribute gap: 1.05
+  Mean margin: 17.55
+
+AFTER Phase 1 (acceleration + top_speed integration):
+  Validation: validation_phase1
+  Teams: teams_phase1
+  Correlation: 0.339
+  Games: 100
+  Mean attribute gap: 1.22
+  Mean margin: 16.12
+
+AFTER Phase 2 (grip_strength - AGGRESSIVE rates):
+  Validation: validation_phase2
+  Teams: teams_phase2
+  Correlation: 0.237
+  Games: 100
+  Mean attribute gap: 1.52
+  Mean margin: 16.12
+
+AFTER Phase 2 (grip_strength - TUNED rates):
+  Validation: validation_phase2_tuned
+  Teams: teams_phase2
+  Correlation: 0.258
+  Games: 100
+  Mean attribute gap: 0.90
+  Mean margin: 13.87
+
+================================================================================
+SUMMARY
+================================================================================
+
+Phase 1: 0.274 -> 0.339 (+0.066, +24.0%)
+Phase 2: 0.339 -> 0.258 (-0.081, -23.8%)
+Total:   0.274 -> 0.258 (-0.015, -5.5%)
+
+Status: STALLED - Phase 2 did not improve correlation
+Diagnostic review required before proceeding to Phase 3.

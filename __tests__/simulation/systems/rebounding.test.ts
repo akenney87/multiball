@@ -53,6 +53,7 @@ const createMockPlayer = (
   finesse: 70,
   deception: 60,
   teamwork: 70,
+  footwork: 70,
   ...reboundAttributes,
 });
 

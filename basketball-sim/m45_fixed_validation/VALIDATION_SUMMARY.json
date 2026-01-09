@@ -1,0 +1,32 @@
+{
+  "averages": {
+    "points_per_game": 93.0,
+    "fg_pct": 43.2,
+    "fg3_pct": 35.0,
+    "ft_pct": 48.1,
+    "fg3a_per_game": 31.8,
+    "fta_per_game": 25.6,
+    "reb_per_game": 47.1,
+    "oreb_per_game": 12.4,
+    "oreb_pct": 26.4,
+    "ast_per_game": 17.5,
+    "tov_per_game": 15.8,
+    "stl_per_game": 5.7,
+    "blk_per_game": 2.0,
+    "pf_per_game": 17.8,
+    "possessions_per_game": 101.2,
+    "avg_margin": 30.8
+  },
+  "distributions": {
+    "blowouts_20_plus": 6,
+    "close_games_5_or_less": 0,
+    "high_scoring_120_plus": 2,
+    "low_scoring_80_or_less": 7
+  },
+  "metadata": {
+    "total_games": 10,
+    "successful_games": 10,
+    "timestamp": "2025-11-07T12:56:22.122852",
+    "seed": 88888
+  }
+}

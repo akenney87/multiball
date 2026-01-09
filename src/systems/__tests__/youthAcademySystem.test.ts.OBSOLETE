@@ -1,0 +1,798 @@
+import {
+  calculateAcademyCapacity,
+  calculateProspectsPerYear,
+  calculateAttributeRange,
+  generateProspectAge,
+  generateProspectSport,
+  generateProspectPosition,
+  generateProspectPotential,
+  generateRandomAttribute,
+  generateProspectAttributes,
+  calculateOverallRating,
+  generateYouthProspect,
+  generateYearlyProspects,
+  needsPromotion,
+  promoteProspect,
+  releaseProspect,
+  advanceProspectAge,
+  getAcademyCapacityInfo,
+  filterProspectsByStatus,
+  sortProspectsByRating,
+  sortProspectsByPotential,
+  getProspectsNeedingAttention,
+  BASE_CAPACITY,
+  BASE_COST,
+  COST_PER_TIER,
+  SLOTS_PER_TIER,
+  BASE_PROSPECTS_PER_YEAR,
+  BASE_ATTRIBUTE_MIN,
+  BASE_ATTRIBUTE_MAX,
+  MIN_PROSPECT_AGE,
+  MAX_PROSPECT_AGE,
+  PROMOTION_AGE,
+  YOUTH_POTENTIAL_MIN,
+  YOUTH_POTENTIAL_MAX,
+  AVAILABLE_SPORTS,
+  POSITIONS_BY_SPORT,
+  YouthProspect,
+  ProspectGenerationSettings,
+} from '../youthAcademySystem';
+
+describe('YouthAcademySystem - Capacity Calculations', () => {
+  describe('calculateAcademyCapacity', () => {
+    it('should return base capacity for budget below base cost', () => {
+      expect(calculateAcademyCapacity(50000)).toBe(BASE_CAPACITY);
+      expect(calculateAcademyCapacity(99999)).toBe(BASE_CAPACITY);
+    });
+
+    it('should return base capacity for exactly base cost', () => {
+      expect(calculateAcademyCapacity(BASE_COST)).toBe(BASE_CAPACITY);
+    });
+
+    it('should calculate capacity with 1 additional tier ($150k)', () => {
+      const capacity = calculateAcademyCapacity(150000);
+      // (150k - 100k) / 50k = 1 tier = 3 additional slots
+      expect(capacity).toBe(BASE_CAPACITY + SLOTS_PER_TIER);
+    });
+
+    it('should calculate capacity with 3 additional tiers ($250k)', () => {
+      const capacity = calculateAcademyCapacity(250000);
+      // (250k - 100k) / 50k = 3 tiers = 9 additional slots
+      expect(capacity).toBe(BASE_CAPACITY + (3 * SLOTS_PER_TIER));
+    });
+
+    it('should handle partial tier (rounds down)', () => {
+      const capacity = calculateAcademyCapacity(175000);
+      // (175k - 100k) / 50k = 1.5 → 1 tier
+      expect(capacity).toBe(BASE_CAPACITY + SLOTS_PER_TIER);
+    });
+
+    it('should scale linearly with budget', () => {
+      const cap1 = calculateAcademyCapacity(200000);
+      const cap2 = calculateAcademyCapacity(250000);
+      const cap3 = calculateAcademyCapacity(300000);
+
+      expect(cap2).toBeGreaterThan(cap1);
+      expect(cap3).toBeGreaterThan(cap2);
+    });
+  });
+});
+
+describe('YouthAcademySystem - Prospect Generation', () => {
+  describe('calculateProspectsPerYear', () => {
+    it('should calculate prospects with poor budget (0.5x)', () => {
+      const prospects = calculateProspectsPerYear(0.5);
+      // 3 × 0.5 = 1.5 → 2 prospects
+      expect(prospects).toBe(2);
+    });
+
+    it('should calculate prospects with standard budget (1.0x)', () => {
+      const prospects = calculateProspectsPerYear(1.0);
+      expect(prospects).toBe(BASE_PROSPECTS_PER_YEAR);
+    });
+
+    it('should calculate prospects with elite budget (2.0x)', () => {
+      const prospects = calculateProspectsPerYear(2.0);
+      // 3 × 2.0 = 6 prospects
+      expect(prospects).toBe(6);
+    });
+
+    it('should round to nearest integer', () => {
+      const prospects = calculateProspectsPerYear(1.4);
+      // 3 × 1.4 = 4.2 → 4 prospects
+      expect(prospects).toBe(4);
+    });
+  });
+
+  describe('calculateAttributeRange', () => {
+    it('should calculate range with poor budget (0.5x)', () => {
+      const range = calculateAttributeRange(0.5);
+      // Min: 20 × 0.5 = 10
+      // Max: 40 × 0.5 = 20
+      expect(range.min).toBe(10);
+      expect(range.max).toBe(20);
+    });
+
+    it('should calculate range with standard budget (1.0x)', () => {
+      const range = calculateAttributeRange(1.0);
+      expect(range.min).toBe(BASE_ATTRIBUTE_MIN);
+      expect(range.max).toBe(BASE_ATTRIBUTE_MAX);
+    });
+
+    it('should calculate range with elite budget (2.0x)', () => {
+      const range = calculateAttributeRange(2.0);
+      // Min: 20 × 2.0 = 40
+      // Max: 40 × 2.0 = 80
+      expect(range.min).toBe(40);
+      expect(range.max).toBe(80);
+    });
+
+    it('should clamp values to 1-100', () => {
+      const lowRange = calculateAttributeRange(0.01);
+      expect(lowRange.min).toBeGreaterThanOrEqual(1);
+      expect(lowRange.max).toBeGreaterThanOrEqual(1);
+
+      const highRange = calculateAttributeRange(5.0);
+      expect(highRange.min).toBeLessThanOrEqual(100);
+      expect(highRange.max).toBeLessThanOrEqual(100);
+    });
+  });
+});
+
+describe('YouthAcademySystem - Random Generation', () => {
+  describe('generateProspectAge', () => {
+    it('should generate ages within valid range (15-18)', () => {
+      for (let i = 0; i < 100; i++) {
+        const age = generateProspectAge(i);
+        expect(age).toBeGreaterThanOrEqual(MIN_PROSPECT_AGE);
+        expect(age).toBeLessThanOrEqual(MAX_PROSPECT_AGE);
+      }
+    });
+
+    it('should be deterministic with same seed', () => {
+      const age1 = generateProspectAge(42);
+      const age2 = generateProspectAge(42);
+      expect(age1).toBe(age2);
+    });
+
+    it('should generate all ages in range over many attempts', () => {
+      const ages = new Set<number>();
+      for (let i = 0; i < 100; i++) {
+        ages.add(generateProspectAge(i));
+      }
+
+      // Should have at least 3 different ages
+      expect(ages.size).toBeGreaterThanOrEqual(3);
+    });
+  });
+
+  describe('generateProspectSport', () => {
+    it('should generate valid sports', () => {
+      for (let i = 0; i < 100; i++) {
+        const sport = generateProspectSport(i);
+        expect(AVAILABLE_SPORTS).toContain(sport);
+      }
+    });
+
+    it('should be deterministic with same seed', () => {
+      const sport1 = generateProspectSport(123);
+      const sport2 = generateProspectSport(123);
+      expect(sport1).toBe(sport2);
+    });
+  });
+
+  describe('generateProspectPosition', () => {
+    it('should generate valid positions for basketball', () => {
+      const position = generateProspectPosition('basketball', 456);
+      expect(POSITIONS_BY_SPORT.basketball).toContain(position);
+    });
+
+    it('should generate valid positions for volleyball', () => {
+      const position = generateProspectPosition('volleyball', 789);
+      expect(POSITIONS_BY_SPORT.volleyball).toContain(position);
+    });
+
+    it('should be deterministic with same seed', () => {
+      const pos1 = generateProspectPosition('basketball', 42);
+      const pos2 = generateProspectPosition('basketball', 42);
+      expect(pos1).toBe(pos2);
+    });
+  });
+
+  describe('generateProspectPotential', () => {
+    it('should generate potentials within valid range (60-95)', () => {
+      for (let i = 0; i < 100; i++) {
+        const potential = generateProspectPotential(i);
+        expect(potential).toBeGreaterThanOrEqual(YOUTH_POTENTIAL_MIN);
+        expect(potential).toBeLessThan(YOUTH_POTENTIAL_MAX);
+      }
+    });
+
+    it('should be deterministic with same seed', () => {
+      const pot1 = generateProspectPotential(999);
+      const pot2 = generateProspectPotential(999);
+      expect(pot1).toBe(pot2);
+    });
+  });
+
+  describe('generateRandomAttribute', () => {
+    it('should generate values within range', () => {
+      for (let i = 0; i < 50; i++) {
+        const value = generateRandomAttribute(20, 40, i);
+        expect(value).toBeGreaterThanOrEqual(20);
+        expect(value).toBeLessThanOrEqual(40);
+      }
+    });
+
+    it('should be deterministic with same seed', () => {
+      const val1 = generateRandomAttribute(30, 50, 777);
+      const val2 = generateRandomAttribute(30, 50, 777);
+      expect(val1).toBe(val2);
+    });
+
+    it('should handle min === max', () => {
+      const value = generateRandomAttribute(50, 50, 123);
+      expect(value).toBe(50);
+    });
+  });
+
+  describe('generateProspectAttributes', () => {
+    it('should generate all attribute categories', () => {
+      const attributes = generateProspectAttributes(20, 40, 12345);
+
+      // Should have physical attributes
+      expect(attributes.grip_strength).toBeDefined();
+      expect(attributes.agility).toBeDefined();
+
+      // Should have mental attributes
+      expect(attributes.awareness).toBeDefined();
+      expect(attributes.determination).toBeDefined();
+
+      // Should have technical attributes
+      expect(attributes.hand_eye_coordination).toBeDefined();
+      expect(attributes.teamwork).toBeDefined();
+    });
+
+    it('should generate 25 total attributes', () => {
+      const attributes = generateProspectAttributes(20, 40, 54321);
+      const count = Object.keys(attributes).length;
+
+      // 12 physical + 7 mental + 6 technical = 25
+      expect(count).toBe(25);
+    });
+
+    it('should respect attribute range', () => {
+      const attributes = generateProspectAttributes(30, 50, 99999);
+
+      Object.values(attributes).forEach(value => {
+        expect(value).toBeGreaterThanOrEqual(30);
+        expect(value).toBeLessThanOrEqual(50);
+      });
+    });
+  });
+
+  describe('calculateOverallRating', () => {
+    it('should calculate average of all attributes', () => {
+      const attributes = {
+        attr1: 50,
+        attr2: 60,
+        attr3: 70,
+      };
+
+      const overall = calculateOverallRating(attributes);
+      expect(overall).toBe(60); // (50 + 60 + 70) / 3 = 60
+    });
+
+    it('should round to nearest integer', () => {
+      const attributes = {
+        attr1: 50,
+        attr2: 51,
+        attr3: 52,
+      };
+
+      const overall = calculateOverallRating(attributes);
+      expect(overall).toBe(51); // (50 + 51 + 52) / 3 = 51
+    });
+
+    it('should handle single attribute', () => {
+      const attributes = { attr1: 75 };
+      const overall = calculateOverallRating(attributes);
+      expect(overall).toBe(75);
+    });
+  });
+});
+
+describe('YouthAcademySystem - Prospect Generation', () => {
+  describe('generateYouthProspect', () => {
+    const settings: ProspectGenerationSettings = {
+      qualityMultiplier: 1.0,
+      quantityMultiplier: 1.0,
+    };
+
+    it('should generate a complete youth prospect', () => {
+      const prospect = generateYouthProspect('test-1', 1, settings, 12345);
+
+      expect(prospect.id).toBe('test-1');
+      expect(prospect.name).toBeTruthy();
+      expect(prospect.age).toBeGreaterThanOrEqual(MIN_PROSPECT_AGE);
+      expect(prospect.age).toBeLessThanOrEqual(MAX_PROSPECT_AGE);
+      expect(prospect.dateOfBirth).toBe(1);
+      expect(prospect.overallRating).toBeGreaterThan(0);
+      expect(prospect.primarySport).toBeTruthy();
+      expect(prospect.position).toBeTruthy();
+      expect(prospect.yearsInAcademy).toBe(0);
+      expect(prospect.status).toBe('active');
+    });
+
+    it('should generate high potentials for youth', () => {
+      const prospect = generateYouthProspect('test-2', 1, settings, 54321);
+
+      expect(prospect.potentials.physical).toBeGreaterThanOrEqual(YOUTH_POTENTIAL_MIN);
+      expect(prospect.potentials.mental).toBeGreaterThanOrEqual(YOUTH_POTENTIAL_MIN);
+      expect(prospect.potentials.technical).toBeGreaterThanOrEqual(YOUTH_POTENTIAL_MIN);
+      expect(prospect.averagePotential).toBeGreaterThanOrEqual(YOUTH_POTENTIAL_MIN);
+    });
+
+    it('should generate low current ratings for youth', () => {
+      const prospect = generateYouthProspect('test-3', 1, settings, 99999);
+
+      // Youth should have low current ratings
+      expect(prospect.overallRating).toBeLessThan(50);
+    });
+
+    it('should generate all attributes', () => {
+      const prospect = generateYouthProspect('test-4', 1, settings, 11111);
+
+      expect(Object.keys(prospect.attributes).length).toBe(25);
+    });
+
+    it('should be deterministic with same seed', () => {
+      const prospect1 = generateYouthProspect('test-5', 1, settings, 77777);
+      const prospect2 = generateYouthProspect('test-5', 1, settings, 77777);
+
+      expect(prospect1.age).toBe(prospect2.age);
+      expect(prospect1.name).toBe(prospect2.name);
+      expect(prospect1.primarySport).toBe(prospect2.primarySport);
+      expect(prospect1.overallRating).toBe(prospect2.overallRating);
+    });
+
+    it('should generate better prospects with higher quality multiplier', () => {
+      const poorSettings: ProspectGenerationSettings = {
+        qualityMultiplier: 0.5,
+        quantityMultiplier: 1.0,
+      };
+
+      const eliteSettings: ProspectGenerationSettings = {
+        qualityMultiplier: 2.0,
+        quantityMultiplier: 1.0,
+      };
+
+      const poorProspect = generateYouthProspect('poor', 1, poorSettings, 12345);
+      const eliteProspect = generateYouthProspect('elite', 1, eliteSettings, 12345);
+
+      // Elite academy should produce better prospects
+      expect(eliteProspect.overallRating).toBeGreaterThan(poorProspect.overallRating);
+    });
+  });
+
+  describe('generateYearlyProspects', () => {
+    const settings: ProspectGenerationSettings = {
+      qualityMultiplier: 1.0,
+      quantityMultiplier: 1.0,
+    };
+
+    it('should generate correct number of prospects', () => {
+      const result = generateYearlyProspects(1, settings, 10000);
+
+      expect(result.count).toBe(BASE_PROSPECTS_PER_YEAR);
+      expect(result.prospects.length).toBe(BASE_PROSPECTS_PER_YEAR);
+    });
+
+    it('should generate more prospects with higher quantity multiplier', () => {
+      const eliteSettings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 2.0,
+      };
+
+      const result = generateYearlyProspects(1, eliteSettings, 20000);
+
+      expect(result.count).toBe(6); // 3 × 2.0 = 6
+      expect(result.prospects.length).toBe(6);
+    });
+
+    it('should generate fewer prospects with lower quantity multiplier', () => {
+      const poorSettings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 0.5,
+      };
+
+      const result = generateYearlyProspects(1, poorSettings, 30000);
+
+      expect(result.count).toBe(2); // 3 × 0.5 = 1.5 → 2
+      expect(result.prospects.length).toBe(2);
+    });
+
+    it('should generate unique IDs for each prospect', () => {
+      const result = generateYearlyProspects(1, settings, 40000);
+      const ids = result.prospects.map(p => p.id);
+      const uniqueIds = new Set(ids);
+
+      expect(uniqueIds.size).toBe(ids.length);
+    });
+  });
+});
+
+describe('YouthAcademySystem - Prospect Management', () => {
+  let mockProspect: YouthProspect;
+
+  beforeEach(() => {
+    const settings: ProspectGenerationSettings = {
+      qualityMultiplier: 1.0,
+      quantityMultiplier: 1.0,
+    };
+    mockProspect = generateYouthProspect('test', 1, settings, 12345);
+  });
+
+  describe('needsPromotion', () => {
+    it('should return false for young prospects', () => {
+      mockProspect.age = 16;
+      expect(needsPromotion(mockProspect)).toBe(false);
+    });
+
+    it('should return true for prospects at promotion age', () => {
+      mockProspect.age = PROMOTION_AGE;
+      expect(needsPromotion(mockProspect)).toBe(true);
+    });
+
+    it('should return false for already promoted prospects', () => {
+      mockProspect.age = PROMOTION_AGE;
+      mockProspect.status = 'promoted';
+      expect(needsPromotion(mockProspect)).toBe(false);
+    });
+
+    it('should return false for released prospects', () => {
+      mockProspect.age = PROMOTION_AGE;
+      mockProspect.status = 'released';
+      expect(needsPromotion(mockProspect)).toBe(false);
+    });
+  });
+
+  describe('promoteProspect', () => {
+    it('should change status to promoted', () => {
+      const promoted = promoteProspect(mockProspect);
+      expect(promoted.status).toBe('promoted');
+    });
+
+    it('should not mutate original prospect', () => {
+      const originalStatus = mockProspect.status;
+      promoteProspect(mockProspect);
+      expect(mockProspect.status).toBe(originalStatus);
+    });
+  });
+
+  describe('releaseProspect', () => {
+    it('should change status to released', () => {
+      const released = releaseProspect(mockProspect);
+      expect(released.status).toBe('released');
+    });
+
+    it('should not mutate original prospect', () => {
+      const originalStatus = mockProspect.status;
+      releaseProspect(mockProspect);
+      expect(mockProspect.status).toBe(originalStatus);
+    });
+  });
+
+  describe('advanceProspectAge', () => {
+    it('should increment age by 1', () => {
+      const originalAge = mockProspect.age;
+      const advanced = advanceProspectAge(mockProspect);
+      expect(advanced.age).toBe(originalAge + 1);
+    });
+
+    it('should increment years in academy by 1', () => {
+      const originalYears = mockProspect.yearsInAcademy;
+      const advanced = advanceProspectAge(mockProspect);
+      expect(advanced.yearsInAcademy).toBe(originalYears + 1);
+    });
+
+    it('should not mutate original prospect', () => {
+      const originalAge = mockProspect.age;
+      advanceProspectAge(mockProspect);
+      expect(mockProspect.age).toBe(originalAge);
+    });
+  });
+});
+
+describe('YouthAcademySystem - Academy Management', () => {
+  describe('getAcademyCapacityInfo', () => {
+    it('should calculate capacity info correctly', () => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      const prospects = [
+        generateYouthProspect('p1', 1, settings, 100),
+        generateYouthProspect('p2', 1, settings, 200),
+        generateYouthProspect('p3', 1, settings, 300),
+      ];
+
+      const info = getAcademyCapacityInfo(150000, prospects);
+
+      expect(info.totalSlots).toBe(8); // Base 5 + 1 tier (3 slots)
+      expect(info.usedSlots).toBe(3);
+      expect(info.availableSlots).toBe(5);
+    });
+
+    it('should only count active prospects', () => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      const prospects = [
+        generateYouthProspect('p1', 1, settings, 100),
+        { ...generateYouthProspect('p2', 1, settings, 200), status: 'promoted' as const },
+        { ...generateYouthProspect('p3', 1, settings, 300), status: 'released' as const },
+      ];
+
+      const info = getAcademyCapacityInfo(100000, prospects);
+
+      expect(info.usedSlots).toBe(1); // Only p1 is active
+    });
+
+    it('should handle zero available slots', () => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      const prospects = [];
+      for (let i = 0; i < 10; i++) {
+        prospects.push(generateYouthProspect(`p${i}`, 1, settings, i * 100));
+      }
+
+      const info = getAcademyCapacityInfo(100000, prospects);
+
+      expect(info.totalSlots).toBe(5);
+      expect(info.usedSlots).toBe(10);
+      expect(info.availableSlots).toBe(0); // Over capacity
+    });
+  });
+
+  describe('filterProspectsByStatus', () => {
+    let prospects: YouthProspect[];
+
+    beforeEach(() => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      prospects = [
+        generateYouthProspect('p1', 1, settings, 100),
+        { ...generateYouthProspect('p2', 1, settings, 200), status: 'promoted' as const },
+        { ...generateYouthProspect('p3', 1, settings, 300), status: 'released' as const },
+        generateYouthProspect('p4', 1, settings, 400),
+      ];
+    });
+
+    it('should filter active prospects', () => {
+      const active = filterProspectsByStatus(prospects, 'active');
+      expect(active.length).toBe(2);
+      expect(active.every(p => p.status === 'active')).toBe(true);
+    });
+
+    it('should filter promoted prospects', () => {
+      const promoted = filterProspectsByStatus(prospects, 'promoted');
+      expect(promoted.length).toBe(1);
+      expect(promoted[0].id).toBe('p2');
+    });
+
+    it('should filter released prospects', () => {
+      const released = filterProspectsByStatus(prospects, 'released');
+      expect(released.length).toBe(1);
+      expect(released[0].id).toBe('p3');
+    });
+  });
+
+  describe('sortProspectsByRating', () => {
+    let prospects: YouthProspect[];
+
+    beforeEach(() => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      prospects = [
+        { ...generateYouthProspect('p1', 1, settings, 100), overallRating: 30 },
+        { ...generateYouthProspect('p2', 1, settings, 200), overallRating: 50 },
+        { ...generateYouthProspect('p3', 1, settings, 300), overallRating: 40 },
+      ];
+    });
+
+    it('should sort by rating descending', () => {
+      const sorted = sortProspectsByRating(prospects, false);
+
+      expect(sorted[0].overallRating).toBe(50);
+      expect(sorted[1].overallRating).toBe(40);
+      expect(sorted[2].overallRating).toBe(30);
+    });
+
+    it('should sort by rating ascending', () => {
+      const sorted = sortProspectsByRating(prospects, true);
+
+      expect(sorted[0].overallRating).toBe(30);
+      expect(sorted[1].overallRating).toBe(40);
+      expect(sorted[2].overallRating).toBe(50);
+    });
+
+    it('should not mutate original array', () => {
+      const original = [...prospects];
+      sortProspectsByRating(prospects, false);
+      expect(prospects).toEqual(original);
+    });
+  });
+
+  describe('sortProspectsByPotential', () => {
+    let prospects: YouthProspect[];
+
+    beforeEach(() => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      prospects = [
+        { ...generateYouthProspect('p1', 1, settings, 100), averagePotential: 70 },
+        { ...generateYouthProspect('p2', 1, settings, 200), averagePotential: 85 },
+        { ...generateYouthProspect('p3', 1, settings, 300), averagePotential: 75 },
+      ];
+    });
+
+    it('should sort by potential descending', () => {
+      const sorted = sortProspectsByPotential(prospects, false);
+
+      expect(sorted[0].averagePotential).toBe(85);
+      expect(sorted[1].averagePotential).toBe(75);
+      expect(sorted[2].averagePotential).toBe(70);
+    });
+
+    it('should sort by potential ascending', () => {
+      const sorted = sortProspectsByPotential(prospects, true);
+
+      expect(sorted[0].averagePotential).toBe(70);
+      expect(sorted[1].averagePotential).toBe(75);
+      expect(sorted[2].averagePotential).toBe(85);
+    });
+  });
+
+  describe('getProspectsNeedingAttention', () => {
+    it('should return prospects at age 18', () => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      const prospects = [
+        { ...generateYouthProspect('p1', 1, settings, 100), age: 15 },
+        { ...generateYouthProspect('p2', 1, settings, 200), age: 18 },
+        { ...generateYouthProspect('p3', 1, settings, 300), age: 17 },
+        { ...generateYouthProspect('p4', 1, settings, 400), age: 18 },
+      ];
+
+      const needingAttention = getProspectsNeedingAttention(prospects);
+
+      expect(needingAttention.length).toBe(2);
+      expect(needingAttention.every(p => p.age === MAX_PROSPECT_AGE)).toBe(true);
+    });
+
+    it('should not return promoted or released prospects', () => {
+      const settings: ProspectGenerationSettings = {
+        qualityMultiplier: 1.0,
+        quantityMultiplier: 1.0,
+      };
+
+      const prospects = [
+        { ...generateYouthProspect('p1', 1, settings, 100), age: 18 },
+        { ...generateYouthProspect('p2', 1, settings, 200), age: 18, status: 'promoted' as const },
+        { ...generateYouthProspect('p3', 1, settings, 300), age: 18, status: 'released' as const },
+      ];
+
+      const needingAttention = getProspectsNeedingAttention(prospects);
+
+      expect(needingAttention.length).toBe(1);
+      expect(needingAttention[0].id).toBe('p1');
+    });
+  });
+});
+
+describe('YouthAcademySystem - Integration', () => {
+  it('should simulate full academy lifecycle', () => {
+    const settings: ProspectGenerationSettings = {
+      qualityMultiplier: 1.0,
+      quantityMultiplier: 1.0,
+    };
+
+    // Year 1: Generate initial prospects
+    const year1 = generateYearlyProspects(1, settings, 10000);
+    expect(year1.count).toBe(3);
+
+    let activeProspects = year1.prospects;
+
+    // Year 2: Age prospects and add new ones
+    activeProspects = activeProspects.map(p => advanceProspectAge(p));
+    const year2 = generateYearlyProspects(52, settings, 20000);
+    activeProspects = [...activeProspects, ...year2.prospects];
+
+    expect(activeProspects.length).toBe(6);
+
+    // Year 3: Check for promotion needs
+    activeProspects = activeProspects.map(p => advanceProspectAge(p));
+    const needingPromotion = activeProspects.filter(p => needsPromotion(p));
+
+    if (needingPromotion.length > 0) {
+      // Promote or release
+      activeProspects = activeProspects.map(p =>
+        needsPromotion(p) ? promoteProspect(p) : p
+      );
+    }
+
+    const stillActive = filterProspectsByStatus(activeProspects, 'active');
+    expect(stillActive.length).toBeLessThan(activeProspects.length);
+  });
+
+  it('should demonstrate budget impact on quality and quantity', () => {
+    const poorSettings: ProspectGenerationSettings = {
+      qualityMultiplier: 0.5,
+      quantityMultiplier: 0.5,
+    };
+
+    const eliteSettings: ProspectGenerationSettings = {
+      qualityMultiplier: 2.0,
+      quantityMultiplier: 2.0,
+    };
+
+    const poorResult = generateYearlyProspects(1, poorSettings, 10000);
+    const eliteResult = generateYearlyProspects(1, eliteSettings, 10000);
+
+    // Elite should generate more prospects
+    expect(eliteResult.count).toBeGreaterThan(poorResult.count);
+
+    // Elite should generate better prospects
+    const poorAvgRating =
+      poorResult.prospects.reduce((sum, p) => sum + p.overallRating, 0) / poorResult.count;
+    const eliteAvgRating =
+      eliteResult.prospects.reduce((sum, p) => sum + p.overallRating, 0) / eliteResult.count;
+
+    expect(eliteAvgRating).toBeGreaterThan(poorAvgRating);
+  });
+
+  it('should match FORMULAS.md capacity examples', () => {
+    // Example 1: $100k budget = 5 slots
+    expect(calculateAcademyCapacity(100000)).toBe(5);
+
+    // Example 2: $150k budget = 8 slots
+    expect(calculateAcademyCapacity(150000)).toBe(8);
+
+    // Example 3: $250k budget = 14 slots
+    expect(calculateAcademyCapacity(250000)).toBe(14);
+  });
+
+  it('should match FORMULAS.md prospect quantity examples', () => {
+    // Poor budget: 1-2 prospects
+    const poorCount = calculateProspectsPerYear(0.5);
+    expect(poorCount).toBeGreaterThanOrEqual(1);
+    expect(poorCount).toBeLessThanOrEqual(2);
+
+    // Standard budget: 3 prospects
+    const standardCount = calculateProspectsPerYear(1.0);
+    expect(standardCount).toBe(3);
+
+    // Elite budget: 6 prospects
+    const eliteCount = calculateProspectsPerYear(2.0);
+    expect(eliteCount).toBe(6);
+  });
+});

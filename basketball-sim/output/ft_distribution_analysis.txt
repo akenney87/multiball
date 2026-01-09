@@ -1,0 +1,115 @@
+======================================================================
+HOME TEAM ROSTER
+======================================================================
+Player               Pos   FT Composite   
+----------------------------------------------------------------------
+Player_PG_1          PG    84.9           
+Player_SG_2          SG    69.2           
+Player_SF_3          SF    81.1           
+Player_PF_4          PF    73.4           
+Player_C_5           C     68.2           
+Player_PG_6          PG    80.8           
+Player_SG_7          SG    64.7           
+Player_SF_8          SF    75.7           
+Player_PF_9          PF    59.7           
+Player_C_10          C     63.8           
+
+Team Average: 72.1
+Expected FT% for team avg: 76.5%
+
+======================================================================
+AWAY TEAM ROSTER
+======================================================================
+Player               Pos   FT Composite   
+----------------------------------------------------------------------
+Player_PG_1          PG    71.0           
+Player_SG_2          SG    69.9           
+Player_SF_3          SF    76.5           
+Player_PF_4          PF    67.9           
+Player_C_5           C     63.4           
+Player_PG_6          PG    64.5           
+Player_SG_7          SG    65.2           
+Player_SF_8          SF    65.2           
+Player_PF_9          PF    66.9           
+Player_C_10          C     59.1           
+
+Team Average: 67.0
+Expected FT% for team avg: 75.0%
+
+======================================================================
+SIMULATING GAME...
+======================================================================
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_001 15, Team_050 29
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_001 37, Team_050 48
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_001 61, Team_050 68
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_001 82, Team_050 89
+
+======================================================================
+FREE THROW ANALYSIS
+======================================================================
+
+HOME TEAM
+Total FTA: 16, FTM: 12, FT%: 75.0%
+
+Player               Pos   FTA   FTM   FT%     Composite  Expected% 
+----------------------------------------------------------------------
+Player_SF_3          SF    3     1     33.3    81.1       79.0      
+Player_PF_9          PF    3     3     100.0   59.7       72.9      
+Player_PG_6          PG    3     3     100.0   80.8       78.9      
+Player_SG_7          SG    2     0     0.0     64.7       74.4      
+Player_C_10          C     2     2     100.0   63.8       74.1      
+Player_C_5           C     2     2     100.0   68.2       75.4      
+Player_SF_8          SF    1     1     100.0   75.7       77.6      
+
+Weighted Avg Composite (by FTA): 70.9
+Team Roster Average: 72.1
+Difference: -1.3
+Expected FT% for weighted comp: 76.2%
+
+AWAY TEAM
+Total FTA: 19, FTM: 13, FT%: 68.4%
+
+Player               Pos   FTA   FTM   FT%     Composite  Expected% 
+----------------------------------------------------------------------
+Player_PF_9          PF    5     1     20.0    66.9       75.0      
+Player_SF_3          SF    4     4     100.0   76.5       77.8      
+Player_PG_1          PG    3     3     100.0   71.0       76.2      
+Player_C_5           C     3     1     33.3    63.4       74.0      
+Player_SG_2          SG    2     2     100.0   69.9       75.9      
+Player_PG_6          PG    1     1     100.0   64.5       74.3      
+Player_PF_4          PF    1     1     100.0   67.9       75.3      
+
+Weighted Avg Composite (by FTA): 69.3
+Team Roster Average: 67.0
+Difference: +2.3
+Expected FT% for weighted comp: 75.7%
+
+======================================================================
+OVERALL ANALYSIS
+======================================================================
+Total FTA: 35
+Total FTM: 25
+Actual FT%: 71.4%
+
+Overall Roster Average Composite: 69.6
+Weighted Average (by FTA): 47.1
+Selection Bias: -22.4 points
+
+Expected FT% for weighted composite: 69.1%
+Gap (Expected - Actual): -2.3 percentage points
+
+FINDING: Significant shooter selection bias detected!
+Players taking FTs have different composite than roster average.
+
+FINDING: Expected and actual FT% match closely.
+Formula is working correctly.

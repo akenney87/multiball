@@ -17,25 +17,104 @@ import type {
   ContractNegotiation,
   ContractOffer,
 } from '../../data/types';
+import type { BaseballGameStrategy } from '../../simulation/baseball/types';
+import type {
+  ScoutingReport as YouthScoutingReport,
+  AcademyProspect,
+  ScoutSportFocus,
+} from '../../systems/youthAcademySystem';
 import type { AIConfig } from '../../ai/types';
 import type { Difficulty, NewGameConfig } from '../screens/NewGameScreen';
 import type { ScoutReport } from '../../systems/scoutingSystem';
+import type { PlayerProgressionResult, AcademyProgressionResult } from '../../systems/weeklyProgressionProcessor';
 
 // =============================================================================
 // GAME STATE
 // =============================================================================
 
+// =============================================================================
+// LINEUP CONFIGURATIONS (Multi-Sport)
+// =============================================================================
+
 /**
- * Lineup configuration for matches
+ * Baseball defensive positions
+ */
+export type BaseballPosition = 'P' | 'C' | '1B' | '2B' | '3B' | 'SS' | 'LF' | 'CF' | 'RF' | 'DH';
+
+/**
+ * Soccer formations
+ */
+export type SoccerFormation = '4-4-2' | '4-3-3' | '3-5-2' | '4-2-3-1' | '5-3-2' | '4-1-4-1';
+
+/**
+ * Baseball bullpen role types
+ */
+export type BullpenRole = 'longReliever' | 'shortReliever' | 'closer';
+
+/**
+ * Baseball bullpen configuration
+ */
+export interface BaseballBullpenConfig {
+  /** Long relievers (2 slots) - can pitch multiple innings */
+  longRelievers: [string, string];
+  /** Short relievers (2 slots) - typically 1-2 innings */
+  shortRelievers: [string, string];
+  /** Closer (1 slot) - finishes games */
+  closer: string;
+}
+
+/**
+ * Baseball lineup configuration
+ */
+export interface BaseballLineupConfig {
+  /** Batting order (9-10 players) - player IDs. Validated at runtime by validateBaseballLineup() */
+  battingOrder: string[];
+
+  /** Defensive position assignments (player ID -> position) */
+  positions: Record<string, BaseballPosition>;
+
+  /** Starting pitcher ID */
+  startingPitcher: string;
+
+  /** Bullpen configuration */
+  bullpen: BaseballBullpenConfig;
+}
+
+/**
+ * Soccer lineup configuration
+ */
+export interface SoccerLineupConfig {
+  /** Starting 11 player IDs */
+  starters: string[];
+
+  /** Formation */
+  formation: SoccerFormation;
+
+  /**
+   * Position assignments (player ID -> slot index 0-10)
+   * The slot index maps to the formation's position array.
+   * E.g., for 4-4-2: 0=GK, 1=LB, 2=CB, 3=CB, 4=RB, etc.
+   */
+  positions: Record<string, number>;
+}
+
+/**
+ * Lineup configuration for matches (supports all sports)
  */
 export interface LineupConfig {
-  /** Starting 5 player IDs in position order (PG, SG, SF, PF, C) */
-  starters: [string, string, string, string, string];
+  /** Basketball: Starting 5 player IDs in position order (PG, SG, SF, PF, C) */
+  basketballStarters: [string, string, string, string, string];
 
-  /** Bench player IDs in rotation priority order */
+  /** Baseball lineup configuration */
+  baseballLineup: BaseballLineupConfig;
+
+  /** Soccer lineup configuration */
+  soccerLineup: SoccerLineupConfig;
+
+  /** Bench player IDs (shared across sports - players not starting) */
   bench: string[];
 
-  /** Minutes allocation (player ID -> target minutes) */
+  /** Minutes allocation for basketball (player ID -> target minutes) */
   minutesAllocation: Record<string, number>;
 }
 
@@ -95,8 +174,8 @@ export interface UserTeamState {
     secondary: string;
   };
 
-  /** Current division (1-5, starts at 5) */
-  division: 1 | 2 | 3 | 4 | 5;
+  /** Current division (1-10, starts at 7) */
+  division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
   /** Total budget for season */
   totalBudget: number;
@@ -119,8 +198,20 @@ export interface UserTeamState {
   /** Team-wide training focus */
   trainingFocus: TrainingFocus;
 
-  /** Tactical settings */
+  /** Tactical settings (basketball) */
   tactics: TacticalSettings;
+
+  /** Baseball strategy settings */
+  baseballStrategy: BaseballGameStrategy;
+
+  /** Shortlisted player IDs (players from other teams user is interested in) */
+  shortlistedPlayerIds: string[];
+
+  /** Transfer listed player IDs (user's players available for transfer) */
+  transferListPlayerIds: string[];
+
+  /** Asking prices for transfer listed players (playerId -> askingPrice) */
+  transferListAskingPrices: Record<string, number>;
 }
 
 /**
@@ -139,14 +230,44 @@ export interface AITeamState {
     secondary: string;
   };
 
-  /** Current division */
-  division: 1 | 2 | 3 | 4 | 5;
+  /** Current division (1-10) */
+  division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
   /** Roster player IDs */
   rosterIds: string[];
 
   /** AI configuration */
   aiConfig: AIConfig;
+}
+
+/**
+ * Soccer strategy for a team
+ */
+export interface SoccerTeamStrategy {
+  attackingStyle: 'possession' | 'direct' | 'counter';
+  pressing: 'high' | 'balanced' | 'low';
+  width: 'wide' | 'balanced' | 'tight';
+}
+
+/**
+ * Basketball strategy for a team
+ */
+export interface BasketballTeamStrategy {
+  pace: 'fast' | 'standard' | 'slow';
+  defense: 'man' | 'mixed' | 'zone';
+  rebounding: 'crash_glass' | 'standard' | 'prevent_transition';
+}
+
+/**
+ * AI team's season-long strategy settings (randomized at season start, persistent)
+ */
+export interface AITeamSeasonStrategy {
+  /** Baseball strategy (plate approach, swing style, baserunning) */
+  baseball: BaseballGameStrategy;
+  /** Soccer strategy */
+  soccer: SoccerTeamStrategy;
+  /** Basketball strategy */
+  basketball: BasketballTeamStrategy;
 }
 
 /**
@@ -184,6 +305,9 @@ export interface SeasonState {
 
   /** Current standings (team ID -> standing) */
   standings: Record<string, TeamStanding>;
+
+  /** AI team strategies for this season (team ID -> strategy) */
+  aiTeamStrategies: Record<string, AITeamSeasonStrategy>;
 }
 
 /**
@@ -204,6 +328,27 @@ export interface MarketState {
 
   /** Completed negotiations history */
   negotiationHistory: ContractNegotiation[];
+}
+
+/**
+ * Youth Academy state
+ * Manages scouting reports and signed academy prospects
+ */
+export interface YouthAcademyState {
+  /** Current scouting reports (prospects being evaluated) */
+  scoutingReports: YouthScoutingReport[];
+
+  /** Signed academy prospects */
+  academyProspects: AcademyProspect[];
+
+  /** Week when last batch of scouting reports was generated */
+  lastReportWeek: number;
+
+  /** Whether the academy has been initialized */
+  initialized: boolean;
+
+  /** Scout focus - which sport to prioritize when scouting */
+  scoutSportFocus: ScoutSportFocus;
 }
 
 /**
@@ -257,6 +402,9 @@ export interface GameState {
   /** Market state */
   market: MarketState;
 
+  /** Youth Academy state */
+  youthAcademy: YouthAcademyState;
+
   /** Recent events/news */
   events: NewsItem[];
 
@@ -277,6 +425,9 @@ export interface GameState {
 
   /** Scouting depth slider value (0-1, breadth to depth) */
   scoutingDepthSlider: number;
+
+  /** Whether user has completed initial budget allocation (required before scouting/simming) */
+  budgetConfigured: boolean;
 }
 
 // =============================================================================
@@ -299,6 +450,8 @@ export type GameAction =
 
   // Roster
   | { type: 'SET_LINEUP'; payload: LineupConfig }
+  | { type: 'SET_TACTICS'; payload: TacticalSettings }
+  | { type: 'SET_BASEBALL_STRATEGY'; payload: BaseballGameStrategy }
   | { type: 'RELEASE_PLAYER'; payload: { playerId: string } }
   | { type: 'SIGN_PLAYER'; payload: { player: Player } }
   | { type: 'SET_TRAINING_FOCUS'; payload: { playerId?: string; focus: TrainingFocus } }
@@ -319,6 +472,7 @@ export type GameAction =
 
   // Budget
   | { type: 'SET_OPERATIONS_BUDGET'; payload: OperationsBudget }
+  | { type: 'CONFIRM_BUDGET_ALLOCATION' }
 
   // Settings
   | { type: 'UPDATE_SETTINGS'; payload: Partial<GameSettings> }
@@ -334,6 +488,81 @@ export type GameAction =
   | { type: 'ADD_SCOUTING_REPORT'; payload: { report: ScoutReport } }
   | { type: 'SET_SCOUT_INSTRUCTIONS'; payload: ScoutInstructions }
   | { type: 'SET_SCOUTING_DEPTH_SLIDER'; payload: number }
+
+  // Youth Academy
+  | { type: 'SET_YOUTH_ACADEMY_STATE'; payload: YouthAcademyState }
+  | { type: 'ADD_YOUTH_SCOUTING_REPORT'; payload: { report: YouthScoutingReport } }
+  | { type: 'UPDATE_YOUTH_SCOUTING_REPORT'; payload: { reportId: string; report: YouthScoutingReport } }
+  | { type: 'REMOVE_YOUTH_SCOUTING_REPORT'; payload: { reportId: string } }
+  | { type: 'SIGN_PROSPECT_TO_ACADEMY'; payload: { prospect: AcademyProspect; signingCost?: number } }
+  | { type: 'UPDATE_ACADEMY_PROSPECT'; payload: { prospectId: string; prospect: AcademyProspect } }
+  | { type: 'REMOVE_ACADEMY_PROSPECT'; payload: { prospectId: string } }
+  | { type: 'SET_LAST_REPORT_WEEK'; payload: { week: number } }
+  | { type: 'SET_SCOUT_SPORT_FOCUS'; payload: { focus: ScoutSportFocus } }
+
+  // Player Progression
+  | { type: 'SNAPSHOT_SEASON_ATTRIBUTES' }
+  | { type: 'APPLY_WEEKLY_PROGRESSION'; payload: { results: PlayerProgressionResult[] } }
+  | { type: 'APPLY_ACADEMY_TRAINING'; payload: { results: AcademyProgressionResult[] } }
+
+  // Match Fitness
+  | {
+      type: 'APPLY_MATCH_FATIGUE';
+      payload: Array<{
+        playerId: string;
+        drain: number;
+        matchDate: Date;
+        sport: 'basketball' | 'baseball' | 'soccer';
+      }>;
+    }
+  | {
+      type: 'APPLY_FITNESS_RECOVERY';
+      payload: {
+        daysSinceAdvance: number;
+        medicalBudgetPct: number;
+      };
+    }
+
+  // AI Actions
+  | {
+      type: 'AI_SIGN_FREE_AGENT';
+      payload: {
+        teamId: string;
+        playerId: string;
+        salary: number;
+        years: number;
+      };
+    }
+  | {
+      type: 'AI_MAKE_TRANSFER_BID';
+      payload: {
+        buyerTeamId: string;
+        sellerTeamId: string;
+        playerId: string;
+        bidAmount: number;
+      };
+    }
+  | {
+      type: 'AI_RELEASE_PLAYER';
+      payload: {
+        teamId: string;
+        playerId: string;
+      };
+    }
+  | {
+      type: 'AI_RESPOND_TO_TRANSFER';
+      payload: {
+        offerId: string;
+        decision: 'accept' | 'reject' | 'counter';
+        counterAmount?: number;
+      };
+    }
+
+  // Shortlist & Transfer List
+  | { type: 'ADD_TO_SHORTLIST'; payload: { playerId: string } }
+  | { type: 'REMOVE_FROM_SHORTLIST'; payload: { playerId: string } }
+  | { type: 'ADD_TO_TRANSFER_LIST'; payload: { playerId: string; askingPrice: number } }
+  | { type: 'REMOVE_FROM_TRANSFER_LIST'; payload: { playerId: string } }
 
   // Save
   | { type: 'MARK_SAVED'; payload: { timestamp: Date } };
@@ -416,9 +645,25 @@ export interface GameContextValue {
 
   /**
    * Simulate a specific match
+   * @param matchId - The match ID to simulate
+   * @param baseballStrategy - Optional baseball strategy for the user team
+   * @param soccerStrategy - Optional soccer strategy for the user team
+   * @param basketballStrategy - Optional basketball strategy for the user team
    * @returns Match result
    */
-  simulateMatch: (matchId: string) => Promise<MatchResult>;
+  simulateMatch: (
+    matchId: string,
+    baseballStrategy?: BaseballGameStrategy,
+    soccerStrategy?: { attackingStyle: 'possession' | 'direct' | 'counter'; pressing: 'high' | 'balanced' | 'low'; width: 'wide' | 'balanced' | 'tight' },
+    basketballStrategy?: { pace: 'fast' | 'standard' | 'slow'; defense: 'man' | 'mixed' | 'zone'; rebounding: 'crash_glass' | 'standard' | 'prevent_transition'; scoringOptions: string[] }
+  ) => Promise<MatchResult>;
+
+  /**
+   * Save a pre-computed match result (used by live simulation screen)
+   * @param matchId - The match ID
+   * @param result - The pre-computed match result
+   */
+  saveMatchResult: (matchId: string, result: MatchResult) => Promise<void>;
 
   /**
    * Quick simulate all matches in current week
@@ -445,6 +690,16 @@ export interface GameContextValue {
   setLineup: (lineup: LineupConfig) => void;
 
   /**
+   * Set tactical settings (basketball)
+   */
+  setTactics: (tactics: TacticalSettings) => void;
+
+  /**
+   * Set baseball strategy
+   */
+  setBaseballStrategy: (strategy: BaseballGameStrategy) => void;
+
+  /**
    * Release a player from the roster
    */
   releasePlayer: (playerId: string) => void;
@@ -454,6 +709,22 @@ export interface GameContextValue {
    * Used for youth promotions, transfers, etc.
    */
   signPlayer: (player: Player) => void;
+
+  /**
+   * Sign a prospect to the youth academy
+   * Deducts $100k signing cost from available budget
+   */
+  signProspectToAcademy: (prospect: AcademyProspect) => void;
+
+  /**
+   * Update a youth scouting report (for continue/stop scouting)
+   */
+  updateYouthScoutingReport: (reportId: string, report: YouthScoutingReport) => void;
+
+  /**
+   * Set the sport focus for youth scouts
+   */
+  setYouthScoutSportFocus: (focus: 'basketball' | 'baseball' | 'soccer' | 'balanced') => void;
 
   /**
    * Set training focus (team-wide or per-player)
@@ -498,6 +769,38 @@ export interface GameContextValue {
    * Get available free agents
    */
   getFreeAgents: () => Player[];
+
+  /**
+   * Add a player to the shortlist (players from other teams user is interested in)
+   */
+  addToShortlist: (playerId: string) => void;
+
+  /**
+   * Remove a player from the shortlist
+   */
+  removeFromShortlist: (playerId: string) => void;
+
+  /**
+   * Get shortlisted players
+   */
+  getShortlistedPlayers: () => Player[];
+
+  /**
+   * Add a player to the transfer list (user's players available for transfer)
+   * @param playerId - The player to add
+   * @param askingPrice - The asking price for the player
+   */
+  addToTransferList: (playerId: string, askingPrice: number) => void;
+
+  /**
+   * Remove a player from the transfer list
+   */
+  removeFromTransferList: (playerId: string) => void;
+
+  /**
+   * Get transfer listed players
+   */
+  getTransferListedPlayers: () => Player[];
 
   // =========================================================================
   // SCOUTING ACTIONS
@@ -570,6 +873,11 @@ export interface GameContextValue {
    */
   setOperationsBudget: (allocation: OperationsBudget) => void;
 
+  /**
+   * Confirm budget allocation has been completed (enables scouting/simming)
+   */
+  confirmBudgetAllocation: () => void;
+
   // =========================================================================
   // SETTINGS ACTIONS
   // =========================================================================
@@ -594,9 +902,9 @@ export interface GameContextValue {
   getMatchesByWeek: (week: number) => Match[];
 
   /**
-   * Get recent events/news
+   * Get recent events/news filtered by scope
    */
-  getRecentEvents: (count?: number) => NewsItem[];
+  getRecentEvents: (count?: number, scope?: 'team' | 'division' | 'global') => NewsItem[];
 
   /**
    * Get user team standing
@@ -640,6 +948,20 @@ export const DEFAULT_TRAINING_FOCUS: TrainingFocus = {
 };
 
 /**
+ * Default youth academy state
+ */
+export const DEFAULT_YOUTH_ACADEMY_STATE: YouthAcademyState = {
+  scoutingReports: [],
+  academyProspects: [],
+  lastReportWeek: 0,
+  initialized: false,
+  scoutSportFocus: 'balanced',
+};
+
+/**
  * Current save version
  */
 export const SAVE_VERSION = '1.0.0';
+
+// Re-export ScoutSportFocus type for convenience
+export type { ScoutSportFocus } from '../../systems/youthAcademySystem';

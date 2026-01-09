@@ -1,0 +1,38 @@
+================================================================================
+TEAM 3PT COMPOSITE vs ACTUAL 3PT%
+================================================================================
+Total teams analyzed: 87
+
+3PT SHOOTING BY COMPOSITE RANGE:
+--------------------------------------------------------------------------------
+0-55: 9 teams, Avg Comp=53.7, 3PT=170/497 (34.2%)
+55-60: 49 teams, Avg Comp=57.9, 3PT=1112/3061 (36.3%)
+60-65: 29 teams, Avg Comp=61.1, 3PT=617/1656 (37.3%)
+
+Pearson Correlation: 0.071
+League Avg 3PT%: 36.4%
+League Avg Composite: 58.5
+
+TOP 10 TEAMS (by composite):
+  Team_048        Comp=63.9  3PT=6/27 (22.2%)
+  Team_046        Comp=63.6  3PT=17/74 (23.0%)
+  Team_067        Comp=62.0  3PT=9/27 (33.3%)
+  Team_085        Comp=61.8  3PT=19/45 (42.2%)
+  Team_005        Comp=61.8  3PT=46/130 (35.4%)
+  Team_003        Comp=61.6  3PT=32/90 (35.6%)
+  Team_045        Comp=61.5  3PT=26/82 (31.7%)
+  Team_099        Comp=61.3  3PT=25/82 (30.5%)
+  Team_010        Comp=61.3  3PT=27/72 (37.5%)
+  Team_029        Comp=61.2  3PT=9/26 (34.6%)
+
+BOTTOM 10 TEAMS (by composite):
+  Team_014        Comp=51.9  3PT=27/87 (31.0%)
+  Team_026        Comp=52.8  3PT=23/61 (37.7%)
+  Team_088        Comp=52.8  3PT=10/31 (32.3%)
+  Team_066        Comp=53.5  3PT=10/24 (41.7%)
+  Team_064        Comp=54.2  3PT=45/133 (33.8%)
+  Team_032        Comp=54.2  3PT=18/55 (32.7%)
+  Team_059        Comp=54.4  3PT=10/30 (33.3%)
+  Team_062        Comp=54.7  3PT=13/42 (31.0%)
+  Team_056        Comp=54.9  3PT=14/34 (41.2%)
+  Team_051        Comp=55.4  3PT=28/77 (36.4%)

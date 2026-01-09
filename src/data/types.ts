@@ -64,7 +64,7 @@ export interface PhysicalAttributes {
 }
 
 /**
- * Mental attributes (7 total)
+ * Mental attributes (8 total)
  * All attributes rated 1-100 scale
  */
 export interface MentalAttributes {
@@ -82,6 +82,8 @@ export interface MentalAttributes {
   composure: number;
   /** Patience - shot selection, waiting for opportunities */
   patience: number;
+  /** Teamwork - willingness to pass, help defense */
+  teamwork: number;
 }
 
 /**
@@ -99,12 +101,12 @@ export interface TechnicalAttributes {
   finesse: number;
   /** Deception - fakes, pump fakes, misdirection */
   deception: number;
-  /** Teamwork - willingness to pass, help defense */
-  teamwork: number;
+  /** Footwork - proper foot positioning, pivot moves, defensive sliding */
+  footwork: number;
 }
 
 /**
- * Complete athlete attribute set (25 attributes)
+ * Complete athlete attribute set (26 attributes)
  * Visible to user
  */
 export interface PlayerAttributes extends PhysicalAttributes, MentalAttributes, TechnicalAttributes {}
@@ -218,26 +220,168 @@ export interface BasketballCareerStats {
 
 /**
  * Baseball-specific career statistics
- * Placeholder for future implementation
  */
 export interface BaseballCareerStats {
-  // TODO: Define baseball stats
-  placeholder?: number;
+  // Batting (accumulated totals)
+  /** At bats */
+  atBats: number;
+  /** Runs scored */
+  runs: number;
+  /** Hits */
+  hits: number;
+  /** Doubles */
+  doubles: number;
+  /** Triples */
+  triples: number;
+  /** Home runs */
+  homeRuns: number;
+  /** Runs batted in */
+  rbi: number;
+  /** Walks (bases on balls) */
+  walks: number;
+  /** Strikeouts */
+  strikeouts: number;
+  /** Stolen bases */
+  stolenBases: number;
+  /** Caught stealing */
+  caughtStealing: number;
+
+  // Pitching (if player has pitched)
+  /** Games started as pitcher */
+  gamesStarted: number;
+  /** Innings pitched (stored as thirds, e.g., 6.2 IP = 20) */
+  inningsPitched: number;
+  /** Hits allowed */
+  hitsAllowed: number;
+  /** Runs allowed */
+  runsAllowed: number;
+  /** Earned runs */
+  earnedRuns: number;
+  /** Walks allowed */
+  walksAllowed: number;
+  /** Strikeouts thrown */
+  strikeoutsThrown: number;
+  /** Home runs allowed */
+  homeRunsAllowed: number;
+  /** Wins */
+  wins: number;
+  /** Losses */
+  losses: number;
+  /** Saves */
+  saves: number;
+
+  // Fielding
+  /** Putouts */
+  putouts: number;
+  /** Assists */
+  assists: number;
+  /** Errors */
+  errors: number;
 }
 
 /**
  * Soccer-specific career statistics
- * Placeholder for future implementation
  */
 export interface SoccerCareerStats {
-  // TODO: Define soccer stats
-  placeholder?: number;
+  /** Goals scored */
+  goals: number;
+  /** Assists */
+  assists: number;
+  /** Total shots */
+  shots: number;
+  /** Shots on target */
+  shotsOnTarget: number;
+  /** Minutes played */
+  minutesPlayed: number;
+  /** Yellow cards received */
+  yellowCards: number;
+  /** Red cards received */
+  redCards: number;
+  /** Saves (goalkeeper only) */
+  saves?: number;
+  /** Clean sheets (goalkeeper only) */
+  cleanSheets?: number;
+  /** Goals conceded (goalkeeper only) */
+  goalsAgainst?: number;
 }
 
 /**
  * Player season statistics (same structure as career, but for current season)
  */
 export type PlayerSeasonStats = PlayerCareerStats;
+
+/**
+ * Historical record of a single season's statistics
+ * Used for year-by-year stat display on player detail screen
+ */
+export interface PlayerSeasonRecord {
+  /** Season number (1, 2, 3, etc.) */
+  seasonNumber: number;
+  /** Display label for the season (e.g., "2024-25") */
+  yearLabel: string;
+  /** Team ID the player was on during this season */
+  teamId: string;
+  /** Games played by sport during this season */
+  gamesPlayed: {
+    basketball: number;
+    baseball: number;
+    soccer: number;
+  };
+  /** Total points scored by sport */
+  totalPoints: {
+    basketball: number;
+    baseball: number;
+    soccer: number;
+  };
+  /** Minutes played by sport */
+  minutesPlayed: {
+    basketball: number;
+    baseball: number;
+    soccer: number;
+  };
+  /** Basketball stats for this season */
+  basketball?: BasketballCareerStats;
+  /** Baseball stats for this season */
+  baseball?: BaseballCareerStats;
+  /** Soccer stats for this season */
+  soccer?: SoccerCareerStats;
+}
+
+// =============================================================================
+// YOUTH PHYSICAL DEVELOPMENT
+// =============================================================================
+
+/**
+ * Growth pattern determines timing of physical development
+ */
+export type GrowthPattern = 'early' | 'average' | 'late';
+
+/**
+ * Youth physical development tracking
+ *
+ * Players grow in height until age 18 and weight until age 24.
+ * This interface tracks projected adult measurements and growth progress.
+ * Only exists for players under age 24.
+ */
+export interface YouthPhysicalDevelopment {
+  /** Projected adult height in inches */
+  projectedAdultHeight: number;
+
+  /** Height projection variance (typically ±2 inches) */
+  heightVariance: number;
+
+  /** Target adult BMI (used to calculate projected weight) */
+  targetAdultBMI: number;
+
+  /** Growth pattern affects timing of development */
+  growthPattern: GrowthPattern;
+
+  /** Game day number of last growth check */
+  lastGrowthGameDay: number;
+
+  /** Height percentile (0-100) for lookup in growth tables */
+  heightPercentile: number;
+}
 
 /**
  * Complete Player/Athlete entity
@@ -268,7 +412,7 @@ export interface Player {
   /** Nationality/Country (e.g., "USA", "Spain", "France") */
   nationality: string;
 
-  /** All 25 attributes (1-100 scale) */
+  /** All 26 attributes (1-100 scale) */
   attributes: PlayerAttributes;
 
   /** Hidden potential ceilings (not visible to user) */
@@ -295,6 +439,13 @@ export interface Player {
   /** Current season statistics */
   currentSeasonStats: PlayerSeasonStats;
 
+  /**
+   * Historical season-by-season statistics
+   * Each entry represents one completed season
+   * Empty array for new players, populated at end of each season
+   */
+  seasonHistory: PlayerSeasonRecord[];
+
   /** Team assignment ('user' | AI team ID | 'free_agent' | 'youth_academy') */
   teamId: string;
 
@@ -303,6 +454,68 @@ export interface Player {
 
   /** When player was acquired */
   acquisitionDate: Date;
+
+  /**
+   * Snapshot of attributes at start of season (for progress tracking)
+   * Used to display attribute changes like "Speed: 45 (+8)"
+   * Optional - null if not yet set (e.g., mid-season acquisition)
+   */
+  seasonStartAttributes?: PlayerAttributes;
+
+  /**
+   * Sport-specific metadata (optional)
+   * Contains data that only applies to specific sports
+   */
+  sportMetadata?: {
+    baseball?: {
+      /** Batting hand: L=Left, R=Right, S=Switch */
+      bats: 'L' | 'R' | 'S';
+      /** Throwing hand: L=Left, R=Right */
+      throws: 'L' | 'R';
+      /** Preferred position (if user-assigned) */
+      preferredPosition?: 'P' | 'C' | '1B' | '2B' | '3B' | 'SS' | 'LF' | 'CF' | 'RF' | 'DH';
+    };
+    soccer?: {
+      /** Preferred foot: L=Left, R=Right, B=Both */
+      preferredFoot: 'L' | 'R' | 'B';
+      /** Preferred position (if user-assigned) */
+      preferredPosition?: 'GK' | 'CB' | 'LB' | 'RB' | 'CDM' | 'CM' | 'CAM' | 'LW' | 'RW' | 'ST';
+    };
+  };
+
+  // =========================================================================
+  // MATCH FITNESS (Persistent stamina between matches)
+  // =========================================================================
+
+  /**
+   * Match fitness level (0-100, default 100)
+   * Depletes after matches, recovers over time.
+   * Distinct from in-match stamina (StaminaTracker) and stamina attribute.
+   */
+  matchFitness: number;
+
+  /**
+   * Date of last match played (for recovery calculation)
+   * null if player hasn't played a match yet
+   */
+  lastMatchDate: Date | null;
+
+  /**
+   * Sport of last match played
+   * Used to track which sport caused the fatigue
+   */
+  lastMatchSport: 'basketball' | 'baseball' | 'soccer' | null;
+
+  // =========================================================================
+  // YOUTH PHYSICAL DEVELOPMENT
+  // =========================================================================
+
+  /**
+   * Youth physical development data (only for players under 24)
+   * Tracks projected adult height/weight and growth progress.
+   * Set to undefined when player reaches age 24.
+   */
+  youthDevelopment?: YouthPhysicalDevelopment;
 }
 
 // =============================================================================
@@ -698,7 +911,84 @@ export interface TacticalSettings {
 
   /** Timeout strategy */
   timeoutStrategy: 'aggressive' | 'standard' | 'conservative';
+
+  // ==========================================================================
+  // SOCCER TACTICAL SETTINGS
+  // ==========================================================================
+
+  /** Soccer attacking style */
+  soccerAttackingStyle?: 'possession' | 'direct' | 'counter';
+
+  /** Soccer pressing intensity */
+  soccerPressing?: 'high' | 'balanced' | 'low';
+
+  /** Soccer formation width */
+  soccerWidth?: 'wide' | 'balanced' | 'tight';
 }
+
+/**
+ * Tactical settings for baseball
+ */
+export interface BaseballTacticalSettings {
+  /** Batting order (9 player IDs in order) */
+  lineup: [string, string, string, string, string, string, string, string, string];
+
+  /** Defensive positions (player ID -> position) */
+  defensivePositions: Record<string, 'P' | 'C' | '1B' | '2B' | '3B' | 'SS' | 'LF' | 'CF' | 'RF' | 'DH'>;
+
+  /** Starting pitcher (player ID) */
+  startingPitcher: string;
+
+  /** Bullpen order (relief pitchers in preferred usage order) */
+  bullpenOrder: string[];
+
+  /** Bullpen usage strategy */
+  bullpenStrategy: 'aggressive' | 'standard' | 'conservative';
+
+  /** Use designated hitter */
+  useDH: boolean;
+
+  /** Baserunning aggression */
+  baserunningAggression: 'aggressive' | 'standard' | 'conservative';
+
+  /** Steal attempt frequency (0-1) */
+  stealFrequency: number;
+
+  /** Sacrifice bunt frequency (0-1) */
+  sacrificeBuntFrequency: number;
+}
+
+/**
+ * Tactical settings for soccer
+ * Placeholder for future implementation
+ */
+export interface SoccerTacticalSettings {
+  /** Formation (e.g., "4-3-3", "4-4-2") */
+  formation: string;
+
+  /** Starting XI (11 player IDs) */
+  startingXI: string[];
+
+  /** Position assignments */
+  positions: Record<string, 'GK' | 'CB' | 'LB' | 'RB' | 'CDM' | 'CM' | 'CAM' | 'LW' | 'RW' | 'ST'>;
+
+  /** Attacking style */
+  attackingStyle: 'possession' | 'direct' | 'counter';
+
+  /** Defensive line */
+  defensiveLine: 'high' | 'medium' | 'low';
+
+  /** Pressing intensity */
+  pressingIntensity: 'high' | 'medium' | 'low';
+}
+
+/**
+ * Sport-aware tactical settings union type
+ */
+export type SportTacticalSettings =
+  | { sport: 'basketball'; settings: TacticalSettings }
+  | { sport: 'baseball'; settings: BaseballTacticalSettings }
+  | { sport: 'soccer'; settings: SoccerTacticalSettings };
 
 /**
  * Scouting settings
@@ -765,8 +1055,8 @@ export interface Franchise {
   /** Team colors */
   colors: TeamColors;
 
-  /** Current division (1-5) */
-  division: 1 | 2 | 3 | 4 | 5;
+  /** Current division (1-10) */
+  division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
   /** Division history */
   divisionHistory: DivisionHistoryEntry[];
@@ -804,22 +1094,36 @@ export interface Franchise {
 // =============================================================================
 
 /**
+ * Sport-specific record
+ */
+export interface SportRecord {
+  wins: number;
+  losses: number;
+}
+
+/**
  * Team standing
  */
 export interface TeamStanding {
   /** Team ID */
   teamId: string;
 
-  /** Wins */
+  /** Total wins (all sports) */
   wins: number;
 
-  /** Losses */
+  /** Total losses (all sports) */
   losses: number;
 
-  /** Total points (combined across all sports) */
-  points: number;
+  /** Basketball record */
+  basketball: SportRecord;
 
-  /** Current rank (1-20) */
+  /** Baseball record */
+  baseball: SportRecord;
+
+  /** Soccer record */
+  soccer: SportRecord;
+
+  /** Current rank (1-20) - sorted by total W-L% */
   rank: number;
 }
 
@@ -844,6 +1148,12 @@ export interface MatchResult {
 
   /** Play-by-play log */
   playByPlay: string[];
+
+  /** Penalty shootout result (soccer only, when regulation ends in draw) */
+  penaltyShootout?: {
+    homeScore: number;
+    awayScore: number;
+  };
 }
 
 /**
@@ -1173,7 +1483,7 @@ export interface NewsItem {
   id: string;
 
   /** News type */
-  type: 'injury' | 'contract' | 'scouting' | 'transfer' | 'match' | 'youth' | 'general';
+  type: 'injury' | 'contract' | 'scouting' | 'transfer' | 'match' | 'youth' | 'general' | 'award' | 'progression' | 'stat_line' | 'window';
 
   /** Priority level */
   priority: 'critical' | 'important' | 'info';
@@ -1192,6 +1502,18 @@ export interface NewsItem {
 
   /** Related entity ID (player, match, etc.) */
   relatedEntityId?: string;
+
+  /** Scope - which filter shows this event */
+  scope: 'team' | 'division' | 'global';
+
+  /** Team ID this event relates to (for division-level filtering) */
+  teamId?: string;
+
+  /** Sport this event relates to (for sport-specific events) */
+  sport?: 'basketball' | 'baseball' | 'soccer';
+
+  /** Stat type for notable stat lines */
+  statType?: string;
 }
 
 // =============================================================================

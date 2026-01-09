@@ -1,0 +1,58 @@
+================================================================================
+PHASE 2 DIAGNOSTIC REPORT - GRIP_STRENGTH INTEGRATION
+================================================================================
+
+IMPLEMENTATION STATUS: Complete with formula bugs
+CORRELATION RESULT: FAILED (-30% regression)
+
+MECHANICS IMPLEMENTED:
+1. Contested rebound rip-aways (rebounding.py:495-525)
+2. Strip attempts on drives (possession.py:220-245)
+3. Perimeter steal credit (turnovers.py:238-281)
+
+ROOT CAUSE IDENTIFIED:
+======================
+The weighted sigmoid formula P = BaseRate + (1-BaseRate) * sigmoid(diff) is 
+INAPPROPRIATE for defensive contest mechanics.
+
+At neutral (equal attributes):
+- Expected: 8% rip-away chance (base rate)
+- Actual: 54% rip-away chance 
+- Problem: Formula adds 46% to base rate even when players are equal!
+
+PROBABILITY BREAKDOWN (k=0.015, base=0.08):
+- Equal players (50 vs 50): 54.0% (should be ~8%)
+- Better rebounder (70 vs 50): 47.2% (should be ~5%)
+- Worse rebounder (50 vs 70): 60.8% (should be ~12%)
+- Much worse (30 vs 90): 73.4% (should be ~20%)
+
+GAME IMPACT:
+- TOV/game: 23.5 (vs 15.1 Phase 1, 14.0 NBA)
+- One game had 48 total TOVs (16 home, 32 away)
+- Low-scoring games: 65/100 under 80 points
+- Correlation: 0.339 → 0.258 (-24% regression)
+
+WHY THIS FORMULA DOESN'T WORK:
+The weighted sigmoid is designed for SHOT SUCCESS where:
+- Neutral outcome (50%) makes sense as midpoint
+- Attributes push probability up/down from 50%
+- BaseRate sets floor, (1-BaseRate) sets ceiling
+
+But for DEFENSIVE CONTESTS we need:
+- Neutral outcome should be BASE_RATE (8%), not 50%
+- Attributes should scale probability around base rate
+- Better defender → higher than base
+- Worse defender → lower than base
+
+CORRECT FORMULA NEEDED:
+Something like: prob = BASE_RATE * scaling_factor(attribute_diff)
+where scaling_factor ranges from 0.5x to 2.0x based on sigmoid
+
+FILES MODIFIED:
+- src/constants.py (lines 151-196, 327-330)
+- src/systems/rebounding.py (lines 478-525)
+- src/systems/possession.py (lines 220-245)  
+- src/systems/turnovers.py (lines 238-281)
+
+RECOMMENDATION:
+Consult PM for correct formula for defensive contest mechanics.

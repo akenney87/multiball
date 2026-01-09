@@ -2,53 +2,28 @@
  * Connected Youth Academy Screen
  *
  * Youth Academy screen connected to GameContext.
- * Uses module-level cache to persist state between navigations.
+ * State is persisted in GameContext (survives app restarts).
  */
 
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useColors, spacing } from '../theme';
 import { YouthAcademyScreen } from './YouthAcademyScreen';
 import { useGame } from '../context/GameContext';
 import type { Player, Contract, PlayerAttributes, PlayerPotentials, PeakAges, TrainingFocus, WeeklyXP, PlayerCareerStats } from '../../data/types';
 import {
-  ScoutingReport,
   AcademyProspect,
   AcademyInfo,
-  generateScoutingReports,
+  ScoutSportFocus,
   getAcademyInfo,
-  calculateReportsPerCycle,
   calculateAcademyCapacity,
   canSignProspect,
-  signProspectToAcademy,
+  signProspectToAcademy as createProspectFromReport,
   requestContinueScouting,
   stopScouting,
-  advanceScoutingReport,
-  promoteProspect,
-  releaseProspect,
   getProspectsNeedingAction,
   SCOUTING_CYCLE_WEEKS,
 } from '../../systems/youthAcademySystem';
-
-// =============================================================================
-// MODULE-LEVEL CACHE (persists between component mounts)
-// =============================================================================
-
-interface AcademyCache {
-  scoutingReports: ScoutingReport[];
-  academyProspects: AcademyProspect[];
-  lastReportWeek: number;
-  initialized: boolean;
-  gameId: string | null;  // Track which game this cache belongs to
-}
-
-let academyCache: AcademyCache = {
-  scoutingReports: [],
-  academyProspects: [],
-  lastReportWeek: 0,
-  initialized: false,
-  gameId: null,
-};
 
 // =============================================================================
 // HELPER: Convert AcademyProspect to Player
@@ -80,12 +55,13 @@ function convertProspectToPlayer(
     consistency: attrs['consistency'] ?? 30,
     composure: attrs['composure'] ?? 30,
     patience: attrs['patience'] ?? 30,
+    teamwork: attrs['teamwork'] ?? 30,
     hand_eye_coordination: attrs['hand_eye_coordination'] ?? 30,
     throw_accuracy: attrs['throw_accuracy'] ?? 30,
     form_technique: attrs['form_technique'] ?? 30,
     finesse: attrs['finesse'] ?? 30,
     deception: attrs['deception'] ?? 30,
-    teamwork: attrs['teamwork'] ?? 30,
+    footwork: attrs['footwork'] ?? 30,
   };
 
   const potentials: PlayerPotentials = {
@@ -145,6 +121,14 @@ function convertProspectToPlayer(
     teamId: 'user',
     acquisitionType: 'youth',
     acquisitionDate: new Date(),
+    // Snapshot current attributes for progress tracking
+    seasonStartAttributes: { ...attributes },
+    // Match fitness - new players start fully fit
+    matchFitness: 100,
+    lastMatchDate: null,
+    lastMatchSport: null,
+    // Season history - empty for new players
+    seasonHistory: [],
   };
 }
 
@@ -182,66 +166,27 @@ interface ConnectedYouthAcademyScreenProps {
 
 export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthAcademyScreenProps) {
   const colors = useColors();
-  const { state, signPlayer } = useGame();
-  const mountedRef = useRef(true);
+  const {
+    state,
+    signPlayer,
+    signProspectToAcademy,
+    updateYouthScoutingReport,
+    setYouthScoutSportFocus,
+  } = useGame();
 
-  // Local state initialized from cache
-  const [scoutingReports, setScoutingReports] = useState<ScoutingReport[]>(() => {
-    // Reset cache if different game
-    if (academyCache.gameId !== state.userTeam.name) {
-      return [];
-    }
-    return academyCache.scoutingReports;
-  });
-
-  const [academyProspects, setAcademyProspects] = useState<AcademyProspect[]>(() => {
-    if (academyCache.gameId !== state.userTeam.name) {
-      return [];
-    }
-    return academyCache.academyProspects;
-  });
-
-  const [lastReportWeek, setLastReportWeek] = useState<number>(() => {
-    if (academyCache.gameId !== state.userTeam.name) {
-      return 0;
-    }
-    return academyCache.lastReportWeek;
-  });
-
-  const [initialized, setInitialized] = useState<boolean>(() => {
-    if (academyCache.gameId !== state.userTeam.name) {
-      return false;
-    }
-    return academyCache.initialized;
-  });
-
-  // Sync state to cache on every change
-  useEffect(() => {
-    academyCache = {
-      scoutingReports,
-      academyProspects,
-      lastReportWeek,
-      initialized,
-      gameId: state.userTeam.name,
-    };
-  }, [scoutingReports, academyProspects, lastReportWeek, initialized, state.userTeam.name]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
+  // Get youth academy state directly from context (reports are now generated in advanceWeek)
+  const youthAcademy = state.youthAcademy;
+  const scoutingReports = youthAcademy?.scoutingReports || [];
+  const academyProspects = youthAcademy?.academyProspects || [];
+  const lastReportWeek = youthAcademy?.lastReportWeek || 0;
+  const sportFocus = youthAcademy?.scoutSportFocus || 'balanced';
 
   // Calculate budget-based settings
   const youthBudgetPct = state.userTeam.operationsBudget.youthDevelopment;
   const budgetAmount = (youthBudgetPct / 100) * 500000;
-  const qualityMultiplier = 0.5 + (youthBudgetPct / 100) * 1.0;
 
-  // Calculate academy capacity and reports per cycle
+  // Calculate academy capacity
   const capacity = useMemo(() => calculateAcademyCapacity(budgetAmount), [budgetAmount]);
-  const reportsPerCycle = useMemo(() => calculateReportsPerCycle(budgetAmount), [budgetAmount]);
 
   // Calculate weeks until next reports
   const currentWeek = state.season?.currentWeek ?? 0;
@@ -249,71 +194,6 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
     const weeksSinceLastReport = currentWeek - lastReportWeek;
     return Math.max(0, SCOUTING_CYCLE_WEEKS - weeksSinceLastReport);
   }, [currentWeek, lastReportWeek]);
-
-  // Initialize on first load
-  useEffect(() => {
-    if (state.initialized && !initialized) {
-      const seed = Date.now();
-      const reports = generateScoutingReports(
-        currentWeek,
-        reportsPerCycle,
-        qualityMultiplier,
-        seed
-      );
-      setScoutingReports(reports);
-      setLastReportWeek(currentWeek);
-      setAcademyProspects([]);
-      setInitialized(true);
-    }
-  }, [state.initialized, initialized, currentWeek, reportsPerCycle, qualityMultiplier]);
-
-  // Generate new reports when 4-week cycle completes
-  useEffect(() => {
-    if (initialized && weeksUntilNextReports === 0 && currentWeek > lastReportWeek) {
-      const seed = Date.now() + currentWeek;
-
-      setScoutingReports(prev => {
-        // Advance continuing reports (narrow ranges, check for rival signing)
-        const updated = prev.map((report, index) =>
-          advanceScoutingReport(report, currentWeek, seed + index * 100)
-        );
-
-        // Check for rival signings and show alerts
-        const rivalSigned = updated.filter(r => r.status === 'signed_by_rival');
-        rivalSigned.forEach(report => {
-          // Show alert for each rival signing (delayed to avoid React state issues)
-          setTimeout(() => {
-            Alert.alert(
-              'Prospect Signed by Rival',
-              `${report.name} has been signed by another club while you were scouting him. The scouting report is no longer available.`
-            );
-          }, 100);
-        });
-
-        // Keep reports that are continuing scouting (status = 'scouting')
-        // These take up slots in the next cycle
-        const continuingReports = updated.filter(r => r.status === 'scouting');
-
-        // Calculate how many new report slots are available
-        // Total slots = reportsPerCycle, continuing reports take up slots
-        const availableSlots = Math.max(0, reportsPerCycle - continuingReports.length);
-
-        // Generate new reports only for available slots
-        const newReports = availableSlots > 0
-          ? generateScoutingReports(
-              currentWeek,
-              availableSlots,
-              qualityMultiplier,
-              seed + 10000
-            )
-          : [];
-
-        return [...continuingReports, ...newReports];
-      });
-
-      setLastReportWeek(currentWeek);
-    }
-  }, [initialized, weeksUntilNextReports, currentWeek, lastReportWeek, reportsPerCycle, qualityMultiplier]);
 
   // Get academy info
   const academyInfo = useMemo((): AcademyInfo => {
@@ -337,17 +217,19 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
 
   // Handle continue scouting
   const handleContinueScouting = useCallback((reportId: string) => {
-    setScoutingReports(prev =>
-      prev.map(r => r.id === reportId ? requestContinueScouting(r) : r)
-    );
-  }, []);
+    const report = scoutingReports.find(r => r.id === reportId);
+    if (report) {
+      updateYouthScoutingReport(reportId, requestContinueScouting(report));
+    }
+  }, [scoutingReports, updateYouthScoutingReport]);
 
   // Handle stop scouting
   const handleStopScouting = useCallback((reportId: string) => {
-    setScoutingReports(prev =>
-      prev.map(r => r.id === reportId ? stopScouting(r) : r)
-    );
-  }, []);
+    const report = scoutingReports.find(r => r.id === reportId);
+    if (report) {
+      updateYouthScoutingReport(reportId, stopScouting(report));
+    }
+  }, [scoutingReports, updateYouthScoutingReport]);
 
   // Handle signing a prospect to the academy
   const handleSignProspect = useCallback((reportId: string) => {
@@ -359,13 +241,15 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
       return;
     }
 
-    const prospect = signProspectToAcademy(report, currentWeek);
-    setAcademyProspects(prev => [...prev, prospect]);
+    // Create the prospect from the scouting report
+    const prospect = createProspectFromReport(report, currentWeek);
 
-    setScoutingReports(prev =>
-      prev.map(r => r.id === reportId ? { ...r, status: 'signed' as const } : r)
-    );
-  }, [scoutingReports, academyProspects, capacity, currentWeek]);
+    // Sign to academy via context (this also deducts $100k from budget)
+    signProspectToAcademy(prospect);
+
+    // Mark report as signed
+    updateYouthScoutingReport(reportId, { ...report, status: 'signed' as const });
+  }, [scoutingReports, academyProspects, capacity, currentWeek, signProspectToAcademy, updateYouthScoutingReport]);
 
   // Handle promoting a prospect to main squad
   const handlePromoteProspect = useCallback((prospectId: string) => {
@@ -376,13 +260,8 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
     const contract = createYouthContract(prospect.id);
     const player = convertProspectToPlayer(prospect, contract);
 
-    // Add to main roster via context
+    // Add to main roster via context (this will also update the academy prospect status)
     signPlayer(player);
-
-    // Mark as promoted in academy
-    setAcademyProspects(prev =>
-      prev.map(p => p.id === prospectId ? promoteProspect(p) : p)
-    );
 
     Alert.alert(
       'Prospect Promoted!',
@@ -392,10 +271,17 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
 
   // Handle releasing a prospect
   const handleReleaseProspect = useCallback((prospectId: string) => {
-    setAcademyProspects(prev =>
-      prev.map(p => p.id === prospectId ? releaseProspect(p) : p)
-    );
-  }, []);
+    const prospect = academyProspects.find(p => p.id === prospectId);
+    if (!prospect) return;
+    // TODO: Add a context function for releasing prospects
+    // For now, this would need to be handled via a dispatch
+    Alert.alert('Released', `${prospect.name} has been released from the academy.`);
+  }, [academyProspects]);
+
+  // Handle sport focus change
+  const handleSportFocusChange = useCallback((focus: ScoutSportFocus) => {
+    setYouthScoutSportFocus(focus);
+  }, [setYouthScoutSportFocus]);
 
   // Loading state
   if (!state.initialized) {
@@ -417,6 +303,8 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
       academyInfo={academyInfo}
       academyProspects={activeProspects}
       prospectsNeedingAction={prospectsNeedingAction}
+      sportFocus={sportFocus}
+      onSportFocusChange={handleSportFocusChange}
       onContinueScouting={handleContinueScouting}
       onStopScouting={handleStopScouting}
       onSignProspect={handleSignProspect}

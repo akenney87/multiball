@@ -1,0 +1,137 @@
+{
+  "num_games": 100,
+  "min_attempts": 30,
+  "qualified_players": 14,
+  "correlation": 0.2756739695757906,
+  "spread_pp": 19.677381466578765,
+  "bucket_averages": {
+    "50-55": 0.21212121212121213,
+    "55-60": 0.2599579644435931,
+    "60-65": 0.195861844248941,
+    "65-70": 0.3926356589147287
+  },
+  "top_10": [
+    {
+      "name": "Dwyane O'Neal",
+      "composite": 68.38,
+      "pct": 0.4186046511627907,
+      "attempts": 43
+    },
+    {
+      "name": "Jrue Green",
+      "composite": 57.28,
+      "pct": 0.38095238095238093,
+      "attempts": 42
+    },
+    {
+      "name": "Lauri Dosunmu",
+      "composite": 66.21,
+      "pct": 0.36666666666666664,
+      "attempts": 30
+    },
+    {
+      "name": "Kevin Bane",
+      "composite": 57.62,
+      "pct": 0.3170731707317073,
+      "attempts": 41
+    },
+    {
+      "name": "Julius Anthony",
+      "composite": 59.12,
+      "pct": 0.30612244897959184,
+      "attempts": 49
+    },
+    {
+      "name": "Dejounte Allen",
+      "composite": 58.44,
+      "pct": 0.26666666666666666,
+      "attempts": 30
+    },
+    {
+      "name": "Jordan Brogdon",
+      "composite": 64.94,
+      "pct": 0.26666666666666666,
+      "attempts": 30
+    },
+    {
+      "name": "D'Angelo Iverson",
+      "composite": 55.9,
+      "pct": 0.24324324324324326,
+      "attempts": 37
+    },
+    {
+      "name": "Shaquille Herro",
+      "composite": 64.47,
+      "pct": 0.21212121212121213,
+      "attempts": 33
+    },
+    {
+      "name": "Malcolm Murray",
+      "composite": 54.57,
+      "pct": 0.21212121212121213,
+      "attempts": 33
+    }
+  ],
+  "bottom_10": [
+    {
+      "name": "Julius Anthony",
+      "composite": 59.12,
+      "pct": 0.30612244897959184,
+      "attempts": 49
+    },
+    {
+      "name": "Dejounte Allen",
+      "composite": 58.44,
+      "pct": 0.26666666666666666,
+      "attempts": 30
+    },
+    {
+      "name": "Jordan Brogdon",
+      "composite": 64.94,
+      "pct": 0.26666666666666666,
+      "attempts": 30
+    },
+    {
+      "name": "D'Angelo Iverson",
+      "composite": 55.9,
+      "pct": 0.24324324324324326,
+      "attempts": 37
+    },
+    {
+      "name": "Shaquille Herro",
+      "composite": 64.47,
+      "pct": 0.21212121212121213,
+      "attempts": 33
+    },
+    {
+      "name": "Malcolm Murray",
+      "composite": 54.57,
+      "pct": 0.21212121212121213,
+      "attempts": 33
+    },
+    {
+      "name": "Pau Curry",
+      "composite": 60.08,
+      "pct": 0.1935483870967742,
+      "attempts": 31
+    },
+    {
+      "name": "Kristaps Fox",
+      "composite": 59.79,
+      "pct": 0.16279069767441862,
+      "attempts": 43
+    },
+    {
+      "name": "Magic Durant",
+      "composite": 55.72,
+      "pct": 0.14285714285714285,
+      "attempts": 35
+    },
+    {
+      "name": "Allen Mobley",
+      "composite": 64.7,
+      "pct": 0.1111111111111111,
+      "attempts": 36
+    }
+  ]
+}

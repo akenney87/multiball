@@ -1,0 +1,142 @@
+================================================================================
+CORRELATION ANALYSIS SUMMARY
+================================================================================
+
+Total attributes tested: 24
+Test method: HIGH (90) vs LOW (30) teams, 5 games each
+
+TOP 10 ATTRIBUTES BY POINTS IMPACT:
+Attribute                 Avg Diff Pts    Avg Diff FG%    Avg Diff TO    
+--------------------------------------------------------------------------------
+ 1. finesse                  +14.8            +7.0%           +0.0
+ 2. hand_eye_coordination    +14.6            +4.9%           -1.4
+ 3. height                   +14.4            +6.4%           -3.2
+ 4. grip_strength            +13.8            +3.3%           -1.8
+ 5. balance                  +13.4            +8.9%           -2.6
+ 6. creativity               -12.2            +0.7%           +2.8
+ 7. throw_accuracy           +10.4            +4.9%           +1.2
+ 8. top_speed                 +8.4            +2.9%           -1.0
+ 9. determination             +7.2            +5.9%           +1.0
+10. teamwork                  -6.4            -2.3%           -2.0
+
+BOTTOM 10 ATTRIBUTES BY POINTS IMPACT:
+Attribute                 Avg Diff Pts    Avg Diff FG%    Avg Diff TO    
+--------------------------------------------------------------------------------
+ 1. deception                 +4.4            -1.6%           -2.2
+ 2. jumping                   +4.0            +3.4%           +0.4
+ 3. form_technique            +3.8            +0.0%           -1.4
+ 4. agility                   +3.6            +2.7%           -0.2
+ 5. reactions                 -2.2            -3.5%           -2.8
+ 6. arm_strength              -1.8            +1.2%           +0.2
+ 7. composure                 -1.6            -4.9%           -3.0
+ 8. patience                  -1.2            -0.6%           +3.2
+ 9. acceleration              -0.2            -1.3%           +0.6
+10. awareness                 -0.2            -2.3%           -1.6
+
+ATTRIBUTES WITH MINIMAL IMPACT (potential issues):
+Attribute                 Avg Diff Pts    Avg Diff FG%    Avg Diff TO    
+--------------------------------------------------------------------------------
+[OK] All attributes show meaningful impact!
+
+DETAILED BREAKDOWN:
+================================================================================
+finesse:
+  Points: +14.8  |  FG%: +7.0%  |  3PT%: +8.4%  |  FT%: +6.9%
+  TO: +0.0  |  OREB: -2.6  |  AST: +2.4  |  PF: -2.0
+
+hand_eye_coordination:
+  Points: +14.6  |  FG%: +4.9%  |  3PT%: +17.2%  |  FT%: +11.2%
+  TO: -1.4  |  OREB: -1.4  |  AST: +6.0  |  PF: -2.8
+
+height:
+  Points: +14.4  |  FG%: +6.4%  |  3PT%: -1.7%  |  FT%: +8.7%
+  TO: -3.2  |  OREB: +1.4  |  AST: -1.8  |  PF: -0.8
+
+grip_strength:
+  Points: +13.8  |  FG%: +3.3%  |  3PT%: +3.0%  |  FT%: +1.8%
+  TO: -1.8  |  OREB: +1.8  |  AST: -1.2  |  PF: +1.2
+
+balance:
+  Points: +13.4  |  FG%: +8.9%  |  3PT%: +3.1%  |  FT%: -11.0%
+  TO: -2.6  |  OREB: -0.2  |  AST: +2.0  |  PF: +3.2
+
+creativity:
+  Points: -12.2  |  FG%: +0.7%  |  3PT%: -3.8%  |  FT%: +6.5%
+  TO: +2.8  |  OREB: -0.4  |  AST: -3.4  |  PF: -5.8
+
+throw_accuracy:
+  Points: +10.4  |  FG%: +4.9%  |  3PT%: +18.1%  |  FT%: +1.6%
+  TO: +1.2  |  OREB: -0.2  |  AST: +2.8  |  PF: +1.8
+
+top_speed:
+  Points: +8.4  |  FG%: +2.9%  |  3PT%: -3.0%  |  FT%: +0.0%
+  TO: -1.0  |  OREB: +1.8  |  AST: +0.8  |  PF: -1.8
+
+determination:
+  Points: +7.2  |  FG%: +5.9%  |  3PT%: +2.8%  |  FT%: -7.6%
+  TO: +1.0  |  OREB: +0.8  |  AST: +6.8  |  PF: +2.0
+
+teamwork:
+  Points: -6.4  |  FG%: -2.3%  |  3PT%: -7.8%  |  FT%: -3.8%
+  TO: -2.0  |  OREB: +1.0  |  AST: -0.8  |  PF: -0.8
+
+bravery:
+  Points: -6.2  |  FG%: -1.2%  |  3PT%: -2.1%  |  FT%: -4.6%
+  TO: +1.0  |  OREB: +2.6  |  AST: -2.8  |  PF: +3.6
+
+stamina:
+  Points: -6.0  |  FG%: -3.8%  |  3PT%: +1.7%  |  FT%: -7.7%
+  TO: +2.2  |  OREB: -1.8  |  AST: -3.0  |  PF: +5.4
+
+core_strength:
+  Points: +5.4  |  FG%: -2.3%  |  3PT%: +2.5%  |  FT%: -8.6%
+  TO: -0.4  |  OREB: -1.2  |  AST: +2.6  |  PF: +1.0
+
+consistency:
+  Points: -4.8  |  FG%: -3.4%  |  3PT%: -2.6%  |  FT%: +4.9%
+  TO: +0.4  |  OREB: -0.4  |  AST: -0.8  |  PF: -2.4
+
+deception:
+  Points: +4.4  |  FG%: -1.6%  |  3PT%: -2.2%  |  FT%: -4.4%
+  TO: -2.2  |  OREB: +0.2  |  AST: +3.0  |  PF: +7.0
+
+jumping:
+  Points: +4.0  |  FG%: +3.4%  |  3PT%: -3.9%  |  FT%: +2.7%
+  TO: +0.4  |  OREB: -2.0  |  AST: +0.6  |  PF: +0.6
+
+form_technique:
+  Points: +3.8  |  FG%: +0.0%  |  3PT%: +5.9%  |  FT%: +5.8%
+  TO: -1.4  |  OREB: -1.0  |  AST: +2.2  |  PF: +2.8
+
+agility:
+  Points: +3.6  |  FG%: +2.7%  |  3PT%: -3.9%  |  FT%: +2.6%
+  TO: -0.2  |  OREB: -0.8  |  AST: -0.8  |  PF: +4.8
+
+reactions:
+  Points: -2.2  |  FG%: -3.5%  |  3PT%: -2.5%  |  FT%: +3.1%
+  TO: -2.8  |  OREB: +3.8  |  AST: +0.2  |  PF: -0.4
+
+arm_strength:
+  Points: -1.8  |  FG%: +1.2%  |  3PT%: +5.1%  |  FT%: -11.1%
+  TO: +0.2  |  OREB: +0.6  |  AST: +1.2  |  PF: -1.0
+
+composure:
+  Points: -1.6  |  FG%: -4.9%  |  3PT%: +2.7%  |  FT%: +3.3%
+  TO: -3.0  |  OREB: -1.4  |  AST: +1.4  |  PF: +2.6
+
+patience:
+  Points: -1.2  |  FG%: -0.6%  |  3PT%: +5.5%  |  FT%: -7.4%
+  TO: +3.2  |  OREB: -4.2  |  AST: +2.2  |  PF: +2.2
+
+acceleration:
+  Points: -0.2  |  FG%: -1.3%  |  3PT%: +4.8%  |  FT%: +6.1%
+  TO: +0.6  |  OREB: +0.2  |  AST: -2.4  |  PF: -2.2
+
+awareness:
+  Points: -0.2  |  FG%: -2.3%  |  3PT%: -4.7%  |  FT%: -7.2%
+  TO: -1.6  |  OREB: +0.0  |  AST: +0.2  |  PF: +0.2
+
+================================================================================
+[OK] Tested and active: 24/25 attributes
+[FUTURE] Reserved for future: durability (injury system in Milestone 3)
+================================================================================

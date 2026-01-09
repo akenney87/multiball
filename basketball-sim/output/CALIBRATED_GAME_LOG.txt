@@ -1,0 +1,29 @@
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_001 17, Team_050 29
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_001 41, Team_050 49
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_001 58, Team_050 78
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_001 88, Team_050 105
+=== GAME SUMMARY ===
+Final Score: Team_001 88 - Team_050 105
+
+Fouls: Home 21, Away 10 (Total: 31)
+Turnovers: Home 16, Away 11 (Total: 27)
+Total Possessions: 204
+
+Turnover Rate: 13.2% per 100 possessions
+Foul Rate: 15.2 per 100 possessions
+
+Quarter Scores: [(17, 29), (24, 20), (17, 29), (30, 27)]

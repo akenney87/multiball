@@ -1,0 +1,87 @@
+================================================================================
+TIMEOUT VALIDATION REPORT
+================================================================================
+
+Total Timeouts: 15
+Legal Timeouts: 15
+ILLEGAL Timeouts (VIOLATIONS): 0
+
+================================================================================
+NO VIOLATIONS DETECTED - ALL TIMEOUTS LEGAL
+================================================================================
+
+================================================================================
+SAMPLE LEGAL TIMEOUTS (first 10):
+================================================================================
+
+Game 1, Q1, 04:13
+  Timeout Team: Away
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 1, Q1, 04:21
+  Timeout Team: Away
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 2, Q1, 07:25
+  Timeout Team: Away
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 2, Q1, 08:17
+  Timeout Team: Home
+  Possession: Home
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 2, Q1, 07:36
+  Timeout Team: Away
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 2, Q1, 00:25
+  Timeout Team: Home
+  Possession: Home
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 2, Q1, 00:00
+  Timeout Team: Home
+  Possession: Home
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 3, Q1, 01:58
+  Timeout Team: Away
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 3, Q1, 00:00
+  Timeout Team: Home
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+Game 4, Q1, 03:59
+  Timeout Team: Away
+  Possession: Away
+  Outcome: made_shot
+  Ball State: DEAD BALL
+  Reason: DEAD BALL - either team can call timeout
+
+================================================================================

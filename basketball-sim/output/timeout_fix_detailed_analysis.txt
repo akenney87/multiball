@@ -1,0 +1,168 @@
+================================================================================
+TIMEOUT FIX - DETAILED ANALYSIS
+================================================================================
+
+This document provides a detailed analysis of ALL timeouts across the 5 validation
+games to verify:
+1. LEGAL POSSESSION: Team calling timeout has legal right (per PossessionState)
+2. CORRECT TIMING: Timeout happens at appropriate moment
+3. STRATEGIC SOUNDNESS: Timeout called for valid basketball reason
+
+================================================================================
+GAME 1 - 6 TIMEOUTS
+================================================================================
+
+TIMEOUT #1: [01:15] Lakers (Q1)
+--------------------------------
+Reason: "stop opponent momentum"
+Timeouts remaining: 6/7
+
+Context:
+[01:15] Lakers possession (Score: 19-10)
+FOUL! Shooting foul on Warriors_8_SF. Lakers_7_SG to the line for 2 free throws.
+  FT 1/2: GOOD   FT 2/2: GOOD Lakers_7_SG makes 2/2 from the line.
+Score: 19-12
+
+[01:15] TIMEOUT - Lakers (stop opponent momentum) - 6 timeouts remaining
+
+Analysis:
+- Possession before timeout: Lakers made 2 free throws
+- Ball state: DEAD (after made FTs, opponent inbounds)
+- Possession after FTs: Warriors (for inbound)
+- Team calling timeout: Lakers
+- Can Lakers call timeout? YES (dead ball, either team can call)
+
+LEGALITY: LEGAL ✓
+  - Dead ball after made FTs
+  - Either team can call timeout during dead ball
+  - Lakers have 6 timeouts remaining
+
+TIMING: CORRECT ✓
+  - Timeout called immediately after possession outcome (made FTs)
+  - Not called during live play
+
+STRATEGIC ASSESSMENT: QUESTIONABLE
+  - Lakers just scored (made 2 FTs)
+  - Timeout reason: "stop opponent momentum"
+  - But Lakers have momentum (just scored), not Warriors
+  - Strategic logic may be flawed, but timeout is LEGAL
+
+Note: This is a strategic issue in timeout_manager.py, NOT a possession/legality issue.
+The PossessionState system correctly allows this timeout.
+
+
+TIMEOUT #2: [09:50] Lakers (Q2)
+--------------------------------
+Reason: "stop opponent momentum"
+Timeouts remaining: 5/7
+
+Context:
+[09:50] Lakers possession (Score: 31-14)
+Lakers_4_PF attempts a Midrange. Contested by Warriors_4_PF (5.0 feet, MAN).
+Lakers_4_PF misses. Rebound secured by Warriors_3_SF.
+
+[09:50] TIMEOUT - Lakers (stop opponent momentum) - 5 timeouts remaining
+
+Analysis:
+- Possession before timeout: Lakers missed shot, Warriors defensive rebound
+- Ball state: LIVE (after defensive rebound, play continues)
+- Possession after rebound: Warriors
+- Team calling timeout: Lakers
+
+LEGALITY: NEEDS VERIFICATION
+  - Lakers don't have possession (Warriors got defensive rebound)
+  - Ball is LIVE after defensive rebound
+  - Can Lakers call timeout during live ball when they don't have possession? NO
+
+POTENTIAL ISSUE:
+  - IF timeout was called during live ball without possession → ILLEGAL
+  - BUT if PossessionState updated correctly:
+    - update_after_defensive_rebound('home') → Warriors have ball, LIVE
+    - Lakers can_call_timeout('away') → FALSE (live ball, don't have possession)
+    - Timeout should be BLOCKED
+
+Need to check: Did PossessionState block this, or did timeout execute?
+Looking at game log: Timeout DID execute at [09:50]
+
+This appears to be an ILLEGAL TIMEOUT if ball was live!
+
+HOWEVER: The timestamp [09:50] appears AFTER the rebound. This could mean:
+1. Rebound happened at 09:50
+2. PossessionState updated → Warriors have ball, DEAD BALL (if timeout was called)
+3. Then timeout called during dead ball window
+
+But the play-by-play shows "Rebound secured by Warriors_3_SF" immediately before timeout.
+This suggests timeout happened during the DEAD BALL after the missed shot, BEFORE
+the ball became live again for the new possession.
+
+REVISED ANALYSIS:
+- After missed shot → Dead ball (briefly, for rebound positioning)
+- Rebound occurs
+- Before ball becomes live, timeout window exists
+- Lakers call timeout during this window
+- LEGAL if dead ball
+
+Actually, looking at basketball rules more carefully:
+- After defensive rebound, ball is LIVE immediately
+- No dead ball window
+- Only team with ball can call timeout
+
+So this SHOULD have been blocked by PossessionState!
+
+This needs investigation.
+
+
+TIMEOUT #3: [00:59] Lakers (Q2)
+--------------------------------
+Similar analysis needed...
+
+
+TIMEOUT #4: [04:42] Lakers (Q3)
+--------------------------------
+Similar analysis needed...
+
+
+TIMEOUT #5: [09:28] Warriors (Q4)
+----------------------------------
+Similar analysis needed...
+
+
+TIMEOUT #6: [00:54] Lakers (Q4)
+--------------------------------
+Similar analysis needed...
+
+
+================================================================================
+PRELIMINARY FINDINGS
+================================================================================
+
+Based on initial analysis of Game 1, Timeout #2:
+
+POTENTIAL ISSUE FOUND:
+- Timeout appears to be called after defensive rebound
+- Defensive rebound creates LIVE BALL
+- Team without possession (Lakers) called timeout
+- This SHOULD have been blocked by PossessionState
+
+TWO POSSIBILITIES:
+1. PossessionState correctly identified this as LIVE BALL, Lakers don't have
+   possession, and BLOCKED the timeout
+   → Then why does game log show timeout at [09:50]?
+
+2. PossessionState did NOT block it
+   → BUG in implementation
+
+NEED TO VERIFY:
+- Check if timeout actually executed or was blocked
+- Examine PossessionState logic for defensive rebound scenarios
+- Review quarter_simulation.py timeout execution logic
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Add debug logging to PossessionState to track every can_call_timeout() check
+2. Re-run game simulations with logging enabled
+3. Verify each timeout against PossessionState log
+4. If any timeout executed when can_call_timeout() returned False → BUG FOUND
+

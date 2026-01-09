@@ -1,0 +1,373 @@
+====================================================================================================
+COMPLETE ATTRIBUTE USAGE REPORT
+====================================================================================================
+
+Total weight dictionaries found: 20
+
+====================================================================================================
+ATTRIBUTE USAGE BY ATTRIBUTE
+====================================================================================================
+
+grip_strength:
+  Used in 2 actions:
+    - Rebound
+    - Turnover Prevention
+
+arm_strength:
+  Used in 2 actions:
+    - Drive Dunk
+    - Dunk
+
+core_strength:
+  Used in 2 actions:
+    - Shooting Foul Offense
+    - Rebound
+
+agility:
+  Used in 13 actions:
+    - Shooting Foul Defender
+    - Shooting Foul Offense
+    - 3Pt
+    - Block Defender
+    - Block Shooter
+    - Contest
+    - Drive Dunk
+    - Dunk
+    - Help Defense Rotation
+    - Midrange
+    - Shot Separation
+    - Transition Defense
+    - Transition Success
+
+acceleration:
+  Used in 5 actions:
+    - Drive Dunk
+    - Drive Layup
+    - Shot Separation
+    - Transition Defense
+    - Transition Success
+
+top_speed:
+  Used in 2 actions:
+    - Transition Defense
+    - Transition Success
+
+jumping:
+  Used in 7 actions:
+    - Block Defender
+    - Block Shooter
+    - Drive Dunk
+    - Drive Layup
+    - Dunk
+    - Layup
+    - Rebound
+
+reactions:
+  Used in 6 actions:
+    - Shooting Foul Defender
+    - Block Defender
+    - Contest
+    - Help Defense Rotation
+    - Rebound
+    - Transition Defense
+
+stamina:
+  Used in 2 actions:
+    - Transition Defense
+    - Transition Success
+
+balance:
+  Used in 5 actions:
+    - 3Pt
+    - Block Defender
+    - Drive Layup
+    - Layup
+    - Midrange
+
+height:
+  Used in 6 actions:
+    - Block Defender
+    - Block Shooter
+    - Contest
+    - Drive Dunk
+    - Dunk
+    - Rebound
+
+durability: NOT USED
+
+awareness:
+  Used in 11 actions:
+    - Shooting Foul Defender
+    - Block Defender
+    - Block Shooter
+    - Drive Kickout
+    - Drive Turnover
+    - Find Open Teammate
+    - Help Defense Rotation
+    - Rebound
+    - Transition Defense
+    - Transition Success
+    - Turnover Prevention
+
+creativity:
+  Used in 3 actions:
+    - Block Shooter
+    - Find Open Teammate
+    - Shot Separation
+
+determination:
+  Used in 2 actions:
+    - Help Defense Rotation
+    - Rebound
+
+bravery:
+  Used in 2 actions:
+    - Shooting Foul Offense
+    - Block Defender
+
+consistency:
+  Used in 4 actions:
+    - 3Pt
+    - Drive Turnover
+    - Midrange
+    - Turnover Prevention
+
+composure:
+  Used in 10 actions:
+    - Shooting Foul Defender
+    - 3Pt
+    - Block Shooter
+    - Drive Kickout
+    - Drive Turnover
+    - Find Open Teammate
+    - Midrange
+    - Shot Separation
+    - Transition Success
+    - Turnover Prevention
+
+patience:
+  Used in 1 actions:
+    - Shooting Foul Defender
+
+hand_eye_coordination:
+  Used in 9 actions:
+    - 3Pt
+    - Block Defender
+    - Drive Layup
+    - Drive Turnover
+    - Find Open Teammate
+    - Layup
+    - Midrange
+    - Transition Success
+    - Turnover Prevention
+
+throw_accuracy:
+  Used in 2 actions:
+    - 3Pt
+    - Midrange
+
+form_technique:
+  Used in 2 actions:
+    - 3Pt
+    - Midrange
+
+finesse:
+  Used in 5 actions:
+    - 3Pt
+    - Block Shooter
+    - Drive Layup
+    - Layup
+    - Midrange
+
+deception:
+  Used in 2 actions:
+    - Block Shooter
+    - Shot Separation
+
+teamwork:
+  Used in 3 actions:
+    - Drive Kickout
+    - Find Open Teammate
+    - Help Defense Rotation
+
+====================================================================================================
+SUMMARY
+====================================================================================================
+Used: 24/25 (96.0%)
+Unused: 1/25 (4.0%)
+
+Unused attributes:
+  - durability
+
+====================================================================================================
+ACTIONS AND THEIR ATTRIBUTES
+====================================================================================================
+
+Shooting Foul Defender:
+  Attributes (5):
+    composure: 0.3
+    awareness: 0.25
+    patience: 0.2
+    agility: 0.15
+    reactions: 0.1
+
+Shooting Foul Offense:
+  Attributes (3):
+    bravery: 0.4
+    agility: 0.3
+    core_strength: 0.3
+
+3Pt:
+  Attributes (8):
+    form_technique: 0.25
+    throw_accuracy: 0.2
+    finesse: 0.15
+    hand_eye_coordination: 0.12
+    balance: 0.1
+    composure: 0.08
+    consistency: 0.06
+    agility: 0.04
+
+Block Defender:
+  Attributes (8):
+    jumping: 0.25
+    height: 0.2
+    reactions: 0.15
+    agility: 0.12
+    awareness: 0.1
+    bravery: 0.08
+    hand_eye_coordination: 0.05
+    balance: 0.05
+
+Block Shooter:
+  Attributes (8):
+    height: 0.2
+    finesse: 0.18
+    awareness: 0.15
+    jumping: 0.12
+    creativity: 0.1
+    composure: 0.1
+    agility: 0.08
+    deception: 0.07
+
+Contest:
+  Attributes (3):
+    agility: 0.3334
+    height: 0.3333
+    reactions: 0.3333
+
+Drive Dunk:
+  Attributes (5):
+    jumping: 0.4
+    height: 0.22
+    arm_strength: 0.2
+    agility: 0.1
+    acceleration: 0.08
+
+Drive Kickout:
+  Attributes (3):
+    teamwork: 0.4
+    awareness: 0.35
+    composure: 0.25
+
+Drive Layup:
+  Attributes (5):
+    hand_eye_coordination: 0.3
+    finesse: 0.25
+    balance: 0.2
+    jumping: 0.15
+    acceleration: 0.1
+
+Drive Turnover:
+  Attributes (4):
+    awareness: 0.4
+    composure: 0.3
+    consistency: 0.2
+    hand_eye_coordination: 0.1
+
+Dunk:
+  Attributes (4):
+    jumping: 0.4
+    height: 0.3
+    arm_strength: 0.2
+    agility: 0.1
+
+Find Open Teammate:
+  Attributes (5):
+    creativity: 0.3
+    awareness: 0.3
+    teamwork: 0.2
+    composure: 0.12
+    hand_eye_coordination: 0.08
+
+Help Defense Rotation:
+  Attributes (5):
+    teamwork: 0.3
+    awareness: 0.3
+    reactions: 0.2
+    agility: 0.12
+    determination: 0.08
+
+Layup:
+  Attributes (4):
+    finesse: 0.35
+    hand_eye_coordination: 0.3
+    balance: 0.2
+    jumping: 0.15
+
+Midrange:
+  Attributes (8):
+    form_technique: 0.23
+    finesse: 0.2
+    throw_accuracy: 0.18
+    hand_eye_coordination: 0.13
+    balance: 0.11
+    composure: 0.08
+    consistency: 0.05
+    agility: 0.02
+
+Rebound:
+  Attributes (7):
+    height: 0.22
+    jumping: 0.18
+    awareness: 0.18
+    core_strength: 0.14
+    grip_strength: 0.1
+    reactions: 0.09
+    determination: 0.09
+
+Shot Separation:
+  Attributes (5):
+    deception: 0.35
+    agility: 0.25
+    acceleration: 0.2
+    creativity: 0.1
+    composure: 0.1
+
+Transition Defense:
+  Attributes (6):
+    top_speed: 0.3
+    acceleration: 0.2
+    stamina: 0.15
+    awareness: 0.15
+    agility: 0.1
+    reactions: 0.1
+
+Transition Success:
+  Attributes (7):
+    acceleration: 0.25
+    top_speed: 0.2
+    awareness: 0.15
+    agility: 0.15
+    stamina: 0.1
+    composure: 0.1
+    hand_eye_coordination: 0.05
+
+Turnover Prevention:
+  Attributes (5):
+    awareness: 0.38
+    composure: 0.28
+    consistency: 0.19
+    hand_eye_coordination: 0.1
+    grip_strength: 0.05
+

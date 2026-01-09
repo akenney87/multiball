@@ -391,53 +391,29 @@ export function getTurnoverDescription(
   turnoverType: TurnoverType,
   ballHandlerName: string,
   stealCreditedTo: string | null = null,
-  defenderName: string | null = null,
-  foulEvent: any = null
+  _defenderName: string | null = null,
+  _foulEvent: any = null
 ): string {
-  // USER FIX: Make turnover descriptions explicit about live/dead ball status
+  // ESPN-style concise turnover descriptions
   if (turnoverType === 'bad_pass') {
     if (stealCreditedTo) {
-      // LIVE BALL: steal, play continues
-      return `${ballHandlerName} throws a bad pass! Stolen by ${stealCreditedTo}! TURNOVER! (live ball)`;
+      return `${ballHandlerName} bad pass (${stealCreditedTo} steals)`;
     } else {
-      // DEAD BALL: out of bounds
-      return `${ballHandlerName} throws a bad pass out of bounds! TURNOVER! (dead ball)`;
+      return `${ballHandlerName} bad pass out of bounds turnover`;
     }
   } else if (turnoverType === 'lost_ball') {
     if (stealCreditedTo) {
-      // LIVE BALL: stripped, play continues
-      return `${ballHandlerName} loses the ball! Stripped by ${stealCreditedTo}! TURNOVER! (live ball)`;
+      return `${ballHandlerName} lost ball turnover (${stealCreditedTo} steals)`;
     } else {
-      // DEAD BALL: lost control, rolled out of bounds
-      return `${ballHandlerName} loses control! Ball rolls out of bounds! TURNOVER! (dead ball)`;
+      return `${ballHandlerName} out of bounds lost ball turnover`;
     }
   } else if (turnoverType === 'offensive_foul') {
-    // BUG FIX: Include foul tracking information
-    // DEAD BALL: whistle blown for foul
-    if (foulEvent) {
-      // Format with foul counts
-      const foulInfo = `[Team fouls: ${foulEvent.team_fouls_after}] (${ballHandlerName}: ${foulEvent.personal_fouls_after} personal fouls)`;
-      if (defenderName) {
-        return `FOUL! Offensive foul on ${ballHandlerName}! ${defenderName} drew the charge! ${foulInfo} TURNOVER! (dead ball)`;
-      } else {
-        return `FOUL! Offensive foul on ${ballHandlerName}! ${foulInfo} TURNOVER! (dead ball)`;
-      }
-    } else {
-      // Fallback if no foul event (shouldn't happen with fix)
-      if (defenderName) {
-        return `${ballHandlerName} commits an offensive foul! ${defenderName} drew the charge! TURNOVER! (dead ball)`;
-      } else {
-        return `${ballHandlerName} commits an offensive foul! TURNOVER! (dead ball)`;
-      }
-    }
+    return `${ballHandlerName} offensive foul turnover`;
   } else if (turnoverType === 'shot_clock') {
-    // DEAD BALL: whistle blown for shot clock violation
-    return `Shot clock violation! ${ballHandlerName} couldn't get a shot off in time! TURNOVER! (dead ball)`;
+    return `${ballHandlerName} shot clock violation`;
   } else if (turnoverType === 'other_violation') {
-    // DEAD BALL: whistle blown for violation
-    return `${ballHandlerName} commits a violation (traveling/carry)! TURNOVER! (dead ball)`;
+    return `${ballHandlerName} traveling`;
   } else {
-    // Fallback for unknown types
-    return `${ballHandlerName} turns the ball over! TURNOVER!`;
+    return `${ballHandlerName} turnover`;
   }
 }

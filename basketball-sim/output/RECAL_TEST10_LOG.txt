@@ -1,0 +1,257 @@
+Using random seed: 12345
+
+Loading teams from teams_phase1...
+Loaded 100 teams
+
+================================================================================
+RUNNING 10-GAME VALIDATION SUITE
+================================================================================
+
+Game 1/10: Team_054 vs Team_094
+  Ratings: 60.8 vs 58.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_054 19, Team_094 22
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_054 36, Team_094 50
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_054 64, Team_094 73
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_054 78, Team_094 89
+  Final: 78-89 | Poss: 100.0
+  Saved to: validation_recal_test10\games\game_001.json
+
+Game 2/10: Team_016 vs Team_072
+  Ratings: 55.4 vs 56.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_016 23, Team_072 27
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_016 44, Team_072 53
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_016 68, Team_072 84
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_016 97, Team_072 113
+  Final: 97-113 | Poss: 100.0
+  Saved to: validation_recal_test10\games\game_002.json
+
+Game 3/10: Team_100 vs Team_026
+  Ratings: 58.0 vs 62.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_100 27, Team_026 14
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_100 50, Team_026 34
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_100 71, Team_026 54
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_100 100, Team_026 79
+  Final: 100-79 | Poss: 100.0
+  Saved to: validation_recal_test10\games\game_003.json
+
+Game 4/10: Team_016 vs Team_011
+  Ratings: 55.4 vs 61.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_016 21, Team_011 29
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_016 34, Team_011 53
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_016 45, Team_011 78
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_016 67, Team_011 93
+  Final: 67-93 | Poss: 101.0
+  Saved to: validation_recal_test10\games\game_004.json
+
+Game 5/10: Team_028 vs Team_032
+  Ratings: 57.7 vs 60.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_028 27, Team_032 7
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_028 53, Team_032 21
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_028 84, Team_032 46
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_028 106, Team_032 69
+  Final: 106-69 | Poss: 101.5
+  Saved to: validation_recal_test10\games\game_005.json
+
+Game 6/10: Team_083 vs Team_097
+  Ratings: 63.8 vs 57.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_083 17, Team_097 20
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_083 40, Team_097 44
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_083 69, Team_097 66
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_083 96, Team_097 92
+  Final: 96-92 | Poss: 97.5
+  Saved to: validation_recal_test10\games\game_006.json
+
+Game 7/10: Team_047 vs Team_024
+  Ratings: 61.3 vs 59.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_047 21, Team_024 12
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_047 57, Team_024 43
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_047 74, Team_024 63
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_047 93, Team_024 80
+  Final: 93-80 | Poss: 99.0
+  Saved to: validation_recal_test10\games\game_007.json
+
+Game 8/10: Team_063 vs Team_050
+  Ratings: 58.0 vs 61.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_063 18, Team_050 26
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_063 49, Team_050 50
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_063 82, Team_050 69
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_063 108, Team_050 99
+  Final: 108-99 | Poss: 101.0
+  Saved to: validation_recal_test10\games\game_008.json
+
+Game 9/10: Team_034 vs Team_089
+  Ratings: 61.2 vs 57.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_034 27, Team_089 28
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_034 45, Team_089 50
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_034 65, Team_089 69
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_034 99, Team_089 88
+  Final: 99-88 | Poss: 101.5
+  Saved to: validation_recal_test10\games\game_009.json
+
+Game 10/10: Team_033 vs Team_042
+  Ratings: 59.9 vs 63.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_033 30, Team_042 24
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_033 51, Team_042 44
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_033 68, Team_042 74
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_033 97, Team_042 101
+  Final: 97-101 | Poss: 101.0
+  Saved to: validation_recal_test10\games\game_010.json
+
+
+================================================================================
+CALCULATING AGGREGATE STATISTICS
+================================================================================
+
+Summary saved to: validation_recal_test10\VALIDATION_SUMMARY.json
+
+================================================================================
+VALIDATION SUITE COMPLETE
+================================================================================
+
+Key Statistics:
+  Points per game: 92.2
+  FG%: 42.4%
+  3PT%: 32.9%
+  FT%: 72.5%
+  Possessions: 100.2
+  OREB%: 26.3%

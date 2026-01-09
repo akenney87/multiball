@@ -1,0 +1,26 @@
+Running game simulation with specialized players...
+
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_Specialized_A 27, Team_Specialized_B 20
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_Specialized_A 50, Team_Specialized_B 37
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_Specialized_A 77, Team_Specialized_B 57
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_Specialized_A 101, Team_Specialized_B 76
+Game complete! Results saved to output/DETAILED_GAME.txt
+Traceback (most recent call last):
+  File "C:\Users\alexa\desktop\projects\simulator\test_detailed_game.py", line 56, in <module>
+    print(f"Final Score: {team1['name']} {result.home_score}, {team2['name']} {result.away_score}")
+                          ~~~~~^^^^^^^^
+KeyError: 'name'

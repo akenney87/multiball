@@ -1,0 +1,38 @@
+
+================================================================================
+COMPETITIVE BALANCE DIAGNOSTIC SUITE
+================================================================================
+
+Target: Identify root cause of competitive balance issues
+  - Blowouts (20+): 38% (target 15-20%)
+  - Close games (<=5): 15% (target 35-40%)
+  - Average margin: 17.6 (target 11-13)
+
+Loading data from:
+  Validation: validation_m41_test1
+  Teams: teams_m41
+
+Loaded: 100 games, 100 teams
+
+================================================================================
+ANALYSIS 1: ATTRIBUTE DISPARITY VS MARGIN CORRELATION
+================================================================================
+
+Total Games Analyzed: 100
+
+Correlation Coefficient (AttributeGap vs Margin): 0.274
+  Interpretation: LOW
+Traceback (most recent call last):
+  File "C:\Users\alexa\desktop\projects\simulator\diagnose_competitive_balance.py", line 307, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\alexa\desktop\projects\simulator\diagnose_competitive_balance.py", line 282, in main
+    results['attribute_disparity'] = analysis_1_attribute_disparity(games, teams)
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\alexa\desktop\projects\simulator\diagnose_competitive_balance.py", line 160, in analysis_1_attribute_disparity
+    print(f"  {'\u26a0\ufe0f  DETERMINISTIC - Attribute advantage too predictive' if abs(correlation) > 0.7 else '\u2713 Reasonable attribute impact'}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 2: character maps to <undefined>

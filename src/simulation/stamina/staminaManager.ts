@@ -281,11 +281,18 @@ export class StaminaTracker {
       const isScoringOption = scoringOptions.includes(playerName);
 
       // M4.5 PHASE 4B: Get player's stamina attribute (endurance rating 1-100)
-      const playerStaminaAttr = player.stamina;
+      // Handle both nested (player.attributes.stamina) and flat (player.stamina) structures
+      const playerStaminaAttr = ('attributes' in player && player.attributes)
+        ? player.attributes.stamina
+        : (player as any).stamina;
 
       // PHASE 1: Get player's speed attributes for efficiency calculation
-      const playerAccel = player.acceleration;
-      const playerSpeed = player.top_speed;
+      const playerAccel = ('attributes' in player && player.attributes)
+        ? player.attributes.acceleration
+        : (player as any).acceleration;
+      const playerSpeed = ('attributes' in player && player.attributes)
+        ? player.attributes.top_speed
+        : (player as any).top_speed;
 
       // Calculate stamina cost with player's attributes
       const cost = calculateStaminaCost(
@@ -322,7 +329,9 @@ export class StaminaTracker {
       const current = this.getCurrentStamina(playerName);
 
       // M4.5 PHASE 4B: Get player's stamina attribute (endurance rating 1-100)
-      const playerStaminaAttr = player.stamina;
+      const playerStaminaAttr = ('attributes' in player && player.attributes)
+        ? player.attributes.stamina
+        : (player as any).stamina ?? 50;
 
       // Calculate recovery with player's stamina attribute
       const recovery = recoverStamina(current, minutesElapsed, playerStaminaAttr);
@@ -351,9 +360,23 @@ export class StaminaTracker {
     const playerName = player.name;
     const currentStamina = this.getCurrentStamina(playerName);
 
+    // Flatten player attributes for stamina degradation
+    let flatPlayer: Record<string, number | string>;
+    if ('attributes' in player && player.attributes) {
+      // Player has nested attributes - flatten them
+      flatPlayer = {
+        name: player.name,
+        position: player.position,
+        ...player.attributes
+      };
+    } else {
+      // Already flat
+      flatPlayer = player as unknown as Record<string, number | string>;
+    }
+
     // Use the stamina degradation function from probability.ts
     const degradedPlayer = applyStaminaToPlayer(
-      player as unknown as Record<string, number>,
+      flatPlayer as Record<string, number>,
       currentStamina
     );
 
@@ -375,7 +398,11 @@ export class StaminaTracker {
     // Convert seconds to minutes
     const minutes = seconds / 60.0;
     const current = this.minutesPlayed.get(playerName)!;
-    this.minutesPlayed.set(playerName, current + minutes);
+
+    // Hard cap at 48 minutes - no player can play more than a full game
+    const MAX_GAME_MINUTES = 48.0;
+    const newTotal = Math.min(current + minutes, MAX_GAME_MINUTES);
+    this.minutesPlayed.set(playerName, newTotal);
   }
 
   /**
@@ -407,8 +434,9 @@ export class StaminaTracker {
       throw new Error(`Player '${playerName}' not found in original players`);
     }
 
-    const originalStamina = originalPlayer.stamina || 100.0;
-    this.staminaState.set(playerName, originalStamina);
+    // Reset to player's original stamina attribute value
+    const staminaAttr = (originalPlayer as any).stamina ?? 100;
+    this.staminaState.set(playerName, staminaAttr);
   }
 
   /**

@@ -140,11 +140,11 @@ describe('Free Throws System', () => {
         composure: 40,
       });
 
-      // Sample 100 FTs for each
+      // Sample 1000 FTs for each (increased from 100 for statistical reliability)
       let eliteMakes = 0;
       let poorMakes = 0;
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 1000; i++) {
         const eliteResult = FreeThrowShooter.shootFreeThrows(eliteShooter, 1);
         const poorResult = FreeThrowShooter.shootFreeThrows(poorShooter, 1);
 
@@ -158,11 +158,11 @@ describe('Free Throws System', () => {
     it('should apply and-1 bonus (higher probability)', () => {
       const shooter = createMockPlayer('Player1');
 
-      // Sample 200 FTs
+      // Sample 1000 FTs (increased from 200 for statistical reliability)
       let normalMakes = 0;
       let andOneMakes = 0;
 
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 1000; i++) {
         const normalResult = FreeThrowShooter.shootFreeThrows(shooter, 1, 'normal');
         const andOneResult = FreeThrowShooter.shootFreeThrows(shooter, 1, 'and_1');
 
@@ -177,11 +177,11 @@ describe('Free Throws System', () => {
     it('should apply clutch penalty (lower probability)', () => {
       const shooter = createMockPlayer('Player1');
 
-      // Sample 200 FTs
+      // Sample 1000 FTs (increased from 200 for statistical reliability)
       let normalMakes = 0;
       let clutchMakes = 0;
 
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 1000; i++) {
         const normalResult = FreeThrowShooter.shootFreeThrows(shooter, 1, 'normal');
         const clutchResult = FreeThrowShooter.shootFreeThrows(
           shooter,

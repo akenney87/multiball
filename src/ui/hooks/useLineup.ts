@@ -1,0 +1,1874 @@
+/**
+ * useLineup Hook
+ *
+ * Provides lineup management functionality for the user team.
+ * Supports basketball, baseball, and soccer lineup editing.
+ */
+
+import { useCallback, useMemo } from 'react';
+import { useGame } from '../context/GameContext';
+import { calculatePlayerOverall, calculateSoccerPositionOverall } from '../integration/gameInitializer';
+import type { SoccerFormation, BaseballPosition, BullpenRole, BaseballBullpenConfig } from '../context/types';
+import { calculateBaseballPositionOverall, type BaseballPositionType } from '../../utils/overallRating';
+import type { Player } from '../../data/types';
+
+export interface LineupPlayer {
+  id: string;
+  name: string;
+  position: string;
+  overall: number;
+  isStarter: boolean;
+  isInjured: boolean;
+  targetMinutes: number;
+  /** Height in inches */
+  height: number;
+  /** Weight in pounds */
+  weight: number;
+  /** Match fitness (0-100) - persistent stamina between matches */
+  matchFitness: number;
+  /** Soccer-specific: slot index in formation (0-10) */
+  slotIndex?: number;
+  /** Baseball-specific: batting order position (1-9, undefined if not in order) */
+  battingOrderPosition?: number;
+  /** Baseball-specific: defensive position assignment */
+  baseballPosition?: BaseballPosition;
+  /** Baseball-specific: whether this player is the starting pitcher */
+  isPitcher?: boolean;
+  /** Baseball-specific: bullpen role (if in bullpen) */
+  bullpenRole?: BullpenRole;
+}
+
+export type SportType = 'basketball' | 'soccer' | 'baseball';
+
+// Soccer formations with position slots (exported for use in other components)
+// Uses L/R designations to differentiate duplicate positions
+export const FORMATION_POSITIONS: Record<SoccerFormation, string[]> = {
+  '4-4-2': ['GK', 'LB', 'LCB', 'RCB', 'RB', 'LM', 'LCM', 'RCM', 'RM', 'LST', 'RST'],
+  '4-3-3': ['GK', 'LB', 'LCB', 'RCB', 'RB', 'LCM', 'CDM', 'RCM', 'LW', 'ST', 'RW'],
+  '3-5-2': ['GK', 'LCB', 'CB', 'RCB', 'LM', 'LCM', 'CDM', 'RCM', 'RM', 'LST', 'RST'],
+  '4-2-3-1': ['GK', 'LB', 'LCB', 'RCB', 'RB', 'LCDM', 'RCDM', 'LW', 'CAM', 'RW', 'ST'],
+  '5-3-2': ['GK', 'LWB', 'LCB', 'CB', 'RCB', 'RWB', 'LCM', 'CM', 'RCM', 'LST', 'RST'],
+  '4-1-4-1': ['GK', 'LB', 'LCB', 'RCB', 'RB', 'CDM', 'LM', 'LCM', 'RCM', 'RM', 'ST'],
+};
+
+export function useLineup(sport: SportType = 'basketball') {
+  const { state, setLineup, getUserRoster } = useGame();
+
+  // =========================================================================
+  // BASKETBALL
+  // =========================================================================
+
+  const basketballPlayers = useMemo((): LineupPlayer[] => {
+    const roster = getUserRoster();
+    const starters = new Set(state.userTeam.lineup.basketballStarters);
+    const minutesAllocation = state.userTeam.lineup.minutesAllocation;
+
+    return roster.map((player) => ({
+      id: player.id,
+      name: player.name,
+      position: player.position,
+      overall: calculatePlayerOverall(player),
+      isStarter: starters.has(player.id),
+      isInjured: player.injury !== null,
+      // Use allocated minutes, or default: starters get 32, bench gets 0 (until optimal is applied)
+      targetMinutes: minutesAllocation[player.id] ?? (starters.has(player.id) ? 32 : 0),
+      height: player.height,
+      weight: player.weight,
+      matchFitness: player.matchFitness ?? 100,
+    }));
+  }, [getUserRoster, state.userTeam.lineup.basketballStarters, state.userTeam.lineup.minutesAllocation]);
+
+  const basketballStarters = useMemo((): (LineupPlayer | undefined)[] => {
+    // Return starters in positional order (PG, SG, SF, PF, C)
+    // Each index corresponds to a position slot (0=PG, 1=SG, 2=SF, 3=PF, 4=C)
+    // Returns array of length 5, with undefined for empty slots
+    const starterIds = state.userTeam.lineup.basketballStarters;
+    return starterIds.map((id) => {
+      if (!id) return undefined;
+      return basketballPlayers.find((p) => p.id === id);
+    });
+  }, [basketballPlayers, state.userTeam.lineup.basketballStarters]);
+
+  const basketballBench = useMemo(() => {
+    const benchSet = new Set(state.userTeam.lineup.bench);
+    return basketballPlayers
+      .filter((p) => !p.isStarter && benchSet.has(p.id))
+      .slice(0, 9); // Ensure max 9
+  }, [basketballPlayers, state.userTeam.lineup.bench]);
+
+  const basketballReserves = useMemo(() => {
+    const benchSet = new Set(state.userTeam.lineup.bench);
+    return basketballPlayers.filter((p) => !p.isStarter && !benchSet.has(p.id));
+  }, [basketballPlayers, state.userTeam.lineup.bench]);
+
+  const setBasketballStarter = useCallback(
+    (playerId: string, position: number) => {
+      const currentLineup = state.userTeam.lineup;
+      const newStarters = [...currentLineup.basketballStarters];
+      const newBench = [...currentLineup.bench];
+
+      const benchIndex = newBench.indexOf(playerId);
+      if (benchIndex !== -1) {
+        newBench.splice(benchIndex, 1);
+      }
+
+      const existingStarter = newStarters[position];
+      if (existingStarter && existingStarter !== playerId) {
+        newBench.push(existingStarter);
+      }
+
+      const currentStarterIndex = newStarters.indexOf(playerId);
+      if (currentStarterIndex !== -1 && currentStarterIndex !== position) {
+        newStarters[currentStarterIndex] = '';
+      }
+
+      newStarters[position] = playerId;
+
+      setLineup({
+        ...currentLineup,
+        basketballStarters: newStarters as [string, string, string, string, string],
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const moveBasketballToBench = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const newStarters = [...currentLineup.basketballStarters];
+      const newBench = [...currentLineup.bench];
+
+      const starterIndex = newStarters.indexOf(playerId);
+      if (starterIndex !== -1) {
+        newStarters[starterIndex] = '';
+      }
+
+      if (!newBench.includes(playerId)) {
+        newBench.push(playerId);
+      }
+
+      setLineup({
+        ...currentLineup,
+        basketballStarters: newStarters as [string, string, string, string, string],
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  // Add a player to the bench (from reserves) - respects 9 player limit
+  const addPlayerToBench = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const newBench = [...currentLineup.bench];
+
+      // Check if already on bench or if bench is full
+      if (newBench.includes(playerId)) return;
+      if (newBench.length >= 9) return; // Bench is full
+
+      newBench.push(playerId);
+
+      setLineup({
+        ...currentLineup,
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  // Remove a player from the bench (to reserves)
+  const removePlayerFromBench = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const newBench = currentLineup.bench.filter((id) => id !== playerId);
+
+      setLineup({
+        ...currentLineup,
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  // Swap a bench player with a reserve player atomically
+  const swapBenchWithReserve = useCallback(
+    (benchPlayerId: string, reservePlayerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const benchIndex = currentLineup.bench.indexOf(benchPlayerId);
+
+      // Bench player must be on bench
+      if (benchIndex === -1) return;
+
+      // Reserve player must NOT be on bench (they're a reserve)
+      if (currentLineup.bench.includes(reservePlayerId)) return;
+
+      // Create new bench with the swap
+      const newBench = [...currentLineup.bench];
+      newBench[benchIndex] = reservePlayerId;
+
+      setLineup({
+        ...currentLineup,
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const swapBasketballPlayers = useCallback(
+    (player1Id: string, player2Id: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const newStarters = [...currentLineup.basketballStarters];
+      const newBench = [...currentLineup.bench];
+
+      const starter1Index = newStarters.indexOf(player1Id);
+      const starter2Index = newStarters.indexOf(player2Id);
+      const bench1Index = newBench.indexOf(player1Id);
+      const bench2Index = newBench.indexOf(player2Id);
+
+      if (starter1Index !== -1 && starter2Index !== -1) {
+        newStarters[starter1Index] = player2Id;
+        newStarters[starter2Index] = player1Id;
+      } else if (starter1Index !== -1 && bench2Index !== -1) {
+        newStarters[starter1Index] = player2Id;
+        newBench[bench2Index] = player1Id;
+      } else if (starter2Index !== -1 && bench1Index !== -1) {
+        newStarters[starter2Index] = player1Id;
+        newBench[bench1Index] = player2Id;
+      }
+
+      setLineup({
+        ...currentLineup,
+        basketballStarters: newStarters as [string, string, string, string, string],
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Swap two starters' positions by their slot indices.
+   * This allows swapping e.g. the PG and SG positions directly.
+   */
+  const swapBasketballStarterPositions = useCallback(
+    (slotIndexA: number, slotIndexB: number) => {
+      const currentLineup = state.userTeam.lineup;
+      const newStarters = [...currentLineup.basketballStarters];
+
+      // Swap the player IDs at the two position slots
+      const playerA = newStarters[slotIndexA] ?? '';
+      const playerB = newStarters[slotIndexB] ?? '';
+      newStarters[slotIndexA] = playerB;
+      newStarters[slotIndexB] = playerA;
+
+      setLineup({
+        ...currentLineup,
+        basketballStarters: newStarters as [string, string, string, string, string],
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const isValidBasketballLineup = useMemo(() => {
+    const validStarters = state.userTeam.lineup.basketballStarters.filter((id) => id !== '');
+    return validStarters.length === 5;
+  }, [state.userTeam.lineup.basketballStarters]);
+
+  /**
+   * Set the full basketball lineup at once (all 5 starters) with proper minutes allocation.
+   * - Starters get minutes based on their overall (28-36 range)
+   * - Top 3 bench players get minutes (8-16 range based on overall)
+   * - Total should equal exactly 240 minutes
+   */
+  const setFullBasketballLineup = useCallback(
+    (starterIds: [string, string, string, string, string]) => {
+      const currentLineup = state.userTeam.lineup;
+      const roster = getUserRoster();
+
+      // Build new starters array
+      const newStarters = starterIds;
+      const starterSet = new Set(starterIds.filter((id) => id !== ''));
+
+      // Build new bench - top 9 non-starters by condition-adjusted rating
+      const benchPlayers = roster
+        .filter((p) => !starterSet.has(p.id))
+        .map((p) => {
+          const overall = calculatePlayerOverall(p);
+          const stamina = p.matchFitness ?? 100;
+          const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+          return { id: p.id, overall, effectiveRating: overall * staminaFactor };
+        })
+        .sort((a, b) => b.effectiveRating - a.effectiveRating);
+
+      // Limit bench to 9 players (rest are reserves)
+      const newBench = benchPlayers.slice(0, 9).map((p) => p.id);
+
+      // Calculate minutes allocation for exactly 240 total
+      const newMinutesAllocation: Record<string, number> = {};
+
+      // Get starter overalls for proportional allocation
+      const starterOveralls = starterIds
+        .filter((id) => id !== '')
+        .map((id) => {
+          const player = roster.find((p) => p.id === id);
+          return { id, overall: player ? calculatePlayerOverall(player) : 50 };
+        })
+        .sort((a, b) => b.overall - a.overall);
+
+      // Starters get 28-36 minutes based on rank (best starter gets most)
+      // Total starter minutes: ~160 (leaving ~80 for bench)
+      const starterMinutesTemplate = [36, 34, 32, 30, 28]; // 160 total
+      starterOveralls.forEach((starter, idx) => {
+        newMinutesAllocation[starter.id] = starterMinutesTemplate[idx] ?? 32;
+      });
+
+      // Top 3 bench players get minutes to reach 240 total
+      // Total bench minutes: 80 (240 - 160 starter minutes)
+      const benchMinutesAdjusted = [28, 28, 24]; // 80 total for top 3 bench
+      const topBenchCount = Math.min(3, benchPlayers.length);
+
+      for (let i = 0; i < benchPlayers.length; i++) {
+        const benchPlayer = benchPlayers[i];
+        if (benchPlayer) {
+          if (i < topBenchCount) {
+            newMinutesAllocation[benchPlayer.id] = benchMinutesAdjusted[i] ?? 0;
+          } else {
+            newMinutesAllocation[benchPlayer.id] = 0; // Other bench players get 0
+          }
+        }
+      }
+
+      setLineup({
+        ...currentLineup,
+        basketballStarters: newStarters,
+        bench: newBench,
+        minutesAllocation: newMinutesAllocation,
+      });
+    },
+    [state.userTeam.lineup, setLineup, getUserRoster]
+  );
+
+  /**
+   * Calculate optimal basketball lineup and apply it.
+   * Selects top 5 players by overall weighted by stamina, allocates minutes properly.
+   */
+  const applyOptimalBasketballLineup = useCallback(() => {
+    const roster = getUserRoster();
+
+    // Sort all healthy players by overall weighted by stamina (descending)
+    // Players with low stamina are ranked lower, but not drastically
+    // Formula: overall * (0.6 + 0.4 * stamina/100)
+    // At 100% stamina: 100% of overall
+    // At 50% stamina: 80% of overall
+    // At 0% stamina: 60% of overall
+    const sortedPlayers = roster
+      .filter((p) => p.injury === null)
+      .map((p) => {
+        const overall = calculatePlayerOverall(p);
+        const stamina = p.matchFitness ?? 100;
+        const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+        const effectiveRating = overall * staminaFactor;
+        return { id: p.id, overall, effectiveRating };
+      })
+      .sort((a, b) => b.effectiveRating - a.effectiveRating);
+
+    // Get top 5 players
+    const top5 = sortedPlayers.slice(0, 5);
+
+    // Sort top 5 by height (shortest to tallest) for position assignment
+    // PG (slot 0) = shortest, SG (slot 1) = 2nd shortest, ..., C (slot 4) = tallest
+    const top5WithHeight = top5.map(p => {
+      const fullPlayer = roster.find(r => r.id === p.id);
+      return { ...p, height: fullPlayer?.height ?? 72 }; // Default 6'0" if missing
+    }).sort((a, b) => a.height - b.height);
+
+    // Build the 5-tuple of starter IDs arranged by height
+    const starterIds: [string, string, string, string, string] = ['', '', '', '', ''];
+    for (let i = 0; i < 5 && i < top5WithHeight.length; i++) {
+      const player = top5WithHeight[i];
+      if (player) {
+        starterIds[i] = player.id;
+      }
+    }
+
+    // Use setFullBasketballLineup which handles minutes allocation
+    setFullBasketballLineup(starterIds);
+  }, [getUserRoster, setFullBasketballLineup]);
+
+  const basketballTotalMinutes = useMemo(() => {
+    return basketballPlayers.reduce((sum, p) => sum + p.targetMinutes, 0);
+  }, [basketballPlayers]);
+
+  /**
+   * Get the maximum minutes allowed for a specific player given the current total allocation.
+   * This is used by the slider to prevent the user from exceeding the total limit.
+   */
+  const getBasketballMaxAllowedMinutes = useCallback(
+    (playerId: string): number => {
+      const playerData = basketballPlayers.find(p => p.id === playerId);
+      const currentPlayerMinutes = playerData?.targetMinutes ?? 0;
+      const otherPlayersMinutes = basketballTotalMinutes - currentPlayerMinutes;
+      // Max 48 per player, but also can't exceed 240 total
+      return Math.max(0, Math.min(48, 240 - otherPlayersMinutes));
+    },
+    [basketballPlayers, basketballTotalMinutes]
+  );
+
+  const setBasketballTargetMinutes = useCallback(
+    (playerId: string, minutes: number) => {
+      const currentLineup = state.userTeam.lineup;
+
+      // Get the player's current minutes from the basketballPlayers array (which accounts for defaults)
+      const playerData = basketballPlayers.find(p => p.id === playerId);
+      const currentPlayerMinutes = playerData?.targetMinutes ?? 0;
+      const otherPlayersMinutes = basketballTotalMinutes - currentPlayerMinutes;
+
+      // Cap at 240 total, also max 48 per player, min 0
+      const maxAllowedForPlayer = Math.min(48, 240 - otherPlayersMinutes);
+      const clampedMinutes = Math.max(0, Math.min(maxAllowedForPlayer, minutes));
+
+      setLineup({
+        ...currentLineup,
+        minutesAllocation: {
+          ...currentLineup.minutesAllocation,
+          [playerId]: clampedMinutes,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup, basketballTotalMinutes, basketballPlayers]
+  );
+
+  // =========================================================================
+  // SOCCER
+  // =========================================================================
+
+  const soccerPlayers = useMemo((): LineupPlayer[] => {
+    const roster = getUserRoster();
+    const soccerLineup = state.userTeam.lineup.soccerLineup;
+    const starterSet = new Set(soccerLineup.starters);
+    const minutesAllocation = state.userTeam.lineup.minutesAllocation;
+
+    return roster.map((player) => ({
+      id: player.id,
+      name: player.name,
+      position: player.position,
+      overall: calculatePlayerOverall(player),
+      isStarter: starterSet.has(player.id),
+      isInjured: player.injury !== null,
+      targetMinutes: minutesAllocation[player.id] ?? (starterSet.has(player.id) ? 90 : 0),
+      height: player.height,
+      weight: player.weight,
+      matchFitness: player.matchFitness ?? 100,
+      slotIndex: soccerLineup.positions[player.id],
+    }));
+  }, [getUserRoster, state.userTeam.lineup.soccerLineup, state.userTeam.lineup.minutesAllocation]);
+
+  const soccerStarters = useMemo(() => {
+    return soccerPlayers.filter((p) => p.isStarter);
+  }, [soccerPlayers]);
+
+  const soccerBench = useMemo(() => {
+    const benchSet = new Set(state.userTeam.lineup.bench);
+    return soccerPlayers
+      .filter((p) => !p.isStarter && benchSet.has(p.id))
+      .slice(0, 9); // Ensure max 9
+  }, [soccerPlayers, state.userTeam.lineup.bench]);
+
+  const soccerReserves = useMemo(() => {
+    const benchSet = new Set(state.userTeam.lineup.bench);
+    return soccerPlayers.filter((p) => !p.isStarter && !benchSet.has(p.id));
+  }, [soccerPlayers, state.userTeam.lineup.bench]);
+
+  const currentFormation = state.userTeam.lineup.soccerLineup.formation;
+  const formationPositions = FORMATION_POSITIONS[currentFormation] || FORMATION_POSITIONS['4-4-2'];
+
+  const setSoccerStarter = useCallback(
+    (playerId: string, slotIndex: number) => {
+      const currentLineup = state.userTeam.lineup;
+      const soccerLineup = { ...currentLineup.soccerLineup };
+      const newStarters = [...soccerLineup.starters];
+      const newPositions: Record<string, number> = { ...soccerLineup.positions };
+      const newBench = [...currentLineup.bench];
+
+      // Validate slot index
+      if (slotIndex < 0 || slotIndex > 10) {
+        return;
+      }
+
+      // Remove player from bench if present
+      const benchIndex = newBench.indexOf(playerId);
+      if (benchIndex !== -1) {
+        newBench.splice(benchIndex, 1);
+      }
+
+      // Find and remove any player currently in this slot
+      for (const [existingId, existingSlot] of Object.entries(newPositions)) {
+        if (existingSlot === slotIndex && existingId !== playerId) {
+          // Remove from starters
+          const idx = newStarters.indexOf(existingId);
+          if (idx !== -1) {
+            newStarters.splice(idx, 1);
+          }
+          // Add to bench
+          if (!newBench.includes(existingId)) {
+            newBench.push(existingId);
+          }
+          // Remove slot assignment
+          delete newPositions[existingId];
+          break; // Only one player can be in a slot
+        }
+      }
+
+      // Remove player from their old slot if they had one
+      if (newPositions[playerId] !== undefined) {
+        delete newPositions[playerId];
+      }
+
+      // Remove from starters if already there (to re-add)
+      const existingStarterIdx = newStarters.indexOf(playerId);
+      if (existingStarterIdx !== -1) {
+        newStarters.splice(existingStarterIdx, 1);
+      }
+
+      // Add player to starters and assign slot
+      newStarters.push(playerId);
+      newPositions[playerId] = slotIndex;
+
+      setLineup({
+        ...currentLineup,
+        soccerLineup: {
+          ...soccerLineup,
+          starters: newStarters,
+          positions: newPositions,
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const moveSoccerToBench = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const soccerLineup = { ...currentLineup.soccerLineup };
+      const newStarters = soccerLineup.starters.filter((id) => id !== playerId);
+      const newPositions = { ...soccerLineup.positions };
+      delete newPositions[playerId];
+
+      const newBench = [...currentLineup.bench];
+      if (!newBench.includes(playerId)) {
+        newBench.push(playerId);
+      }
+
+      setLineup({
+        ...currentLineup,
+        soccerLineup: {
+          ...soccerLineup,
+          starters: newStarters,
+          positions: newPositions,
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const setSoccerFormation = useCallback(
+    (formation: SoccerFormation) => {
+      const currentLineup = state.userTeam.lineup;
+      const soccerLineup = currentLineup.soccerLineup;
+
+      // Clear all position assignments when changing formation
+      // User must rebuild lineup for the new formation
+      // Move all current starters to bench
+      const newBench = [
+        ...currentLineup.bench,
+        ...soccerLineup.starters.filter((id) => !currentLineup.bench.includes(id)),
+      ];
+
+      setLineup({
+        ...currentLineup,
+        soccerLineup: {
+          starters: [],
+          formation,
+          positions: {},
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Set the full soccer lineup at once (starters and positions)
+   * This avoids state batching issues when setting multiple starters
+   */
+  const setFullSoccerLineup = useCallback(
+    (starterAssignments: Array<{ playerId: string; slotIndex: number }>) => {
+      const currentLineup = state.userTeam.lineup;
+      const roster = getUserRoster();
+
+      // Build new starters and positions from assignments
+      const newStarters: string[] = [];
+      const newPositions: Record<string, number> = {};
+
+      for (const { playerId, slotIndex } of starterAssignments) {
+        if (slotIndex >= 0 && slotIndex <= 10) {
+          newStarters.push(playerId);
+          newPositions[playerId] = slotIndex;
+        }
+      }
+
+      // Build new bench - everyone not in starters
+      const starterSet = new Set(newStarters);
+      const newBench = roster
+        .filter(p => !starterSet.has(p.id))
+        .map(p => p.id);
+
+      setLineup({
+        ...currentLineup,
+        soccerLineup: {
+          ...currentLineup.soccerLineup,
+          starters: newStarters,
+          positions: newPositions,
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup, getUserRoster]
+  );
+
+  /**
+   * Swap two starters' positions in a single state update
+   * This avoids state batching issues when swapping
+   */
+  const swapSoccerStarters = useCallback(
+    (slotIndexA: number, slotIndexB: number) => {
+      const currentLineup = state.userTeam.lineup;
+      const soccerLineup = currentLineup.soccerLineup;
+      const newPositions: Record<string, number> = { ...soccerLineup.positions };
+
+      // Find players at each slot
+      let playerAtA: string | null = null;
+      let playerAtB: string | null = null;
+
+      for (const [playerId, slot] of Object.entries(newPositions)) {
+        if (slot === slotIndexA) playerAtA = playerId;
+        if (slot === slotIndexB) playerAtB = playerId;
+      }
+
+      // Swap their positions
+      if (playerAtA) newPositions[playerAtA] = slotIndexB;
+      if (playerAtB) newPositions[playerAtB] = slotIndexA;
+
+      setLineup({
+        ...currentLineup,
+        soccerLineup: {
+          ...soccerLineup,
+          positions: newPositions,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const isValidSoccerLineup = useMemo(() => {
+    const { starters, positions } = state.userTeam.lineup.soccerLineup;
+
+    // Need exactly 11 starters
+    if (starters.length !== 11) return false;
+
+    // All starters must have slot assignments
+    const assignedSlots = Object.values(positions);
+    if (assignedSlots.length !== 11) return false;
+
+    // Must have GK slot (index 0) filled
+    if (!assignedSlots.includes(0)) return false;
+
+    // All slots 0-10 must be filled exactly once (no duplicates)
+    const slotSet = new Set(assignedSlots);
+    if (slotSet.size !== 11) return false;
+
+    // All slots must be in valid range 0-10
+    for (const slot of assignedSlots) {
+      if (slot < 0 || slot > 10) return false;
+    }
+
+    return true;
+  }, [state.userTeam.lineup.soccerLineup]);
+
+  const soccerTotalMinutes = useMemo(() => {
+    return soccerPlayers.reduce((sum, p) => sum + p.targetMinutes, 0);
+  }, [soccerPlayers]);
+
+  /**
+   * Get the maximum minutes allowed for a specific player given the current total allocation.
+   * This is used by the slider to prevent the user from exceeding the total limit.
+   */
+  const getSoccerMaxAllowedMinutes = useCallback(
+    (playerId: string): number => {
+      const playerData = soccerPlayers.find(p => p.id === playerId);
+      const currentPlayerMinutes = playerData?.targetMinutes ?? 0;
+      const otherPlayersMinutes = soccerTotalMinutes - currentPlayerMinutes;
+      // Max 90 per player, but also can't exceed 990 total
+      return Math.max(0, Math.min(90, 990 - otherPlayersMinutes));
+    },
+    [soccerPlayers, soccerTotalMinutes]
+  );
+
+  const setSoccerTargetMinutes = useCallback(
+    (playerId: string, minutes: number) => {
+      const currentLineup = state.userTeam.lineup;
+
+      // Get the player's current minutes from the soccerPlayers array (which accounts for defaults)
+      const playerData = soccerPlayers.find(p => p.id === playerId);
+      const currentPlayerMinutes = playerData?.targetMinutes ?? 0;
+      const otherPlayersMinutes = soccerTotalMinutes - currentPlayerMinutes;
+
+      // Cap at 990 total, also max 90 per player, min 0
+      const maxAllowedForPlayer = Math.min(90, 990 - otherPlayersMinutes);
+      const clampedMinutes = Math.max(0, Math.min(maxAllowedForPlayer, minutes));
+
+      setLineup({
+        ...currentLineup,
+        minutesAllocation: {
+          ...currentLineup.minutesAllocation,
+          [playerId]: clampedMinutes,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup, soccerTotalMinutes, soccerPlayers]
+  );
+
+  /**
+   * Calculate the optimal lineup and average overall for a given formation.
+   * Returns the best player assignments and the average overall rating.
+   * Factors in player stamina when ranking players.
+   */
+  const calculateOptimalLineupForFormation = useCallback(
+    (targetFormation: SoccerFormation): {
+      assignments: Array<{ playerId: string; slotIndex: number }>;
+      averageOverall: number;
+      totalOverall: number;
+    } => {
+      const roster = getUserRoster();
+      const positions = FORMATION_POSITIONS[targetFormation];
+      const assignments: Array<{ playerId: string; slotIndex: number }> = [];
+      const assignedPlayerIds = new Set<string>();
+      let totalOverall = 0;
+
+      // For each slot (0-10), find the best unassigned, healthy player
+      // weighted by stamina using balanced formula
+      // Formula: overall * (0.6 + 0.4 * stamina/100)
+      // At 100% stamina: 100% of overall
+      // At 50% stamina: 80% of overall
+      // At 0% stamina: 60% of overall
+      for (let slotIndex = 0; slotIndex < 11; slotIndex++) {
+        const positionName = positions[slotIndex];
+        let bestPlayer: Player | null = null;
+        let bestEffectiveRating = -1;
+        let bestRawOverall = 0;
+
+        for (const player of roster) {
+          if (assignedPlayerIds.has(player.id)) continue;
+          if (player.injury !== null) continue; // Skip injured players
+
+          const ovr = calculateSoccerPositionOverall(player, positionName || 'CM');
+          const stamina = player.matchFitness ?? 100;
+          const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+          const effectiveRating = ovr * staminaFactor;
+
+          if (effectiveRating > bestEffectiveRating) {
+            bestEffectiveRating = effectiveRating;
+            bestRawOverall = ovr;
+            bestPlayer = player;
+          }
+        }
+
+        if (bestPlayer) {
+          assignedPlayerIds.add(bestPlayer.id);
+          assignments.push({ playerId: bestPlayer.id, slotIndex });
+          totalOverall += bestRawOverall; // Use raw overall for display purposes
+        }
+      }
+
+      const averageOverall = assignments.length > 0 ? Math.round(totalOverall / assignments.length) : 0;
+      return { assignments, averageOverall, totalOverall };
+    },
+    [getUserRoster]
+  );
+
+  /**
+   * Get the average overall for each formation to help user choose.
+   */
+  const getFormationRatings = useCallback((): Record<SoccerFormation, number> => {
+    const formations = Object.keys(FORMATION_POSITIONS) as SoccerFormation[];
+    const ratings: Partial<Record<SoccerFormation, number>> = {};
+
+    for (const formation of formations) {
+      const { averageOverall } = calculateOptimalLineupForFormation(formation);
+      ratings[formation] = averageOverall;
+    }
+
+    return ratings as Record<SoccerFormation, number>;
+  }, [calculateOptimalLineupForFormation]);
+
+  /**
+   * Get the current lineup's average overall (for the current formation).
+   */
+  const getCurrentLineupAverageOverall = useMemo((): number => {
+    if (soccerStarters.length === 0) return 0;
+
+    let total = 0;
+    for (const starter of soccerStarters) {
+      if (starter.slotIndex !== undefined) {
+        const positionName = formationPositions[starter.slotIndex];
+        const player = state.players[starter.id];
+        if (player && positionName) {
+          total += calculateSoccerPositionOverall(player, positionName);
+        }
+      }
+    }
+
+    return soccerStarters.length > 0 ? Math.round(total / soccerStarters.length) : 0;
+  }, [soccerStarters, formationPositions, state.players]);
+
+  /**
+   * Apply the optimal lineup for the specified formation (or current if not specified).
+   * Updates both formation AND lineup in a single state update to avoid batching issues.
+   * Also allocates minutes: starters get 90, top 3 bench get ~25 each.
+   */
+  const applyOptimalSoccerLineup = useCallback(
+    (targetFormation?: SoccerFormation) => {
+      const formation = targetFormation || currentFormation;
+      const { assignments } = calculateOptimalLineupForFormation(formation);
+
+      if (assignments.length === 0) return;
+
+      const currentLineup = state.userTeam.lineup;
+      const roster = getUserRoster();
+
+      // Build new starters and positions from assignments
+      const newStarters: string[] = [];
+      const newPositions: Record<string, number> = {};
+
+      for (const { playerId, slotIndex } of assignments) {
+        if (slotIndex >= 0 && slotIndex <= 10) {
+          newStarters.push(playerId);
+          newPositions[playerId] = slotIndex;
+        }
+      }
+
+      // Build new bench - top 9 non-starters by condition-adjusted rating
+      const starterSet = new Set(newStarters);
+      const benchPlayers = roster
+        .filter(p => !starterSet.has(p.id))
+        .map(p => {
+          const overall = calculatePlayerOverall(p);
+          const stamina = p.matchFitness ?? 100;
+          const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+          return { id: p.id, overall, effectiveRating: overall * staminaFactor };
+        })
+        .sort((a, b) => b.effectiveRating - a.effectiveRating);
+      // Limit bench to 9 players (rest are reserves)
+      const newBench = benchPlayers.slice(0, 9).map(p => p.id);
+
+      // Allocate minutes: starters get 90 each, bench gets 0
+      // Total = 11 * 90 = 990
+      const newMinutesAllocation: Record<string, number> = {};
+
+      // All starters get 90 minutes
+      for (const starterId of newStarters) {
+        newMinutesAllocation[starterId] = 90;
+      }
+
+      // All bench players get 0 minutes
+      for (const benchPlayer of benchPlayers) {
+        newMinutesAllocation[benchPlayer.id] = 0;
+      }
+
+      // Single state update with formation, lineup, AND minutes
+      setLineup({
+        ...currentLineup,
+        soccerLineup: {
+          ...currentLineup.soccerLineup,
+          formation, // Update formation here
+          starters: newStarters,
+          positions: newPositions,
+        },
+        bench: newBench,
+        minutesAllocation: newMinutesAllocation,
+      });
+    },
+    [state.userTeam.lineup, currentFormation, calculateOptimalLineupForFormation, setLineup, getUserRoster]
+  );
+
+  // =========================================================================
+  // BASEBALL
+  // =========================================================================
+
+  const baseballPlayers = useMemo((): LineupPlayer[] => {
+    const roster = getUserRoster();
+    const baseballLineup = state.userTeam.lineup.baseballLineup;
+    const battingOrderSet = new Set(baseballLineup.battingOrder);
+    const pitcherId = baseballLineup.startingPitcher;
+    const bullpen = baseballLineup.bullpen;
+
+    // Build a map of player ID to bullpen role
+    const bullpenRoleMap: Record<string, BullpenRole> = {};
+    if (bullpen) {
+      if (bullpen.closer) bullpenRoleMap[bullpen.closer] = 'closer';
+      bullpen.longRelievers?.forEach((id) => {
+        if (id) bullpenRoleMap[id] = 'longReliever';
+      });
+      bullpen.shortRelievers?.forEach((id) => {
+        if (id) bullpenRoleMap[id] = 'shortReliever';
+      });
+    }
+
+    return roster.map((player) => {
+      const battingIndex = baseballLineup.battingOrder.indexOf(player.id);
+      const isPitcher = player.id === pitcherId;
+      const isInLineup = battingOrderSet.has(player.id) || isPitcher;
+      const assignedPosition = baseballLineup.positions[player.id];
+      const bullpenRole = bullpenRoleMap[player.id];
+
+      return {
+        id: player.id,
+        name: player.name,
+        position: player.position,
+        overall: calculatePlayerOverall(player),
+        isStarter: isInLineup,
+        isInjured: player.injury !== null,
+        targetMinutes: 0, // Not applicable for baseball
+        height: player.height,
+        weight: player.weight,
+        matchFitness: player.matchFitness ?? 100,
+        battingOrderPosition: battingIndex >= 0 ? battingIndex + 1 : undefined,
+        baseballPosition: assignedPosition,
+        isPitcher,
+        bullpenRole,
+      };
+    });
+  }, [getUserRoster, state.userTeam.lineup.baseballLineup]);
+
+  const baseballBattingOrder = useMemo(() => {
+    return baseballPlayers
+      .filter((p) => p.battingOrderPosition !== undefined)
+      .sort((a, b) => (a.battingOrderPosition || 0) - (b.battingOrderPosition || 0));
+  }, [baseballPlayers]);
+
+  const baseballStartingPitcher = useMemo(() => {
+    return baseballPlayers.find((p) => p.isPitcher);
+  }, [baseballPlayers]);
+
+  const baseballBullpen = useMemo(() => {
+    const bullpen = state.userTeam.lineup.baseballLineup.bullpen;
+    if (!bullpen) return { longRelievers: [], shortRelievers: [], closer: null };
+
+    const getPlayer = (id: string) => baseballPlayers.find((p) => p.id === id) ?? null;
+
+    return {
+      longRelievers: bullpen.longRelievers.map(getPlayer),
+      shortRelievers: bullpen.shortRelievers.map(getPlayer),
+      closer: getPlayer(bullpen.closer),
+    };
+  }, [baseballPlayers, state.userTeam.lineup.baseballLineup.bullpen]);
+
+  const baseballBench = useMemo(() => {
+    const benchSet = new Set(state.userTeam.lineup.bench);
+    return baseballPlayers
+      .filter((p) => !p.isStarter && !p.isPitcher && !p.bullpenRole && benchSet.has(p.id))
+      .slice(0, 9); // Ensure max 9
+  }, [baseballPlayers, state.userTeam.lineup.bench]);
+
+  const baseballReserves = useMemo(() => {
+    const benchSet = new Set(state.userTeam.lineup.bench);
+    return baseballPlayers.filter(
+      (p) => !p.isStarter && !p.isPitcher && !p.bullpenRole && !benchSet.has(p.id)
+    );
+  }, [baseballPlayers, state.userTeam.lineup.bench]);
+
+  const setBaseballBattingOrder = useCallback(
+    (newBattingOrder: string[]) => {
+      const currentLineup = state.userTeam.lineup;
+      const baseballLineup = { ...currentLineup.baseballLineup };
+
+      // Update batting order (should be exactly 9 players)
+      baseballLineup.battingOrder = newBattingOrder.slice(0, 9);
+
+      // Update bench - remove anyone now in batting order
+      const newInLineup = new Set([
+        ...newBattingOrder,
+        baseballLineup.startingPitcher,
+      ]);
+      const newBench = currentLineup.bench.filter((id) => !newInLineup.has(id));
+
+      // Add players removed from batting order to bench
+      const oldBattingSet = new Set(currentLineup.baseballLineup.battingOrder);
+      for (const oldId of oldBattingSet) {
+        if (!newBattingOrder.includes(oldId) && !newBench.includes(oldId)) {
+          newBench.push(oldId);
+        }
+      }
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup,
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const setBaseballStartingPitcher = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const newBench = [...currentLineup.bench];
+      const newBattingOrder = [...currentLineup.baseballLineup.battingOrder];
+      const newPositions = { ...currentLineup.baseballLineup.positions };
+
+      // If there's an existing pitcher, move them to bench
+      const oldPitcherId = currentLineup.baseballLineup.startingPitcher;
+      if (oldPitcherId && oldPitcherId !== playerId) {
+        // Add old pitcher to bench if they're not already there and not in batting order
+        if (!newBench.includes(oldPitcherId) && !newBattingOrder.includes(oldPitcherId)) {
+          newBench.push(oldPitcherId);
+        }
+        // Remove old pitcher's position assignment
+        delete newPositions[oldPitcherId];
+      }
+
+      // Remove new pitcher from bench if present
+      const benchIndex = newBench.indexOf(playerId);
+      if (benchIndex !== -1) {
+        newBench.splice(benchIndex, 1);
+      }
+
+      // Remove from batting order if present (pitchers don't bat in DH league)
+      const battingIndex = newBattingOrder.indexOf(playerId);
+      if (battingIndex !== -1) {
+        newBattingOrder[battingIndex] = ''; // Clear the slot instead of splicing
+      }
+
+      // Set new pitcher
+      newPositions[playerId] = 'P';
+
+      setLineup({
+        ...currentLineup,
+        bench: newBench,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          startingPitcher: playerId,
+          battingOrder: newBattingOrder,
+          positions: newPositions,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const setBaseballPosition = useCallback(
+    (playerId: string, position: BaseballPosition) => {
+      const currentLineup = state.userTeam.lineup;
+      const baseballLineup = { ...currentLineup.baseballLineup };
+      const newPositions = { ...baseballLineup.positions };
+
+      // If setting to pitcher, use setBaseballStartingPitcher instead
+      if (position === 'P') {
+        setBaseballStartingPitcher(playerId);
+        return;
+      }
+
+      // Get the current player's old position (for swapping)
+      const oldPosition = newPositions[playerId];
+
+      // Swap positions if target is occupied (except DH which can have multiple)
+      if (position !== 'DH') {
+        for (const [existingId, existingPos] of Object.entries(newPositions)) {
+          if (existingPos === position && existingId !== playerId) {
+            // Swap: give the displaced player the old position
+            if (oldPosition && oldPosition !== 'P') {
+              newPositions[existingId] = oldPosition;
+            } else {
+              // If no old position, assign DH as fallback
+              newPositions[existingId] = 'DH';
+            }
+            break;
+          }
+        }
+      }
+
+      newPositions[playerId] = position;
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...baseballLineup,
+          positions: newPositions,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup, setBaseballStartingPitcher]
+  );
+
+  const addToBattingOrder = useCallback(
+    (playerId: string, slotIndex: number, defensivePosition?: BaseballPosition) => {
+      const currentLineup = state.userTeam.lineup;
+      const baseballLineup = { ...currentLineup.baseballLineup };
+      const newBattingOrder = [...baseballLineup.battingOrder];
+      const newBench = [...currentLineup.bench];
+      const newPositions = { ...baseballLineup.positions };
+
+      // Don't add pitcher to batting order
+      if (playerId === baseballLineup.startingPitcher) {
+        return;
+      }
+
+      // Remove player from current position in batting order if present
+      const existingIndex = newBattingOrder.indexOf(playerId);
+      if (existingIndex !== -1) {
+        newBattingOrder.splice(existingIndex, 1);
+      }
+
+      // Remove from bench if present
+      const benchIndex = newBench.indexOf(playerId);
+      if (benchIndex !== -1) {
+        newBench.splice(benchIndex, 1);
+      }
+
+      // If slot is occupied, swap players
+      if (newBattingOrder[slotIndex]) {
+        // Move displaced player to bench if they were swapped out entirely
+        const displacedId = newBattingOrder[slotIndex];
+        if (existingIndex === -1) {
+          // New player coming in, displaced goes to bench
+          if (!newBench.includes(displacedId)) {
+            newBench.push(displacedId);
+          }
+          newBattingOrder[slotIndex] = playerId;
+        } else {
+          // Existing player moving to new position - swap them
+          newBattingOrder[existingIndex] = displacedId;
+          newBattingOrder[slotIndex] = playerId;
+        }
+      } else {
+        // Empty slot
+        newBattingOrder[slotIndex] = playerId;
+      }
+
+      // Ensure batting order is exactly 9 slots
+      while (newBattingOrder.length < 9) {
+        newBattingOrder.push('');
+      }
+
+      // Set defensive position if provided
+      if (defensivePosition) {
+        // Remove any other player at this defensive position (except DH)
+        if (defensivePosition !== 'DH') {
+          for (const [existingId, existingPos] of Object.entries(newPositions)) {
+            if (existingPos === defensivePosition && existingId !== playerId) {
+              delete newPositions[existingId];
+            }
+          }
+        }
+        newPositions[playerId] = defensivePosition;
+      }
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...baseballLineup,
+          battingOrder: newBattingOrder.slice(0, 9),
+          positions: newPositions,
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const removeFromBattingOrder = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const baseballLineup = { ...currentLineup.baseballLineup };
+      const newBattingOrder = baseballLineup.battingOrder.map((id) =>
+        id === playerId ? '' : id
+      );
+      const newPositions = { ...baseballLineup.positions };
+      const newBench = [...currentLineup.bench];
+
+      // Remove position assignment
+      delete newPositions[playerId];
+
+      // Add to bench
+      if (!newBench.includes(playerId)) {
+        newBench.push(playerId);
+      }
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...baseballLineup,
+          battingOrder: newBattingOrder,
+          positions: newPositions,
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Swap two players' positions in the batting order
+   * Handles the swap in a single state update to avoid batching issues
+   */
+  const swapBattingOrderPositions = useCallback(
+    (slotIndexA: number, slotIndexB: number) => {
+      const currentLineup = state.userTeam.lineup;
+      const baseballLineup = { ...currentLineup.baseballLineup };
+      const newBattingOrder = [...baseballLineup.battingOrder];
+
+      // Swap the player IDs at the two slots (use empty string as fallback)
+      const playerA = newBattingOrder[slotIndexA] ?? '';
+      const playerB = newBattingOrder[slotIndexB] ?? '';
+      newBattingOrder[slotIndexA] = playerB;
+      newBattingOrder[slotIndexB] = playerA;
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...baseballLineup,
+          battingOrder: newBattingOrder,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  const isValidBaseballLineup = useMemo(() => {
+    const baseballLineup = state.userTeam.lineup.baseballLineup;
+
+    // Must have a starting pitcher
+    if (!baseballLineup.startingPitcher) return false;
+
+    // Batting order must have exactly 9 filled slots
+    const filledSlots = baseballLineup.battingOrder.filter((id) => id !== '');
+    if (filledSlots.length !== 9) return false;
+
+    // All batters must have position assignments
+    for (const batterId of filledSlots) {
+      if (!baseballLineup.positions[batterId]) return false;
+    }
+
+    // Pitcher must have 'P' position
+    if (baseballLineup.positions[baseballLineup.startingPitcher] !== 'P') return false;
+
+    // Exactly one player per defensive position (except DH)
+    const positionCounts: Record<string, number> = {};
+    for (const pos of Object.values(baseballLineup.positions)) {
+      positionCounts[pos] = (positionCounts[pos] || 0) + 1;
+    }
+
+    // Each non-DH position should appear exactly once
+    const requiredPositions: BaseballPosition[] = ['P', 'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF'];
+    for (const pos of requiredPositions) {
+      if (positionCounts[pos] !== 1) return false;
+    }
+
+    return true;
+  }, [state.userTeam.lineup.baseballLineup]);
+
+  /**
+   * Calculate a player's overall rating for a specific baseball position
+   */
+  const getBaseballPositionOverall = useCallback(
+    (playerId: string, position: BaseballPositionType): number => {
+      const player = state.players[playerId];
+      if (!player) return 0;
+      return calculateBaseballPositionOverall(player.attributes, position);
+    },
+    [state.players]
+  );
+
+  /**
+   * Get a player's best baseball position and overall rating
+   * Checks all positions and returns the highest rated one
+   */
+  const getBaseballBestPosition = useCallback(
+    (playerId: string): { position: BaseballPositionType; overall: number } => {
+      const player = state.players[playerId];
+      if (!player) return { position: 'DH', overall: 0 };
+
+      const positions: BaseballPositionType[] = ['P', 'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH'];
+      let bestPosition: BaseballPositionType = 'DH';
+      let bestOverall = 0;
+
+      for (const pos of positions) {
+        const ovr = calculateBaseballPositionOverall(player.attributes, pos);
+        if (ovr > bestOverall) {
+          bestOverall = ovr;
+          bestPosition = pos;
+        }
+      }
+
+      return { position: bestPosition, overall: bestOverall };
+    },
+    [state.players]
+  );
+
+  /**
+   * Set the full baseball lineup at once (pitcher, batting order, positions)
+   * This avoids state batching issues when setting multiple values
+   */
+  const setFullBaseballLineup = useCallback(
+    (pitcherId: string, battingOrder: string[], positions: Record<string, BaseballPosition>) => {
+      const currentLineup = state.userTeam.lineup;
+      const allInLineup = new Set([pitcherId, ...battingOrder.filter(id => id !== '')]);
+
+      // Build new bench - everyone not in lineup (and not in bullpen)
+      const roster = getUserRoster();
+      const bullpenIds = new Set([
+        currentLineup.baseballLineup.bullpen?.closer ?? '',
+        ...(currentLineup.baseballLineup.bullpen?.longRelievers ?? []),
+        ...(currentLineup.baseballLineup.bullpen?.shortRelievers ?? []),
+      ].filter(id => id !== ''));
+      const newBench = roster
+        .filter(p => !allInLineup.has(p.id) && !bullpenIds.has(p.id))
+        .map(p => p.id);
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          battingOrder: battingOrder.slice(0, 9),
+          startingPitcher: pitcherId,
+          positions: { ...positions, [pitcherId]: 'P' },
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup, getUserRoster]
+  );
+
+  /**
+   * Set a player in a bullpen role
+   */
+  const setBullpenRole = useCallback(
+    (playerId: string, role: BullpenRole, slotIndex?: number) => {
+      const currentLineup = state.userTeam.lineup;
+      const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
+        longRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', ''] as [string, string],
+        closer: '',
+      };
+      const newBench = [...currentLineup.bench];
+
+      // Find the existing player in the target slot (to move them to bench)
+      let displacedPlayerId: string | null = null;
+      switch (role) {
+        case 'closer':
+          if (currentBullpen.closer && currentBullpen.closer !== playerId) {
+            displacedPlayerId = currentBullpen.closer;
+          }
+          break;
+        case 'longReliever':
+          if (slotIndex !== undefined && slotIndex < 2) {
+            const existing = currentBullpen.longRelievers[slotIndex];
+            if (existing && existing !== playerId) {
+              displacedPlayerId = existing;
+            }
+          }
+          break;
+        case 'shortReliever':
+          if (slotIndex !== undefined && slotIndex < 2) {
+            const existing = currentBullpen.shortRelievers[slotIndex];
+            if (existing && existing !== playerId) {
+              displacedPlayerId = existing;
+            }
+          }
+          break;
+      }
+
+      // Move displaced player to bench if they exist and aren't already there
+      if (displacedPlayerId && !newBench.includes(displacedPlayerId)) {
+        newBench.push(displacedPlayerId);
+      }
+
+      // Remove the new player from bench (they're becoming a bullpen player)
+      const benchIndex = newBench.indexOf(playerId);
+      if (benchIndex !== -1) {
+        newBench.splice(benchIndex, 1);
+      }
+
+      // Remove player from any existing bullpen slot
+      const newBullpen: BaseballBullpenConfig = {
+        longRelievers: currentBullpen.longRelievers.map((id) =>
+          id === playerId ? '' : id
+        ) as [string, string],
+        shortRelievers: currentBullpen.shortRelievers.map((id) =>
+          id === playerId ? '' : id
+        ) as [string, string],
+        closer: currentBullpen.closer === playerId ? '' : currentBullpen.closer,
+      };
+
+      // Also remove from batting order if present
+      const newBattingOrder = currentLineup.baseballLineup.battingOrder.map((id) =>
+        id === playerId ? '' : id
+      );
+
+      // Add to the specified role
+      switch (role) {
+        case 'closer':
+          newBullpen.closer = playerId;
+          break;
+        case 'longReliever':
+          if (slotIndex !== undefined && slotIndex < 2) {
+            newBullpen.longRelievers[slotIndex] = playerId;
+          } else {
+            // Find first empty slot
+            const emptyIndex = newBullpen.longRelievers.findIndex((id) => !id);
+            if (emptyIndex >= 0) {
+              newBullpen.longRelievers[emptyIndex] = playerId;
+            }
+          }
+          break;
+        case 'shortReliever':
+          if (slotIndex !== undefined && slotIndex < 2) {
+            newBullpen.shortRelievers[slotIndex] = playerId;
+          } else {
+            const emptyIndex = newBullpen.shortRelievers.findIndex((id) => !id);
+            if (emptyIndex >= 0) {
+              newBullpen.shortRelievers[emptyIndex] = playerId;
+            }
+          }
+          break;
+      }
+
+      setLineup({
+        ...currentLineup,
+        bench: newBench,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          battingOrder: newBattingOrder,
+          bullpen: newBullpen,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Remove a player from the bullpen
+   */
+  const removeFromBullpen = useCallback(
+    (playerId: string) => {
+      const currentLineup = state.userTeam.lineup;
+      const currentBullpen = currentLineup.baseballLineup.bullpen;
+      if (!currentBullpen) return;
+
+      const newBullpen: BaseballBullpenConfig = {
+        longRelievers: currentBullpen.longRelievers.map((id) =>
+          id === playerId ? '' : id
+        ) as [string, string],
+        shortRelievers: currentBullpen.shortRelievers.map((id) =>
+          id === playerId ? '' : id
+        ) as [string, string],
+        closer: currentBullpen.closer === playerId ? '' : currentBullpen.closer,
+      };
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          bullpen: newBullpen,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Swap two bullpen players' roles in a single state update
+   */
+  const swapBullpenRoles = useCallback(
+    (
+      playerAId: string,
+      roleA: BullpenRole,
+      slotA: number | undefined,
+      playerBId: string,
+      roleB: BullpenRole,
+      slotB: number | undefined
+    ) => {
+      const currentLineup = state.userTeam.lineup;
+      const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
+        longRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', ''] as [string, string],
+        closer: '',
+      };
+
+      // Start with empty bullpen slots for the affected positions
+      const newBullpen: BaseballBullpenConfig = {
+        longRelievers: [...currentBullpen.longRelievers] as [string, string],
+        shortRelievers: [...currentBullpen.shortRelievers] as [string, string],
+        closer: currentBullpen.closer,
+      };
+
+      // Clear both players from their current positions
+      newBullpen.longRelievers = newBullpen.longRelievers.map((id) =>
+        id === playerAId || id === playerBId ? '' : id
+      ) as [string, string];
+      newBullpen.shortRelievers = newBullpen.shortRelievers.map((id) =>
+        id === playerAId || id === playerBId ? '' : id
+      ) as [string, string];
+      if (newBullpen.closer === playerAId || newBullpen.closer === playerBId) {
+        newBullpen.closer = '';
+      }
+
+      // Helper to place a player in a role
+      const placeInRole = (playerId: string, role: BullpenRole, slot: number | undefined) => {
+        switch (role) {
+          case 'closer':
+            newBullpen.closer = playerId;
+            break;
+          case 'longReliever':
+            if (slot !== undefined && slot < 2) {
+              newBullpen.longRelievers[slot] = playerId;
+            }
+            break;
+          case 'shortReliever':
+            if (slot !== undefined && slot < 2) {
+              newBullpen.shortRelievers[slot] = playerId;
+            }
+            break;
+        }
+      };
+
+      // Place player A in player B's old position
+      placeInRole(playerAId, roleB, slotB);
+      // Place player B in player A's old position
+      placeInRole(playerBId, roleA, slotA);
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          bullpen: newBullpen,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Atomically swap a bullpen player with a batter.
+   * Moves the batter to the specified bullpen role, and the bullpen player to the batting slot.
+   */
+  const swapBullpenWithBatter = useCallback(
+    (
+      bullpenPlayerId: string,
+      bullpenRole: BullpenRole,
+      bullpenSlotIndex: number | undefined,
+      batterPlayerId: string,
+      batterSlotIndex: number,
+      batterPosition: BaseballPosition
+    ) => {
+      const currentLineup = state.userTeam.lineup;
+      const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
+        longRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', ''] as [string, string],
+        closer: '',
+      };
+
+      // 1. Build new bullpen - remove bullpen player, add batter
+      const newBullpen: BaseballBullpenConfig = {
+        longRelievers: currentBullpen.longRelievers.map((id) =>
+          id === bullpenPlayerId ? '' : id
+        ) as [string, string],
+        shortRelievers: currentBullpen.shortRelievers.map((id) =>
+          id === bullpenPlayerId ? '' : id
+        ) as [string, string],
+        closer: currentBullpen.closer === bullpenPlayerId ? '' : currentBullpen.closer,
+      };
+
+      // Add batter to the bullpen role
+      switch (bullpenRole) {
+        case 'closer':
+          newBullpen.closer = batterPlayerId;
+          break;
+        case 'longReliever':
+          if (bullpenSlotIndex !== undefined && bullpenSlotIndex < 2) {
+            newBullpen.longRelievers[bullpenSlotIndex] = batterPlayerId;
+          }
+          break;
+        case 'shortReliever':
+          if (bullpenSlotIndex !== undefined && bullpenSlotIndex < 2) {
+            newBullpen.shortRelievers[bullpenSlotIndex] = batterPlayerId;
+          }
+          break;
+      }
+
+      // 2. Build new batting order - remove batter, add bullpen player
+      const newBattingOrder = [...currentLineup.baseballLineup.battingOrder];
+      newBattingOrder[batterSlotIndex] = bullpenPlayerId;
+
+      // 3. Build new positions - give bullpen player the batter's position
+      const newPositions = { ...currentLineup.baseballLineup.positions };
+      delete newPositions[batterPlayerId]; // Remove batter's position
+      newPositions[bullpenPlayerId] = batterPosition; // Give bullpen player the position
+
+      // 4. Update bench - remove bullpen player if they were there
+      const newBench = currentLineup.bench.filter((id) => id !== bullpenPlayerId);
+
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          battingOrder: newBattingOrder,
+          positions: newPositions,
+          bullpen: newBullpen,
+        },
+        bench: newBench,
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
+   * Apply optimal baseball lineup including batting order, pitcher, and bullpen.
+   * Uses position-specific ratings weighted by stamina to find the best player for each slot.
+   */
+  const applyOptimalBaseballLineup = useCallback(() => {
+    const roster = getUserRoster();
+    const currentLineup = state.userTeam.lineup;
+
+    // Calculate each player's rating for each baseball position, weighted by stamina
+    // Formula: overall * (0.6 + 0.4 * stamina/100)
+    // At 100% stamina: 100% of overall
+    // At 50% stamina: 80% of overall
+    // At 0% stamina: 60% of overall
+    const playerScores: Array<{
+      player: Player;
+      scores: Record<BaseballPosition, number>;
+      stamina: number;
+    }> = roster
+      .filter((p) => p.injury === null)
+      .map((player) => {
+        const stamina = player.matchFitness ?? 100;
+        const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+        return {
+          player,
+          stamina,
+          // Weight all scores by stamina for selection purposes
+          scores: {
+            P: calculateBaseballPositionOverall(player.attributes, 'P') * staminaFactor,
+            C: calculateBaseballPositionOverall(player.attributes, 'C') * staminaFactor,
+            '1B': calculateBaseballPositionOverall(player.attributes, '1B') * staminaFactor,
+            '2B': calculateBaseballPositionOverall(player.attributes, '2B') * staminaFactor,
+            SS: calculateBaseballPositionOverall(player.attributes, 'SS') * staminaFactor,
+            '3B': calculateBaseballPositionOverall(player.attributes, '3B') * staminaFactor,
+            LF: calculateBaseballPositionOverall(player.attributes, 'LF') * staminaFactor,
+            CF: calculateBaseballPositionOverall(player.attributes, 'CF') * staminaFactor,
+            RF: calculateBaseballPositionOverall(player.attributes, 'RF') * staminaFactor,
+            DH: calculateBaseballPositionOverall(player.attributes, 'DH') * staminaFactor,
+          },
+        };
+      });
+
+    // 1. Find best starting pitcher (weighted by stamina)
+    const sortedByPitching = [...playerScores].sort(
+      (a, b) => b.scores.P - a.scores.P
+    );
+    const startingPitcher = sortedByPitching[0]?.player;
+    if (!startingPitcher) return;
+
+    // 2. Build optimal lineup for defensive positions (excluding pitcher)
+    const usedPlayerIds = new Set<string>([startingPitcher.id]);
+    const positions: Record<string, BaseballPosition> = {
+      [startingPitcher.id]: 'P',
+    };
+    const battingOrder: string[] = [];
+
+    // Defensive positions to fill (9 players: C, 1B, 2B, SS, 3B, LF, CF, RF, DH)
+    const defensivePositions: BaseballPosition[] = [
+      'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH',
+    ];
+
+    // Greedy assignment: for each position, pick the best available player
+    for (const pos of defensivePositions) {
+      const available = playerScores.filter(
+        (ps) => !usedPlayerIds.has(ps.player.id)
+      );
+      if (available.length === 0) break;
+
+      // Sort by score for this position
+      available.sort((a, b) => b.scores[pos] - a.scores[pos]);
+      const best = available[0];
+      if (best) {
+        battingOrder.push(best.player.id);
+        positions[best.player.id] = pos;
+        usedPlayerIds.add(best.player.id);
+      }
+    }
+
+    // 3. Build optimal bullpen from remaining players
+    // Sort remaining players by pitching ability
+    const remainingForBullpen = playerScores
+      .filter((ps) => !usedPlayerIds.has(ps.player.id))
+      .sort((a, b) => b.scores.P - a.scores.P);
+
+    // Closer: best remaining pitcher
+    const closer = remainingForBullpen[0]?.player.id ?? '';
+    // Long relievers: next 2 best
+    const longRelievers: [string, string] = [
+      remainingForBullpen[1]?.player.id ?? '',
+      remainingForBullpen[2]?.player.id ?? '',
+    ];
+    // Short relievers: next 2 best
+    const shortRelievers: [string, string] = [
+      remainingForBullpen[3]?.player.id ?? '',
+      remainingForBullpen[4]?.player.id ?? '',
+    ];
+
+    const bullpen: BaseballBullpenConfig = {
+      closer,
+      longRelievers,
+      shortRelievers,
+    };
+
+    // 4. Build bench from anyone not assigned - top 9 by condition-adjusted rating
+    const allAssigned = new Set([
+      startingPitcher.id,
+      ...battingOrder,
+      closer,
+      ...longRelievers.filter((id) => id !== ''),
+      ...shortRelievers.filter((id) => id !== ''),
+    ]);
+    const benchCandidates = roster
+      .filter((p) => !allAssigned.has(p.id))
+      .map((p) => {
+        const overall = calculatePlayerOverall(p);
+        const stamina = p.matchFitness ?? 100;
+        const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+        return { id: p.id, effectiveRating: overall * staminaFactor };
+      })
+      .sort((a, b) => b.effectiveRating - a.effectiveRating);
+    // Limit bench to 9 players (rest are reserves)
+    const newBench = benchCandidates.slice(0, 9).map((p) => p.id);
+
+    // 5. Set the full lineup in one state update
+    setLineup({
+      ...currentLineup,
+      baseballLineup: {
+        ...currentLineup.baseballLineup,
+        startingPitcher: startingPitcher.id,
+        battingOrder: battingOrder.slice(0, 9),
+        positions,
+        bullpen,
+      },
+      bench: newBench,
+    });
+  }, [state.userTeam.lineup, getUserRoster, setLineup]);
+
+  // =========================================================================
+  // RETURN BASED ON SPORT
+  // =========================================================================
+
+  if (sport === 'baseball') {
+    return {
+      players: baseballPlayers,
+      starters: baseballBattingOrder,
+      bench: baseballBench,
+      reserves: baseballReserves,
+      currentLineup: state.userTeam.lineup,
+      battingOrder: baseballBattingOrder,
+      startingPitcher: baseballStartingPitcher,
+      positions: state.userTeam.lineup.baseballLineup.positions,
+      bullpen: baseballBullpen,
+      setBattingOrder: setBaseballBattingOrder,
+      setStartingPitcher: setBaseballStartingPitcher,
+      setPosition: setBaseballPosition,
+      addToBattingOrder,
+      removeFromBattingOrder,
+      swapBattingOrder: swapBattingOrderPositions,
+      setFullLineup: setFullBaseballLineup,
+      setBullpenRole,
+      removeFromBullpen,
+      swapBullpenRoles,
+      swapBullpenWithBatter,
+      getPositionOverall: getBaseballPositionOverall,
+      getBestPosition: getBaseballBestPosition,
+      applyOptimalLineup: applyOptimalBaseballLineup,
+      isValidLineup: isValidBaseballLineup,
+      // Provide stubs for shared interface compatibility
+      setStarter: addToBattingOrder,
+      moveToBench: removeFromBattingOrder,
+      swapPlayers: () => {},
+      setFormation: undefined,
+      setTargetMinutes: () => {},
+      totalMinutesAllocated: 0,
+      formation: undefined,
+      formationPositions: undefined,
+      addToBench: addPlayerToBench,
+      removeFromBench: removePlayerFromBench,
+      swapBenchWithReserve,
+    };
+  }
+
+  if (sport === 'soccer') {
+    return {
+      players: soccerPlayers,
+      starters: soccerStarters,
+      bench: soccerBench,
+      reserves: soccerReserves,
+      currentLineup: state.userTeam.lineup,
+      formation: currentFormation,
+      formationPositions,
+      setStarter: setSoccerStarter,
+      moveToBench: moveSoccerToBench,
+      setFormation: setSoccerFormation,
+      setFullLineup: setFullSoccerLineup,
+      swapStarters: swapSoccerStarters,
+      swapPlayers: () => {}, // Legacy - use swapStarters instead
+      setTargetMinutes: setSoccerTargetMinutes,
+      getMaxAllowedMinutes: getSoccerMaxAllowedMinutes,
+      totalMinutesAllocated: soccerTotalMinutes,
+      isValidLineup: isValidSoccerLineup,
+      // Formation rating utilities
+      getFormationRatings,
+      getCurrentLineupAverageOverall,
+      applyOptimalLineup: applyOptimalSoccerLineup,
+      calculateOptimalLineupForFormation,
+      addToBench: addPlayerToBench,
+      removeFromBench: removePlayerFromBench,
+      swapBenchWithReserve,
+    };
+  }
+
+  // Default: basketball
+  return {
+    players: basketballPlayers,
+    starters: basketballStarters,
+    bench: basketballBench,
+    reserves: basketballReserves,
+    currentLineup: state.userTeam.lineup,
+    formation: undefined,
+    formationPositions: undefined,
+    setStarter: setBasketballStarter,
+    moveToBench: moveBasketballToBench,
+    swapPlayers: swapBasketballPlayers,
+    swapStarters: swapBasketballStarterPositions,
+    setFormation: undefined,
+    setFullLineup: setFullBasketballLineup,
+    applyOptimalLineup: applyOptimalBasketballLineup,
+    setTargetMinutes: setBasketballTargetMinutes,
+    getMaxAllowedMinutes: getBasketballMaxAllowedMinutes,
+    totalMinutesAllocated: basketballTotalMinutes,
+    isValidLineup: isValidBasketballLineup,
+    addToBench: addPlayerToBench,
+    removeFromBench: removePlayerFromBench,
+    swapBenchWithReserve,
+  };
+}
+
+export default useLineup;

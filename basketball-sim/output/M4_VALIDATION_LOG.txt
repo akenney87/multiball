@@ -1,0 +1,1927 @@
+Using random seed: 54321
+
+Loading teams from teams...
+Loaded 100 teams
+
+================================================================================
+RUNNING 100-GAME VALIDATION SUITE
+================================================================================
+
+Game 1/100: Team_063 vs Team_009
+  Ratings: 62.1 vs 71.3
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_063 16, Team_009 24
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_063 29, Team_009 38
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_063 45, Team_009 64
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_063 61, Team_009 98
+  Final: 61-98 | Poss: 62.5
+  Saved to: validation_results\games\game_001.json
+
+Game 2/100: Team_075 vs Team_047
+  Ratings: 81.5 vs 62.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_075 25, Team_047 15
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_075 55, Team_047 22
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_075 84, Team_047 28
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_075 102, Team_047 40
+  Final: 102-40 | Poss: 62.5
+  Saved to: validation_results\games\game_002.json
+
+Game 3/100: Team_092 vs Team_060
+  Ratings: 57.1 vs 62.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_092 14, Team_060 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_092 33, Team_060 38
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_092 47, Team_060 68
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_092 54, Team_060 96
+  Final: 54-96 | Poss: 66.0
+  Saved to: validation_results\games\game_003.json
+
+Game 4/100: Team_064 vs Team_034
+  Ratings: 52.8 vs 71.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_064 8, Team_034 29
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_064 19, Team_034 64
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_064 33, Team_034 94
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_064 43, Team_034 131
+  Final: 43-131 | Poss: 71.5
+  Saved to: validation_results\games\game_004.json
+
+Game 5/100: Team_073 vs Team_040
+  Ratings: 67.3 vs 56.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_073 23, Team_040 12
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_073 48, Team_040 27
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_073 68, Team_040 43
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_073 97, Team_040 49
+  Final: 97-49 | Poss: 69.5
+  Saved to: validation_results\games\game_005.json
+
+Game 6/100: Team_051 vs Team_089
+  Ratings: 68.2 vs 73.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_051 19, Team_089 21
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_051 38, Team_089 42
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_051 50, Team_089 56
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_051 72, Team_089 76
+  Final: 72-76 | Poss: 63.0
+  Saved to: validation_results\games\game_006.json
+
+Game 7/100: Team_013 vs Team_047
+  Ratings: 60.8 vs 62.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_013 20, Team_047 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_013 50, Team_047 35
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_013 69, Team_047 53
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_013 81, Team_047 74
+  Final: 81-74 | Poss: 59.5
+  Saved to: validation_results\games\game_007.json
+
+Game 8/100: Team_009 vs Team_015
+  Ratings: 71.3 vs 78.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_009 6, Team_015 16
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_009 23, Team_015 31
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_009 40, Team_015 60
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_009 56, Team_015 72
+  Final: 56-72 | Poss: 57.5
+  Saved to: validation_results\games\game_008.json
+
+Game 9/100: Team_022 vs Team_005
+  Ratings: 63.8 vs 72.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_022 17, Team_005 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_022 23, Team_005 37
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_022 33, Team_005 60
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_022 65, Team_005 84
+  Final: 65-84 | Poss: 61.0
+  Saved to: validation_results\games\game_009.json
+
+Game 10/100: Team_060 vs Team_078
+  Ratings: 62.2 vs 63.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_060 14, Team_078 23
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_060 28, Team_078 46
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_060 50, Team_078 61
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_060 66, Team_078 77
+  Final: 66-77 | Poss: 63.0
+  Saved to: validation_results\games\game_010.json
+
+Game 11/100: Team_033 vs Team_017
+  Ratings: 67.9 vs 77.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_033 9, Team_017 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_033 23, Team_017 32
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_033 51, Team_017 57
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_033 60, Team_017 66
+  Final: 60-66 | Poss: 67.5
+  Saved to: validation_results\games\game_011.json
+
+Game 12/100: Team_020 vs Team_093
+  Ratings: 74.7 vs 62.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_020 17, Team_093 12
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_020 45, Team_093 29
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_020 70, Team_093 40
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_020 93, Team_093 53
+  Final: 93-53 | Poss: 52.0
+  Saved to: validation_results\games\game_012.json
+
+Game 13/100: Team_010 vs Team_004
+  Ratings: 52.4 vs 79.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_010 10, Team_004 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_010 21, Team_004 54
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_010 29, Team_004 90
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_010 39, Team_004 113
+  Final: 39-113 | Poss: 65.0
+  Saved to: validation_results\games\game_013.json
+
+Game 14/100: Team_054 vs Team_093
+  Ratings: 58.8 vs 62.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_054 13, Team_093 13
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_054 25, Team_093 31
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_054 51, Team_093 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_054 70, Team_093 66
+  Final: 70-66 | Poss: 59.0
+  Saved to: validation_results\games\game_014.json
+
+Game 15/100: Team_068 vs Team_007
+  Ratings: 63.8 vs 52.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_068 30, Team_007 27
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_068 49, Team_007 41
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_068 79, Team_007 53
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_068 100, Team_007 65
+  Final: 100-65 | Poss: 69.0
+  Saved to: validation_results\games\game_015.json
+
+Game 16/100: Team_015 vs Team_038
+  Ratings: 78.2 vs 68.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_015 23, Team_038 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_015 43, Team_038 31
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_015 58, Team_038 46
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_015 82, Team_038 58
+  Final: 82-58 | Poss: 62.5
+  Saved to: validation_results\games\game_016.json
+
+Game 17/100: Team_054 vs Team_025
+  Ratings: 58.8 vs 64.3
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_054 11, Team_025 20
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_054 38, Team_025 39
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_054 45, Team_025 61
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_054 79, Team_025 76
+  Final: 79-76 | Poss: 66.5
+  Saved to: validation_results\games\game_017.json
+
+Game 18/100: Team_042 vs Team_079
+  Ratings: 82.3 vs 57.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_042 32, Team_079 11
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_042 50, Team_079 22
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_042 66, Team_079 37
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_042 87, Team_079 49
+  Final: 87-49 | Poss: 64.5
+  Saved to: validation_results\games\game_018.json
+
+Game 19/100: Team_052 vs Team_048
+  Ratings: 63.5 vs 64.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_052 24, Team_048 20
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_052 39, Team_048 39
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_052 56, Team_048 63
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_052 72, Team_048 86
+  Final: 72-86 | Poss: 62.0
+  Saved to: validation_results\games\game_019.json
+
+Game 20/100: Team_045 vs Team_022
+  Ratings: 61.6 vs 63.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_045 13, Team_022 30
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_045 35, Team_022 56
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_045 55, Team_022 80
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_045 77, Team_022 93
+  Final: 77-93 | Poss: 69.0
+  Saved to: validation_results\games\game_020.json
+
+Game 21/100: Team_039 vs Team_098
+  Ratings: 64.2 vs 63.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_039 20, Team_098 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_039 35, Team_098 36
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_039 55, Team_098 56
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_039 80, Team_098 66
+  Final: 80-66 | Poss: 59.5
+  Saved to: validation_results\games\game_021.json
+
+Game 22/100: Team_074 vs Team_050
+  Ratings: 74.8 vs 69.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_074 9, Team_050 10
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_074 24, Team_050 34
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_074 37, Team_050 48
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_074 54, Team_050 57
+  Final: 54-57 | Poss: 63.0
+  Saved to: validation_results\games\game_022.json
+
+Game 23/100: Team_010 vs Team_064
+  Ratings: 52.4 vs 52.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_010 24, Team_064 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_010 47, Team_064 28
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_010 71, Team_064 48
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_010 88, Team_064 69
+  Final: 88-69 | Poss: 69.0
+  Saved to: validation_results\games\game_023.json
+
+Game 24/100: Team_030 vs Team_017
+  Ratings: 72.4 vs 77.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_030 11, Team_017 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_030 28, Team_017 33
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_030 43, Team_017 48
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_030 63, Team_017 66
+  Final: 63-66 | Poss: 64.5
+  Saved to: validation_results\games\game_024.json
+
+Game 25/100: Team_081 vs Team_088
+  Ratings: 58.5 vs 73.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_081 15, Team_088 10
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_081 30, Team_088 32
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_081 45, Team_088 61
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_081 55, Team_088 69
+  Final: 55-69 | Poss: 70.5
+  Saved to: validation_results\games\game_025.json
+
+Game 26/100: Team_072 vs Team_021
+  Ratings: 59.8 vs 67.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_072 10, Team_021 29
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_072 28, Team_021 57
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_072 45, Team_021 80
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_072 59, Team_021 99
+  Final: 59-99 | Poss: 63.5
+  Saved to: validation_results\games\game_026.json
+
+Game 27/100: Team_066 vs Team_014
+  Ratings: 79.5 vs 61.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_066 36, Team_014 14
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_066 58, Team_014 26
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_066 80, Team_014 34
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_066 102, Team_014 43
+  Final: 102-43 | Poss: 59.5
+  Saved to: validation_results\games\game_027.json
+
+Game 28/100: Team_035 vs Team_096
+  Ratings: 66.4 vs 66.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_035 15, Team_096 20
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_035 28, Team_096 46
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_035 43, Team_096 61
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_035 62, Team_096 82
+  Final: 62-82 | Poss: 58.5
+  Saved to: validation_results\games\game_028.json
+
+Game 29/100: Team_053 vs Team_066
+  Ratings: 64.8 vs 79.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_053 14, Team_066 28
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_053 24, Team_066 54
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_053 39, Team_066 80
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_053 48, Team_066 107
+  Final: 48-107 | Poss: 55.5
+  Saved to: validation_results\games\game_029.json
+
+Game 30/100: Team_071 vs Team_050
+  Ratings: 76.0 vs 69.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_071 23, Team_050 13
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_071 47, Team_050 26
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_071 71, Team_050 40
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_071 93, Team_050 45
+  Final: 93-45 | Poss: 59.5
+  Saved to: validation_results\games\game_030.json
+
+Game 31/100: Team_009 vs Team_011
+  Ratings: 71.3 vs 63.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_009 23, Team_011 14
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_009 34, Team_011 26
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_009 58, Team_011 53
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_009 85, Team_011 62
+  Final: 85-62 | Poss: 61.5
+  Saved to: validation_results\games\game_031.json
+
+Game 32/100: Team_022 vs Team_030
+  Ratings: 63.8 vs 72.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_022 18, Team_030 24
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_022 32, Team_030 43
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_022 57, Team_030 62
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_022 76, Team_030 94
+  Final: 76-94 | Poss: 68.0
+  Saved to: validation_results\games\game_032.json
+
+Game 33/100: Team_085 vs Team_014
+  Ratings: 62.6 vs 61.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_085 31, Team_014 28
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_085 44, Team_014 45
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_085 61, Team_014 60
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_085 78, Team_014 82
+  Final: 78-82 | Poss: 54.0
+  Saved to: validation_results\games\game_033.json
+
+Game 34/100: Team_015 vs Team_056
+  Ratings: 78.2 vs 57.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_015 26, Team_056 12
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_015 53, Team_056 29
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_015 84, Team_056 37
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_015 113, Team_056 52
+  Final: 113-52 | Poss: 61.0
+  Saved to: validation_results\games\game_034.json
+
+Game 35/100: Team_087 vs Team_010
+  Ratings: 67.4 vs 52.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_087 34, Team_010 15
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_087 55, Team_010 26
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_087 81, Team_010 36
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_087 105, Team_010 49
+  Final: 105-49 | Poss: 71.0
+  Saved to: validation_results\games\game_035.json
+
+Game 36/100: Team_013 vs Team_068
+  Ratings: 60.8 vs 63.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_013 26, Team_068 8
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_013 39, Team_068 35
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_013 51, Team_068 58
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_013 71, Team_068 68
+  Final: 71-68 | Poss: 63.0
+  Saved to: validation_results\games\game_036.json
+
+Game 37/100: Team_069 vs Team_043
+  Ratings: 75.2 vs 55.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_069 29, Team_043 8
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_069 54, Team_043 21
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_069 81, Team_043 30
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_069 100, Team_043 39
+  Final: 100-39 | Poss: 59.5
+  Saved to: validation_results\games\game_037.json
+
+Game 38/100: Team_045 vs Team_057
+  Ratings: 61.6 vs 55.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_045 36, Team_057 11
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_045 56, Team_057 34
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_045 74, Team_057 52
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_045 97, Team_057 74
+  Final: 97-74 | Poss: 58.0
+  Saved to: validation_results\games\game_038.json
+
+Game 39/100: Team_045 vs Team_086
+  Ratings: 61.6 vs 72.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_045 20, Team_086 27
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_045 33, Team_086 45
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_045 49, Team_086 66
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_045 64, Team_086 81
+  Final: 64-81 | Poss: 57.5
+  Saved to: validation_results\games\game_039.json
+
+Game 40/100: Team_021 vs Team_027
+  Ratings: 67.0 vs 70.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_021 27, Team_027 24
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_021 41, Team_027 33
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_021 49, Team_027 57
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_021 72, Team_027 84
+  Final: 72-84 | Poss: 66.5
+  Saved to: validation_results\games\game_040.json
+
+Game 41/100: Team_079 vs Team_028
+  Ratings: 57.9 vs 74.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_079 14, Team_028 27
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_079 32, Team_028 51
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_079 45, Team_028 80
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_079 55, Team_028 110
+  Final: 55-110 | Poss: 55.0
+  Saved to: validation_results\games\game_041.json
+
+Game 42/100: Team_053 vs Team_071
+  Ratings: 64.8 vs 76.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_053 18, Team_071 31
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_053 34, Team_071 58
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_053 49, Team_071 85
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_053 63, Team_071 105
+  Final: 63-105 | Poss: 64.5
+  Saved to: validation_results\games\game_042.json
+
+Game 43/100: Team_097 vs Team_047
+  Ratings: 68.0 vs 62.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_097 22, Team_047 7
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_097 42, Team_047 14
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_097 66, Team_047 38
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_097 85, Team_047 51
+  Final: 85-51 | Poss: 61.0
+  Saved to: validation_results\games\game_043.json
+
+Game 44/100: Team_073 vs Team_091
+  Ratings: 67.3 vs 71.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_073 27, Team_091 22
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_073 39, Team_091 38
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_073 52, Team_091 60
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_073 74, Team_091 79
+  Final: 74-79 | Poss: 68.5
+  Saved to: validation_results\games\game_044.json
+
+Game 45/100: Team_078 vs Team_011
+  Ratings: 63.5 vs 63.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_078 21, Team_011 27
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_078 34, Team_011 49
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_078 54, Team_011 75
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_078 76, Team_011 90
+  Final: 76-90 | Poss: 63.0
+  Saved to: validation_results\games\game_045.json
+
+Game 46/100: Team_100 vs Team_093
+  Ratings: 68.2 vs 62.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_100 20, Team_093 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_100 42, Team_093 46
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_100 58, Team_093 58
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_100 78, Team_093 65
+  Final: 78-65 | Poss: 59.0
+  Saved to: validation_results\games\game_046.json
+
+Game 47/100: Team_022 vs Team_027
+  Ratings: 63.8 vs 70.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_022 24, Team_027 23
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_022 41, Team_027 49
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_022 51, Team_027 65
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_022 75, Team_027 77
+  Final: 75-77 | Poss: 60.0
+  Saved to: validation_results\games\game_047.json
+
+Game 48/100: Team_088 vs Team_072
+  Ratings: 73.7 vs 59.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_088 31, Team_072 16
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_088 53, Team_072 29
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_088 62, Team_072 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_088 89, Team_072 61
+  Final: 89-61 | Poss: 60.0
+  Saved to: validation_results\games\game_048.json
+
+Game 49/100: Team_032 vs Team_093
+  Ratings: 65.5 vs 62.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_032 24, Team_093 7
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_032 41, Team_093 15
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_032 49, Team_093 26
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_032 58, Team_093 53
+  Final: 58-53 | Poss: 62.5
+  Saved to: validation_results\games\game_049.json
+
+Game 50/100: Team_062 vs Team_100
+  Ratings: 60.9 vs 68.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_062 12, Team_100 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_062 28, Team_100 40
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_062 34, Team_100 51
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_062 47, Team_100 75
+  Final: 47-75 | Poss: 56.0
+  Saved to: validation_results\games\game_050.json
+
+Game 51/100: Team_097 vs Team_069
+  Ratings: 68.0 vs 75.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_097 17, Team_069 15
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_097 23, Team_069 41
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_097 33, Team_069 65
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_097 40, Team_069 102
+  Final: 40-102 | Poss: 59.5
+  Saved to: validation_results\games\game_051.json
+
+Game 52/100: Team_077 vs Team_063
+  Ratings: 70.7 vs 62.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_077 23, Team_063 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_077 42, Team_063 29
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_077 60, Team_063 37
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_077 81, Team_063 50
+  Final: 81-50 | Poss: 57.5
+  Saved to: validation_results\games\game_052.json
+
+Game 53/100: Team_053 vs Team_098
+  Ratings: 64.8 vs 63.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_053 17, Team_098 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_053 38, Team_098 27
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_053 51, Team_098 38
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_053 68, Team_098 50
+  Final: 68-50 | Poss: 56.5
+  Saved to: validation_results\games\game_053.json
+
+Game 54/100: Team_015 vs Team_074
+  Ratings: 78.2 vs 74.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_015 24, Team_074 10
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_015 45, Team_074 24
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_015 70, Team_074 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_015 89, Team_074 71
+  Final: 89-71 | Poss: 64.0
+  Saved to: validation_results\games\game_054.json
+
+Game 55/100: Team_033 vs Team_059
+  Ratings: 67.9 vs 66.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_033 17, Team_059 12
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_033 42, Team_059 30
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_033 58, Team_059 45
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_033 71, Team_059 58
+  Final: 71-58 | Poss: 68.5
+  Saved to: validation_results\games\game_055.json
+
+Game 56/100: Team_024 vs Team_041
+  Ratings: 71.8 vs 80.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_024 14, Team_041 20
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_024 19, Team_041 34
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_024 25, Team_041 55
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_024 43, Team_041 69
+  Final: 43-69 | Poss: 59.0
+  Saved to: validation_results\games\game_056.json
+
+Game 57/100: Team_084 vs Team_076
+  Ratings: 72.7 vs 64.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_084 32, Team_076 8
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_084 63, Team_076 14
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_084 97, Team_076 34
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_084 104, Team_076 49
+  Final: 104-49 | Poss: 64.0
+  Saved to: validation_results\games\game_057.json
+
+Game 58/100: Team_010 vs Team_057
+  Ratings: 52.4 vs 55.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_010 15, Team_057 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_010 40, Team_057 39
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_010 52, Team_057 59
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_010 68, Team_057 78
+  Final: 68-78 | Poss: 63.0
+  Saved to: validation_results\games\game_058.json
+
+Game 59/100: Team_081 vs Team_016
+  Ratings: 58.5 vs 70.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_081 12, Team_016 11
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_081 30, Team_016 43
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_081 51, Team_016 61
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_081 63, Team_016 76
+  Final: 63-76 | Poss: 59.0
+  Saved to: validation_results\games\game_059.json
+
+Game 60/100: Team_023 vs Team_062
+  Ratings: 73.3 vs 60.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_023 20, Team_062 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_023 45, Team_062 32
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_023 67, Team_062 57
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_023 91, Team_062 70
+  Final: 91-70 | Poss: 61.0
+  Saved to: validation_results\games\game_060.json
+
+Game 61/100: Team_054 vs Team_087
+  Ratings: 58.8 vs 67.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_054 15, Team_087 15
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_054 31, Team_087 41
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_054 45, Team_087 55
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_054 68, Team_087 77
+  Final: 68-77 | Poss: 55.5
+  Saved to: validation_results\games\game_061.json
+
+Game 62/100: Team_100 vs Team_056
+  Ratings: 68.2 vs 57.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_100 20, Team_056 11
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_100 52, Team_056 22
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_100 83, Team_056 45
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_100 112, Team_056 54
+  Final: 112-54 | Poss: 57.5
+  Saved to: validation_results\games\game_062.json
+
+Game 63/100: Team_022 vs Team_038
+  Ratings: 63.8 vs 68.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_022 25, Team_038 20
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_022 38, Team_038 28
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_022 49, Team_038 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_022 61, Team_038 61
+  Final: 61-61 | Poss: 64.5
+  Saved to: validation_results\games\game_063.json
+
+Game 64/100: Team_012 vs Team_034
+  Ratings: 67.8 vs 71.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_012 23, Team_034 24
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_012 31, Team_034 43
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_012 54, Team_034 69
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_012 79, Team_034 95
+  Final: 79-95 | Poss: 66.5
+  Saved to: validation_results\games\game_064.json
+
+Game 65/100: Team_085 vs Team_058
+  Ratings: 62.6 vs 82.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_085 9, Team_058 12
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_085 29, Team_058 35
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_085 43, Team_058 56
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_085 53, Team_058 85
+  Final: 53-85 | Poss: 61.0
+  Saved to: validation_results\games\game_065.json
+
+Game 66/100: Team_006 vs Team_065
+  Ratings: 70.3 vs 64.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_006 14, Team_065 10
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_006 32, Team_065 35
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_006 47, Team_065 60
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_006 58, Team_065 78
+  Final: 58-78 | Poss: 49.5
+  Saved to: validation_results\games\game_066.json
+
+Game 67/100: Team_004 vs Team_071
+  Ratings: 79.0 vs 76.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_004 16, Team_071 10
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_004 38, Team_071 19
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_004 58, Team_071 34
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_004 85, Team_071 70
+  Final: 85-70 | Poss: 67.0
+  Saved to: validation_results\games\game_067.json
+
+Game 68/100: Team_090 vs Team_099
+  Ratings: 66.7 vs 53.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_090 25, Team_099 8
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_090 54, Team_099 22
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_090 81, Team_099 41
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_090 108, Team_099 48
+  Final: 108-48 | Poss: 57.5
+  Saved to: validation_results\games\game_068.json
+
+Game 69/100: Team_083 vs Team_021
+  Ratings: 74.8 vs 67.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_083 23, Team_021 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_083 54, Team_021 27
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_083 64, Team_021 40
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_083 87, Team_021 54
+  Final: 87-54 | Poss: 66.0
+  Saved to: validation_results\games\game_069.json
+
+Game 70/100: Team_056 vs Team_060
+  Ratings: 57.2 vs 62.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_056 14, Team_060 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_056 19, Team_060 41
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_056 28, Team_060 66
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_056 41, Team_060 83
+  Final: 41-83 | Poss: 55.0
+  Saved to: validation_results\games\game_070.json
+
+Game 71/100: Team_088 vs Team_015
+  Ratings: 73.7 vs 78.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_088 24, Team_015 26
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_088 34, Team_015 53
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_088 48, Team_015 66
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_088 71, Team_015 87
+  Final: 71-87 | Poss: 71.5
+  Saved to: validation_results\games\game_071.json
+
+Game 72/100: Team_061 vs Team_052
+  Ratings: 67.2 vs 63.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_061 23, Team_052 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_061 39, Team_052 37
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_061 56, Team_052 50
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_061 70, Team_052 64
+  Final: 70-64 | Poss: 59.5
+  Saved to: validation_results\games\game_072.json
+
+Game 73/100: Team_083 vs Team_024
+  Ratings: 74.8 vs 71.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_083 18, Team_024 26
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_083 43, Team_024 38
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_083 62, Team_024 58
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_083 75, Team_024 72
+  Final: 75-72 | Poss: 56.5
+  Saved to: validation_results\games\game_073.json
+
+Game 74/100: Team_024 vs Team_052
+  Ratings: 71.8 vs 63.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_024 25, Team_052 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_024 45, Team_052 39
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_024 76, Team_052 57
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_024 104, Team_052 76
+  Final: 104-76 | Poss: 58.5
+  Saved to: validation_results\games\game_074.json
+
+Game 75/100: Team_070 vs Team_022
+  Ratings: 76.5 vs 63.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_070 15, Team_022 5
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_070 37, Team_022 17
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_070 62, Team_022 26
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_070 70, Team_022 45
+  Final: 70-45 | Poss: 61.5
+  Saved to: validation_results\games\game_075.json
+
+Game 76/100: Team_090 vs Team_052
+  Ratings: 66.7 vs 63.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_090 16, Team_052 6
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_090 37, Team_052 17
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_090 51, Team_052 47
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_090 60, Team_052 65
+  Final: 60-65 | Poss: 63.5
+  Saved to: validation_results\games\game_076.json
+
+Game 77/100: Team_007 vs Team_027
+  Ratings: 52.4 vs 70.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_007 8, Team_027 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_007 20, Team_027 61
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_007 26, Team_027 87
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_007 51, Team_027 119
+  Final: 51-119 | Poss: 61.0
+  Saved to: validation_results\games\game_077.json
+
+Game 78/100: Team_076 vs Team_028
+  Ratings: 64.0 vs 74.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_076 5, Team_028 21
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_076 22, Team_028 35
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_076 35, Team_028 57
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_076 56, Team_028 86
+  Final: 56-86 | Poss: 54.0
+  Saved to: validation_results\games\game_078.json
+
+Game 79/100: Team_018 vs Team_096
+  Ratings: 78.9 vs 66.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_018 19, Team_096 14
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_018 31, Team_096 27
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_018 50, Team_096 37
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_018 62, Team_096 46
+  Final: 62-46 | Poss: 54.0
+  Saved to: validation_results\games\game_079.json
+
+Game 80/100: Team_098 vs Team_019
+  Ratings: 63.1 vs 70.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_098 14, Team_019 29
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_098 28, Team_019 40
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_098 40, Team_019 57
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_098 53, Team_019 81
+  Final: 53-81 | Poss: 62.0
+  Saved to: validation_results\games\game_080.json
+
+Game 81/100: Team_090 vs Team_039
+  Ratings: 66.7 vs 64.2
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_090 18, Team_039 17
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_090 32, Team_039 31
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_090 49, Team_039 46
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_090 68, Team_039 57
+  Final: 68-57 | Poss: 63.0
+  Saved to: validation_results\games\game_081.json
+
+Game 82/100: Team_036 vs Team_001
+  Ratings: 61.8 vs 72.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_036 19, Team_001 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_036 37, Team_001 47
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_036 45, Team_001 69
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_036 62, Team_001 95
+  Final: 62-95 | Poss: 58.0
+  Saved to: validation_results\games\game_082.json
+
+Game 83/100: Team_039 vs Team_005
+  Ratings: 64.2 vs 72.1
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_039 14, Team_005 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_039 31, Team_005 42
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_039 42, Team_005 65
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_039 54, Team_005 80
+  Final: 54-80 | Poss: 60.0
+  Saved to: validation_results\games\game_083.json
+
+Game 84/100: Team_010 vs Team_068
+  Ratings: 52.4 vs 63.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_010 17, Team_068 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_010 43, Team_068 53
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_010 60, Team_068 77
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_010 75, Team_068 102
+  Final: 75-102 | Poss: 67.0
+  Saved to: validation_results\games\game_084.json
+
+Game 85/100: Team_089 vs Team_058
+  Ratings: 73.1 vs 82.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_089 10, Team_058 13
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_089 22, Team_058 36
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_089 36, Team_058 61
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_089 51, Team_058 92
+  Final: 51-92 | Poss: 64.0
+  Saved to: validation_results\games\game_085.json
+
+Game 86/100: Team_042 vs Team_043
+  Ratings: 82.3 vs 55.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_042 26, Team_043 4
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_042 64, Team_043 19
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_042 87, Team_043 27
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_042 115, Team_043 31
+  Final: 115-31 | Poss: 64.5
+  Saved to: validation_results\games\game_086.json
+
+Game 87/100: Team_047 vs Team_040
+  Ratings: 62.1 vs 56.9
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_047 22, Team_040 13
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_047 38, Team_040 28
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_047 52, Team_040 46
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_047 81, Team_040 63
+  Final: 81-63 | Poss: 62.5
+  Saved to: validation_results\games\game_087.json
+
+Game 88/100: Team_055 vs Team_081
+  Ratings: 64.6 vs 58.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_055 20, Team_081 13
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_055 42, Team_081 28
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_055 56, Team_081 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_055 78, Team_081 68
+  Final: 78-68 | Poss: 56.5
+  Saved to: validation_results\games\game_088.json
+
+Game 89/100: Team_080 vs Team_036
+  Ratings: 76.8 vs 61.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_080 22, Team_036 16
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_080 36, Team_036 37
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_080 55, Team_036 48
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_080 75, Team_036 53
+  Final: 75-53 | Poss: 62.0
+  Saved to: validation_results\games\game_089.json
+
+Game 90/100: Team_095 vs Team_081
+  Ratings: 73.2 vs 58.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_095 15, Team_081 8
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_095 32, Team_081 30
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_095 54, Team_081 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_095 73, Team_081 68
+  Final: 73-68 | Poss: 64.0
+  Saved to: validation_results\games\game_090.json
+
+Game 91/100: Team_026 vs Team_075
+  Ratings: 62.6 vs 81.5
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_026 17, Team_075 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_026 32, Team_075 44
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_026 41, Team_075 66
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_026 49, Team_075 85
+  Final: 49-85 | Poss: 63.5
+  Saved to: validation_results\games\game_091.json
+
+Game 92/100: Team_099 vs Team_086
+  Ratings: 53.8 vs 72.4
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_099 9, Team_086 28
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_099 18, Team_086 50
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_099 28, Team_086 83
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_099 40, Team_086 121
+  Final: 40-121 | Poss: 69.0
+  Saved to: validation_results\games\game_092.json
+
+Game 93/100: Team_051 vs Team_068
+  Ratings: 68.2 vs 63.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_051 11, Team_068 12
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_051 30, Team_068 29
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_051 44, Team_068 47
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_051 62, Team_068 60
+  Final: 62-60 | Poss: 59.5
+  Saved to: validation_results\games\game_093.json
+
+Game 94/100: Team_075 vs Team_097
+  Ratings: 81.5 vs 68.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_075 20, Team_097 5
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_075 44, Team_097 21
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_075 58, Team_097 41
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_075 88, Team_097 54
+  Final: 88-54 | Poss: 63.0
+  Saved to: validation_results\games\game_094.json
+
+Game 95/100: Team_065 vs Team_049
+  Ratings: 64.5 vs 62.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_065 27, Team_049 25
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_065 62, Team_049 37
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_065 77, Team_049 53
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_065 94, Team_049 71
+  Final: 94-71 | Poss: 57.0
+  Saved to: validation_results\games\game_095.json
+
+Game 96/100: Team_083 vs Team_013
+  Ratings: 74.8 vs 60.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_083 32, Team_013 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_083 60, Team_013 41
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_083 80, Team_013 52
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_083 103, Team_013 62
+  Final: 103-62 | Poss: 65.0
+  Saved to: validation_results\games\game_096.json
+
+Game 97/100: Team_059 vs Team_045
+  Ratings: 66.8 vs 61.6
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_059 20, Team_045 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_059 45, Team_045 30
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_059 74, Team_045 47
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_059 86, Team_045 65
+  Final: 86-65 | Poss: 47.5
+  Saved to: validation_results\games\game_097.json
+
+Game 98/100: Team_064 vs Team_021
+  Ratings: 52.8 vs 67.0
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_064 10, Team_021 22
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_064 28, Team_021 43
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_064 42, Team_021 69
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_064 57, Team_021 100
+  Final: 57-100 | Poss: 65.0
+  Saved to: validation_results\games\game_098.json
+
+Game 99/100: Team_097 vs Team_054
+  Ratings: 68.0 vs 58.8
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_097 18, Team_054 19
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_097 35, Team_054 27
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_097 58, Team_054 49
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_097 77, Team_054 62
+  Final: 77-62 | Poss: 62.0
+  Saved to: validation_results\games\game_099.json
+
+Game 100/100: Team_039 vs Team_093
+  Ratings: 64.2 vs 62.7
+
+Simulating Quarter 1...
+Quarter 1 complete: Team_039 18, Team_093 14
+
+Simulating Quarter 2...
+Quarter 2 complete: Team_039 39, Team_093 27
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team_039 57, Team_093 43
+
+Simulating Quarter 4...
+Quarter 4 complete: Team_039 78, Team_093 56
+  Final: 78-56 | Poss: 59.0
+  Saved to: validation_results\games\game_100.json
+
+
+================================================================================
+CALCULATING AGGREGATE STATISTICS
+================================================================================
+
+Summary saved to: validation_results\VALIDATION_SUMMARY.json
+
+================================================================================
+VALIDATION SUITE COMPLETE
+================================================================================
+
+Key Statistics:
+  Points per game: 72.8
+  FG%: 42.1%
+  3PT%: 34.7%
+  FT%: 0.0%
+  Possessions: 61.7
+  OREB%: 27.3%

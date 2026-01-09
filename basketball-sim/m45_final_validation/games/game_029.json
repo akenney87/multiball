@@ -1,0 +1,119 @@
+{
+  "game_number": 29,
+  "home_team": "Team_056",
+  "away_team": "Team_061",
+  "final_score": {
+    "home": 50,
+    "away": 104
+  },
+  "quarter_scores": [
+    [
+      16,
+      22
+    ],
+    [
+      11,
+      23
+    ],
+    [
+      9,
+      29
+    ],
+    [
+      14,
+      30
+    ]
+  ],
+  "game_statistics": {
+    "home_team": "Team_056",
+    "away_team": "Team_061",
+    "home_score": 50,
+    "away_score": 104,
+    "home_stats": {
+      "points": 32,
+      "fgm": 15,
+      "fga": 63,
+      "fg3m": 2,
+      "fg3a": 26,
+      "ftm": 13,
+      "fta": 22,
+      "oreb": 14,
+      "dreb": 29,
+      "ast": 5,
+      "tov": 20,
+      "stl": 5,
+      "blk": 0,
+      "pf": 12
+    },
+    "away_stats": {
+      "points": 87,
+      "fgm": 35,
+      "fga": 65,
+      "fg3m": 15,
+      "fg3a": 29,
+      "ftm": 9,
+      "fta": 18,
+      "oreb": 7,
+      "dreb": 48,
+      "ast": 27,
+      "tov": 17,
+      "stl": 8,
+      "blk": 3,
+      "pf": 16
+    },
+    "total_possessions": 202
+  },
+  "statistics": {
+    "home_totals": {
+      "points": 50,
+      "fgm": 15,
+      "fga": 63,
+      "fg3m": 2,
+      "fg3a": 26,
+      "ftm": 13,
+      "fta": 22,
+      "oreb": 14,
+      "dreb": 29,
+      "reb": 43,
+      "ast": 5,
+      "stl": 5,
+      "blk": 0,
+      "tov": 20,
+      "pf": 12,
+      "fg_pct": 23.809523809523807,
+      "fg3_pct": 7.6923076923076925,
+      "ft_pct": 59.09090909090909,
+      "oreb_pct": 32.55813953488372
+    },
+    "away_totals": {
+      "points": 104,
+      "fgm": 35,
+      "fga": 65,
+      "fg3m": 15,
+      "fg3a": 29,
+      "ftm": 9,
+      "fta": 18,
+      "oreb": 7,
+      "dreb": 48,
+      "reb": 55,
+      "ast": 27,
+      "stl": 8,
+      "blk": 3,
+      "tov": 17,
+      "pf": 16,
+      "fg_pct": 53.84615384615385,
+      "fg3_pct": 51.724137931034484,
+      "ft_pct": 50.0,
+      "oreb_pct": 12.727272727272727
+    },
+    "possessions": 101.0,
+    "home_score": 50,
+    "away_score": 104,
+    "margin": 54,
+    "game_number": 29,
+    "home_team": "Team_056",
+    "away_team": "Team_061",
+    "home_rating": 57.2,
+    "away_rating": 67.2
+  }
+}

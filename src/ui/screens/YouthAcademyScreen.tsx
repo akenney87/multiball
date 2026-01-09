@@ -20,15 +20,16 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
-  SafeAreaView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors, spacing, borderRadius } from '../theme';
 import type {
   ScoutingReport,
   AcademyProspect,
   AcademyInfo,
   AttributeRange,
+  ScoutSportFocus,
 } from '../../systems/youthAcademySystem';
 import {
   formatHeight,
@@ -42,6 +43,7 @@ import {
   WEEKLY_PROSPECT_COST,
   MAX_SCOUTING_WEEKS,
 } from '../../systems/youthAcademySystem';
+import { calculateAllOverallsFromAttrs } from '../../utils/overallRating';
 
 // =============================================================================
 // TYPES
@@ -57,6 +59,10 @@ export interface YouthAcademyScreenProps {
   academyInfo: AcademyInfo;
   academyProspects: AcademyProspect[];
   prospectsNeedingAction: AcademyProspect[];
+
+  // Scout focus
+  sportFocus: ScoutSportFocus;
+  onSportFocusChange: (focus: ScoutSportFocus) => void;
 
   // Actions
   onContinueScouting: (reportId: string) => void;
@@ -89,6 +95,12 @@ function getAttributeColor(value: number, colors: any): string {
   if (value >= 60) return colors.success;
   if (value >= 40) return colors.primary;
   if (value >= 25) return colors.warning;
+  return colors.error;
+}
+
+function getOverallColor(overall: number, colors: any): string {
+  if (overall >= 80) return colors.success;
+  if (overall >= 65) return colors.warning;
   return colors.error;
 }
 
@@ -342,14 +354,29 @@ function AcademyProspectModal({
         {attrKeys.map((attr) => {
           const value = prospect.attributes[attr];
           if (value === undefined) return null;
+
+          // Calculate delta from when prospect was signed
+          const startValue = prospect.seasonStartAttributes?.[attr];
+          const delta = startValue !== undefined ? value - startValue : 0;
+
           return (
             <View key={attr} style={styles.attrItem}>
               <Text style={[styles.attrName, { color: colors.textMuted }]}>
                 {formatAttributeName(attr)}
               </Text>
-              <Text style={[styles.attrValue, { color: getAttributeColor(value, colors) }]}>
-                {value}
-              </Text>
+              <View style={styles.attrValueRow}>
+                <Text style={[styles.attrValue, { color: getAttributeColor(value, colors) }]}>
+                  {value}
+                </Text>
+                {delta !== 0 && (
+                  <Text style={[
+                    styles.attrDelta,
+                    { color: delta > 0 ? colors.success : colors.error }
+                  ]}>
+                    {delta > 0 ? `+${delta}` : delta}
+                  </Text>
+                )}
+              </View>
             </View>
           );
         })}
@@ -392,6 +419,41 @@ function AcademyProspectModal({
               </View>
             )}
           </View>
+
+          {/* Overall Ratings */}
+          {(() => {
+            const overalls = calculateAllOverallsFromAttrs(prospect.attributes);
+            return (
+              <View style={[styles.overallsCard, { backgroundColor: colors.card }]}>
+                <View style={styles.overallsRow}>
+                  <View style={styles.overallItem}>
+                    <Text style={[styles.overallValue, { color: getOverallColor(overalls.overall, colors) }]}>
+                      {overalls.overall}
+                    </Text>
+                    <Text style={[styles.overallLabel, { color: colors.textMuted }]}>OVR</Text>
+                  </View>
+                  <View style={styles.overallItem}>
+                    <Text style={[styles.sportOverallValue, { color: getOverallColor(overalls.basketball, colors) }]}>
+                      {overalls.basketball}
+                    </Text>
+                    <Text style={[styles.overallLabel, { color: colors.textMuted }]}>BBL</Text>
+                  </View>
+                  <View style={styles.overallItem}>
+                    <Text style={[styles.sportOverallValue, { color: getOverallColor(overalls.baseball, colors) }]}>
+                      {overalls.baseball}
+                    </Text>
+                    <Text style={[styles.overallLabel, { color: colors.textMuted }]}>BSB</Text>
+                  </View>
+                  <View style={styles.overallItem}>
+                    <Text style={[styles.sportOverallValue, { color: getOverallColor(overalls.soccer, colors) }]}>
+                      {overalls.soccer}
+                    </Text>
+                    <Text style={[styles.overallLabel, { color: colors.textMuted }]}>SOC</Text>
+                  </View>
+                </View>
+              </View>
+            );
+          })()}
 
           {/* Academy Info */}
           <View style={[styles.infoCard, { backgroundColor: colors.card }]}>
@@ -446,6 +508,14 @@ function AcademyProspectModal({
 // MAIN COMPONENT
 // =============================================================================
 
+// Sport focus options
+const SPORT_FOCUS_OPTIONS: { key: ScoutSportFocus; label: string }[] = [
+  { key: 'balanced', label: 'All' },
+  { key: 'basketball', label: 'Basketball' },
+  { key: 'baseball', label: 'Baseball' },
+  { key: 'soccer', label: 'Soccer' },
+];
+
 export function YouthAcademyScreen({
   scoutingReports,
   weeksUntilNextReports,
@@ -453,6 +523,8 @@ export function YouthAcademyScreen({
   academyInfo,
   academyProspects,
   prospectsNeedingAction,
+  sportFocus,
+  onSportFocusChange,
   onContinueScouting,
   onStopScouting,
   onSignProspect,
@@ -503,6 +575,44 @@ export function YouthAcademyScreen({
             {weeksUntilNextReports === 0
               ? 'New reports available now'
               : `New reports in ${weeksUntilNextReports} week${weeksUntilNextReports !== 1 ? 's' : ''}`}
+          </Text>
+        </View>
+
+        {/* Sport Focus Selector */}
+        <View style={[styles.sportFocusContainer, { backgroundColor: colors.card }]}>
+          <Text style={[styles.sportFocusLabel, { color: colors.textMuted }]}>
+            Scout Focus
+          </Text>
+          <View style={styles.sportFocusButtons}>
+            {SPORT_FOCUS_OPTIONS.map((option) => {
+              const isActive = sportFocus === option.key;
+              return (
+                <TouchableOpacity
+                  key={option.key}
+                  style={[
+                    styles.sportFocusButton,
+                    { borderColor: isActive ? colors.primary : colors.border },
+                    isActive && { backgroundColor: colors.primary + '20' },
+                  ]}
+                  onPress={() => onSportFocusChange(option.key)}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.sportFocusButtonText,
+                      { color: isActive ? colors.primary : colors.textMuted },
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <Text style={[styles.sportFocusHint, { color: colors.textMuted }]}>
+            {sportFocus === 'balanced'
+              ? 'Scouts will find all-around athletes'
+              : `Scouts will prioritize ${sportFocus} prospects`}
           </Text>
         </View>
 
@@ -585,6 +695,7 @@ export function YouthAcademyScreen({
         ) : (
           activeProspects.map((prospect) => {
             const needsAction = needsActionIds.has(prospect.id);
+            const overalls = calculateAllOverallsFromAttrs(prospect.attributes);
             return (
               <TouchableOpacity
                 key={prospect.id}
@@ -597,7 +708,7 @@ export function YouthAcademyScreen({
                 activeOpacity={0.7}
               >
                 <View style={styles.prospectHeader}>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <View style={styles.nameRow}>
                       <Text style={[styles.prospectName, { color: colors.text }]}>{prospect.name}</Text>
                       {needsAction && (
@@ -610,13 +721,33 @@ export function YouthAcademyScreen({
                       Age {prospect.age} • {formatHeight(prospect.height)} • {prospect.nationality}
                     </Text>
                   </View>
-                  <View>
-                    <Text style={[styles.prospectCost, { color: colors.textMuted }]}>
-                      {formatMoney(prospect.weeklyCost)}/wk
-                    </Text>
+                  <View style={styles.prospectOveralls}>
+                    <View style={styles.prospectOverallItem}>
+                      <Text style={[styles.prospectOverallValue, { color: getOverallColor(overalls.basketball, colors) }]}>
+                        {overalls.basketball}
+                      </Text>
+                      <Text style={[styles.prospectOverallLabel, { color: colors.textMuted }]}>BBL</Text>
+                    </View>
+                    <View style={styles.prospectOverallItem}>
+                      <Text style={[styles.prospectOverallValue, { color: getOverallColor(overalls.baseball, colors) }]}>
+                        {overalls.baseball}
+                      </Text>
+                      <Text style={[styles.prospectOverallLabel, { color: colors.textMuted }]}>BSB</Text>
+                    </View>
+                    <View style={styles.prospectOverallItem}>
+                      <Text style={[styles.prospectOverallValue, { color: getOverallColor(overalls.soccer, colors) }]}>
+                        {overalls.soccer}
+                      </Text>
+                      <Text style={[styles.prospectOverallLabel, { color: colors.textMuted }]}>SOC</Text>
+                    </View>
+                    <View style={styles.prospectOverallItem}>
+                      <Text style={[styles.prospectMainOverall, { color: getOverallColor(overalls.overall, colors) }]}>
+                        {overalls.overall}
+                      </Text>
+                      <Text style={[styles.prospectOverallLabel, { color: colors.textMuted }]}>OVR</Text>
+                    </View>
                   </View>
                 </View>
-                <Text style={[styles.tapHint, { color: colors.textMuted }]}>Tap for details</Text>
               </TouchableOpacity>
             );
           })
@@ -731,6 +862,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontStyle: 'italic',
   },
+  overallsCard: {
+    marginHorizontal: spacing.md,
+    marginTop: spacing.md,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+  },
+  overallsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  overallItem: {
+    alignItems: 'center',
+  },
+  overallValue: {
+    fontSize: 28,
+    fontWeight: '800',
+  },
+  sportOverallValue: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  overallLabel: {
+    fontSize: 10,
+    fontWeight: '500',
+    marginTop: 2,
+  },
   infoCard: {
     marginHorizontal: spacing.md,
     marginTop: spacing.md,
@@ -798,6 +955,15 @@ const styles = StyleSheet.create({
   },
   attrValue: {
     fontSize: 13,
+    fontWeight: '600',
+  },
+  attrValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  attrDelta: {
+    fontSize: 10,
     fontWeight: '600',
   },
   costCard: {
@@ -1013,10 +1179,65 @@ const styles = StyleSheet.create({
   prospectCost: {
     fontSize: 12,
   },
+  prospectOveralls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  prospectOverallItem: {
+    alignItems: 'center',
+    minWidth: 28,
+  },
+  prospectOverallValue: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  prospectMainOverall: {
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  prospectOverallLabel: {
+    fontSize: 8,
+    fontWeight: '500',
+  },
   tapHint: {
     fontSize: 11,
     marginTop: spacing.sm,
     fontStyle: 'italic',
+  },
+  sportFocusContainer: {
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    marginBottom: spacing.md,
+  },
+  sportFocusLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: spacing.sm,
+  },
+  sportFocusButtons: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  sportFocusButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.xs,
+    borderRadius: borderRadius.sm,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  sportFocusButtonText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  sportFocusHint: {
+    fontSize: 11,
+    marginTop: spacing.sm,
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
 });
 

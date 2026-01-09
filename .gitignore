@@ -49,3 +49,43 @@ coverage/
 *.swp
 *.swo
 *~
+
+# Claude Code settings
+.claude/
+
+# Temporary output/debug files
+*_output.txt
+*_test.txt
+*_run.txt
+game_log_*.txt
+lakers_vs_celtics*.txt
+test_*.txt
+*_validation.txt
+agentA_output.txt
+agentC_full_output.txt
+agent2_validation.txt
+complete_test.txt
+demo_output.txt
+diagnostic_run.txt
+final_*.txt
+fresh_output.txt
+full_game*.txt
+latest_*.txt
+new_test_output.txt
+q1_*.txt
+real_game_output.txt
+simple_rotation_test.txt
+synchronized_test.txt
+verification_test.txt
+nul
+
+# Temp debug/test scripts
+debug_*.ts
+test_*.ts
+testFullGame.ts
+show_minutes_targets.ts
+demo_*.ts
+demo_*.js
+validate_*.js
+verify_*.js
+final_validation.js

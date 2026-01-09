@@ -1,0 +1,2279 @@
+
+> multiball@0.1.0 test
+> jest fullGameDemo.test.ts
+
+  console.log
+    
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:145:13)
+
+  console.log
+    NBA SIMULATION: Los Angeles Lakers vs Boston Celtics
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:146:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:147:13)
+
+  console.log
+    
+    Simulating Quarter 1...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:118:15)
+
+  console.log
+    [DEBUG SUB CHECK] 10:09: LeBron James time_on_court=1.85min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 06:35: LeBron James time_on_court=5.42min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 04:53: LeBron James time_on_court=7.12min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 04:07: LeBron James time_on_court=7.88min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 02:47: LeBron James time_on_court=9.22min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 00:06: LeBron James time_on_court=11.90min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 00:06: 10 substitutions executed
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:719:15)
+
+  console.log
+    Quarter 1 complete: Lakers 23, Celtics 21
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:180:15)
+
+  console.log
+    
+    Quarter break (2:10): Players recovering stamina...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:108:17)
+
+  console.log
+    
+    Simulating Quarter 2...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:118:15)
+
+  console.log
+    [DEBUG SUB CHECK] 05:16: Taurean Prince time_on_court=6.73min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 05:16: 8 substitutions executed
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:719:15)
+
+  console.log
+    [DEBUG SUB CHECK] 04:27: LeBron James time_on_court=0.82min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 03:29: LeBron James time_on_court=1.78min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 03:14: LeBron James time_on_court=2.03min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 00:41: LeBron James time_on_court=4.58min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    Quarter 2 complete: Lakers 43, Celtics 41
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:180:15)
+
+  console.log
+    
+    Halftime (15 min): All players fully recovering stamina...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:111:17)
+
+  console.log
+    
+    Simulating Quarter 3...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:118:15)
+
+  console.log
+    [DEBUG SUB CHECK] 11:43: LeBron James time_on_court=0.28min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 09:45: LeBron James time_on_court=2.25min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 06:43: LeBron James time_on_court=5.28min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 00:41: LeBron James time_on_court=11.32min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 00:41: 8 substitutions executed
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:719:15)
+
+  console.log
+    [DEBUG SUB CHECK] 00:10: Rui Hachimura time_on_court=0.52min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    Quarter 3 complete: Lakers 75, Celtics 66
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:180:15)
+
+  console.log
+    
+    Quarter break (2:10): Players recovering stamina...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:114:17)
+
+  console.log
+    
+    Simulating Quarter 4...
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:118:15)
+
+  console.log
+    
+    [Q4 CLOSER] Q4 rotation decisions calculated:
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:672:17)
+
+  console.log
+      LeBron James: INSERT_AT (stamina: 100.0)
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:674:19)
+
+  console.log
+      Anthony Davis: INSERT_AT (stamina: 100.0)
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:674:19)
+
+  console.log
+      D'Angelo Russell: INSERT_AT (stamina: 100.0)
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:674:19)
+
+  console.log
+      Austin Reaves: INSERT_AT (stamina: 100.0)
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:674:19)
+
+  console.log
+      Rui Hachimura: WILL_FATIGUE (stamina: 99.4)
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:674:19)
+
+  console.log
+    [DEBUG SUB CHECK] 11:43: Rui Hachimura time_on_court=0.28min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 04:43: Rui Hachimura time_on_court=7.28min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    [DEBUG SUB CHECK] 04:43: 8 substitutions executed
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:719:15)
+
+  console.log
+    [DEBUG SUB CHECK] 04:24: LeBron James time_on_court=0.32min
+
+      at SubstitutionManager.log [as checkAndExecuteSubstitutions] (src/simulation/systems/substitutions.ts:685:17)
+
+  console.log
+    Quarter 4 complete: Lakers 99, Celtics 96
+
+      at GameSimulator.log [as simulateGame] (src/simulation/game/gameSimulation.ts:180:15)
+
+  console.log
+    
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:160:13)
+
+  console.log
+    FINAL SCORE
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:161:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:162:13)
+
+  console.log
+    Lakers: 99
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:163:13)
+
+  console.log
+    Celtics: 96
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:164:13)
+
+  console.log
+    Winner: Lakers
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:165:13)
+
+  console.log
+    undefined
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:166:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:168:13)
+
+  console.log
+    QUARTER-BY-QUARTER SCORING
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:169:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:170:13)
+
+  console.log
+    Q1: Lakers 23 - Celtics 21
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:172:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Q2: Lakers 20 - Celtics 20
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:172:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Q3: Lakers 32 - Celtics 25
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:172:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Q4: Lakers 24 - Celtics 30
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:172:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    undefined
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:174:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:176:13)
+
+  console.log
+    MINUTES PLAYED
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:177:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:178:13)
+
+  console.log
+    
+    LAKERS:
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:179:13)
+
+  console.log
+      Jaxson Hayes              36.6 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      LeBron James              33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Anthony Davis             33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      D'Angelo Russell          33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Austin Reaves             33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Rui Hachimura             20.0 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Jarred Vanderbilt         15.1 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Cam Reddish               15.1 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Max Christie              15.1 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Taurean Prince            7.0 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:184:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    
+    CELTICS:
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:187:13)
+
+  console.log
+      Oshae Brissett            36.6 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Jayson Tatum              33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Jaylen Brown              33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Derrick White             33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Al Horford                33.4 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Jrue Holiday              20.0 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Kristaps Porzingis        15.1 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Sam Hauser                15.1 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Payton Pritchard          15.1 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+      Svi Mykhailiuk            7.0 min
+
+      at log (src/simulation/__tests__/fullGameDemo.test.ts:192:17)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    undefined
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:195:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:196:13)
+
+  console.log
+    PLAY-BY-PLAY LOG
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:197:13)
+
+  console.log
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:198:13)
+
+  console.log
+    ================================================================================
+                                              FULL GAME - Lakers vs Celtics         
+    ================================================================================
+    
+    ================================================================================
+                1ST QUARTER - Lakers vs Celtics
+    ================================================================================
+    
+    [12:00] Lakers possession (Score: 0-0)
+    Rui Hachimura attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    Rui Hachimura misses.
+    Offensive rebound by LeBron James!
+    LeBron James kicks it out.
+    FOUL! Non-shooting foul on Jaylen Brown.
+    [Away Team Fouls: 1]
+    (Jaylen Brown: 1 personal foul)
+    
+    [11:43] Lakers possession (Score: 0-0)
+    Austin Reaves attempts a Rim.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    FOUL! Shooting foul on Jrue Holiday.
+    [Away Team Fouls: 2]
+    (Jrue Holiday: 1 personal foul)
+    Austin Reaves to the line for 2 free throws.
+    Austin Reaves makes the 1st free throw.
+    Austin Reaves makes the 2nd free throw.
+    Score: 2-0
+    
+    [11:23] Celtics possession (Score: 2-0)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    AL HORFORD MAKES IT!
+    Assist: Jayson Tatum
+    Score: 2-2
+    
+    [11:07] Lakers possession (Score: 2-2)
+    Rui Hachimura attempts a Rim.
+    Defended by Jayson Tatum [MAN].
+    RUI HACHIMURA MAKES IT!
+    Assist: D'Angelo Russell
+    Score: 4-2
+    
+    [10:51] Celtics possession (Score: 4-2)
+    Jrue Holiday attempts a 3pt.
+    Defended by Austin Reaves [MAN].
+    Jrue Holiday misses.
+    Rebound secured by Anthony Davis.
+    
+    [10:36] Lakers possession (Score: 4-2)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    LEBRON JAMES MAKES IT!
+    Assist: Rui Hachimura
+    Score: 7-2
+    
+    [10:22] Celtics possession (Score: 7-2)
+    Al Horford loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [10:09] Lakers possession (Score: 7-2)
+    D'Angelo Russell attempts a Midrange.
+    Defended by Derrick White [MAN].
+    D'Angelo Russell misses.
+    Rebound secured by Jaylen Brown.
+    
+    [09:52] Celtics possession (Score: 7-2)
+    Jayson Tatum attempts a Dunk.
+    Defended by LeBron James [MAN].
+    Jayson Tatum misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [09:37] Lakers possession (Score: 7-2)
+    D'Angelo Russell attempts a 3pt.
+    Defended by Derrick White [MAN].
+    D'ANGELO RUSSELL MAKES IT!
+    Assist: Rui Hachimura
+    Score: 10-2
+    
+    [09:19] Celtics possession (Score: 10-2)
+    Al Horford attempts a Dunk.
+    Defended by Anthony Davis [MAN].
+    Al Horford misses.
+    Offensive rebound by Al Horford!
+    Al Horford kicks it out.
+    
+    [09:09] Celtics possession (Score: 10-2)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [MAN].
+    Jayson Tatum misses.
+    Rebound secured by LeBron James.
+    
+    [08:54] Lakers possession (Score: 10-2)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jaylen Brown.
+    
+    [08:40] Celtics possession (Score: 10-2)
+    Jrue Holiday attempts a Rim.
+    Defended by Austin Reaves [MAN].
+    JRUE HOLIDAY MAKES IT!
+    FOUL! Shooting foul on Austin Reaves.
+    [Home Team Fouls: 1]
+    (Austin Reaves: 1 personal foul)
+    And-1! Jrue Holiday to the line for 1 bonus free throw.
+    Jrue Holiday makes the 1st free throw.
+    Score: 10-5
+    
+    [08:25] Lakers possession (Score: 10-5)
+    Austin Reaves attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    Rebound secured by Jaylen Brown.
+    
+    [08:10] Celtics possession (Score: 10-5)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [MAN].
+    Jayson Tatum misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [08:01] Lakers possession (Score: 10-5)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    Rebound secured by Jaylen Brown.
+    
+    [07:49] Celtics possession (Score: 10-5)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [MAN].
+    DERRICK WHITE MAKES IT!
+    Assist: Jaylen Brown
+    Score: 10-8
+    
+    [07:37] Lakers possession (Score: 10-8)
+    D'Angelo Russell attempts a Rim.
+    Defended by Derrick White [MAN].
+    D'ANGELO RUSSELL MAKES IT!
+    Score: 12-8
+    
+    [07:20] Celtics possession (Score: 12-8)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [MAN].
+    Jayson Tatum misses.
+    Rebound secured by Anthony Davis.
+    
+    [07:07] Lakers possession (Score: 12-8)
+    Rui Hachimura attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    Rui Hachimura misses.
+    Rebound secured by Jayson Tatum.
+    
+    [06:57] Celtics possession (Score: 12-8)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [ZONE].
+    Jayson Tatum misses.
+    Rebound secured by LeBron James.
+    
+    [06:48] Lakers possession (Score: 12-8)
+    Rui Hachimura loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [06:35] Celtics possession (Score: 12-8)
+    Jrue Holiday attempts a 3pt.
+    Defended by Austin Reaves [MAN].
+    Jrue Holiday misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [06:23] Lakers possession (Score: 12-8)
+    Austin Reaves attempts a 3pt.
+    Defended by Jrue Holiday [ZONE].
+    Austin Reaves misses.
+    Rebound secured by Jayson Tatum.
+    
+    [06:07] Celtics possession (Score: 12-8)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    AL HORFORD MAKES IT!
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 2]
+    (Anthony Davis: 1 personal foul)
+    And-1! Al Horford to the line for 1 bonus free throw.
+    Al Horford makes the 1st free throw.
+    Score: 12-11
+    
+    [05:58] Lakers possession (Score: 12-11)
+    Austin Reaves attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    FOUL! Shooting foul on Jrue Holiday.
+    [Away Team Fouls: 3]
+    (Jrue Holiday: 2 personal fouls)
+    Austin Reaves to the line for 3 free throws.
+    Austin Reaves makes the 1st free throw.
+    Austin Reaves makes the 2nd free throw.
+    Austin Reaves misses the 3rd free throw.
+    Rebound secured by Jaylen Brown.
+    Score: 14-11
+    
+    [05:42] Lakers possession (Score: 14-11)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    FOUL! Shooting foul on Jayson Tatum.
+    [Away Team Fouls: 4]
+    (Jayson Tatum: 1 personal foul)
+    LeBron James to the line for 2 free throws.
+    LeBron James makes the 1st free throw.
+    LeBron James makes the 2nd free throw.
+    Score: 16-11
+    
+    [05:29] Celtics possession (Score: 16-11)
+    Derrick White attempts a Rim.
+    Defended by D'Angelo Russell [MAN].
+    DERRICK WHITE MAKES IT!
+    Score: 16-13
+    
+    [05:18] Lakers possession (Score: 16-13)
+    Rui Hachimura attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    Rui Hachimura misses.
+    Rebound secured by Jayson Tatum.
+    
+    [05:04] Celtics possession (Score: 16-13)
+    Derrick White throws a bad pass out of bounds! TURNOVER! (dead ball)
+    
+    [04:53] Lakers possession (Score: 16-13)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jayson Tatum.
+    
+    [04:41] Celtics possession (Score: 16-13)
+    Jayson Tatum attempts a Rim.
+    Defended by LeBron James [MAN].
+    JAYSON TATUM MAKES IT!
+    Assist: Al Horford
+    Score: 16-15
+    
+    [04:26] Lakers possession (Score: 16-15)
+    Anthony Davis throws a bad pass out of bounds! TURNOVER! (dead ball)
+    
+    [04:07] Celtics possession (Score: 16-15)
+    Al Horford attempts a Dunk.
+    Defended by Anthony Davis [MAN].
+    Al Horford misses.
+    Rebound secured by Anthony Davis.
+    
+    [03:52] Lakers possession (Score: 16-15)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [ZONE].
+    LEBRON JAMES MAKES IT!
+    Score: 18-15
+    
+    [03:38] Celtics possession (Score: 18-15)
+    Al Horford attempts a Dunk.
+    Defended by Anthony Davis [ZONE].
+    Al Horford misses.
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 3]
+    (Anthony Davis: 2 personal fouls)
+    Al Horford to the line for 2 free throws.
+    Al Horford makes the 1st free throw.
+    Al Horford makes the 2nd free throw.
+    Score: 18-17
+    
+    [03:22] Lakers possession (Score: 18-17)
+    Austin Reaves attempts a Rim.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis's putback is no good.
+    Rebound secured by Jayson Tatum.
+    
+    [03:03] Celtics possession (Score: 18-17)
+    Jrue Holiday loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [02:47] Lakers possession (Score: 18-17)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    Rebound secured by Jayson Tatum.
+    
+    [02:32] Celtics possession (Score: 18-17)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [MAN].
+    Derrick White misses.
+    Rebound secured by LeBron James.
+    
+    [02:18] Lakers possession (Score: 18-17)
+    Austin Reaves attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    Rebound secured by Jayson Tatum.
+    
+    [02:04] Celtics possession (Score: 18-17)
+    Jrue Holiday attempts a 3pt.
+    Defended by Austin Reaves [ZONE].
+    Jrue Holiday misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [01:51] Lakers possession (Score: 18-17)
+    Austin Reaves attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    Rebound secured by Jaylen Brown.
+    
+    [01:34] Celtics possession (Score: 18-17)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [ZONE].
+    Jayson Tatum misses.
+    Offensive rebound by Derrick White!
+    Derrick White's putback is no good.
+    Rebound secured by D'Angelo Russell.
+    
+    [01:25] Lakers possession (Score: 18-17)
+    Austin Reaves attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Austin Reaves misses.
+    Rebound secured by Jayson Tatum.
+    
+    [01:14] Celtics possession (Score: 18-17)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [MAN].
+    JAYSON TATUM MAKES IT!
+    FOUL! Shooting foul on LeBron James.
+    [Home Team Fouls: 4]
+    (LeBron James: 1 personal foul)
+    And-1! Jayson Tatum to the line for 1 bonus free throw.
+    Jayson Tatum makes the 1st free throw.
+    Score: 18-21
+    
+    [01:01] Lakers possession (Score: 18-21)
+    Anthony Davis attempts a 3pt.
+    Defended by Al Horford [MAN].
+    ANTHONY DAVIS MAKES IT!
+    Assist: Rui Hachimura
+    Score: 21-21
+    
+    [00:45] Celtics possession (Score: 21-21)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [ZONE].
+    Jayson Tatum misses.
+    Rebound secured by Anthony Davis.
+    
+    [00:37] Lakers possession (Score: 21-21)
+    Anthony Davis attempts a Midrange.
+    Defended by Al Horford [ZONE].
+    Anthony Davis misses.
+    FOUL! Shooting foul on Al Horford.
+    [Away Team Fouls: 5]
+    (Al Horford: 1 personal foul)
+    Anthony Davis to the line for 2 free throws.
+    Anthony Davis makes the 1st free throw.
+    Anthony Davis makes the 2nd free throw.
+    Score: 23-21
+    
+    [00:20] Celtics possession (Score: 23-21)
+    Jrue Holiday loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [00:06] Lakers possession (Score: 23-21)
+    Taurean Prince attempts a 3pt.
+    Defended by Sam Hauser [MAN].
+    Taurean Prince misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [00:06] Substitution (Lakers): LeBron James OUT (stamina: 62) → Taurean Prince IN (stamina_rule2)
+    
+    [00:06] Substitution (Lakers): Anthony Davis OUT (stamina: 65) → Jarred Vanderbilt IN (stamina_rule2)
+    
+    [00:06] Substitution (Lakers): D'Angelo Russell OUT (stamina: 62) → Cam Reddish IN (stamina_rule2)
+    
+    [00:06] Substitution (Lakers): Austin Reaves OUT (stamina: 66) → Max Christie IN (stamina_rule2)
+    
+    [00:06] Substitution (Lakers): Rui Hachimura OUT (stamina: 62) → Jaxson Hayes IN (stamina_rule2)
+    
+    [00:06] Substitution (Celtics): Jayson Tatum OUT (stamina: 64) → Sam Hauser IN (stamina_rule2)
+    
+    [00:06] Substitution (Celtics): Jaylen Brown OUT (stamina: 66) → Svi Mykhailiuk IN (stamina_rule2)
+    
+    [00:06] Substitution (Celtics): Derrick White OUT (stamina: 63) → Payton Pritchard IN (stamina_rule2)
+    
+    [00:06] Substitution (Celtics): Jrue Holiday OUT (stamina: 68) → Kristaps Porzingis IN (stamina_rule2)
+    
+    [00:06] Substitution (Celtics): Al Horford OUT (stamina: 65) → Oshae Brissett IN (stamina_rule2)
+    
+    ================================================================================
+                         1ST QUARTER COMPLETE
+    ================================================================================
+    
+    1ST QUARTER SCORE: Lakers 23, Celtics 21
+    
+    BOX SCORE:
+    ================================================================================
+    
+    Lakers
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    LeBron James           12    7    4    0   0     2/7  28.6     1/2  50.0
+    Anthony Davis          12    5    4    0   1     1/2  50.0     1/1 100.0
+    Austin Reaves          12    4    0    0   0     0/8   0.0     0/6   0.0
+    Rui Hachimura          12    2    0    3   1     1/4  25.0     0/3   0.0
+    Taurean Prince          0    0    0    0   0     0/1   0.0     0/1   0.0
+    
+    TEAM: FG: 6/25 (24.0%), 3PT: 3/14 (21.4%), REB: 13 (2 off, 11 def), AST: 4, TO: 2
+    TEAM FOULS: 4
+    
+    
+    Celtics
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Al Horford             12    7    1    1   1     2/5  40.0     0/0   0.0
+    Jayson Tatum           12    6    8    1   0     2/9  22.2     1/7  14.3
+    D'Angelo Russell       12    5    5    1   0     2/3  66.7     1/1 100.0
+    Derrick White          12    5    0    2   1     2/3  66.7     1/2  50.0
+    Jrue Holiday           12    3    0    1   2     1/4  25.0     0/3   0.0
+    Jaylen Brown           12    0    5    1   0     0/0   0.0     0/0   0.0
+    Kristaps Porzingis      0    0    1    0   0     0/0   0.0     0/0   0.0
+    
+    TEAM: FG: 7/21 (33.3%), 3PT: 2/12 (16.7%), REB: 15 (2 off, 13 def), AST: 6, TO: 4
+    TEAM FOULS: 5 [Lakers in BONUS]
+    
+    ================================================================================
+    
+    ================================================================================
+                2ND QUARTER - Lakers vs Celtics
+    ================================================================================
+    
+    [12:00] Lakers possession (Score: 23-21)
+    Max Christie attempts a Rim.
+    Defended by Svi Mykhailiuk [MAN].
+    Max Christie misses.
+    FOUL! Shooting foul on Svi Mykhailiuk.
+    [Away Team Fouls: 1]
+    (Svi Mykhailiuk: 1 personal foul)
+    Max Christie to the line for 2 free throws.
+    Max Christie makes the 1st free throw.
+    Max Christie makes the 2nd free throw.
+    Score: 25-21
+    
+    [11:46] Celtics possession (Score: 25-21)
+    Oshae Brissett attempts a 3pt.
+    Defended by Jarred Vanderbilt [ZONE].
+    Oshae Brissett misses.
+    Rebound secured by Taurean Prince.
+    
+    [11:28] Lakers possession (Score: 25-21)
+    Jaxson Hayes attempts a Rim.
+    Defended by Kristaps Porzingis [MAN].
+    Jaxson Hayes misses.
+    Offensive rebound by Jarred Vanderbilt!
+    Jarred Vanderbilt kicks it out.
+    
+    [11:10] Lakers possession (Score: 25-21)
+    Jaxson Hayes attempts a Midrange.
+    Defended by Kristaps Porzingis [MAN].
+    Jaxson Hayes misses.
+    Rebound secured by Sam Hauser.
+    
+    [10:56] Celtics possession (Score: 25-21)
+    Payton Pritchard attempts a Rim.
+    Defended by Cam Reddish [MAN].
+    PAYTON PRITCHARD MAKES IT!
+    Score: 25-23
+    
+    [10:42] Lakers possession (Score: 25-23)
+    Cam Reddish attempts a 3pt.
+    Defended by Svi Mykhailiuk [MAN].
+    Cam Reddish misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [10:25] Celtics possession (Score: 25-23)
+    Svi Mykhailiuk attempts a 3pt.
+    Defended by Cam Reddish [MAN].
+    Svi Mykhailiuk misses.
+    Rebound secured by Jaxson Hayes.
+    
+    [10:10] Lakers possession (Score: 25-23)
+    Max Christie attempts a 3pt.
+    Defended by Svi Mykhailiuk [MAN].
+    Max Christie misses.
+    Rebound secured by Sam Hauser.
+    
+    [09:54] Celtics possession (Score: 25-23)
+    Oshae Brissett attempts a Layup.
+    Defended by Jarred Vanderbilt [MAN].
+    Oshae Brissett misses.
+    Rebound secured by Jarred Vanderbilt.
+    
+    [09:44] Lakers possession (Score: 25-23)
+    Jaxson Hayes attempts a Rim.
+    Defended by Kristaps Porzingis [MAN].
+    JAXSON HAYES MAKES IT!
+    FOUL! Shooting foul on Kristaps Porzingis.
+    [Away Team Fouls: 2]
+    (Kristaps Porzingis: 1 personal foul)
+    And-1! Jaxson Hayes to the line for 1 bonus free throw.
+    Jaxson Hayes makes the 1st free throw.
+    Score: 28-23
+    
+    [09:26] Celtics possession (Score: 28-23)
+    Payton Pritchard attempts a Rim.
+    Defended by Cam Reddish [MAN].
+    Payton Pritchard misses.
+    FOUL! Shooting foul on Cam Reddish.
+    [Home Team Fouls: 1]
+    (Cam Reddish: 1 personal foul)
+    Payton Pritchard to the line for 2 free throws.
+    Payton Pritchard makes the 1st free throw.
+    Payton Pritchard misses the 2nd free throw.
+    Rebound secured by Jaxson Hayes.
+    Score: 28-24
+    
+    [09:16] Celtics possession (Score: 28-24)
+    Payton Pritchard attempts a 3pt.
+    Defended by Cam Reddish [MAN].
+    Payton Pritchard misses.
+    Rebound secured by Taurean Prince.
+    
+    [09:02] Lakers possession (Score: 28-24)
+    Taurean Prince attempts a Rim.
+    Defended by Sam Hauser [MAN].
+    Taurean Prince misses.
+    FOUL! Shooting foul on Sam Hauser.
+    [Away Team Fouls: 3]
+    (Sam Hauser: 1 personal foul)
+    Taurean Prince to the line for 2 free throws.
+    Taurean Prince makes the 1st free throw.
+    Taurean Prince makes the 2nd free throw.
+    Score: 30-24
+    
+    [08:49] Celtics possession (Score: 30-24)
+    Sam Hauser attempts a Midrange.
+    Defended by Taurean Prince [ZONE].
+    Sam Hauser misses.
+    Rebound secured by Jarred Vanderbilt.
+    
+    [08:34] Lakers possession (Score: 30-24)
+    Jaxson Hayes attempts a Midrange.
+    Defended by Kristaps Porzingis [MAN].
+    JAXSON HAYES MAKES IT!
+    FOUL! Shooting foul on Kristaps Porzingis.
+    [Away Team Fouls: 4]
+    (Kristaps Porzingis: 2 personal fouls)
+    And-1! Jaxson Hayes to the line for 1 bonus free throw.
+    Jaxson Hayes makes the 1st free throw.
+    Score: 33-24
+    
+    [08:18] Celtics possession (Score: 33-24)
+    Svi Mykhailiuk attempts a Rim.
+    Defended by Cam Reddish [MAN].
+    SVI MYKHAILIUK MAKES IT!
+    Assist: Oshae Brissett
+    Score: 33-26
+    
+    [08:04] Lakers possession (Score: 33-26)
+    Taurean Prince attempts a Midrange.
+    Defended by Sam Hauser [MAN].
+    Taurean Prince misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [07:51] Celtics possession (Score: 33-26)
+    Oshae Brissett attempts a 3pt.
+    Defended by Jarred Vanderbilt [ZONE].
+    Oshae Brissett misses.
+    Rebound secured by Jarred Vanderbilt.
+    
+    [07:38] Lakers possession (Score: 33-26)
+    Jarred Vanderbilt attempts a Rim.
+    Defended by Kristaps Porzingis [ZONE].
+    Jarred Vanderbilt misses.
+    FOUL! Shooting foul on Kristaps Porzingis.
+    [Away Team Fouls: 5]
+    (Kristaps Porzingis: 3 personal fouls)
+    Jarred Vanderbilt to the line for 2 free throws.
+    Jarred Vanderbilt makes the 1st free throw.
+    Jarred Vanderbilt makes the 2nd free throw.
+    Score: 35-26
+    
+    [07:21] Celtics possession (Score: 35-26)
+    Payton Pritchard attempts a Rim.
+    Defended by Cam Reddish [MAN].
+    PAYTON PRITCHARD MAKES IT!
+    FOUL! Shooting foul on Cam Reddish.
+    [Home Team Fouls: 2]
+    (Cam Reddish: 2 personal fouls)
+    And-1! Payton Pritchard to the line for 1 bonus free throw.
+    Payton Pritchard makes the 1st free throw.
+    Score: 35-29
+    
+    [07:04] Lakers possession (Score: 35-29)
+    Taurean Prince attempts a 3pt.
+    Defended by Sam Hauser [ZONE].
+    Taurean Prince misses.
+    Offensive rebound by Taurean Prince!
+    Taurean Prince kicks it out.
+    
+    [06:51] Lakers possession (Score: 35-29)
+    Jarred Vanderbilt attempts a 3pt.
+    Defended by Kristaps Porzingis [MAN].
+    Jarred Vanderbilt misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [06:38] Celtics possession (Score: 35-29)
+    Oshae Brissett attempts a 3pt.
+    Defended by Jarred Vanderbilt [ZONE].
+    Oshae Brissett misses.
+    Rebound secured by Jarred Vanderbilt.
+    
+    [06:24] Lakers possession (Score: 35-29)
+    Cam Reddish attempts a Rim.
+    Defended by Svi Mykhailiuk [MAN].
+    CAM REDDISH MAKES IT!
+    FOUL! Shooting foul on Svi Mykhailiuk.
+    [Away Team Fouls: 6]
+    (Svi Mykhailiuk: 2 personal fouls)
+    And-1! Cam Reddish to the line for 1 bonus free throw.
+    Cam Reddish misses the 1st free throw.
+    Offensive rebound by Taurean Prince!
+    Taurean Prince kicks it out.
+    Score: 37-29
+    
+    [06:08] Celtics possession (Score: 37-29)
+    Payton Pritchard attempts a 3pt.
+    Defended by Cam Reddish [MAN].
+    Payton Pritchard misses.
+    Offensive rebound by Svi Mykhailiuk!
+    Svi Mykhailiuk kicks it out.
+    
+    [05:57] Celtics possession (Score: 37-29)
+    Oshae Brissett attempts a Rim.
+    Defended by Jarred Vanderbilt [MAN].
+    OSHAE BRISSETT MAKES IT!
+    Assist: Sam Hauser
+    Score: 37-31
+    
+    [05:45] Lakers possession (Score: 37-31)
+    Max Christie attempts a 3pt.
+    Defended by Svi Mykhailiuk [MAN].
+    Max Christie misses.
+    Rebound secured by Sam Hauser.
+    
+    [05:33] Celtics possession (Score: 37-31)
+    Kristaps Porzingis attempts a 3pt.
+    Defended by Jaxson Hayes [MAN].
+    Kristaps Porzingis misses.
+    Offensive rebound by Payton Pritchard!
+    Payton Pritchard kicks it out.
+    FOUL! Non-shooting foul on Taurean Prince.
+    [Home Team Fouls: 3]
+    (Taurean Prince: 1 personal foul)
+    
+    [05:16] Celtics possession (Score: 37-31)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [ZONE].
+    Derrick White misses.
+    Rebound secured by Anthony Davis.
+    
+    [05:16] Substitution (Lakers): Taurean Prince OUT (stamina: 77) → LeBron James IN (starter_return_rule1)
+    
+    [05:16] Substitution (Lakers): Jarred Vanderbilt OUT (stamina: 78) → Anthony Davis IN (starter_return_rule1)
+    
+    [05:16] Substitution (Lakers): Cam Reddish OUT (stamina: 77) → D'Angelo Russell IN (starter_return_rule1)
+    
+    [05:16] Substitution (Lakers): Max Christie OUT (stamina: 77) → Austin Reaves IN (starter_return_rule1)
+    
+    [05:16] Substitution (Celtics): Sam Hauser OUT (stamina: 80) → Jayson Tatum IN (starter_return_rule1)
+    
+    [05:16] Substitution (Celtics): Svi Mykhailiuk OUT (stamina: 78) → Jaylen Brown IN (starter_return_rule1)
+    
+    [05:16] Substitution (Celtics): Payton Pritchard OUT (stamina: 77) → Derrick White IN (starter_return_rule1)
+    
+    [05:16] Substitution (Celtics): Kristaps Porzingis OUT (stamina: 80) → Al Horford IN (starter_return_rule1)
+    
+    [05:01] Lakers possession (Score: 37-31)
+    Jaxson Hayes attempts a Midrange.
+    Defended by Al Horford [MAN].
+    JAXSON HAYES MAKES IT!
+    Assist: D'Angelo Russell
+    Score: 39-31
+    
+    [04:44] Celtics possession (Score: 39-31)
+    Al Horford loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [04:27] Lakers possession (Score: 39-31)
+    D'Angelo Russell attempts a Midrange.
+    Defended by Derrick White [MAN].
+    D'Angelo Russell misses.
+    Rebound secured by Jayson Tatum.
+    
+    [04:10] Celtics possession (Score: 39-31)
+    Oshae Brissett attempts a Rim.
+    Defended by Anthony Davis [ZONE].
+    OSHAE BRISSETT MAKES IT!
+    Score: 39-33
+    
+    [03:57] Lakers possession (Score: 39-33)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis's putback is no good.
+    Rebound secured by Jaylen Brown.
+    
+    [03:46] Celtics possession (Score: 39-33)
+    Jaylen Brown attempts a 3pt.
+    Defended by Austin Reaves [ZONE].
+    Jaylen Brown misses.
+    Offensive rebound by Oshae Brissett!
+    Oshae Brissett kicks it out.
+    FOUL! Non-shooting foul on D'Angelo Russell.
+    [Home Team Fouls: 4]
+    (D'Angelo Russell: 1 personal foul)
+    
+    [03:29] Celtics possession (Score: 39-33)
+    Al Horford loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [03:14] Lakers possession (Score: 39-33)
+    D'Angelo Russell attempts a 3pt.
+    Defended by Derrick White [MAN].
+    D'Angelo Russell misses.
+    Rebound secured by Jaylen Brown.
+    
+    [03:04] Celtics possession (Score: 39-33)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    AL HORFORD MAKES IT!
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 5]
+    (Anthony Davis: 3 personal fouls)
+    And-1! Al Horford to the line for 1 bonus free throw.
+    Al Horford makes the 1st free throw.
+    Score: 39-36
+    
+    [02:51] Lakers possession (Score: 39-36)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jayson Tatum.
+    
+    [02:39] Celtics possession (Score: 39-36)
+    Jayson Tatum attempts a Rim.
+    Defended by LeBron James [MAN].
+    JAYSON TATUM MAKES IT!
+    Assist: Al Horford
+    Score: 39-38
+    
+    [02:24] Lakers possession (Score: 39-38)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jayson Tatum.
+    
+    [02:14] Celtics possession (Score: 39-38)
+    Al Horford attempts a Midrange.
+    Defended by Anthony Davis [MAN].
+    Al Horford misses.
+    Offensive rebound by Jayson Tatum!
+    Jayson Tatum kicks it out.
+    FOUL! Non-shooting foul on D'Angelo Russell.
+    [Home Team Fouls: 6]
+    (D'Angelo Russell: 2 personal fouls)
+    Jayson Tatum to the line for 2 free throws.
+    Jayson Tatum makes 1/2 from the line.
+    Score: 39-39
+    
+    [01:57] Lakers possession (Score: 39-39)
+    Austin Reaves attempts a Rim.
+    Defended by Jaylen Brown [ZONE].
+    Austin Reaves misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis's putback is no good.
+    Rebound secured by Jaylen Brown.
+    
+    [01:44] Celtics possession (Score: 39-39)
+    Al Horford attempts a Dunk.
+    Defended by Anthony Davis [MAN].
+    Al Horford misses.
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 7]
+    (Anthony Davis: 4 personal fouls)
+    Al Horford to the line for 2 free throws.
+    Al Horford makes the 1st free throw.
+    Al Horford makes the 2nd free throw.
+    Score: 39-41
+    
+    [01:31] Lakers possession (Score: 39-41)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [MAN].
+    LEBRON JAMES MAKES IT!
+    Assist: Anthony Davis
+    Score: 41-41
+    
+    [01:15] Celtics possession (Score: 41-41)
+    Jayson Tatum attempts a Dunk.
+    Defended by LeBron James [ZONE].
+    Jayson Tatum misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [00:59] Lakers possession (Score: 41-41)
+    D'Angelo Russell throws a bad pass out of bounds! TURNOVER! (dead ball)
+    
+    [00:41] Celtics possession (Score: 41-41)
+    Derrick White attempts a Dunk.
+    Defended by D'Angelo Russell [MAN].
+    Derrick White misses.
+    Rebound secured by Anthony Davis.
+    
+    [00:27] Lakers possession (Score: 41-41)
+    Anthony Davis attempts a Rim.
+    Defended by Al Horford [MAN].
+    ANTHONY DAVIS MAKES IT!
+    Score: 43-41
+    
+    [00:14] Celtics possession (Score: 43-41)
+    Jaylen Brown attempts a 3pt.
+    Defended by Austin Reaves [ZONE].
+    Jaylen Brown misses.
+    Rebound secured by Anthony Davis.
+    
+    ================================================================================
+                         2ND QUARTER COMPLETE
+    ================================================================================
+    
+    2ND QUARTER SCORE: Lakers 20, Celtics 20
+    
+    BOX SCORE:
+    ================================================================================
+    
+    Lakers
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Jaxson Hayes           12    8    1    1   0     3/5  60.0     0/0   0.0
+    Max Christie            7    2    0    0   0     0/3   0.0     0/2   0.0
+    Taurean Prince          7    2    3    0   0     0/3   0.0     0/1   0.0
+    Jarred Vanderbilt       7    2    5    1   0     0/2   0.0     0/1   0.0
+    Cam Reddish             7    2    0    0   0     1/2  50.0     0/1   0.0
+    Anthony Davis          17    2    3    1   0     1/1 100.0     0/0   0.0
+    LeBron James           17    2    0    0   0     1/4  25.0     0/3   0.0
+    D'Angelo Russell       17    0    1    1   1     0/2   0.0     0/1   0.0
+    Austin Reaves          17    0    0    0   0     0/1   0.0     0/0   0.0
+    
+    TEAM: FG: 6/23 (26.1%), 3PT: 0/9 (0.0%), REB: 15 (4 off, 11 def), AST: 4, TO: 1
+    TEAM FOULS: 7 [Celtics in BONUS]
+    
+    
+    Celtics
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Payton Pritchard        7    6    1    0   0     2/5  40.0     0/2   0.0
+    Al Horford             17    5    0    1   2     1/3  33.3     0/0   0.0
+    Oshae Brissett         12    4    1    1   0     2/6  33.3     0/3   0.0
+    Jayson Tatum           17    3    4    0   0     1/2  50.0     0/0   0.0
+    Svi Mykhailiuk          7    2    1    0   0     1/2  50.0     0/1   0.0
+    Sam Hauser              7    0    3    2   0     0/1   0.0     0/0   0.0
+    Kristaps Porzingis      7    0    3    0   0     0/1   0.0     0/1   0.0
+    Derrick White          17    0    0    1   0     0/2   0.0     0/1   0.0
+    Jaylen Brown           17    0    3    0   0     0/2   0.0     0/2   0.0
+    
+    TEAM: FG: 7/24 (29.2%), 3PT: 0/10 (0.0%), REB: 14 (4 off, 10 def), AST: 5, TO: 2
+    TEAM FOULS: 6 [Lakers in BONUS]
+    
+    ================================================================================
+    
+    ================================================================================
+                3RD QUARTER - Lakers vs Celtics
+    ================================================================================
+    
+    [12:00] Lakers possession (Score: 43-41)
+    Austin Reaves attempts a 3pt.
+    Defended by Jaylen Brown [MAN].
+    Austin Reaves misses.
+    Offensive rebound by LeBron James!
+    LeBron James kicks it out.
+    FOUL! Non-shooting foul on Jaylen Brown.
+    [Away Team Fouls: 1]
+    (Jaylen Brown: 2 personal fouls)
+    
+    [11:43] Lakers possession (Score: 43-41)
+    D'Angelo Russell attempts a 3pt.
+    Defended by Derrick White [MAN].
+    D'Angelo Russell misses.
+    FOUL! Shooting foul on Derrick White.
+    [Away Team Fouls: 2]
+    (Derrick White: 1 personal foul)
+    D'Angelo Russell to the line for 3 free throws.
+    D'Angelo Russell makes the 1st free throw.
+    D'Angelo Russell makes the 2nd free throw.
+    D'Angelo Russell misses the 3rd free throw.
+    Rebound secured by Jaylen Brown.
+    Score: 45-41
+    
+    [11:25] Lakers possession (Score: 45-41)
+    Austin Reaves attempts a 3pt.
+    Defended by Jaylen Brown [MAN].
+    Austin Reaves misses.
+    Rebound secured by Jaylen Brown.
+    
+    [11:15] Celtics possession (Score: 45-41)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [MAN].
+    Jayson Tatum misses.
+    Rebound secured by Anthony Davis.
+    
+    [11:05] Lakers possession (Score: 45-41)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis puts it back in!
+    Score: 47-41
+    
+    [10:55] Celtics possession (Score: 47-41)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [MAN].
+    Derrick White misses.
+    Rebound secured by LeBron James.
+    
+    [10:44] Lakers possession (Score: 47-41)
+    Jaxson Hayes attempts a Layup.
+    Defended by Al Horford [MAN].
+    Jaxson Hayes misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis puts it back in!
+    Score: 49-41
+    
+    [10:33] Celtics possession (Score: 49-41)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [MAN].
+    Derrick White misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [10:19] Lakers possession (Score: 49-41)
+    LeBron James attempts a Dunk.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    Offensive rebound by LeBron James!
+    LeBron James's putback is no good.
+    Rebound secured by Jayson Tatum.
+    
+    [10:02] Celtics possession (Score: 49-41)
+    Oshae Brissett throws a bad pass out of bounds! TURNOVER! (dead ball)
+    
+    [09:45] Lakers possession (Score: 49-41)
+    Anthony Davis attempts a Rim.
+    Defended by Oshae Brissett [MAN].
+    ANTHONY DAVIS MAKES IT!
+    Score: 51-41
+    
+    [09:29] Celtics possession (Score: 51-41)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [MAN].
+    Jayson Tatum misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [09:16] Lakers possession (Score: 51-41)
+    Anthony Davis attempts a Rim.
+    Defended by Oshae Brissett [MAN].
+    ANTHONY DAVIS MAKES IT!
+    FOUL! Shooting foul on Oshae Brissett.
+    [Away Team Fouls: 3]
+    (Oshae Brissett: 1 personal foul)
+    And-1! Anthony Davis to the line for 1 bonus free throw.
+    Anthony Davis makes the 1st free throw.
+    Score: 54-41
+    
+    [09:01] Celtics possession (Score: 54-41)
+    Jayson Tatum attempts a 3pt.
+    Defended by LeBron James [ZONE].
+    Jayson Tatum misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [08:47] Lakers possession (Score: 54-41)
+    Anthony Davis attempts a Midrange.
+    Defended by Oshae Brissett [MAN].
+    Anthony Davis misses.
+    Rebound secured by Jayson Tatum.
+    
+    [08:31] Celtics possession (Score: 54-41)
+    Oshae Brissett attempts a Midrange.
+    Defended by Anthony Davis [MAN].
+    OSHAE BRISSETT MAKES IT!
+    Assist: Jaylen Brown
+    Score: 54-43
+    
+    [08:17] Lakers possession (Score: 54-43)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [ZONE].
+    LEBRON JAMES MAKES IT!
+    Assist: D'Angelo Russell
+    Score: 56-43
+    
+    [08:04] Celtics possession (Score: 56-43)
+    Jaylen Brown attempts a 3pt.
+    Defended by Austin Reaves [ZONE].
+    Jaylen Brown misses.
+    Rebound secured by LeBron James.
+    
+    [07:51] Lakers possession (Score: 56-43)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    Rebound secured by Jayson Tatum.
+    
+    [07:32] Celtics possession (Score: 56-43)
+    Jaylen Brown attempts a Rim.
+    Defended by Austin Reaves [MAN].
+    JAYLEN BROWN MAKES IT!
+    FOUL! Shooting foul on Austin Reaves.
+    [Home Team Fouls: 1]
+    (Austin Reaves: 2 personal fouls)
+    And-1! Jaylen Brown to the line for 1 bonus free throw.
+    Jaylen Brown makes the 1st free throw.
+    Score: 56-46
+    
+    [07:19] Lakers possession (Score: 56-46)
+    Anthony Davis attempts a 3pt.
+    Defended by Oshae Brissett [MAN].
+    ANTHONY DAVIS MAKES IT!
+    Assist: Jaxson Hayes
+    Score: 59-46
+    
+    [07:08] Celtics possession (Score: 59-46)
+    Oshae Brissett attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    Oshae Brissett misses.
+    Rebound secured by LeBron James.
+    
+    [06:58] Lakers possession (Score: 59-46)
+    D'Angelo Russell loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [06:43] Celtics possession (Score: 59-46)
+    Jaylen Brown attempts a 3pt.
+    Defended by Austin Reaves [ZONE].
+    Jaylen Brown misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [06:33] Lakers possession (Score: 59-46)
+    Jaxson Hayes attempts a Midrange.
+    Defended by Al Horford [MAN].
+    JAXSON HAYES MAKES IT!
+    Assist: D'Angelo Russell
+    Score: 61-46
+    
+    [06:18] Celtics possession (Score: 61-46)
+    Al Horford attempts a Midrange.
+    Defended by Anthony Davis [MAN].
+    Al Horford misses.
+    Offensive rebound by Jayson Tatum!
+    Jayson Tatum puts it back in!
+    Score: 61-48
+    
+    [06:05] Lakers possession (Score: 61-48)
+    D'Angelo Russell attempts a 3pt.
+    Defended by Derrick White [MAN].
+    D'Angelo Russell misses.
+    Rebound secured by Jayson Tatum.
+    
+    [05:51] Celtics possession (Score: 61-48)
+    Derrick White attempts a Rim.
+    Defended by D'Angelo Russell [MAN].
+    DERRICK WHITE MAKES IT!
+    Assist: Al Horford
+    Score: 61-50
+    
+    [05:39] Lakers possession (Score: 61-50)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [MAN].
+    LEBRON JAMES MAKES IT!
+    Assist: Jaxson Hayes
+    Score: 63-50
+    
+    [05:24] Celtics possession (Score: 63-50)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [ZONE].
+    AL HORFORD MAKES IT!
+    Assist: Jayson Tatum
+    Score: 63-52
+    
+    [05:09] Lakers possession (Score: 63-52)
+    Austin Reaves attempts a Rim.
+    Defended by Jaylen Brown [MAN].
+    AUSTIN REAVES MAKES IT!
+    Score: 65-52
+    
+    [04:57] Celtics possession (Score: 65-52)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [MAN].
+    Derrick White misses.
+    Offensive rebound by Al Horford!
+    Al Horford kicks it out.
+    
+    [04:41] Celtics possession (Score: 65-52)
+    Derrick White attempts a Rim.
+    Defended by D'Angelo Russell [MAN].
+    DERRICK WHITE MAKES IT!
+    Assist: Al Horford
+    Score: 65-54
+    
+    [04:26] Lakers possession (Score: 65-54)
+    Jaxson Hayes attempts a Rim.
+    Defended by Al Horford [ZONE].
+    JAXSON HAYES MAKES IT!
+    Score: 67-54
+    
+    [04:12] Celtics possession (Score: 67-54)
+    Al Horford attempts a Midrange.
+    Defended by Anthony Davis [ZONE].
+    AL HORFORD MAKES IT!
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 2]
+    (Anthony Davis: 5 personal fouls)
+    And-1! Al Horford to the line for 1 bonus free throw.
+    Al Horford makes the 1st free throw.
+    Score: 67-57
+    
+    [03:59] Lakers possession (Score: 67-57)
+    Jaxson Hayes attempts a Midrange.
+    Defended by Al Horford [MAN].
+    JAXSON HAYES MAKES IT!
+    Assist: D'Angelo Russell
+    Score: 69-57
+    
+    [03:39] Celtics possession (Score: 69-57)
+    Derrick White attempts a Rim.
+    Defended by D'Angelo Russell [MAN].
+    DERRICK WHITE MAKES IT!
+    FOUL! Shooting foul on D'Angelo Russell.
+    [Home Team Fouls: 3]
+    (D'Angelo Russell: 3 personal fouls)
+    And-1! Derrick White to the line for 1 bonus free throw.
+    Derrick White misses the 1st free throw.
+    Offensive rebound by Derrick White!
+    Derrick White kicks it out.
+    Score: 69-59
+    
+    [03:24] Lakers possession (Score: 69-59)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jaylen Brown.
+    
+    [03:11] Celtics possession (Score: 69-59)
+    Oshae Brissett attempts a 3pt.
+    Defended by Anthony Davis [MAN].
+    Oshae Brissett misses.
+    Rebound secured by LeBron James.
+    
+    [02:55] Lakers possession (Score: 69-59)
+    LeBron James attempts a Rim.
+    Defended by Jayson Tatum [MAN].
+    LEBRON JAMES MAKES IT!
+    FOUL! Shooting foul on Jayson Tatum.
+    [Away Team Fouls: 4]
+    (Jayson Tatum: 2 personal fouls)
+    And-1! LeBron James to the line for 1 bonus free throw.
+    LeBron James misses the 1st free throw.
+    Rebound secured by Jayson Tatum.
+    Score: 71-59
+    
+    [02:42] Celtics possession (Score: 71-59)
+    Jayson Tatum attempts a Rim.
+    Defended by LeBron James [ZONE].
+    JAYSON TATUM MAKES IT!
+    Assist: Derrick White
+    Score: 71-61
+    
+    [02:27] Lakers possession (Score: 71-61)
+    LeBron James attempts a Dunk.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jaylen Brown.
+    
+    [02:15] Celtics possession (Score: 71-61)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    AL HORFORD MAKES IT!
+    Assist: Derrick White
+    Score: 71-63
+    
+    [01:58] Lakers possession (Score: 71-63)
+    Anthony Davis attempts a Rim.
+    Defended by Al Horford [ZONE].
+    Anthony Davis misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis kicks it out.
+    
+    [01:42] Lakers possession (Score: 71-63)
+    Anthony Davis attempts a 3pt.
+    Defended by Al Horford [MAN].
+    Anthony Davis misses.
+    Offensive rebound by Anthony Davis!
+    Anthony Davis kicks it out.
+    FOUL! Non-shooting foul on Jayson Tatum.
+    [Away Team Fouls: 5]
+    (Jayson Tatum: 3 personal fouls)
+    Anthony Davis to the line for 2 free throws.
+    Anthony Davis makes 2/2 from the line.
+    Score: 73-63
+    
+    [01:28] Celtics possession (Score: 73-63)
+    Jaylen Brown attempts a 3pt.
+    Defended by Austin Reaves [MAN].
+    JAYLEN BROWN MAKES IT!
+    Assist: Jayson Tatum
+    Score: 73-66
+    
+    [01:14] Lakers possession (Score: 73-66)
+    Austin Reaves attempts a Dunk.
+    Defended by Jaylen Brown [ZONE].
+    Austin Reaves misses.
+    Rebound secured by Jayson Tatum.
+    
+    [00:56] Celtics possession (Score: 73-66)
+    Al Horford commits a violation (traveling/carry)! TURNOVER! (dead ball)
+    
+    [00:41] Lakers possession (Score: 73-66)
+    Jaxson Hayes attempts a Rim.
+    Defended by Kristaps Porzingis [MAN].
+    JAXSON HAYES MAKES IT!
+    Assist: Cam Reddish
+    Score: 75-66
+    
+    [00:41] Substitution (Lakers): LeBron James OUT (stamina: 64) → Rui Hachimura IN (stamina_rule2)
+    
+    [00:41] Substitution (Lakers): Anthony Davis OUT (stamina: 67) → Jarred Vanderbilt IN (stamina_rule2)
+    
+    [00:41] Substitution (Lakers): D'Angelo Russell OUT (stamina: 64) → Cam Reddish IN (stamina_rule2)
+    
+    [00:41] Substitution (Lakers): Austin Reaves OUT (stamina: 68) → Max Christie IN (stamina_rule2)
+    
+    [00:41] Substitution (Celtics): Jayson Tatum OUT (stamina: 66) → Sam Hauser IN (stamina_rule2)
+    
+    [00:41] Substitution (Celtics): Jaylen Brown OUT (stamina: 69) → Jrue Holiday IN (stamina_rule2)
+    
+    [00:41] Substitution (Celtics): Derrick White OUT (stamina: 66) → Payton Pritchard IN (stamina_rule2)
+    
+    [00:41] Substitution (Celtics): Al Horford OUT (stamina: 67) → Kristaps Porzingis IN (stamina_rule2)
+    
+    [00:24] Celtics possession (Score: 75-66)
+    Oshae Brissett loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [00:10] Lakers possession (Score: 75-66)
+    Jarred Vanderbilt attempts a 3pt.
+    Defended by Kristaps Porzingis [MAN].
+    Jarred Vanderbilt misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    ================================================================================
+                         3RD QUARTER COMPLETE
+    ================================================================================
+    
+    3RD QUARTER SCORE: Lakers 32, Celtics 25
+    
+    BOX SCORE:
+    ================================================================================
+    
+    Lakers
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Anthony Davis          29   14    5    0   0     5/8  62.5     2/3  66.7
+    Jaxson Hayes           24    8    0    3   0     4/5  80.0     0/0   0.0
+    LeBron James           29    6    5    0   0     3/8  37.5     0/3   0.0
+    Austin Reaves          29    2    0    0   0     1/4  25.0     0/2   0.0
+    D'Angelo Russell       29    2    4    3   1     0/2   0.0     0/2   0.0
+    Cam Reddish             8    0    0    1   0     0/0   0.0     0/0   0.0
+    Jarred Vanderbilt       8    0    0    0   0     0/1   0.0     0/1   0.0
+    
+    TEAM: FG: 13/26 (50.0%), 3PT: 2/10 (20.0%), REB: 15 (6 off, 9 def), AST: 7, TO: 1
+    TEAM FOULS: 3
+    
+    
+    Celtics
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Al Horford             29    7    1    2   1     3/4  75.0     0/0   0.0
+    Jaylen Brown           29    6    3    1   0     2/4  50.0     1/3  33.3
+    Derrick White          29    6    0    2   0     3/6  50.0     0/3   0.0
+    Jayson Tatum           29    4    6    2   0     2/5  40.0     0/3   0.0
+    Oshae Brissett         24    2    0    0   2     1/3  33.3     0/1   0.0
+    Kristaps Porzingis      8    0    1    0   0     0/0   0.0     0/0   0.0
+    
+    TEAM: FG: 11/21 (52.4%), 3PT: 1/10 (10.0%), REB: 10 (2 off, 8 def), AST: 7, TO: 3
+    TEAM FOULS: 5 [Lakers in BONUS]
+    
+    ================================================================================
+    
+    ================================================================================
+                4TH QUARTER - Lakers vs Celtics
+    ================================================================================
+    
+    [12:00] Lakers possession (Score: 75-66)
+    Cam Reddish attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Cam Reddish misses.
+    Offensive rebound by Jarred Vanderbilt!
+    Jarred Vanderbilt kicks it out.
+    FOUL! Non-shooting foul on Jrue Holiday.
+    [Away Team Fouls: 1]
+    (Jrue Holiday: 3 personal fouls)
+    
+    [11:43] Lakers possession (Score: 75-66)
+    Rui Hachimura attempts a 3pt.
+    Defended by Sam Hauser [MAN].
+    Rui Hachimura misses.
+    FOUL! Shooting foul on Sam Hauser.
+    [Away Team Fouls: 2]
+    (Sam Hauser: 2 personal fouls)
+    Rui Hachimura to the line for 3 free throws.
+    Rui Hachimura makes the 1st free throw.
+    Rui Hachimura makes the 2nd free throw.
+    Rui Hachimura misses the 3rd free throw.
+    Rebound secured by Kristaps Porzingis.
+    Score: 77-66
+    
+    [11:25] Lakers possession (Score: 77-66)
+    Rui Hachimura attempts a 3pt.
+    Defended by Sam Hauser [MAN].
+    Rui Hachimura misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [11:15] Celtics possession (Score: 77-66)
+    Kristaps Porzingis attempts a Rim.
+    Defended by Jaxson Hayes [MAN].
+    KRISTAPS PORZINGIS MAKES IT!
+    Score: 77-68
+    
+    [11:03] Lakers possession (Score: 77-68)
+    Cam Reddish attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Cam Reddish misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [10:48] Celtics possession (Score: 77-68)
+    Jrue Holiday attempts a Rim.
+    Defended by Cam Reddish [MAN].
+    JRUE HOLIDAY MAKES IT!
+    Assist: Kristaps Porzingis
+    Score: 77-70
+    
+    [10:35] Lakers possession (Score: 77-70)
+    Max Christie attempts a Rim.
+    Defended by Jrue Holiday [MAN].
+    Max Christie misses.
+    FOUL! Shooting foul on Jrue Holiday.
+    [Away Team Fouls: 3]
+    (Jrue Holiday: 4 personal fouls)
+    Max Christie to the line for 2 free throws.
+    Max Christie makes the 1st free throw.
+    Max Christie misses the 2nd free throw.
+    Rebound secured by Kristaps Porzingis.
+    Score: 78-70
+    
+    [10:24] Lakers possession (Score: 78-70)
+    Cam Reddish attempts a Dunk.
+    Defended by Jrue Holiday [MAN].
+    Cam Reddish misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [10:09] Celtics possession (Score: 78-70)
+    Jrue Holiday attempts a 3pt.
+    Defended by Cam Reddish [ZONE].
+    Jrue Holiday misses.
+    Rebound secured by Jaxson Hayes.
+    
+    [09:54] Lakers possession (Score: 78-70)
+    Rui Hachimura attempts a 3pt.
+    Defended by Sam Hauser [ZONE].
+    Rui Hachimura misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [09:43] Celtics possession (Score: 78-70)
+    Jrue Holiday attempts a 3pt.
+    Defended by Cam Reddish [MAN].
+    JRUE HOLIDAY MAKES IT!
+    Assist: Sam Hauser
+    Score: 78-73
+    
+    [09:27] Lakers possession (Score: 78-73)
+    Max Christie attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Max Christie misses.
+    Rebound secured by Jrue Holiday.
+    
+    [09:14] Celtics possession (Score: 78-73)
+    Jrue Holiday attempts a 3pt.
+    Defended by Cam Reddish [ZONE].
+    Jrue Holiday misses.
+    Rebound secured by Jaxson Hayes.
+    
+    [09:01] Lakers possession (Score: 78-73)
+    Cam Reddish attempts a 3pt.
+    Defended by Jrue Holiday [ZONE].
+    Cam Reddish misses.
+    Rebound secured by Jrue Holiday.
+    
+    [08:45] Celtics possession (Score: 78-73)
+    Jrue Holiday attempts a Dunk.
+    Defended by Cam Reddish [MAN].
+    Jrue Holiday misses.
+    Rebound secured by Jaxson Hayes.
+    
+    [08:31] Lakers possession (Score: 78-73)
+    Jaxson Hayes attempts a Midrange.
+    Defended by Kristaps Porzingis [MAN].
+    Jaxson Hayes misses.
+    Offensive rebound by Jarred Vanderbilt!
+    Jarred Vanderbilt kicks it out.
+    
+    [08:14] Lakers possession (Score: 78-73)
+    Max Christie attempts a Layup.
+    Defended by Jrue Holiday [MAN].
+    Max Christie misses.
+    FOUL! Shooting foul on Jrue Holiday.
+    [Away Team Fouls: 4]
+    (Jrue Holiday: 5 personal fouls)
+    Max Christie to the line for 2 free throws.
+    Max Christie makes the 1st free throw.
+    Max Christie makes the 2nd free throw.
+    Score: 80-73
+    
+    [07:58] Celtics possession (Score: 80-73)
+    Jrue Holiday attempts a 3pt.
+    Defended by Cam Reddish [MAN].
+    Jrue Holiday misses.
+    Rebound secured by Rui Hachimura.
+    
+    [07:47] Lakers possession (Score: 80-73)
+    Rui Hachimura attempts a 3pt.
+    Defended by Sam Hauser [MAN].
+    Rui Hachimura misses.
+    Rebound secured by Kristaps Porzingis.
+    
+    [07:30] Celtics possession (Score: 80-73)
+    Jrue Holiday attempts a 3pt.
+    Defended by Cam Reddish [ZONE].
+    JRUE HOLIDAY MAKES IT!
+    Assist: Sam Hauser
+    Score: 80-76
+    
+    [07:16] Lakers possession (Score: 80-76)
+    Max Christie attempts a Midrange.
+    Defended by Jrue Holiday [MAN].
+    MAX CHRISTIE MAKES IT!
+    Score: 82-76
+    
+    [06:59] Celtics possession (Score: 82-76)
+    Oshae Brissett attempts a Rim.
+    Defended by Jarred Vanderbilt [MAN].
+    Oshae Brissett misses.
+    Offensive rebound by Oshae Brissett!
+    Oshae Brissett kicks it out.
+    
+    [06:46] Celtics possession (Score: 82-76)
+    Oshae Brissett attempts a Rim.
+    Defended by Jarred Vanderbilt [MAN].
+    Oshae Brissett misses.
+    Rebound secured by Rui Hachimura.
+    
+    [06:34] Lakers possession (Score: 82-76)
+    Rui Hachimura attempts a Midrange.
+    Defended by Sam Hauser [ZONE].
+    Rui Hachimura misses.
+    FOUL! Shooting foul on Sam Hauser.
+    [Away Team Fouls: 5]
+    (Sam Hauser: 3 personal fouls)
+    Rui Hachimura to the line for 2 free throws.
+    Rui Hachimura makes the 1st free throw.
+    Rui Hachimura makes the 2nd free throw.
+    Score: 84-76
+    
+    [06:19] Celtics possession (Score: 84-76)
+    Sam Hauser attempts a 3pt.
+    Defended by Rui Hachimura [MAN].
+    Sam Hauser misses.
+    Rebound secured by Rui Hachimura.
+    
+    [06:04] Lakers possession (Score: 84-76)
+    Max Christie attempts a 3pt.
+    Defended by Jrue Holiday [ZONE].
+    Max Christie misses.
+    FOUL! Shooting foul on Jrue Holiday.
+    [Away Team Fouls: 6]
+    (Jrue Holiday: 6 personal fouls)
+    Max Christie to the line for 3 free throws.
+    Max Christie makes the 1st free throw.
+    Max Christie makes the 2nd free throw.
+    Max Christie makes the 3rd free throw.
+    Score: 87-76
+    
+    [05:49] Celtics possession (Score: 87-76)
+    Payton Pritchard attempts a Rim.
+    Defended by Cam Reddish [MAN].
+    PAYTON PRITCHARD MAKES IT!
+    Assist: Jrue Holiday
+    Score: 87-78
+    
+    [05:37] Lakers possession (Score: 87-78)
+    Max Christie attempts a 3pt.
+    Defended by Jrue Holiday [MAN].
+    Max Christie misses.
+    Rebound secured by Jrue Holiday.
+    
+    [05:22] Celtics possession (Score: 87-78)
+    Sam Hauser attempts a 3pt.
+    Defended by Rui Hachimura [ZONE].
+    Sam Hauser misses.
+    Rebound secured by Jaxson Hayes.
+    
+    [05:10] Lakers possession (Score: 87-78)
+    Jaxson Hayes attempts a Rim.
+    Defended by Kristaps Porzingis [MAN].
+    JAXSON HAYES MAKES IT!
+    Assist: Rui Hachimura
+    Score: 89-78
+    
+    [04:58] Celtics possession (Score: 89-78)
+    Shot clock violation! Payton Pritchard couldn't get a shot off in time! TURNOVER! (dead ball)
+    
+    [04:43] Lakers possession (Score: 89-78)
+    Anthony Davis loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+    
+    [04:43] Substitution (Lakers): Rui Hachimura OUT (stamina: 77) → LeBron James IN (starter_return_rule1)
+    
+    [04:43] Substitution (Lakers): Jarred Vanderbilt OUT (stamina: 76) → Anthony Davis IN (starter_return_rule1)
+    
+    [04:43] Substitution (Lakers): Cam Reddish OUT (stamina: 74) → D'Angelo Russell IN (starter_return_rule1)
+    
+    [04:43] Substitution (Lakers): Max Christie OUT (stamina: 75) → Austin Reaves IN (starter_return_rule1)
+    
+    [04:43] Substitution (Celtics): Sam Hauser OUT (stamina: 78) → Jayson Tatum IN (starter_return_rule1)
+    
+    [04:43] Substitution (Celtics): Jrue Holiday OUT (stamina: 81) → Jaylen Brown IN (starter_return_rule1)
+    
+    [04:43] Substitution (Celtics): Payton Pritchard OUT (stamina: 75) → Derrick White IN (starter_return_rule1)
+    
+    [04:43] Substitution (Celtics): Kristaps Porzingis OUT (stamina: 79) → Al Horford IN (starter_return_rule1)
+    
+    [04:24] Celtics possession (Score: 89-78)
+    Derrick White attempts a 3pt.
+    Defended by D'Angelo Russell [MAN].
+    DERRICK WHITE MAKES IT!
+    Assist: Al Horford
+    Score: 89-81
+    
+    [04:11] Lakers possession (Score: 89-81)
+    LeBron James attempts a 3pt.
+    Defended by Jayson Tatum [ZONE].
+    LeBron James misses.
+    Rebound secured by Jaylen Brown.
+    
+    [04:02] Celtics possession (Score: 89-81)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    AL HORFORD MAKES IT!
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 1]
+    (Anthony Davis: 6 personal fouls)
+    And-1! Al Horford to the line for 1 bonus free throw.
+    Al Horford makes the 1st free throw.
+    Score: 89-84
+    
+    [03:49] Lakers possession (Score: 89-84)
+    Austin Reaves attempts a 3pt.
+    Defended by Jaylen Brown [MAN].
+    AUSTIN REAVES MAKES IT!
+    FOUL! Shooting foul on Jaylen Brown.
+    [Away Team Fouls: 7]
+    (Jaylen Brown: 3 personal fouls)
+    And-1! Austin Reaves to the line for 1 bonus free throw.
+    Austin Reaves makes the 1st free throw.
+    Score: 93-84
+    
+    [03:29] Celtics possession (Score: 93-84)
+    Al Horford attempts a Rim.
+    Defended by Anthony Davis [MAN].
+    AL HORFORD MAKES IT!
+    FOUL! Shooting foul on Anthony Davis.
+    [Home Team Fouls: 2]
+    (Anthony Davis: 7 personal fouls)
+    And-1! Al Horford to the line for 1 bonus free throw.
+    Al Horford misses the 1st free throw.
+    Offensive rebound by Derrick White!
+    Derrick White kicks it out.
+    Score: 93-86
+    
+    [03:14] Lakers possession (Score: 93-86)
+    Anthony Davis attempts a 3pt.
+    Defended by Al Horford [MAN].
+    Anthony Davis misses.
+    Rebound secured by Jaylen Brown.
+    
+    [03:01] Celtics possession (Score: 93-86)
+    Jayson Tatum attempts a Rim.
+    Defended by LeBron James [MAN].
+    JAYSON TATUM MAKES IT!
+    Score: 93-88
+    
+    [02:49] Lakers possession (Score: 93-88)
+    Anthony Davis attempts a 3pt.
+    Defended by Al Horford [MAN].
+    Anthony Davis misses.
+    Offensive rebound by LeBron James!
+    LeBron James's putback is no good.
+    Rebound secured by Jayson Tatum.
+    
+    [02:36] Celtics possession (Score: 93-88)
+    Jayson Tatum attempts a Rim.
+    Defended by LeBron James [ZONE].
+    JAYSON TATUM MAKES IT!
+    Assist: Oshae Brissett
+    Score: 93-90
+    
+    [02:21] Lakers possession (Score: 93-90)
+    LeBron James attempts a Dunk.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    Rebound secured by Jayson Tatum.
+    
+    [02:09] Celtics possession (Score: 93-90)
+    Al Horford attempts a Midrange.
+    Defended by Anthony Davis [MAN].
+    Al Horford misses.
+    Rebound secured by Anthony Davis.
+    
+    [02:00] Lakers possession (Score: 93-90)
+    LeBron James attempts a Dunk.
+    Defended by Jayson Tatum [MAN].
+    LeBron James misses.
+    FOUL! Shooting foul on Jayson Tatum.
+    [Away Team Fouls: 8]
+    (Jayson Tatum: 4 personal fouls)
+    LeBron James to the line for 2 free throws.
+    LeBron James makes the 1st free throw.
+    LeBron James makes the 2nd free throw.
+    Score: 95-90
+    
+    [01:45] Celtics possession (Score: 95-90)
+    Jayson Tatum attempts a Rim.
+    Defended by LeBron James [MAN].
+    JAYSON TATUM MAKES IT!
+    FOUL! Shooting foul on LeBron James.
+    [Home Team Fouls: 3]
+    (LeBron James: 2 personal fouls)
+    And-1! Jayson Tatum to the line for 1 bonus free throw.
+    Jayson Tatum makes the 1st free throw.
+    Score: 95-93
+    
+    [01:37] Lakers possession (Score: 95-93)
+    Anthony Davis attempts a Rim.
+    Defended by Al Horford [ZONE].
+    Anthony Davis misses.
+    FOUL! Shooting foul on Al Horford.
+    [Away Team Fouls: 9]
+    (Al Horford: 2 personal fouls)
+    Anthony Davis to the line for 2 free throws.
+    Anthony Davis makes the 1st free throw.
+    Anthony Davis makes the 2nd free throw.
+    Score: 97-93
+    
+    [01:22] Celtics possession (Score: 97-93)
+    Derrick White attempts a Rim.
+    Defended by D'Angelo Russell [ZONE].
+    DERRICK WHITE MAKES IT!
+    FOUL! Shooting foul on D'Angelo Russell.
+    [Home Team Fouls: 4]
+    (D'Angelo Russell: 4 personal fouls)
+    And-1! Derrick White to the line for 1 bonus free throw.
+    Derrick White makes the 1st free throw.
+    Score: 97-96
+    
+    [01:07] Lakers possession (Score: 97-96)
+    D'Angelo Russell attempts a Dunk.
+    Defended by Derrick White [MAN].
+    D'Angelo Russell misses.
+    Rebound secured by Jayson Tatum.
+    
+    [00:52] Celtics possession (Score: 97-96)
+    Al Horford attempts a Midrange.
+    Defended by Anthony Davis [ZONE].
+    Al Horford misses.
+    Rebound secured by D'Angelo Russell.
+    
+    [00:39] Lakers possession (Score: 97-96)
+    Austin Reaves attempts a 3pt.
+    Defended by Jaylen Brown [MAN].
+    Austin Reaves misses.
+    Rebound secured by Jaylen Brown.
+    
+    [00:24] Celtics possession (Score: 97-96)
+    Jaylen Brown attempts a 3pt.
+    Defended by Austin Reaves [MAN].
+    Jaylen Brown misses.
+    Rebound secured by LeBron James.
+    
+    [00:10] Lakers possession (Score: 97-96)
+    Jaxson Hayes attempts a Rim.
+    Defended by Al Horford [MAN].
+    JAXSON HAYES MAKES IT!
+    Score: 99-96
+    
+    ================================================================================
+                         4TH QUARTER COMPLETE
+    ================================================================================
+    
+    4TH QUARTER SCORE: Lakers 24, Celtics 30
+    
+    BOX SCORE:
+    ================================================================================
+    
+    Lakers
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Max Christie           15    8    0    0   0     1/6  16.7     0/3   0.0
+    Rui Hachimura          20    4    3    1   0     0/5   0.0     0/4   0.0
+    Jaxson Hayes           37    4    4    0   0     2/3  66.7     0/0   0.0
+    Austin Reaves          33    4    0    0   0     1/2  50.0     1/2  50.0
+    Anthony Davis          33    2    1    0   1     0/3   0.0     0/2   0.0
+    LeBron James           33    2    1    0   0     0/3   0.0     0/1   0.0
+    Cam Reddish            15    0    0    0   0     0/4   0.0     0/3   0.0
+    Jarred Vanderbilt      15    0    2    0   0     0/0   0.0     0/0   0.0
+    D'Angelo Russell       33    0    1    0   0     0/1   0.0     0/0   0.0
+    
+    TEAM: FG: 4/27 (14.8%), 3PT: 1/15 (6.7%), REB: 13 (3 off, 10 def), AST: 1, TO: 1
+    TEAM FOULS: 4
+    
+    
+    Celtics
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+    --------------------------------------------------------------------------------
+    Jrue Holiday           20    8    3    1   0     3/7  42.9     2/5  40.0
+    Jayson Tatum           33    7    3    0   0     3/3 100.0     0/0   0.0
+    Derrick White          33    6    0    0   0     2/2 100.0     1/1 100.0
+    Al Horford             33    5    0    2   0     2/4  50.0     0/0   0.0
+    Kristaps Porzingis     15    2    5    1   0     1/1 100.0     0/0   0.0
+    Payton Pritchard       15    2    0    0   1     1/1 100.0     0/0   0.0
+    Sam Hauser             15    0    0    2   0     0/2   0.0     0/2   0.0
+    Oshae Brissett         37    0    1    2   0     0/2   0.0     0/0   0.0
+    Jaylen Brown           33    0    3    0   0     0/1   0.0     0/1   0.0
+    
+    TEAM: FG: 12/23 (52.2%), 3PT: 3/9 (33.3%), REB: 14 (1 off, 13 def), AST: 8, TO: 1
+    TEAM FOULS: 9 [Lakers in BONUS]
+    
+    ================================================================================
+    
+    ================================================================================
+                                       FULL GAME COMPLETE                           
+    ================================================================================
+    
+    FINAL SCORE: Lakers 99, Celtics 96
+    
+    SCORING BY QUARTER:
+    --------------------------------------------------------------------------------
+    Team                     Q1     Q2     Q3     Q4    FINAL
+    --------------------------------------------------------------------------------
+    Lakers                   23     20     32     24       99
+    Celtics                  21     20     25     30       96
+    --------------------------------------------------------------------------------
+    
+    FULL GAME BOX SCORE:
+    ================================================================================
+    
+    Lakers
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG      3P      FT  PF
+    --------------------------------------------------------------------------------
+    Anthony Davis          33   23   13    1   2    7/14     3/6     6/6   2
+    Jaxson Hayes           37   20    5    4   0    9/13     0/0     0/0   0
+    LeBron James           33   17   10    0   0    6/22     1/9     4/4   0
+    Austin Reaves          33   10    0    0   0    2/15    1/10     4/5   0
+    Max Christie           15   10    0    0   0     1/9     0/5     8/9   0
+    Rui Hachimura          20    6    3    4   1     1/9     0/7     4/5   0
+    D'Angelo Russell       33    2    6    4   2     0/5     0/3     2/3   2
+    Jarred Vanderbilt      15    2    7    1   0     0/3     0/2     2/2   0
+    Taurean Prince          7    2    3    0   0     0/4     0/2     2/2   1
+    Cam Reddish            15    2    0    1   0     1/6     0/4     0/0   1
+    
+    Celtics
+    --------------------------------------------------------------------------------
+    Player                MIN  PTS  REB  AST  TO      FG      3P      FT  PF
+    --------------------------------------------------------------------------------
+    Al Horford             33   24    2    6   4    8/16     0/0     4/4   2
+    Jayson Tatum           33   20   21    3   0    8/19    1/10     1/2   3
+    Derrick White          33   17    0    5   1    7/13     2/7     0/0   1
+    Jrue Holiday           20   11    3    2   2    4/11     2/8     0/0   6
+    Payton Pritchard       15    8    1    0   1     3/6     0/2     1/2   0
+    Jaylen Brown           33    6   14    2   0     2/7     1/6     0/0   2
+    Oshae Brissett         37    6    2    3   2    3/11     0/4     0/0   0
+    Kristaps Porzingis     15    2   10    1   0     1/2     0/1     0/0   1
+    Svi Mykhailiuk          7    2    1    0   0     1/2     0/1     0/0   1
+    Sam Hauser             15    0    3    4   0     0/3     0/2     0/0   3
+    
+    ================================================================================
+
+      at Object.log (src/simulation/__tests__/fullGameDemo.test.ts:199:13)
+

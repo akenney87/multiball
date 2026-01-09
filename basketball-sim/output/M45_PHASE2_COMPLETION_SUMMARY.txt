@@ -1,0 +1,30 @@
+================================================================================
+M4.5 PHASE 2: FREE THROW SYSTEM FIX - COMPLETION SUMMARY
+================================================================================
+
+ROOT CAUSE IDENTIFIED:
+  - Teams with identical player names (Player_PG_1, Player_SG_2, etc.)
+  - Stats aggregation used roster lookup to determine team
+  - Roster lookup ALWAYS matched home team
+  - Result: All FTA attributed to one team, dragging average down to 34%
+
+SOLUTION IMPLEMENTED:
+  1. Added offensive_team field to PossessionResult dataclass
+  2. Track which team (home or away) was on offense during possession
+  3. Updated stats aggregation to use offensive_team instead of roster lookup
+
+FILES MODIFIED:
+  - src/core/data_structures.py: Added offensive_team field
+  - src/systems/possession.py: Track offensive_team in all returns
+  - src/systems/quarter_simulation.py: Pass offensive_team_name
+  - src/systems/game_simulation.py: Use offensive_team for stats attribution
+
+VALIDATION RESULTS (20 games, seed 88888):
+  Before Fix: FT% = 34.0% (away teams 0 FTA)
+  After Fix: FT% = 68.6% (both teams getting FTA)
+
+  Home teams: 181/262 FTA (69.1%)
+  Away teams: 117/185 FTA (63.2%)
+  Combined: 298/447 FTA (66.7%)
+
+KEY IMPROVEMENTS:

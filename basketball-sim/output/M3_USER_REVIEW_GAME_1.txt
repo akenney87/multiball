@@ -1,0 +1,1261 @@
+================================================================================
+M3 USER REVIEW GAME 1 - CLOSE GAME SCENARIO
+================================================================================
+
+================================================================================
+                         FULL GAME - Warriors vs Lakers                         
+================================================================================
+
+================================================================================
+                        1ST QUARTER - Warriors vs Lakers                        
+================================================================================
+
+[12:00] Warriors possession (Score: 0-0)
+FOUL! Shooting foul on Lakers_5_C. Warriors_5_C to the line for 2 free throws. [Team fouls: 1] (Lakers_5_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Warriors_5_C makes 2/2 from the line.
+Score: 2-0
+
+[11:44] Lakers possession (Score: 2-0)
+Lakers_2_SG attempts a 3Pt. Contested by Warriors_2_SG (2.7 feet, MAN). Lakers_2_SG misses. Rebound secured by Warriors_5_C.
+
+[11:31] Warriors possession (Score: 2-0)
+Warriors_1_PG attempts a Midrange. Contested by Lakers_1_PG (2.4 feet, MAN). WARRIORS_1_PG MAKES IT!
+Score: 4-0
+
+[11:18] Lakers possession (Score: 4-0)
+Lakers_5_C attempts a Layup. Contested by Warriors_5_C (2.2 feet, MAN). LAKERS_5_C MAKES IT! Assist: Lakers_1_PG
+Score: 4-2
+
+[11:00] Warriors possession (Score: 4-2)
+Warriors_4_PF drives, picks up Lakers_4_PF. Help arrives from Lakers_1_PG! Warriors_4_PF attempts a Layup. Contested by Lakers_1_PG (2.8 feet, MAN). Warriors_4_PF misses. Offensive rebound by Warriors_5_C! Warriors_5_C puts it back in!
+Score: 6-2
+
+[10:41] Lakers possession (Score: 6-2)
+Lakers_3_SF drives, Warriors_3_SF stays with him. Lakers_3_SF attempts a Dunk. Contested by Warriors_3_SF (2.9 feet, MAN). LAKERS_3_SF MAKES IT! Assist: Lakers_1_PG
+Score: 6-4
+
+[10:27] Warriors possession (Score: 6-4)
+FOUL! Reach-in foul on Lakers_5_C during the drive. [Team fouls: 2] No free throws, side out. (Lakers_5_C: 2 personal fouls)
+
+[10:09] Lakers possession (Score: 6-4)
+Lakers_2_SG attempts a Layup. Contested by Warriors_2_SG (2.8 feet, MAN). LAKERS_2_SG MAKES IT! Assist: Lakers_5_C
+Score: 6-6
+
+[09:46] Warriors possession (Score: 6-6)
+Warriors_5_C attempts a 3Pt. Contested by Lakers_5_C (2.0 feet, MAN). WARRIORS_5_C MAKES IT!
+Score: 9-6
+
+[09:33] Lakers possession (Score: 9-6)
+Lakers_3_SF attempts a 3Pt. Contested by Warriors_3_SF (3.0 feet, MAN). Lakers_3_SF misses. Rebound secured by Warriors_5_C.
+
+[09:19] Warriors possession (Score: 9-6)
+Warriors_2_SG makes the Layup and draws the foul on Lakers_2_SG! And-1! Warriors_2_SG to the line for 1. [Team fouls: 3] (Lakers_2_SG: 1 personal fouls)   FT 1/1: MISS Warriors_2_SG makes 0/1 from the line.
+Score: 11-6
+
+[09:06] Lakers possession (Score: 11-6)
+Lakers_2_SG drives, Warriors_2_SG stays with him. Lakers_2_SG attempts a Layup. Contested by Warriors_2_SG (2.9 feet, MAN). LAKERS_2_SG MAKES IT! Assist: Lakers_3_SF
+Score: 11-8
+
+[08:46] Warriors possession (Score: 11-8)
+Warriors_2_SG drives and kicks out. Warriors_5_C attempts a 3Pt. Contested by Lakers_5_C (2.1 feet, MAN). Warriors_5_C misses. Rebound secured by Lakers_1_PG.
+
+[08:31] Lakers possession (Score: 11-8)
+Lakers_2_SG attempts a 3Pt. Contested by Warriors_2_SG (3.0 feet, MAN). Lakers_2_SG misses. Rebound secured by Warriors_2_SG.
+
+[08:17] Warriors possession (Score: 11-8)
+FOUL! Shooting foul on Lakers_3_SF. Warriors_3_SF to the line for 2 free throws. [Team fouls: 4] (Lakers_3_SF: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Warriors_3_SF makes 2/2 from the line.
+Score: 13-8
+
+[08:03] Lakers possession (Score: 13-8)
+Lakers_1_PG attempts a Midrange. Contested by Warriors_1_PG (3.0 feet, MAN). Lakers_1_PG misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF puts it back in!
+Score: 13-10
+
+[07:48] Warriors possession (Score: 13-10)
+Warriors_1_PG attempts a 3Pt. Contested by Lakers_1_PG (2.8 feet, MAN). Warriors_1_PG misses. Offensive rebound by Warriors_2_SG! Warriors_2_SG kicks it out.
+
+[07:27] Warriors possession (Score: 13-10)
+Warriors_4_PF attempts a 3Pt. Contested by Lakers_4_PF (3.2 feet, MAN). WARRIORS_4_PF MAKES IT! Assist: Warriors_1_PG
+Score: 16-10
+
+[07:05] Lakers possession (Score: 16-10)
+FOUL! Reach-in foul on Warriors_1_PG during the drive. [IN THE BONUS! 5 team fouls] Lakers_1_PG to the line for 2 free throws. (Warriors_1_PG: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Lakers_1_PG makes 1/2 from the line.
+Score: 16-11
+
+[06:44] Warriors possession (Score: 16-11)
+Warriors_2_SG attempts a 3Pt. Contested by Lakers_2_SG (3.7 feet, MAN). WARRIORS_2_SG MAKES IT! Assist: Warriors_4_PF
+Score: 19-11
+
+[06:31] Lakers possession (Score: 19-11)
+Lakers_1_PG drives to the basket... Lakers_1_PG loses the ball! TURNOVER!
+
+[06:17] Warriors possession (Score: 19-11)
+Warriors_2_SG attempts a 3Pt. Contested by Lakers_7_SG (3.4 feet, MAN). WARRIORS_2_SG MAKES IT! Assist: Warriors_1_PG
+Score: 22-11
+
+[06:17] Substitution (Warriors): Warriors_4_PF OUT (stamina: 59) → Warriors_8_SF IN (stamina)
+
+[06:17] Substitution (Lakers): Lakers_2_SG OUT (stamina: 58) → Lakers_7_SG IN (stamina)
+
+[05:58] Lakers possession (Score: 22-11)
+Lakers_4_PF attempts a Midrange. Contested by Warriors_5_C (2.6 feet, MAN). Lakers_4_PF misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF's putback is no good. Rebound secured by Warriors_5_C.
+
+[05:58] TIMEOUT - Lakers (stop opponent momentum) - 6 timeouts remaining
+
+[05:45] Warriors possession (Score: 22-11)
+Warriors_8_SF drives, Lakers_3_SF stays with him. Warriors_8_SF attempts a Dunk. Contested by Lakers_3_SF (2.5 feet, MAN). Warriors_8_SF misses. Offensive rebound by Warriors_5_C! Warriors_5_C puts it back in!
+Score: 24-11
+
+[05:33] Lakers possession (Score: 24-11)
+Lakers_4_PF attempts a Layup. Contested by Warriors_5_C (2.7 feet, MAN). LAKERS_4_PF MAKES IT! Assist: Lakers_1_PG
+Score: 24-13
+
+[05:19] Warriors possession (Score: 24-13)
+Warriors_5_C drives and kicks out. Warriors_5_C attempts a Midrange. Contested by Lakers_5_C (2.4 feet, MAN). Warriors_5_C misses. Offensive rebound by Warriors_5_C! Warriors_5_C's putback is no good. Offensive rebound by Warriors_5_C! Warriors_5_C kicks it out.
+
+[05:02] Warriors possession (Score: 24-13)
+Warriors_1_PG drives, picks up Lakers_1_PG. Help arrives from Lakers_3_SF! Warriors_1_PG attempts a Layup. Contested by Lakers_3_SF (2.9 feet, MAN). WARRIORS_1_PG MAKES IT! Assist: Warriors_5_C
+Score: 26-13
+
+[04:47] Lakers possession (Score: 26-13)
+Lakers_1_PG attempts a Midrange. Contested by Warriors_1_PG (3.3 feet, MAN). Lakers_1_PG misses. Offensive rebound by Lakers_5_C! Lakers_5_C puts it back in!
+Score: 26-15
+
+[04:27] Warriors possession (Score: 26-15)
+Warriors_1_PG loses the ball! Stripped by Lakers_1_PG! TURNOVER!
+
+[04:12] Lakers possession (Score: 26-15)
+Lakers_1_PG attempts a Layup. Contested by Warriors_6_PG (3.2 feet, MAN). Lakers_1_PG misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF puts it back in!
+Score: 26-17
+
+[04:12] Substitution (Warriors): Warriors_1_PG OUT (stamina: 59) → Warriors_6_PG IN (stamina)
+
+[04:12] Substitution (Warriors): Warriors_3_SF OUT (stamina: 59) → Warriors_9_PF IN (stamina)
+
+[04:12] Substitution (Lakers): Lakers_4_PF OUT (stamina: 60) → Lakers_8_SF IN (stamina)
+
+[03:53] Warriors possession (Score: 26-17)
+Warriors_6_PG drives, Lakers_1_PG stays with him. Warriors_6_PG attempts a Layup. Contested by Lakers_1_PG (3.1 feet, MAN). Warriors_6_PG misses. Offensive rebound by Warriors_5_C! Warriors_5_C puts it back in!
+Score: 28-17
+
+[03:39] Lakers possession (Score: 28-17)
+Lakers_7_SG attempts a Midrange. Contested by Warriors_2_SG (3.5 feet, MAN). Lakers_7_SG misses. Rebound secured by Warriors_8_SF.
+
+[03:25] Warriors possession (Score: 28-17)
+Warriors_8_SF attempts a Midrange. Contested by Lakers_8_SF (3.5 feet, MAN). WARRIORS_8_SF MAKES IT!
+Score: 30-17
+
+[03:25] Substitution (Warriors): Warriors_2_SG OUT (stamina: 58) → Warriors_7_SG IN (stamina)
+
+[03:25] Substitution (Warriors): Warriors_5_C OUT (stamina: 59) → Warriors_10_C IN (stamina)
+
+[03:25] Substitution (Lakers): Lakers_1_PG OUT (stamina: 59) → Lakers_6_PG IN (stamina)
+
+[03:25] Substitution (Lakers): Lakers_3_SF OUT (stamina: 62) → Lakers_9_PF IN (minutes)
+
+[03:25] Substitution (Lakers): Lakers_5_C OUT (stamina: 63) → Lakers_10_C IN (minutes)
+
+[03:06] Lakers possession (Score: 30-17)
+Lakers_9_PF drives to the basket... Lakers_9_PF loses the ball! TURNOVER!
+
+[02:46] Warriors possession (Score: 30-17)
+FOUL! Shooting foul on Lakers_6_PG. Warriors_6_PG to the line for 3 free throws. [BONUS: 6 team fouls] (Lakers_6_PG: 1 personal fouls)   FT 1/3: MISS   FT 2/3: GOOD   FT 3/3: GOOD Warriors_6_PG makes 2/3 from the line.
+Score: 32-17
+
+[02:30] Lakers possession (Score: 32-17)
+Lakers_10_C attempts a Midrange. Contested by Warriors_10_C (3.2 feet, MAN). LAKERS_10_C MAKES IT!
+Score: 32-19
+
+[02:16] Warriors possession (Score: 32-19)
+Warriors_9_PF attempts a 3Pt. Contested by Lakers_9_PF (3.0 feet, MAN). WARRIORS_9_PF MAKES IT! Assist: Warriors_10_C
+Score: 35-19
+
+[02:03] Lakers possession (Score: 35-19)
+Lakers_7_SG attempts a 3Pt. Contested by Warriors_7_SG (3.4 feet, MAN). LAKERS_7_SG MAKES IT! Assist: Lakers_6_PG
+Score: 35-22
+
+[01:46] Warriors possession (Score: 35-22)
+Warriors_9_PF attempts a 3Pt. Contested by Lakers_9_PF (3.0 feet, MAN). WARRIORS_9_PF MAKES IT! Assist: Warriors_6_PG
+Score: 38-22
+
+[01:32] Lakers possession (Score: 38-22)
+Lakers_8_SF attempts a 3Pt. Contested by Warriors_8_SF (3.5 feet, MAN). Lakers_8_SF misses. Rebound secured by Warriors_10_C.
+
+[01:13] Warriors possession (Score: 38-22)
+Warriors_4_PF attempts a 3Pt. Contested by Lakers_9_PF (3.0 feet, MAN). Warriors_4_PF misses. Offensive rebound by Warriors_7_SG! Warriors_7_SG kicks it out.
+
+[01:13] Substitution (Warriors): Warriors_8_SF OUT (stamina: 71) → Warriors_4_PF IN (minutes)
+
+[01:13] Substitution (Lakers): Lakers_7_SG OUT (stamina: 71) → Lakers_2_SG IN (minutes)
+
+[00:50] Warriors possession (Score: 38-22)
+Warriors_4_PF loses control of the ball! TURNOVER!
+
+[00:34] Lakers possession (Score: 38-22)
+Lakers_9_PF drives and kicks out. FOUL! Shooting foul on Warriors_4_PF. Lakers_9_PF to the line for 3 free throws. [BONUS: 7 team fouls] (Warriors_4_PF: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: MISS   FT 3/3: MISS Lakers_9_PF makes 1/3 from the line.
+Score: 38-23
+
+[00:34] Substitution (Warriors): Warriors_9_PF OUT (stamina: 77) → Warriors_8_SF IN (minutes)
+
+[00:13] Warriors possession (Score: 38-23)
+Warriors_6_PG attempts a Layup. Contested by Lakers_6_PG (3.6 feet, MAN). Warriors_6_PG misses. Offensive rebound by Warriors_4_PF! Warriors_4_PF's putback is no good. Offensive rebound by Warriors_4_PF! Warriors_4_PF kicks it out.
+
+================================================================================
+                              1ST QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Warriors 38, Lakers 23
+
+BOX SCORE:
+================================================================================
+
+Warriors
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Warriors_5_C            0    9    7    1   0   4/4   100.0     0/0   0.0
+Warriors_2_SG           0    6    2    0   0   2/2   100.0     0/0   0.0
+Warriors_9_PF           0    6    0    0   0   2/2   100.0     0/0   0.0
+Warriors_1_PG           0    4    0    2   0   2/2   100.0     0/0   0.0
+Warriors_4_PF           0    3    1    1   0   1/1   100.0     0/0   0.0
+Warriors_8_SF           0    2    1    0   0   1/1   100.0     0/0   0.0
+Warriors_10_C           0    0    1    1   0   0/0     0.0     0/0   0.0
+Warriors_6_PG           0    0    0    1   0   0/0     0.0     0/0   0.0
+Warriors_7_SG           0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 12/13 (92.3%), 3PT: 6/6 (100.0%), REB: 12 (7 off, 5 def), AST: 6, TO: 2
+TEAM FOULS: 0
+
+
+Lakers
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Lakers_3_SF             0    6    2    1   0   3/3   100.0     0/0   0.0
+Lakers_5_C              0    4    1    1   0   2/2   100.0     0/0   0.0
+Lakers_2_SG             0    4    0    0   0   2/2   100.0     0/0   0.0
+Lakers_7_SG             0    3    0    0   0   1/1   100.0     0/0   0.0
+Lakers_4_PF             0    2    0    0   0   1/1   100.0     0/0   0.0
+Lakers_10_C             0    2    0    0   0   1/1   100.0     0/0   0.0
+Lakers_1_PG             0    0    1    3   0   0/0     0.0     0/0   0.0
+Lakers_6_PG             0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 10/16 (62.5%), 3PT: 1/5 (20.0%), REB: 5 (4 off, 1 def), AST: 6, TO: 2
+TEAM FOULS: 7 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                        2ND QUARTER - Warriors vs Lakers                        
+================================================================================
+
+[12:00] Warriors possession (Score: 38-23)
+Warriors_4_PF attempts a Midrange. Contested by Lakers_4_PF (2.9 feet, MAN). Warriors_4_PF misses. Rebound secured by Lakers_4_PF.
+
+[12:00] Substitution (Warriors): Warriors_2_SG OUT (stamina: 68) → Warriors_7_SG IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_5_C OUT (stamina: 69) → Warriors_10_C IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_1_PG OUT (stamina: 69) → Lakers_6_PG IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_3_SF OUT (stamina: 72) → Lakers_9_PF IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_5_C OUT (stamina: 72) → Lakers_10_C IN (minutes)
+
+[11:41] Lakers possession (Score: 38-23)
+Lakers_8_SF attempts a Midrange. Contested by Warriors_4_PF (2.8 feet, MAN). Lakers_8_SF misses. Rebound secured by Warriors_6_PG.
+
+[11:41] Substitution (Warriors): Warriors_1_PG OUT (stamina: 70) → Warriors_6_PG IN (minutes)
+
+[11:41] Substitution (Warriors): Warriors_3_SF OUT (stamina: 70) → Warriors_9_PF IN (minutes)
+
+[11:41] Substitution (Lakers): Lakers_4_PF OUT (stamina: 71) → Lakers_8_SF IN (minutes)
+
+[11:28] Warriors possession (Score: 38-23)
+FOUL! Shooting foul on Lakers_10_C. Warriors_10_C to the line for 2 free throws. [Team fouls: 1] (Lakers_10_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Warriors_10_C makes 2/2 from the line.
+Score: 40-23
+
+[11:12] Lakers possession (Score: 40-23)
+Lakers_8_SF drives and kicks out. FOUL! Shooting foul on Warriors_10_C. Lakers_10_C to the line for 2 free throws. [Team fouls: 2] (Warriors_10_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Lakers_10_C makes 2/2 from the line.
+Score: 40-25
+
+[10:57] Warriors possession (Score: 40-25)
+Warriors_7_SG drives and kicks out. Warriors_4_PF makes the 3Pt and draws the foul on Lakers_9_PF! And-1! Warriors_4_PF to the line for 1. [Team fouls: 3] (Lakers_9_PF: 1 personal fouls)   FT 1/1: GOOD Warriors_4_PF makes 1/1 from the line.
+Score: 44-25
+
+[10:44] Lakers possession (Score: 44-25)
+FOUL! Shooting foul on Warriors_7_SG. Lakers_2_SG to the line for 2 free throws. [Team fouls: 4] (Warriors_7_SG: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Lakers_2_SG makes 2/2 from the line.
+Score: 44-27
+
+[10:33] Warriors possession (Score: 44-27)
+Warriors_6_PG attempts a Midrange. Contested by Lakers_6_PG (3.8 feet, MAN). Warriors_6_PG misses. Rebound secured by Lakers_10_C.
+
+[10:18] Lakers possession (Score: 44-27)
+Lakers_10_C attempts a Layup. Contested by Warriors_10_C (3.4 feet, MAN). Lakers_10_C misses. Rebound secured by Warriors_6_PG.
+
+[10:18] Substitution (Warriors): Warriors_4_PF OUT (stamina: 68) → Warriors_8_SF IN (minutes)
+
+[10:18] Substitution (Lakers): Lakers_2_SG OUT (stamina: 66) → Lakers_7_SG IN (minutes)
+
+[10:00] Warriors possession (Score: 44-27)
+Warriors_6_PG attempts a 3Pt. Contested by Lakers_1_PG (2.5 feet, MAN). WARRIORS_6_PG MAKES IT! Assist: Warriors_5_C
+Score: 47-27
+
+[10:00] Substitution (Warriors): Warriors_7_SG OUT (stamina: 73) → Warriors_1_PG IN (minutes)
+
+[10:00] Substitution (Warriors): Warriors_10_C OUT (stamina: 71) → Warriors_5_C IN (minutes)
+
+[10:00] Substitution (Lakers): Lakers_6_PG OUT (stamina: 71) → Lakers_1_PG IN (minutes)
+
+[10:00] Substitution (Lakers): Lakers_9_PF OUT (stamina: 72) → Lakers_3_SF IN (minutes)
+
+[10:00] Substitution (Lakers): Lakers_10_C OUT (stamina: 73) → Lakers_5_C IN (minutes)
+
+[09:50] Lakers possession (Score: 47-27)
+FOUL! Reach-in foul on Warriors_8_SF during the drive. [IN THE BONUS! 5 team fouls] Lakers_8_SF to the line for 2 free throws. (Warriors_8_SF: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Lakers_8_SF makes 1/2 from the line.
+Score: 47-28
+
+[09:34] Warriors possession (Score: 47-28)
+Warriors_1_PG attempts a 3Pt. Contested by Lakers_1_PG (2.6 feet, MAN). Warriors_1_PG misses. Rebound secured by Lakers_1_PG.
+
+[09:34] Substitution (Warriors): Warriors_6_PG OUT (stamina: 72) → Warriors_7_SG IN (minutes)
+
+[09:34] Substitution (Warriors): Warriors_9_PF OUT (stamina: 72) → Warriors_3_SF IN (minutes)
+
+[09:34] Substitution (Lakers): Lakers_8_SF OUT (stamina: 69) → Lakers_4_PF IN (minutes)
+
+[09:15] Lakers possession (Score: 47-28)
+Lakers_7_SG drives to the basket... Lakers_7_SG loses the ball! TURNOVER!
+
+[09:01] Warriors possession (Score: 47-28)
+Warriors_8_SF attempts a Layup. Contested by Lakers_3_SF (2.4 feet, MAN). Warriors_8_SF misses. Offensive rebound by Warriors_5_C! Warriors_5_C puts it back in!
+Score: 49-28
+
+[08:46] Lakers possession (Score: 49-28)
+Lakers_1_PG attempts a 3Pt. Contested by Warriors_1_PG (2.9 feet, MAN). Lakers_1_PG misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF's putback is no good. Offensive rebound by Lakers_3_SF! Lakers_3_SF kicks it out.
+
+[08:28] Lakers possession (Score: 49-28)
+Lakers_3_SF drives, Warriors_3_SF stays with him. Lakers_3_SF attempts a Dunk. Contested by Warriors_3_SF (3.0 feet, MAN). LAKERS_3_SF MAKES IT! Assist: Lakers_1_PG
+Score: 49-30
+
+[08:13] Warriors possession (Score: 49-30)
+Warriors_3_SF drives to the basket... Warriors_3_SF loses the ball! TURNOVER!
+
+[07:59] Lakers possession (Score: 49-30)
+Lakers_10_C drives, Warriors_10_C stays with him. Lakers_10_C attempts a Layup. Contested by Warriors_10_C (3.3 feet, MAN). Lakers_10_C misses. Offensive rebound by Lakers_4_PF! Lakers_4_PF puts it back in!
+Score: 49-32
+
+[07:59] Substitution (Warriors): Warriors_1_PG OUT (stamina: 66) → Warriors_2_SG IN (minutes)
+
+[07:59] Substitution (Warriors): Warriors_8_SF OUT (stamina: 67) → Warriors_9_PF IN (minutes)
+
+[07:59] Substitution (Warriors): Warriors_5_C OUT (stamina: 67) → Warriors_10_C IN (minutes)
+
+[07:59] Substitution (Lakers): Lakers_1_PG OUT (stamina: 67) → Lakers_6_PG IN (minutes)
+
+[07:59] Substitution (Lakers): Lakers_7_SG OUT (stamina: 70) → Lakers_2_SG IN (minutes)
+
+[07:59] Substitution (Lakers): Lakers_3_SF OUT (stamina: 69) → Lakers_9_PF IN (minutes)
+
+[07:59] Substitution (Lakers): Lakers_5_C OUT (stamina: 70) → Lakers_10_C IN (minutes)
+
+[07:44] Warriors possession (Score: 49-32)
+Warriors_7_SG attempts a 3Pt. Contested by Lakers_2_SG (3.3 feet, MAN). Warriors_7_SG misses. Offensive rebound by Warriors_3_SF! Warriors_3_SF's putback is no good. Rebound secured by Lakers_10_C.
+
+[07:30] Lakers possession (Score: 49-32)
+Lakers_9_PF drives and kicks out. Lakers_6_PG attempts a Midrange. Contested by Warriors_6_PG (3.3 feet, MAN). Lakers_6_PG misses. Rebound secured by Warriors_6_PG.
+
+[07:30] Substitution (Warriors): Warriors_7_SG OUT (stamina: 68) → Warriors_6_PG IN (minutes)
+
+[07:30] Substitution (Warriors): Warriors_3_SF OUT (stamina: 67) → Warriors_4_PF IN (minutes)
+
+[07:30] Substitution (Lakers): Lakers_4_PF OUT (stamina: 69) → Lakers_8_SF IN (minutes)
+
+[07:16] Warriors possession (Score: 49-32)
+Warriors_6_PG throws a bad pass! Stolen by Lakers_6_PG! TURNOVER!
+
+[06:55] Lakers possession (Score: 49-32)
+Lakers_9_PF attempts a Layup. Contested by Warriors_4_PF (2.8 feet, MAN). Lakers_9_PF misses. Offensive rebound by Lakers_2_SG! Lakers_2_SG kicks it out.
+
+[06:39] Lakers possession (Score: 49-32)
+FOUL! Shooting foul on Warriors_4_PF. Lakers_9_PF to the line for 3 free throws. [BONUS: 6 team fouls] (Warriors_4_PF: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Lakers_9_PF makes 3/3 from the line.
+Score: 49-35
+
+[06:24] Warriors possession (Score: 49-35)
+Warriors_4_PF drives, Lakers_9_PF stays with him. Warriors_4_PF attempts a Dunk. Contested by Lakers_9_PF (3.3 feet, MAN). Warriors_4_PF misses. Offensive rebound by Warriors_4_PF! Warriors_4_PF's putback is no good. Offensive rebound by Warriors_4_PF! Warriors_4_PF kicks it out.
+
+[06:12] Warriors possession (Score: 49-35)
+Warriors_6_PG attempts a 3Pt. Contested by Lakers_6_PG (3.9 feet, MAN). Warriors_6_PG misses. Offensive rebound by Warriors_2_SG! Warriors_2_SG kicks it out.
+
+[05:56] Warriors possession (Score: 49-35)
+Warriors_10_C drives, Lakers_10_C stays with him. Warriors_10_C attempts a Dunk. Contested by Lakers_10_C (3.5 feet, MAN). Warriors_10_C misses. Rebound secured by Lakers_9_PF.
+
+[05:39] Lakers possession (Score: 49-35)
+Lakers_8_SF attempts a 3Pt. Contested by Warriors_8_SF (3.5 feet, MAN). Lakers_8_SF misses. Rebound secured by Warriors_5_C.
+
+[05:39] Substitution (Warriors): Warriors_2_SG OUT (stamina: 69) → Warriors_7_SG IN (minutes)
+
+[05:39] Substitution (Warriors): Warriors_9_PF OUT (stamina: 68) → Warriors_8_SF IN (minutes)
+
+[05:39] Substitution (Warriors): Warriors_10_C OUT (stamina: 68) → Warriors_5_C IN (minutes)
+
+[05:39] Substitution (Lakers): Lakers_6_PG OUT (stamina: 68) → Lakers_7_SG IN (minutes)
+
+[05:39] Substitution (Lakers): Lakers_2_SG OUT (stamina: 64) → Lakers_1_PG IN (minutes)
+
+[05:39] Substitution (Lakers): Lakers_9_PF OUT (stamina: 69) → Lakers_3_SF IN (minutes)
+
+[05:39] Substitution (Lakers): Lakers_10_C OUT (stamina: 70) → Lakers_5_C IN (minutes)
+
+[05:19] Warriors possession (Score: 49-35)
+Warriors_1_PG attempts a 3Pt. Contested by Lakers_1_PG (2.6 feet, MAN). WARRIORS_1_PG MAKES IT! Assist: Warriors_8_SF
+Score: 52-35
+
+[05:19] Substitution (Warriors): Warriors_6_PG OUT (stamina: 70) → Warriors_1_PG IN (minutes)
+
+[05:19] Substitution (Warriors): Warriors_4_PF OUT (stamina: 68) → Warriors_3_SF IN (minutes)
+
+[05:19] Substitution (Lakers): Lakers_8_SF OUT (stamina: 67) → Lakers_4_PF IN (minutes)
+
+[05:03] Lakers possession (Score: 52-35)
+Lakers_5_C makes the Dunk and draws the foul on Warriors_5_C! And-1! Lakers_5_C to the line for 1. [BONUS: 7 team fouls] (Warriors_5_C: 1 personal fouls)   FT 1/1: MISS Lakers_5_C makes 0/1 from the line.
+Score: 52-37
+
+[04:49] Warriors possession (Score: 52-37)
+Warriors_7_SG drives, picks up Lakers_7_SG. Help arrives from Lakers_3_SF! Warriors_7_SG attempts a Dunk. Contested by Lakers_3_SF (3.6 feet, MAN). WARRIORS_7_SG MAKES IT! Assist: Warriors_3_SF
+Score: 54-37
+
+[04:30] Lakers possession (Score: 54-37)
+Lakers_4_PF drives and kicks out. Lakers_1_PG attempts a Midrange. Contested by Warriors_1_PG (2.9 feet, MAN). Lakers_1_PG misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF puts it back in!
+Score: 54-39
+
+[04:14] Warriors possession (Score: 54-39)
+Warriors_7_SG attempts a Midrange. Contested by Lakers_7_SG (3.7 feet, MAN). Warriors_7_SG misses. Offensive rebound by Warriors_1_PG! Warriors_1_PG kicks it out.
+
+[03:55] Warriors possession (Score: 54-39)
+Warriors_8_SF loses the ball! Stripped by Lakers_3_SF! TURNOVER!
+
+[03:42] Lakers possession (Score: 54-39)
+Lakers_3_SF drives to the basket... Lakers_3_SF loses the ball! TURNOVER!
+
+[03:24] Warriors possession (Score: 54-39)
+Warriors_1_PG drives, Lakers_6_PG stays with him. Warriors_1_PG attempts a Dunk. Contested by Lakers_6_PG (3.7 feet, MAN). WARRIORS_1_PG MAKES IT! Assist: Warriors_6_PG
+Score: 56-39
+
+[03:24] Substitution (Warriors): Warriors_7_SG OUT (stamina: 66) → Warriors_6_PG IN (minutes)
+
+[03:24] Substitution (Warriors): Warriors_8_SF OUT (stamina: 67) → Warriors_9_PF IN (minutes)
+
+[03:24] Substitution (Warriors): Warriors_5_C OUT (stamina: 67) → Warriors_10_C IN (minutes)
+
+[03:24] Substitution (Lakers): Lakers_7_SG OUT (stamina: 69) → Lakers_6_PG IN (minutes)
+
+[03:24] Substitution (Lakers): Lakers_1_PG OUT (stamina: 65) → Lakers_2_SG IN (minutes)
+
+[03:24] Substitution (Lakers): Lakers_3_SF OUT (stamina: 67) → Lakers_9_PF IN (minutes)
+
+[03:24] Substitution (Lakers): Lakers_5_C OUT (stamina: 69) → Lakers_10_C IN (minutes)
+
+[03:10] Lakers possession (Score: 56-39)
+Lakers_2_SG drives, Warriors_1_PG stays with him. Lakers_2_SG attempts a Layup. Contested by Warriors_1_PG (3.1 feet, MAN). LAKERS_2_SG MAKES IT!
+Score: 56-41
+
+[02:55] Warriors possession (Score: 56-41)
+Warriors_9_PF makes the Dunk and draws the foul on Lakers_4_PF! And-1! Warriors_9_PF to the line for 1. [BONUS: 8 team fouls] (Lakers_4_PF: 1 personal fouls)   FT 1/1: GOOD Warriors_9_PF makes 1/1 from the line.
+Score: 59-41
+
+[02:42] Lakers possession (Score: 59-41)
+Lakers_6_PG attempts a Layup. Contested by Warriors_1_PG (3.1 feet, MAN). Lakers_6_PG misses. Rebound secured by Warriors_6_PG.
+
+[02:32] Warriors possession (Score: 59-41)
+Warriors_6_PG attempts a 3Pt. Contested by Lakers_6_PG (3.8 feet, MAN). Warriors_6_PG misses. Rebound secured by Lakers_9_PF.
+
+[02:32] Substitution (Warriors): Warriors_1_PG OUT (stamina: 63) → Warriors_2_SG IN (minutes)
+
+[02:32] Substitution (Warriors): Warriors_3_SF OUT (stamina: 62) → Warriors_4_PF IN (minutes)
+
+[02:32] Substitution (Lakers): Lakers_4_PF OUT (stamina: 65) → Lakers_8_SF IN (minutes)
+
+[02:19] Lakers possession (Score: 59-41)
+Lakers_2_SG makes the 3Pt and draws the foul on Warriors_2_SG! And-1! Lakers_2_SG to the line for 1. [BONUS: 9 team fouls] (Warriors_2_SG: 1 personal fouls)   FT 1/1: GOOD Lakers_2_SG makes 1/1 from the line.
+Score: 59-45
+
+[02:07] Warriors possession (Score: 59-45)
+FOUL! Shooting foul on Lakers_10_C. Warriors_10_C to the line for 2 free throws. [BONUS: 10 team fouls] (Lakers_10_C: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Warriors_10_C makes 2/2 from the line.
+Score: 61-45
+
+[01:48] Lakers possession (Score: 61-45)
+Lakers_9_PF drives, Warriors_4_PF stays with him. Lakers_9_PF attempts a Dunk. Contested by Warriors_4_PF (2.8 feet, MAN). LAKERS_9_PF MAKES IT!
+Score: 61-47
+
+[01:31] Warriors possession (Score: 61-47)
+Warriors_9_PF attempts a 3Pt. Contested by Lakers_9_PF (3.4 feet, MAN). WARRIORS_9_PF MAKES IT! Assist: Warriors_6_PG
+Score: 64-47
+
+[01:10] Lakers possession (Score: 64-47)
+FOUL! Shooting foul on Warriors_4_PF. Lakers_9_PF to the line for 3 free throws. [BONUS: 11 team fouls] (Warriors_4_PF: 2 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Lakers_9_PF makes 3/3 from the line.
+Score: 64-50
+
+[00:52] Warriors possession (Score: 64-50)
+Warriors_6_PG attempts a Layup. Contested by Lakers_6_PG (4.0 feet, MAN). Warriors_6_PG misses. Rebound secured by Lakers_10_C.
+
+[00:34] Lakers possession (Score: 64-50)
+Lakers_5_C drives to the basket... Lakers_5_C loses the ball! TURNOVER!
+
+[00:34] Substitution (Warriors): Warriors_6_PG OUT (stamina: 65) → Warriors_7_SG IN (minutes)
+
+[00:34] Substitution (Warriors): Warriors_9_PF OUT (stamina: 65) → Warriors_8_SF IN (minutes)
+
+[00:34] Substitution (Warriors): Warriors_10_C OUT (stamina: 64) → Warriors_5_C IN (minutes)
+
+[00:34] Substitution (Lakers): Lakers_6_PG OUT (stamina: 65) → Lakers_7_SG IN (minutes)
+
+[00:34] Substitution (Lakers): Lakers_2_SG OUT (stamina: 60) → Lakers_1_PG IN (minutes)
+
+[00:34] Substitution (Lakers): Lakers_9_PF OUT (stamina: 65) → Lakers_3_SF IN (minutes)
+
+[00:34] Substitution (Lakers): Lakers_10_C OUT (stamina: 66) → Lakers_5_C IN (minutes)
+
+[00:21] Warriors possession (Score: 64-50)
+Warriors_8_SF drives, picks up Lakers_3_SF. Help arrives from Lakers_1_PG! Warriors_8_SF attempts a Layup. Contested by Lakers_1_PG (2.4 feet, MAN). WARRIORS_8_SF MAKES IT! Assist: Warriors_5_C
+Score: 66-50
+
+[00:21] Substitution (Warriors): Warriors_2_SG OUT (stamina: 69) → Warriors_1_PG IN (minutes)
+
+[00:21] Substitution (Warriors): Warriors_4_PF OUT (stamina: 68) → Warriors_3_SF IN (minutes)
+
+[00:21] Substitution (Lakers): Lakers_8_SF OUT (stamina: 67) → Lakers_4_PF IN (minutes)
+
+[00:06] Lakers possession (Score: 66-50)
+Lakers_3_SF attempts a Midrange. Contested by Warriors_3_SF (3.2 feet, MAN). Lakers_3_SF misses. Rebound secured by Warriors_5_C.
+
+================================================================================
+                              2ND QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Warriors 28, Lakers 27
+
+BOX SCORE:
+================================================================================
+
+Warriors
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Warriors_1_PG           0    5    1    0   0   2/2   100.0     0/0   0.0
+Warriors_6_PG           0    3    4    2   0   1/1   100.0     0/0   0.0
+Warriors_9_PF           0    3    0    0   0   1/1   100.0     0/0   0.0
+Warriors_5_C            0    2    3    2   0   1/1   100.0     0/0   0.0
+Warriors_8_SF           0    2    0    1   0   1/1   100.0     0/0   0.0
+Warriors_7_SG           0    2    0    0   0   1/1   100.0     0/0   0.0
+Warriors_4_PF           0    0    1    0   0   0/0     0.0     0/0   0.0
+Warriors_2_SG           0    0    1    0   0   0/0     0.0     0/0   0.0
+Warriors_3_SF           0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 7/14 (50.0%), 3PT: 3/6 (50.0%), REB: 11 (5 off, 6 def), AST: 6, TO: 3
+TEAM FOULS: 0
+
+
+Lakers
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Lakers_3_SF             0    4    2    0   0   2/2   100.0     0/0   0.0
+Lakers_4_PF             0    2    2    0   0   1/1   100.0     0/0   0.0
+Lakers_2_SG             0    2    1    0   0   1/1   100.0     0/0   0.0
+Lakers_9_PF             0    2    2    0   0   1/1   100.0     0/0   0.0
+Lakers_10_C             0    0    3    0   0   0/0     0.0     0/0   0.0
+Lakers_1_PG             0    0    1    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 5/11 (45.5%), 3PT: 0/1 (0.0%), REB: 10 (4 off, 6 def), AST: 1, TO: 3
+TEAM FOULS: 11 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                        3RD QUARTER - Warriors vs Lakers                        
+================================================================================
+
+[12:00] Warriors possession (Score: 66-50)
+Warriors_8_SF drives, Lakers_8_SF stays with him. Warriors_8_SF attempts a Dunk. Contested by Lakers_8_SF (3.5 feet, MAN). WARRIORS_8_SF MAKES IT! Assist: Warriors_9_PF
+Score: 68-50
+
+[12:00] Substitution (Warriors): Warriors_1_PG OUT (stamina: 100) → Warriors_6_PG IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_2_SG OUT (stamina: 100) → Warriors_7_SG IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_3_SF OUT (stamina: 100) → Warriors_8_SF IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_4_PF OUT (stamina: 100) → Warriors_9_PF IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_5_C OUT (stamina: 100) → Warriors_10_C IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_1_PG OUT (stamina: 100) → Lakers_6_PG IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_2_SG OUT (stamina: 100) → Lakers_7_SG IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_3_SF OUT (stamina: 100) → Lakers_8_SF IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_4_PF OUT (stamina: 100) → Lakers_9_PF IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_5_C OUT (stamina: 100) → Lakers_10_C IN (minutes)
+
+[11:48] Lakers possession (Score: 68-50)
+Lakers_10_C attempts a 3Pt. Contested by Warriors_10_C (3.2 feet, MAN). LAKERS_10_C MAKES IT! Assist: Lakers_8_SF
+Score: 68-53
+
+[11:36] Warriors possession (Score: 68-53)
+Warriors_7_SG attempts a 3Pt. Contested by Lakers_7_SG (3.4 feet, MAN). WARRIORS_7_SG MAKES IT! Assist: Warriors_9_PF
+Score: 71-53
+
+[11:25] Lakers possession (Score: 71-53)
+Lakers_8_SF throws a bad pass! Stolen by Warriors_8_SF! TURNOVER!
+
+[11:07] Warriors possession (Score: 71-53)
+Warriors_8_SF drives to the basket... Warriors_8_SF loses the ball! TURNOVER!
+
+[10:53] Lakers possession (Score: 71-53)
+Lakers_9_PF drives, picks up Warriors_9_PF. Help arrives from Warriors_6_PG! Lakers_9_PF attempts a Layup. Contested by Warriors_6_PG (3.2 feet, MAN). LAKERS_9_PF MAKES IT! Assist: Lakers_10_C
+Score: 71-55
+
+[10:36] Warriors possession (Score: 71-55)
+Warriors_8_SF attempts a 3Pt. Contested by Lakers_8_SF (3.5 feet, MAN). Warriors_8_SF misses. Rebound secured by Lakers_10_C.
+
+[10:21] Lakers possession (Score: 71-55)
+Lakers_9_PF attempts a Midrange. Contested by Warriors_9_PF (3.2 feet, MAN). Lakers_9_PF misses. Rebound secured by Warriors_7_SG.
+
+[10:02] Warriors possession (Score: 71-55)
+Warriors_10_C drives, picks up Lakers_10_C. Help arrives from Lakers_7_SG! Warriors_10_C attempts a Layup. Contested by Lakers_7_SG (3.2 feet, MAN). WARRIORS_10_C MAKES IT!
+Score: 73-55
+
+[09:48] Lakers possession (Score: 73-55)
+Lakers_9_PF attempts a 3Pt. Contested by Warriors_9_PF (3.2 feet, MAN). LAKERS_9_PF MAKES IT! Assist: Lakers_6_PG
+Score: 73-58
+
+[09:32] Warriors possession (Score: 73-58)
+Warriors_9_PF attempts a 3Pt. Contested by Lakers_9_PF (3.0 feet, MAN). Warriors_9_PF misses. Offensive rebound by Warriors_8_SF! Warriors_8_SF puts it back in!
+Score: 75-58
+
+[09:14] Lakers possession (Score: 75-58)
+Lakers_10_C makes the Midrange and draws the foul on Warriors_10_C! And-1! Lakers_10_C to the line for 1. [Team fouls: 1] (Warriors_10_C: 1 personal fouls)   FT 1/1: GOOD Lakers_10_C makes 1/1 from the line.
+Score: 75-61
+
+[08:53] Warriors possession (Score: 75-61)
+FOUL! Shooting foul on Lakers_6_PG. Warriors_6_PG to the line for 2 free throws. [Team fouls: 2] (Lakers_6_PG: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Warriors_6_PG makes 2/2 from the line.
+Score: 77-61
+
+[08:38] Lakers possession (Score: 77-61)
+Lakers_9_PF drives to the basket... Lakers_9_PF loses the ball! TURNOVER!
+
+[08:21] Warriors possession (Score: 77-61)
+Warriors_2_SG drives and kicks out. FOUL! Shooting foul on Lakers_3_SF. Warriors_3_SF to the line for 3 free throws. [Team fouls: 3] (Lakers_3_SF: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Warriors_3_SF makes 3/3 from the line.
+Score: 80-61
+
+[08:21] Substitution (Warriors): Warriors_6_PG OUT (stamina: 89) → Warriors_1_PG IN (minutes)
+
+[08:21] Substitution (Warriors): Warriors_7_SG OUT (stamina: 89) → Warriors_2_SG IN (minutes)
+
+[08:21] Substitution (Warriors): Warriors_8_SF OUT (stamina: 89) → Warriors_3_SF IN (minutes)
+
+[08:21] Substitution (Warriors): Warriors_9_PF OUT (stamina: 89) → Warriors_4_PF IN (minutes)
+
+[08:21] Substitution (Warriors): Warriors_10_C OUT (stamina: 89) → Warriors_5_C IN (minutes)
+
+[08:21] Substitution (Lakers): Lakers_6_PG OUT (stamina: 89) → Lakers_1_PG IN (minutes)
+
+[08:21] Substitution (Lakers): Lakers_7_SG OUT (stamina: 89) → Lakers_2_SG IN (minutes)
+
+[08:21] Substitution (Lakers): Lakers_8_SF OUT (stamina: 89) → Lakers_3_SF IN (minutes)
+
+[08:21] Substitution (Lakers): Lakers_9_PF OUT (stamina: 89) → Lakers_4_PF IN (minutes)
+
+[08:21] Substitution (Lakers): Lakers_10_C OUT (stamina: 89) → Lakers_5_C IN (minutes)
+
+[08:03] Lakers possession (Score: 80-61)
+Lakers_1_PG commits an offensive foul! Warriors_1_PG drew the charge! TURNOVER!
+
+[07:45] Warriors possession (Score: 80-61)
+FOUL! Shooting foul on Lakers_5_C. Warriors_5_C to the line for 2 free throws. [Team fouls: 4] (Lakers_5_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Warriors_5_C makes 1/2 from the line.
+Score: 81-61
+
+[07:31] Lakers possession (Score: 81-61)
+Lakers_2_SG drives to the basket... Lakers_2_SG loses the ball! TURNOVER!
+
+[07:17] Warriors possession (Score: 81-61)
+FOUL! Shooting foul on Lakers_5_C. Warriors_5_C to the line for 2 free throws. [BONUS: 5 team fouls] (Lakers_5_C: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Warriors_5_C makes 2/2 from the line.
+Score: 83-61
+
+[07:02] Lakers possession (Score: 83-61)
+Lakers_4_PF makes the 3Pt and draws the foul on Warriors_4_PF! And-1! Lakers_4_PF to the line for 1. [BONUS: 6 team fouls] (Warriors_4_PF: 1 personal fouls)   FT 1/1: MISS Lakers_4_PF makes 0/1 from the line.
+Score: 83-64
+
+[06:43] Warriors possession (Score: 83-64)
+Warriors_1_PG drives to the basket... Warriors_1_PG loses the ball! TURNOVER!
+
+[06:25] Lakers possession (Score: 83-64)
+Lakers_2_SG attempts a 3Pt. Contested by Warriors_2_SG (2.7 feet, MAN). Lakers_2_SG misses. Rebound secured by Warriors_5_C.
+
+[06:13] Warriors possession (Score: 83-64)
+Warriors_1_PG attempts a 3Pt. Contested by Lakers_1_PG (2.4 feet, MAN). Warriors_1_PG misses. Rebound secured by Lakers_3_SF.
+
+[06:13] Substitution (Warriors): Warriors_1_PG OUT (stamina: 93) → Warriors_6_PG IN (minutes)
+
+[06:13] Substitution (Warriors): Warriors_2_SG OUT (stamina: 93) → Warriors_1_PG IN (minutes)
+
+[06:13] Substitution (Warriors): Warriors_3_SF OUT (stamina: 93) → Warriors_8_SF IN (minutes)
+
+[06:13] Substitution (Warriors): Warriors_4_PF OUT (stamina: 94) → Warriors_3_SF IN (minutes)
+
+[06:13] Substitution (Warriors): Warriors_5_C OUT (stamina: 94) → Warriors_10_C IN (minutes)
+
+[06:13] Substitution (Lakers): Lakers_1_PG OUT (stamina: 93) → Lakers_6_PG IN (minutes)
+
+[06:13] Substitution (Lakers): Lakers_2_SG OUT (stamina: 93) → Lakers_1_PG IN (minutes)
+
+[06:13] Substitution (Lakers): Lakers_3_SF OUT (stamina: 93) → Lakers_8_SF IN (minutes)
+
+[06:13] Substitution (Lakers): Lakers_4_PF OUT (stamina: 94) → Lakers_3_SF IN (minutes)
+
+[06:13] Substitution (Lakers): Lakers_5_C OUT (stamina: 94) → Lakers_10_C IN (minutes)
+
+[05:56] Lakers possession (Score: 83-64)
+Lakers_1_PG attempts a 3Pt. Contested by Warriors_1_PG (2.5 feet, MAN). Lakers_1_PG misses. Rebound secured by Warriors_8_SF.
+
+[05:39] Warriors possession (Score: 83-64)
+Warriors_3_SF attempts a Layup. Contested by Lakers_3_SF (2.1 feet, MAN). WARRIORS_3_SF MAKES IT!
+Score: 85-64
+
+[05:24] Lakers possession (Score: 85-64)
+Lakers_3_SF attempts a Layup. Contested by Warriors_3_SF (2.8 feet, MAN). Lakers_3_SF misses. Rebound secured by Warriors_1_PG.
+
+[05:11] Warriors possession (Score: 85-64)
+Warriors_10_C drives, picks up Lakers_10_C. Help arrives from Lakers_1_PG! Warriors_10_C attempts a Dunk. Contested by Lakers_1_PG (3.2 feet, MAN). Warriors_10_C misses. Rebound secured by Lakers_3_SF.
+
+[04:53] Lakers possession (Score: 85-64)
+Lakers_6_PG attempts a Midrange. Contested by Warriors_1_PG (2.5 feet, MAN). Lakers_6_PG misses. Offensive rebound by Lakers_1_PG! Lakers_1_PG kicks it out.
+
+[04:39] Lakers possession (Score: 85-64)
+Lakers_8_SF attempts a Midrange. Contested by Warriors_3_SF (2.8 feet, MAN). Lakers_8_SF misses. Rebound secured by Warriors_1_PG.
+
+[04:18] Warriors possession (Score: 85-64)
+FOUL! Shooting foul on Lakers_3_SF. Warriors_8_SF to the line for 3 free throws. [BONUS: 7 team fouls] (Lakers_3_SF: 2 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Warriors_8_SF makes 3/3 from the line.
+Score: 88-64
+
+[03:55] Lakers possession (Score: 88-64)
+Lakers_1_PG attempts a 3Pt. Contested by Warriors_1_PG (2.5 feet, MAN). Lakers_1_PG misses. Rebound secured by Warriors_3_SF.
+
+[03:36] Warriors possession (Score: 88-64)
+Warriors_7_SG drives and kicks out. Warriors_9_PF attempts a 3Pt. Contested by Lakers_4_PF (2.7 feet, MAN). Warriors_9_PF misses. Rebound secured by Lakers_4_PF.
+
+[03:36] Substitution (Warriors): Warriors_6_PG OUT (stamina: 83) → Warriors_2_SG IN (minutes)
+
+[03:36] Substitution (Warriors): Warriors_1_PG OUT (stamina: 85) → Warriors_7_SG IN (minutes)
+
+[03:36] Substitution (Warriors): Warriors_8_SF OUT (stamina: 83) → Warriors_4_PF IN (minutes)
+
+[03:36] Substitution (Warriors): Warriors_3_SF OUT (stamina: 85) → Warriors_9_PF IN (minutes)
+
+[03:36] Substitution (Warriors): Warriors_10_C OUT (stamina: 83) → Warriors_5_C IN (minutes)
+
+[03:36] Substitution (Lakers): Lakers_6_PG OUT (stamina: 83) → Lakers_2_SG IN (minutes)
+
+[03:36] Substitution (Lakers): Lakers_1_PG OUT (stamina: 85) → Lakers_7_SG IN (minutes)
+
+[03:36] Substitution (Lakers): Lakers_8_SF OUT (stamina: 83) → Lakers_4_PF IN (minutes)
+
+[03:36] Substitution (Lakers): Lakers_3_SF OUT (stamina: 85) → Lakers_9_PF IN (minutes)
+
+[03:36] Substitution (Lakers): Lakers_10_C OUT (stamina: 83) → Lakers_5_C IN (minutes)
+
+[03:21] Lakers possession (Score: 88-64)
+Lakers_2_SG attempts a 3Pt. Contested by Warriors_2_SG (2.7 feet, MAN). Lakers_2_SG misses. Rebound secured by Warriors_2_SG.
+
+[03:03] Warriors possession (Score: 88-64)
+Warriors_7_SG attempts a Midrange. Contested by Lakers_2_SG (3.0 feet, MAN). Warriors_7_SG misses. Offensive rebound by Warriors_2_SG! Warriors_2_SG kicks it out.
+
+[02:48] Warriors possession (Score: 88-64)
+Warriors_7_SG attempts a Midrange. Contested by Lakers_2_SG (3.0 feet, MAN). WARRIORS_7_SG MAKES IT!
+Score: 90-64
+
+[02:32] Lakers possession (Score: 90-64)
+Lakers_7_SG attempts a 3Pt. Contested by Warriors_2_SG (2.7 feet, MAN). Lakers_7_SG misses. Rebound secured by Warriors_5_C.
+
+[02:32] TIMEOUT - Lakers (stop opponent momentum) - 5 timeouts remaining
+
+[02:10] Warriors possession (Score: 90-64)
+FOUL! Shooting foul on Lakers_2_SG. Warriors_2_SG to the line for 3 free throws. [BONUS: 8 team fouls] (Lakers_2_SG: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Warriors_2_SG makes 3/3 from the line.
+Score: 93-64
+
+[01:58] Lakers possession (Score: 93-64)
+FOUL! Reach-in foul on Warriors_5_C during the drive. [IN THE BONUS! 9 team fouls] Lakers_5_C to the line for 2 free throws. (Warriors_5_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Lakers_5_C makes 2/2 from the line.
+Score: 93-66
+
+[01:41] Warriors possession (Score: 93-66)
+Warriors_7_SG drives, Lakers_2_SG stays with him. Warriors_7_SG attempts a Dunk. Contested by Lakers_2_SG (3.0 feet, MAN). Warriors_7_SG misses. Rebound secured by Lakers_2_SG.
+
+[01:29] Lakers possession (Score: 93-66)
+Lakers_3_SF commits an offensive foul! Warriors_3_SF drew the charge! TURNOVER!
+
+[01:29] Substitution (Warriors): Warriors_2_SG OUT (stamina: 92) → Warriors_1_PG IN (minutes)
+
+[01:29] Substitution (Warriors): Warriors_7_SG OUT (stamina: 91) → Warriors_2_SG IN (minutes)
+
+[01:29] Substitution (Warriors): Warriors_4_PF OUT (stamina: 93) → Warriors_3_SF IN (minutes)
+
+[01:29] Substitution (Warriors): Warriors_9_PF OUT (stamina: 91) → Warriors_4_PF IN (minutes)
+
+[01:29] Substitution (Warriors): Warriors_5_C OUT (stamina: 93) → Warriors_10_C IN (minutes)
+
+[01:29] Substitution (Lakers): Lakers_2_SG OUT (stamina: 92) → Lakers_1_PG IN (minutes)
+
+[01:29] Substitution (Lakers): Lakers_7_SG OUT (stamina: 91) → Lakers_2_SG IN (minutes)
+
+[01:29] Substitution (Lakers): Lakers_4_PF OUT (stamina: 93) → Lakers_3_SF IN (minutes)
+
+[01:29] Substitution (Lakers): Lakers_9_PF OUT (stamina: 91) → Lakers_4_PF IN (minutes)
+
+[01:29] Substitution (Lakers): Lakers_5_C OUT (stamina: 93) → Lakers_10_C IN (minutes)
+
+[01:11] Warriors possession (Score: 93-66)
+Warriors_2_SG attempts a 3Pt. Contested by Lakers_2_SG (3.0 feet, MAN). Warriors_2_SG misses. Rebound secured by Lakers_3_SF.
+
+[00:57] Lakers possession (Score: 93-66)
+Lakers_2_SG attempts a Midrange. Contested by Warriors_2_SG (2.7 feet, MAN). Lakers_2_SG misses. Rebound secured by Warriors_2_SG.
+
+[00:42] Warriors possession (Score: 93-66)
+Warriors_1_PG loses the ball! Stripped by Lakers_1_PG! TURNOVER!
+
+[00:27] Lakers possession (Score: 93-66)
+Lakers_4_PF attempts a 3Pt. Contested by Warriors_4_PF (2.6 feet, MAN). Lakers_4_PF misses. Rebound secured by Warriors_2_SG.
+
+[00:05] Warriors possession (Score: 93-66)
+Warriors_10_C drives, Lakers_10_C stays with him. Warriors_10_C attempts a Dunk. Contested by Lakers_10_C (3.2 feet, MAN). WARRIORS_10_C MAKES IT!
+Score: 95-66
+
+================================================================================
+                              3RD QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Warriors 29, Lakers 16
+
+BOX SCORE:
+================================================================================
+
+Warriors
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Warriors_7_SG           0    5    1    0   0   2/2   100.0     0/0   0.0
+Warriors_8_SF           0    4    2    0   0   2/2   100.0     0/0   0.0
+Warriors_10_C           0    4    0    0   0   2/2   100.0     0/0   0.0
+Warriors_3_SF           0    2    1    0   0   1/1   100.0     0/0   0.0
+Warriors_9_PF           0    0    0    2   0   0/0     0.0     0/0   0.0
+Warriors_5_C            0    0    2    0   0   0/0     0.0     0/0   0.0
+Warriors_1_PG           0    0    2    0   0   0/0     0.0     0/0   0.0
+Warriors_2_SG           0    0    4    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 7/13 (53.8%), 3PT: 2/5 (40.0%), REB: 12 (2 off, 10 def), AST: 2, TO: 3
+TEAM FOULS: 0
+
+
+Lakers
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Lakers_9_PF             0    5    0    0   0   2/2   100.0     0/0   0.0
+Lakers_10_C             0    3    1    1   0   1/1   100.0     0/0   0.0
+Lakers_8_SF             0    0    0    1   0   0/0     0.0     0/0   0.0
+Lakers_6_PG             0    0    0    1   0   0/0     0.0     0/0   0.0
+Lakers_3_SF             0    0    3    0   0   0/0     0.0     0/0   0.0
+Lakers_1_PG             0    0    1    0   0   0/0     0.0     0/0   0.0
+Lakers_4_PF             0    0    1    0   0   0/0     0.0     0/0   0.0
+Lakers_2_SG             0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 3/13 (23.1%), 3PT: 2/8 (25.0%), REB: 7 (1 off, 6 def), AST: 3, TO: 5
+TEAM FOULS: 9 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                        4TH QUARTER - Warriors vs Lakers                        
+================================================================================
+
+[12:00] Warriors possession (Score: 95-66)
+Warriors_9_PF drives to the basket... Warriors_9_PF loses the ball! TURNOVER!
+
+[12:00] Substitution (Warriors): Warriors_1_PG OUT (stamina: 86) → Warriors_7_SG IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_2_SG OUT (stamina: 86) → Warriors_6_PG IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_3_SF OUT (stamina: 86) → Warriors_9_PF IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_4_PF OUT (stamina: 89) → Warriors_8_SF IN (minutes)
+
+[12:00] Substitution (Warriors): Warriors_5_C OUT (stamina: 94) → Warriors_10_C IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_1_PG OUT (stamina: 86) → Lakers_7_SG IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_2_SG OUT (stamina: 87) → Lakers_6_PG IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_3_SF OUT (stamina: 86) → Lakers_9_PF IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_4_PF OUT (stamina: 89) → Lakers_8_SF IN (minutes)
+
+[12:00] Substitution (Lakers): Lakers_5_C OUT (stamina: 94) → Lakers_10_C IN (minutes)
+
+[11:47] Lakers possession (Score: 95-66)
+FOUL! Shooting foul on Warriors_7_SG. Lakers_7_SG to the line for 3 free throws. [Team fouls: 1] (Warriors_7_SG: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Lakers_7_SG makes 3/3 from the line.
+Score: 95-69
+
+[11:32] Warriors possession (Score: 95-69)
+Warriors_8_SF drives, Lakers_8_SF stays with him. Warriors_8_SF attempts a Dunk. Contested by Lakers_8_SF (3.5 feet, MAN). WARRIORS_8_SF MAKES IT!
+Score: 97-69
+
+[11:16] Lakers possession (Score: 97-69)
+Lakers_9_PF attempts a 3Pt. Contested by Warriors_9_PF (3.2 feet, MAN). LAKERS_9_PF MAKES IT! Assist: Lakers_8_SF
+Score: 97-72
+
+[11:01] Warriors possession (Score: 97-72)
+Warriors_7_SG attempts a 3Pt. Contested by Lakers_7_SG (3.4 feet, MAN). Warriors_7_SG misses. Offensive rebound by Warriors_8_SF! Warriors_8_SF puts it back in!
+Score: 99-72
+
+[10:43] Lakers possession (Score: 99-72)
+Lakers_6_PG attempts a 3Pt. Contested by Warriors_6_PG (3.2 feet, MAN). Lakers_6_PG misses. Rebound secured by Warriors_7_SG.
+
+[10:22] Warriors possession (Score: 99-72)
+Warriors_6_PG makes the Dunk and draws the foul on Lakers_6_PG! And-1! Warriors_6_PG to the line for 1. [Team fouls: 2] (Lakers_6_PG: 1 personal fouls)   FT 1/1: GOOD Warriors_6_PG makes 1/1 from the line.
+Score: 102-72
+
+[10:08] Lakers possession (Score: 102-72)
+Lakers_7_SG attempts a 3Pt. Contested by Warriors_7_SG (3.4 feet, MAN). Lakers_7_SG misses. Offensive rebound by Lakers_9_PF! Lakers_9_PF puts it back in!
+Score: 102-74
+
+[09:51] Warriors possession (Score: 102-74)
+Warriors_8_SF attempts a 3Pt. Contested by Lakers_8_SF (3.5 feet, MAN). Warriors_8_SF misses. Rebound secured by Lakers_7_SG.
+
+[09:29] Lakers possession (Score: 102-74)
+FOUL! Shooting foul on Warriors_3_SF. Lakers_3_SF to the line for 3 free throws. [Team fouls: 3] (Warriors_3_SF: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Lakers_3_SF makes 3/3 from the line.
+Score: 102-77
+
+[09:29] Substitution (Warriors): Warriors_7_SG OUT (stamina: 85) → Warriors_1_PG IN (minutes)
+
+[09:29] Substitution (Warriors): Warriors_6_PG OUT (stamina: 85) → Warriors_2_SG IN (minutes)
+
+[09:29] Substitution (Warriors): Warriors_9_PF OUT (stamina: 85) → Warriors_4_PF IN (minutes)
+
+[09:29] Substitution (Warriors): Warriors_8_SF OUT (stamina: 85) → Warriors_3_SF IN (minutes)
+
+[09:29] Substitution (Warriors): Warriors_10_C OUT (stamina: 79) → Warriors_5_C IN (minutes)
+
+[09:29] Substitution (Lakers): Lakers_7_SG OUT (stamina: 85) → Lakers_2_SG IN (minutes)
+
+[09:29] Substitution (Lakers): Lakers_6_PG OUT (stamina: 85) → Lakers_1_PG IN (minutes)
+
+[09:29] Substitution (Lakers): Lakers_9_PF OUT (stamina: 85) → Lakers_4_PF IN (minutes)
+
+[09:29] Substitution (Lakers): Lakers_8_SF OUT (stamina: 85) → Lakers_3_SF IN (minutes)
+
+[09:29] Substitution (Lakers): Lakers_10_C OUT (stamina: 79) → Lakers_5_C IN (minutes)
+
+[09:17] Warriors possession (Score: 102-77)
+Warriors_4_PF throws a bad pass! Stolen by Lakers_4_PF! TURNOVER!
+
+[09:00] Lakers possession (Score: 102-77)
+Lakers_3_SF attempts a 3Pt. Contested by Warriors_3_SF (2.8 feet, MAN). Lakers_3_SF misses. Offensive rebound by Lakers_5_C! Lakers_5_C's putback is no good. Offensive rebound by Lakers_5_C! Lakers_5_C kicks it out.
+
+[08:46] Lakers possession (Score: 102-77)
+FOUL! Reach-in foul on Warriors_5_C during the drive. [Team fouls: 4] No free throws, side out. (Warriors_5_C: 1 personal fouls)
+
+[08:27] Warriors possession (Score: 102-77)
+Warriors_2_SG attempts a Midrange. Contested by Lakers_2_SG (3.0 feet, MAN). WARRIORS_2_SG MAKES IT! Assist: Warriors_5_C
+Score: 104-77
+
+[08:13] Lakers possession (Score: 104-77)
+Lakers_1_PG drives, Warriors_1_PG stays with him. Lakers_1_PG attempts a Dunk. Contested by Warriors_1_PG (2.5 feet, MAN). LAKERS_1_PG MAKES IT! Assist: Lakers_2_SG
+Score: 104-79
+
+[07:56] Warriors possession (Score: 104-79)
+Warriors_4_PF attempts a 3Pt. Contested by Lakers_4_PF (2.7 feet, MAN). Warriors_4_PF misses. Rebound secured by Lakers_1_PG.
+
+[07:40] Lakers possession (Score: 104-79)
+Lakers_1_PG attempts a 3Pt. Contested by Warriors_1_PG (2.5 feet, MAN). Lakers_1_PG misses. Rebound secured by Warriors_2_SG.
+
+[07:24] Warriors possession (Score: 104-79)
+Warriors_6_PG makes the 3Pt and draws the foul on Lakers_6_PG! And-1! Warriors_6_PG to the line for 1. [BONUS: 5 team fouls] (Lakers_6_PG: 2 personal fouls)   FT 1/1: GOOD Warriors_6_PG makes 1/1 from the line.
+Score: 108-79
+
+[07:24] Substitution (Warriors): Warriors_1_PG OUT (stamina: 82) → Warriors_7_SG IN (minutes)
+
+[07:24] Substitution (Warriors): Warriors_2_SG OUT (stamina: 82) → Warriors_6_PG IN (minutes)
+
+[07:24] Substitution (Warriors): Warriors_4_PF OUT (stamina: 84) → Warriors_9_PF IN (minutes)
+
+[07:24] Substitution (Warriors): Warriors_3_SF OUT (stamina: 82) → Warriors_8_SF IN (minutes)
+
+[07:24] Substitution (Warriors): Warriors_5_C OUT (stamina: 89) → Warriors_10_C IN (minutes)
+
+[07:24] Substitution (Lakers): Lakers_2_SG OUT (stamina: 82) → Lakers_7_SG IN (minutes)
+
+[07:24] Substitution (Lakers): Lakers_1_PG OUT (stamina: 81) → Lakers_6_PG IN (minutes)
+
+[07:24] Substitution (Lakers): Lakers_4_PF OUT (stamina: 84) → Lakers_9_PF IN (minutes)
+
+[07:24] Substitution (Lakers): Lakers_3_SF OUT (stamina: 81) → Lakers_8_SF IN (minutes)
+
+[07:24] Substitution (Lakers): Lakers_5_C OUT (stamina: 89) → Lakers_10_C IN (minutes)
+
+[07:10] Lakers possession (Score: 108-79)
+Lakers_9_PF attempts a Midrange. Contested by Warriors_9_PF (3.2 feet, MAN). Lakers_9_PF misses. Offensive rebound by Lakers_10_C! Lakers_10_C puts it back in!
+Score: 108-81
+
+[06:57] Warriors possession (Score: 108-81)
+Warriors_9_PF drives to the basket... Warriors_9_PF loses the ball! TURNOVER!
+
+[06:41] Lakers possession (Score: 108-81)
+Lakers_8_SF attempts a Midrange. Contested by Warriors_8_SF (3.3 feet, MAN). Lakers_8_SF misses. FOUL! Loose ball foul on Warriors_7_SG during the rebound battle. [IN THE BONUS! 6 team fouls] Lakers_9_PF to the line for 2 free throws. (Warriors_7_SG: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Lakers_9_PF makes 2/2 from the line.
+Score: 108-83
+
+[06:26] Warriors possession (Score: 108-83)
+Warriors_6_PG attempts a 3Pt. Contested by Lakers_6_PG (3.6 feet, MAN). Warriors_6_PG misses. Offensive rebound by Warriors_7_SG! Warriors_7_SG kicks it out.
+
+[06:10] Warriors possession (Score: 108-83)
+Warriors_10_C attempts a 3Pt. Contested by Lakers_10_C (3.2 feet, MAN). WARRIORS_10_C MAKES IT!
+Score: 111-83
+
+[05:53] Lakers possession (Score: 111-83)
+Lakers_8_SF attempts a Layup. Contested by Warriors_8_SF (3.3 feet, MAN). Lakers_8_SF misses. Offensive rebound by Lakers_9_PF! Lakers_9_PF puts it back in!
+Score: 111-85
+
+[05:53] Substitution (Warriors): Warriors_7_SG OUT (stamina: 83) → Warriors_1_PG IN (blowout_rest)
+
+[05:53] Substitution (Warriors): Warriors_6_PG OUT (stamina: 82) → Warriors_2_SG IN (blowout_rest)
+
+[05:33] Warriors possession (Score: 111-85)
+Warriors_1_PG attempts a 3Pt. Contested by Lakers_6_PG (3.6 feet, MAN). Warriors_1_PG misses. Rebound secured by Lakers_9_PF.
+
+[05:18] Lakers possession (Score: 111-85)
+Lakers_1_PG drives, Warriors_1_PG stays with him. Lakers_1_PG attempts a Dunk. Contested by Warriors_1_PG (2.5 feet, MAN). LAKERS_1_PG MAKES IT! Assist: Lakers_2_SG
+Score: 111-87
+
+[05:18] Substitution (Warriors): Warriors_9_PF OUT (stamina: 81) → Warriors_4_PF IN (minutes)
+
+[05:18] Substitution (Warriors): Warriors_8_SF OUT (stamina: 81) → Warriors_3_SF IN (minutes)
+
+[05:18] Substitution (Warriors): Warriors_10_C OUT (stamina: 76) → Warriors_5_C IN (minutes)
+
+[05:18] Substitution (Lakers): Lakers_7_SG OUT (stamina: 81) → Lakers_2_SG IN (minutes)
+
+[05:18] Substitution (Lakers): Lakers_6_PG OUT (stamina: 81) → Lakers_1_PG IN (minutes)
+
+[05:18] Substitution (Lakers): Lakers_9_PF OUT (stamina: 81) → Lakers_4_PF IN (minutes)
+
+[05:18] Substitution (Lakers): Lakers_8_SF OUT (stamina: 81) → Lakers_3_SF IN (minutes)
+
+[05:18] Substitution (Lakers): Lakers_10_C OUT (stamina: 76) → Lakers_5_C IN (minutes)
+
+[05:02] Warriors possession (Score: 111-87)
+Warriors_4_PF attempts a 3Pt. Contested by Lakers_4_PF (2.7 feet, MAN). Warriors_4_PF misses. Offensive rebound by Warriors_5_C! Warriors_5_C puts it back in!
+Score: 113-87
+
+[04:47] Lakers possession (Score: 113-87)
+Lakers_4_PF attempts a Midrange. Contested by Warriors_4_PF (2.6 feet, MAN). Lakers_4_PF misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF puts it back in!
+Score: 113-89
+
+[04:32] Warriors possession (Score: 113-89)
+Warriors_5_C attempts a 3Pt. Heavily contested by Lakers_5_C (2.0 feet, MAN)! Warriors_5_C misses. Rebound secured by Lakers_5_C.
+
+[04:20] Lakers possession (Score: 113-89)
+Lakers_3_SF attempts a 3Pt. Contested by Warriors_3_SF (2.8 feet, MAN). Lakers_3_SF misses. Rebound secured by Warriors_5_C.
+
+[04:04] Warriors possession (Score: 113-89)
+Warriors_1_PG attempts a Midrange. Contested by Lakers_1_PG (2.4 feet, MAN). WARRIORS_1_PG MAKES IT! Assist: Warriors_3_SF
+Score: 115-89
+
+[03:42] Lakers possession (Score: 115-89)
+Lakers_5_C attempts a Layup. Contested by Warriors_5_C (2.2 feet, MAN). LAKERS_5_C MAKES IT! Assist: Lakers_4_PF
+Score: 115-91
+
+[03:28] Warriors possession (Score: 115-91)
+Warriors_5_C drives to the basket... Warriors_5_C loses the ball! TURNOVER!
+
+[03:05] Lakers possession (Score: 115-91)
+FOUL! Shooting foul on Warriors_6_PG. Lakers_6_PG to the line for 3 free throws. [BONUS: 7 team fouls] (Warriors_6_PG: 1 personal fouls)   FT 1/3: MISS   FT 2/3: MISS   FT 3/3: GOOD Lakers_6_PG makes 1/3 from the line.
+Score: 115-92
+
+[03:05] Substitution (Warriors): Warriors_1_PG OUT (stamina: 75) → Warriors_7_SG IN (minutes)
+
+[03:05] Substitution (Warriors): Warriors_2_SG OUT (stamina: 75) → Warriors_6_PG IN (minutes)
+
+[03:05] Substitution (Warriors): Warriors_4_PF OUT (stamina: 80) → Warriors_9_PF IN (minutes)
+
+[03:05] Substitution (Warriors): Warriors_3_SF OUT (stamina: 78) → Warriors_8_SF IN (minutes)
+
+[03:05] Substitution (Warriors): Warriors_5_C OUT (stamina: 84) → Warriors_10_C IN (minutes)
+
+[03:05] Substitution (Lakers): Lakers_2_SG OUT (stamina: 77) → Lakers_7_SG IN (minutes)
+
+[03:05] Substitution (Lakers): Lakers_1_PG OUT (stamina: 77) → Lakers_6_PG IN (minutes)
+
+[03:05] Substitution (Lakers): Lakers_4_PF OUT (stamina: 80) → Lakers_9_PF IN (minutes)
+
+[03:05] Substitution (Lakers): Lakers_3_SF OUT (stamina: 77) → Lakers_8_SF IN (minutes)
+
+[03:05] Substitution (Lakers): Lakers_5_C OUT (stamina: 84) → Lakers_10_C IN (minutes)
+
+[02:51] Warriors possession (Score: 115-92)
+Warriors_6_PG drives to the basket... Warriors_6_PG loses the ball! TURNOVER!
+
+[02:37] Lakers possession (Score: 115-92)
+Lakers_9_PF attempts a 3Pt. Contested by Warriors_9_PF (3.2 feet, MAN). Lakers_9_PF misses. Offensive rebound by Lakers_9_PF! Lakers_9_PF puts it back in!
+Score: 115-94
+
+[02:17] Warriors possession (Score: 115-94)
+Warriors_6_PG attempts a 3Pt. Contested by Lakers_6_PG (3.6 feet, MAN). WARRIORS_6_PG MAKES IT! Assist: Warriors_9_PF
+Score: 118-94
+
+[02:03] Lakers possession (Score: 118-94)
+Lakers_9_PF drives, Warriors_9_PF stays with him. Lakers_9_PF attempts a Dunk. Contested by Warriors_9_PF (3.2 feet, MAN). LAKERS_9_PF MAKES IT! Assist: Lakers_7_SG
+Score: 118-96
+
+[01:44] Warriors possession (Score: 118-96)
+Warriors_6_PG attempts a 3Pt. Contested by Lakers_6_PG (3.6 feet, MAN). Warriors_6_PG misses. Rebound secured by Lakers_7_SG.
+
+[01:31] Lakers possession (Score: 118-96)
+Lakers_8_SF attempts a Layup. Contested by Warriors_8_SF (3.3 feet, MAN). Lakers_8_SF misses. Offensive rebound by Lakers_9_PF! Lakers_9_PF's putback is no good. Offensive rebound by Lakers_9_PF! Lakers_9_PF kicks it out.
+
+[01:19] Lakers possession (Score: 118-96)
+Lakers_7_SG drives to the basket... Lakers_7_SG loses the ball! TURNOVER!
+
+[01:01] Warriors possession (Score: 118-96)
+Warriors_1_PG attempts a 3Pt. Contested by Lakers_1_PG (2.4 feet, MAN). Warriors_1_PG misses. Rebound secured by Lakers_3_SF.
+
+[01:01] Substitution (Warriors): Warriors_7_SG OUT (stamina: 80) → Warriors_1_PG IN (minutes)
+
+[01:01] Substitution (Warriors): Warriors_6_PG OUT (stamina: 79) → Warriors_7_SG IN (minutes)
+
+[01:01] Substitution (Warriors): Warriors_9_PF OUT (stamina: 78) → Warriors_4_PF IN (minutes)
+
+[01:01] Substitution (Warriors): Warriors_8_SF OUT (stamina: 77) → Warriors_3_SF IN (minutes)
+
+[01:01] Substitution (Warriors): Warriors_10_C OUT (stamina: 73) → Warriors_5_C IN (minutes)
+
+[01:01] Substitution (Lakers): Lakers_7_SG OUT (stamina: 78) → Lakers_2_SG IN (minutes)
+
+[01:01] Substitution (Lakers): Lakers_6_PG OUT (stamina: 77) → Lakers_1_PG IN (minutes)
+
+[01:01] Substitution (Lakers): Lakers_9_PF OUT (stamina: 78) → Lakers_4_PF IN (minutes)
+
+[01:01] Substitution (Lakers): Lakers_8_SF OUT (stamina: 77) → Lakers_3_SF IN (minutes)
+
+[01:01] Substitution (Lakers): Lakers_10_C OUT (stamina: 73) → Lakers_5_C IN (minutes)
+
+[00:47] Lakers possession (Score: 118-96)
+Lakers_5_C attempts a 3Pt. Contested by Warriors_5_C (2.2 feet, MAN). Lakers_5_C misses. Offensive rebound by Lakers_3_SF! Lakers_3_SF puts it back in!
+Score: 118-98
+
+[00:28] Warriors possession (Score: 118-98)
+Warriors_7_SG attempts a 3Pt. Contested by Lakers_2_SG (3.0 feet, MAN). Warriors_7_SG misses. Rebound secured by Lakers_3_SF.
+
+[00:13] Lakers possession (Score: 118-98)
+Lakers_4_PF attempts a Midrange. Contested by Warriors_4_PF (2.6 feet, MAN). Lakers_4_PF misses. Offensive rebound by Lakers_5_C! Lakers_5_C puts it back in!
+Score: 118-100
+
+[00:00] TIMEOUT - Warriors (stop opponent momentum) - 6 timeouts remaining
+
+================================================================================
+                              4TH QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Warriors 23, Lakers 34
+
+BOX SCORE:
+================================================================================
+
+Warriors
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Warriors_8_SF           0    4    1    0   0   2/2   100.0     0/0   0.0
+Warriors_10_C           0    3    0    0   0   1/1   100.0     0/0   0.0
+Warriors_6_PG           0    3    0    0   0   1/1   100.0     0/0   0.0
+Warriors_2_SG           0    2    1    0   0   1/1   100.0     0/0   0.0
+Warriors_5_C            0    2    2    1   0   1/1   100.0     0/0   0.0
+Warriors_1_PG           0    2    0    0   0   1/1   100.0     0/0   0.0
+Warriors_7_SG           0    0    2    0   0   0/0     0.0     0/0   0.0
+Warriors_3_SF           0    0    0    1   0   0/0     0.0     0/0   0.0
+Warriors_9_PF           0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 7/14 (50.0%), 3PT: 4/11 (36.4%), REB: 6 (3 off, 3 def), AST: 3, TO: 5
+TEAM FOULS: 0
+
+
+Lakers
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Lakers_9_PF             0   11    5    0   0   5/5   100.0     0/0   0.0
+Lakers_5_C              0    4    3    0   0   2/2   100.0     0/0   0.0
+Lakers_1_PG             0    4    1    0   0   2/2   100.0     0/0   0.0
+Lakers_3_SF             0    4    4    0   0   2/2   100.0     0/0   0.0
+Lakers_10_C             0    2    1    0   0   1/1   100.0     0/0   0.0
+Lakers_8_SF             0    0    0    1   0   0/0     0.0     0/0   0.0
+Lakers_7_SG             0    0    2    1   0   0/0     0.0     0/0   0.0
+Lakers_2_SG             0    0    0    2   0   0/0     0.0     0/0   0.0
+Lakers_4_PF             0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 12/15 (80.0%), 3PT: 4/7 (57.1%), REB: 16 (9 off, 7 def), AST: 5, TO: 1
+TEAM FOULS: 7 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                               FULL GAME COMPLETE                               
+================================================================================
+
+FINAL SCORE: Warriors 118, Lakers 100
+
+SCORING BY QUARTER:
+--------------------------------------------------------------------------------
+Team                     Q1     Q2     Q3     Q4    FINAL
+--------------------------------------------------------------------------------
+Warriors                 38     28     29     23      118
+Lakers                   23     27     16     34      100
+--------------------------------------------------------------------------------
+
+FULL GAME BOX SCORE:
+================================================================================
+
+Warriors
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Warriors_1_PG          26   11    3    2   2   5/9    55.6     0/0   0.0
+Warriors_3_SF          25    7    1    2   0   1/1   100.0     0/0   0.0
+Warriors_10_C          25   11    1    1   2   3/5    60.0     0/0   0.0
+Warriors_4_PF          24    7    2    1   2   3/5    60.0     0/0   0.0
+Warriors_2_SG          24   13    8    0   0   4/6    66.7     0/0   0.0
+Warriors_8_SF          24   15    4    1   1   6/8    75.0     0/0   0.0
+Warriors_6_PG          24   17    4    3   2   5/9    55.6     0/0   0.0
+Warriors_7_SG          24    7    4    0   1   5/9    55.6     0/0   0.0
+Warriors_9_PF          23   12    0    3   0   5/5   100.0     0/0   0.0
+Warriors_5_C           23   18   14    4   3   1/2    50.0     0/0   0.0
+
+TEAM: FG: 33/54 (61.1%), 3PT: 15/28 (53.6%), REB: 41 (17 off, 24 def), AST: 17, TO: 13
+
+
+Lakers
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Lakers_1_PG            26    5    4    4   4   5/8    62.5     0/0   0.0
+Lakers_3_SF            26   17   11    1   1   2/6    33.3     0/0   0.0
+Lakers_10_C            25   12    5    1   0   4/5    80.0     0/0   0.0
+Lakers_2_SG            25   12    2    2   0   4/9    44.4     0/0   0.0
+Lakers_4_PF            25    7    3    1   0   5/7    71.4     0/0   0.0
+Lakers_8_SF            24    1    0    2   3   1/5    20.0     0/0   0.0
+Lakers_6_PG            24    1    0    2   0   0/2     0.0     0/0   0.0
+Lakers_5_C             23   12    4    1   1   4/4   100.0     0/0   0.0
+Lakers_9_PF            23   27    7    0   2   7/9    77.8     0/0   0.0
+Lakers_7_SG            23    6    2    1   0   2/4    50.0     0/0   0.0
+
+TEAM: FG: 30/55 (54.5%), 3PT: 7/21 (33.3%), REB: 38 (18 off, 20 def), AST: 15, TO: 11
+
+================================================================================

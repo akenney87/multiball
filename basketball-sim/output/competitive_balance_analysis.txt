@@ -1,0 +1,97 @@
+================================================================================
+COMPETITIVE BALANCE ANALYSIS
+================================================================================
+
+Loaded 100 games
+
+================================================================================
+TEAM RATING DISTRIBUTION
+================================================================================
+Average rating: 67.8
+Minimum rating: 52.4
+Maximum rating: 82.9
+Rating range: 30.5
+
+Rating Distribution (5-point buckets):
+  50-54:   7 teams ###
+  55-59:  17 teams ########
+  60-64:  55 teams ###########################
+  65-69:  37 teams ##################
+  70-74:  57 teams ############################
+  75-79:  16 teams ########
+  80-84:  11 teams #####
+
+================================================================================
+RATING GAP -> SCORE GAP CORRELATION
+================================================================================
+
+Average Score Margin by Rating Difference:
+Rating Diff     Avg Margin   Games    Blowouts (20+)
+------------------------------------------------------------
+0-1 pts         16.6         17      7 (41%)
+2-3 pts         17.5         13      5 (38%)
+4-5 pts         15.8         12      4 (33%)
+6-7 pts         21.6          9      5 (56%)
+8-9 pts         31.1         15     11 (73%)
+10-11 pts         48.5          8      8 (100%)
+12-13 pts         47.6          5      5 (100%)
+14-15 pts         45.5          6      6 (100%)
+16-17 pts         47.3          6      5 (83%)
+18-19 pts         70.0          1      1 (100%)
+20-21 pts         66.5          2      2 (100%)
+22-23 pts         64.0          4      4 (100%)
+24-25 pts         89.0          2      2 (100%)
+
+================================================================================
+WORST BLOWOUTS (Top 10)
+================================================================================
+
+1. Game #79: Team_058 vs Team_092
+   Ratings: 82.9 vs 57.1 (diff: 25.8)
+   Score: 157 - 56 (margin: 101)
+
+2. Game #49: Team_084 vs Team_043
+   Ratings: 72.7 vs 55.6 (diff: 17.1)
+   Score: 154 - 74 (margin: 80)
+
+3. Game #31: Team_092 vs Team_075
+   Ratings: 57.1 vs 81.5 (diff: 24.4)
+   Score: 63 - 140 (margin: 77)
+
+4. Game #39: Team_089 vs Team_013
+   Ratings: 73.1 vs 60.8 (diff: 12.3)
+   Score: 129 - 54 (margin: 75)
+
+5. Game #86: Team_043 vs Team_096
+   Ratings: 55.6 vs 66.4 (diff: 10.8)
+   Score: 68 - 140 (margin: 72)
+
+6. Game #13: Team_042 vs Team_036
+   Ratings: 82.3 vs 61.8 (diff: 20.5)
+   Score: 131 - 60 (margin: 71)
+
+7. Game #5: Team_049 vs Team_075
+   Ratings: 62.8 vs 81.5 (diff: 18.7)
+   Score: 46 - 116 (margin: 70)
+
+8. Game #1: Team_093 vs Team_086
+   Ratings: 62.7 vs 72.4 (diff: 9.7)
+   Score: 72 - 140 (margin: 68)
+
+9. Game #40: Team_004 vs Team_043
+   Ratings: 79.0 vs 55.6 (diff: 23.4)
+   Score: 143 - 75 (margin: 68)
+
+10. Game #42: Team_064 vs Team_069
+   Ratings: 52.8 vs 75.2 (diff: 22.4)
+   Score: 65 - 133 (margin: 68)
+
+================================================================================
+Traceback (most recent call last):
+  File "C:\Users\alexa\desktop\projects\simulator\analyze_competitive_balance.py", line 125, in <module>
+    print("CLOSE GAMES ANALYSIS (\u22645 margin)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2264' in position 22: character maps to <undefined>

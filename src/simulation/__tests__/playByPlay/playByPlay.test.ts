@@ -170,13 +170,13 @@ describe('PlayByPlayLogger', () => {
     const logger = new PlayByPlayLogger('Lakers', 'Celtics', 1);
 
     const possessionResult = {
-      play_by_play_text: 'Player1 makes a shot',
-      points_scored: 2,
-      possession_outcome: 'made_shot',
-      scoring_player: 'Player1',
+      playByPlayText: 'Player1 makes a shot',
+      pointsScored: 2,
+      possessionOutcome: 'made_shot',
+      scoringPlayer: 'Player1',
       debug: {
         shooter: 'Player1',
-        shot_type: 'midrange',
+        shotType: 'midrange',
       },
     };
 
@@ -209,13 +209,13 @@ describe('PlayByPlayLogger', () => {
 
     // Add a possession
     const possessionResult = {
-      play_by_play_text: 'Player1 makes a shot',
-      points_scored: 2,
-      possession_outcome: 'made_shot',
-      scoring_player: 'Player1',
+      playByPlayText: 'Player1 makes a shot',
+      pointsScored: 2,
+      possessionOutcome: 'made_shot',
+      scoringPlayer: 'Player1',
       debug: {
         shooter: 'Player1',
-        shot_type: 'midrange',
+        shotType: 'midrange',
       },
     };
     logger.addPossession(600, 'Home', possessionResult);
@@ -231,13 +231,13 @@ describe('PlayByPlayLogger', () => {
     const logger = new PlayByPlayLogger('Lakers', 'Celtics', 2, {}, 25, 23);
 
     const possessionResult = {
-      play_by_play_text: 'Player1 makes a shot',
-      points_scored: 2,
-      possession_outcome: 'made_shot',
-      scoring_player: 'Player1',
+      playByPlayText: 'Player1 makes a shot',
+      pointsScored: 2,
+      possessionOutcome: 'made_shot',
+      scoringPlayer: 'Player1',
       debug: {
         shooter: 'Player1',
-        shot_type: 'midrange',
+        shotType: 'midrange',
       },
     };
     logger.addPossession(600, 'Home', possessionResult);

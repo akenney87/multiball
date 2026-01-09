@@ -1,0 +1,234 @@
+================================================================================
+CORRELATION INVESTIGATION - FINAL REPORT
+================================================================================
+
+EXECUTIVE SUMMARY:
+- Current correlation: 0.162 (critically low)
+- Target correlation: 0.35+ (minimum acceptable)
+- ROOT CAUSE: Weighted sigmoid formula is mathematically incorrect
+- IMPACT: All success probabilities are inflated, washing out skill differences
+
+================================================================================
+INVESTIGATION FINDINGS
+================================================================================
+
+1. TEAM QUALITY VARIANCE (OK)
+   - Mean rating: 59.92
+   - Std dev: 2.24
+   - Range: 10.83 (55.19 to 66.02)
+   - VERDICT: Sufficient variance for correlation analysis
+
+2. FAVORITE WIN RATE (WEAK)
+   - Overall: 61% (should be 65-70%)
+   - Very Large advantage (4+): 77.3% ✓
+   - Large advantage (3-4): 42.9% ✗ (ANOMALY - small sample)
+   - Moderate advantage (2-3): 56.0%
+   - Close advantage (1-2): 63.6%
+   - Very Close (0-1): 57.1%
+   - VERDICT: Better teams don't win enough
+
+3. CORRELATION ANALYSIS (CRITICAL FAILURE)
+   - Correlation: 0.162
+   - Should be: 0.35+ minimum
+   - VERDICT: Team quality barely predicts game outcomes
+
+4. HOME COURT ADVANTAGE (OK)
+   - Home wins: 55%
+   - Away wins: 45%
+   - VERDICT: No significant bias
+
+================================================================================
+ROOT CAUSE: BROKEN WEIGHTED SIGMOID FORMULA
+================================================================================
+
+CURRENT FORMULA:
+P = BaseRate + (1 - BaseRate) * sigmoid(k * AttributeDiff)
+
+PROBLEM:
+At AttributeDiff = 0 (equal players):
+  sigmoid(0) = 0.5
+  P = BaseRate + (1 - BaseRate) * 0.5
+  P = 0.5 * (BaseRate + 1)
+
+EXAMPLE: 3-Point Shot (BaseRate = 30%)
+  With EQUAL players (diff = 0):
+    P = 0.5 * (0.30 + 1) = 0.65 = 65%
+
+  Expected: 30% (the base rate)
+  Actual: 65%
+  ERROR: +35% absolute, +117% relative
+
+IMPACT:
+- All players shoot WAY better than they should
+- Elite players (90 rating) vs Average (50 rating):
+  - Should have significant advantage
+  - Actually get washed out because everyone shoots ~65%
+- Skill differences become meaningless
+
+MATHEMATICAL PROOF:
+The formula shifts ALL probabilities upward by:
+  Shift = (1 - BaseRate) * 0.5
+
+For different base rates:
+  - 3PT (30% base) → 65% for equal players (+35%)
+  - Layup (62% base) → 81% for equal players (+19%)
+  - Dunk (80% base) → 90% for equal players (+10%)
+
+Lower base rates get inflated MORE, making hard shots too easy.
+
+================================================================================
+CORRECT FORMULA
+================================================================================
+
+The formula should center on BaseRate when players are equal:
+
+OPTION 1: Centered Sigmoid
+P = BaseRate + (max_prob - BaseRate) * (sigmoid(k * diff) - 0.5) * 2
+
+At diff = 0:
+  P = BaseRate + something * (0.5 - 0.5) * 2 = BaseRate ✓
+
+OPTION 2: Multiplicative Sigmoid (already implemented for defensive events)
+P = BaseRate * scaling_factor(diff)
+where scaling_factor ranges from min_mult to max_mult
+
+At diff = 0:
+  scaling_factor = 1.0
+  P = BaseRate * 1.0 = BaseRate ✓
+
+================================================================================
+WEIGHTED RATING CALCULATION (CORRECTED)
+================================================================================
+
+PREVIOUS (WRONG):
+- Simple average of all 25 attributes
+- All attributes weighted equally (4% each)
+- Includes unused attributes (durability, patience)
+- No weighting by playing time
+
+CURRENT (CORRECT):
+- Weighted by actual gameplay importance
+  Top attributes:
+    - awareness: 12.21%
+    - jumping: 11.79%
+    - height: 10.52%
+    - composure: 8.50%
+    - hand_eye_coordination: 8.21%
+  Bottom attributes:
+    - grip_strength: 1.07%
+    - durability/patience: 0.00%
+
+- Weighted by minutes played:
+  - Starters (35 min): 72.9% weight
+  - Bench (13 min): 27.1% weight
+
+IMPACT ON CORRELATION:
+- Old method (simple average): would show 0.339 (FAKE)
+- New method (weighted): shows 0.162 (TRUE but too low)
+
+================================================================================
+GRIP_STRENGTH INTEGRATION (RESOLVED)
+================================================================================
+
+CURRENT STATE:
+- In WEIGHTS_REBOUND: 10%
+- In WEIGHTS_TURNOVER_PREVENTION: 5%
+- All standalone mechanics removed (rip-aways, strips)
+
+IMPACT ON CORRELATION:
+- Without grip in composites: 0.070
+- With grip in composites: 0.162
+- Change: +0.092 (+131%)
+
+VERDICT: Keep grip_strength - it IMPROVES correlation significantly
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+IMMEDIATE ACTION REQUIRED:
+1. FIX THE WEIGHTED SIGMOID FORMULA
+   - Implement centered sigmoid OR
+   - Use multiplicative sigmoid for all mechanics
+   - This is the primary cause of low correlation
+
+2. UPDATE ALL GAME MECHANICS
+   - Shooting (3PT, layup, dunk, midrange)
+   - Rebounding
+   - Turnover prevention
+   - Drive outcomes
+   - Free throws
+   - ALL mechanics using weighted_sigmoid_probability()
+
+3. RE-VALIDATE CORRELATION
+   - Run 100-game validation with fixed formula
+   - Target: 0.35+ correlation minimum
+   - Expected: 0.40-0.50 correlation with correct formula
+
+SECONDARY IMPROVEMENTS:
+4. Increase sigmoid k value
+   - Current: 0.02 (very weak)
+   - Recommended: 0.025-0.030
+   - Makes attribute differences more impactful
+
+5. Remove pure random events
+   - goes_out_of_bounds: currently 50/50
+   - midrange_range_type: currently 50/50
+   - Should be attribute-based
+
+6. Keep weighted rating calculation
+   - Use for all future correlation analysis
+   - Update generate_teams.py to calculate weighted ratings
+
+================================================================================
+EXPECTED OUTCOMES AFTER FIX
+================================================================================
+
+With corrected formula:
+- Correlation: 0.35-0.50 (healthy range)
+- Favorite win rate: 65-70% (realistic)
+- Better teams win convincingly when they should
+- Close games remain competitive
+- Skill differences meaningful but not deterministic
+
+Current state (broken formula):
+- Correlation: 0.162 (broken)
+- Everyone shoots too well
+- Skill differences washed out
+- Games too random
+
+================================================================================
+IMPLEMENTATION PRIORITY
+================================================================================
+
+CRITICAL (Fix immediately):
+1. Fix weighted_sigmoid_probability() formula
+2. Validate that fix works
+3. Re-run all correlation analysis
+
+HIGH (After critical fixes):
+4. Update all game mechanics to use fixed formula
+5. Run comprehensive 100-game validation
+6. Document new baseline correlation
+
+MEDIUM (Quality improvements):
+7. Remove pure random events
+8. Tune sigmoid k value
+9. Fine-tune base rates if needed
+
+LOW (Polish):
+10. Update documentation
+11. Create correlation tracking system
+12. Add correlation validation to CI/CD
+
+================================================================================
+CONCLUSION
+================================================================================
+
+The simulation is fundamentally sound in architecture and design, but the core probability formula has a mathematical error that makes all success rates too high. This washes out skill differences and destroys correlation.
+
+Fixing the weighted sigmoid formula should immediately improve correlation from 0.162 to 0.35+ range.
+
+The grip_strength integration actually HELPS correlation (+131%) and should be kept.
+
+All correlation analysis should use weighted ratings going forward.

@@ -1,0 +1,1273 @@
+================================================================================
+                            FULL GAME - Home vs Away                            
+================================================================================
+
+================================================================================
+                           1ST QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 0-0)
+Home_3_SF drives to the basket... Home_3_SF loses the ball! TURNOVER!
+
+[11:40] Away possession (Score: 0-0)
+Away_3_SF makes the Layup and draws the foul on Home_3_SF! And-1! Away_3_SF to the line for 1. [Team fouls: 1] (Home_3_SF: 1 personal fouls)   FT 1/1: MISS Away_3_SF makes 0/1 from the line.
+Score: 0-2
+
+[11:23] Home possession (Score: 0-2)
+Home_3_SF drives, Away_3_SF stays with him. Home_3_SF attempts a Dunk. Contested by Away_3_SF (2.1 feet, MAN). Home_3_SF misses. Rebound secured by Away_5_C.
+
+[11:09] Away possession (Score: 0-2)
+Away_2_SG drives, picks up Home_2_SG. Help arrives from Home_1_PG! Away_2_SG attempts a Dunk. Contested by Home_1_PG (3.1 feet, MAN). Away_2_SG misses. Rebound secured by Home_1_PG.
+
+[10:54] Home possession (Score: 0-2)
+Home_2_SG attempts a Midrange. Contested by Away_2_SG (2.6 feet, MAN). Home_2_SG misses. Offensive rebound by Home_5_C! Home_5_C puts it back in!
+Score: 2-2
+
+[10:44] Away possession (Score: 2-2)
+FOUL! Reach-in foul on Home_2_SG during the drive. [Team fouls: 2] No free throws, side out. (Home_2_SG: 1 personal fouls)
+
+[10:28] Home possession (Score: 2-2)
+Home_5_C attempts a 3Pt. Contested by Away_5_C (2.4 feet, MAN). Home_5_C misses. Rebound secured by Away_5_C.
+
+[10:09] Away possession (Score: 2-2)
+FOUL! Shooting foul on Home_3_SF. Away_3_SF to the line for 3 free throws. [Team fouls: 3] (Home_3_SF: 2 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Away_3_SF makes 3/3 from the line.
+Score: 2-5
+
+[09:55] Home possession (Score: 2-5)
+Home_4_PF attempts a 3Pt. Contested by Away_4_PF (2.7 feet, MAN). Home_4_PF misses. Rebound secured by Away_5_C.
+
+[09:36] Away possession (Score: 2-5)
+FOUL! Shooting foul on Home_4_PF. Away_4_PF to the line for 2 free throws. [Team fouls: 4] (Home_4_PF: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Away_4_PF makes 1/2 from the line.
+Score: 2-6
+
+[09:22] Home possession (Score: 2-6)
+Home_3_SF attempts a 3Pt. Contested by Away_3_SF (2.2 feet, MAN). Home_3_SF misses. Rebound secured by Away_5_C.
+
+[09:03] Away possession (Score: 2-6)
+Away_5_C attempts a 3Pt. Contested by Home_5_C (2.6 feet, MAN). Away_5_C misses. Offensive rebound by Away_3_SF! Away_3_SF puts it back in!
+Score: 2-8
+
+[08:48] Home possession (Score: 2-8)
+Home_2_SG drives, Away_2_SG stays with him. Home_2_SG attempts a Layup. Contested by Away_2_SG (2.8 feet, MAN). HOME_2_SG MAKES IT! Assist: Home_4_PF
+Score: 4-8
+
+[08:32] Away possession (Score: 4-8)
+Away_1_PG attempts a 3Pt. Contested by Home_1_PG (3.0 feet, MAN). AWAY_1_PG MAKES IT! Assist: Away_5_C
+Score: 4-11
+
+[08:21] Home possession (Score: 4-11)
+Home_5_C makes the 3Pt and draws the foul on Away_5_C! And-1! Home_5_C to the line for 1. [Team fouls: 1] (Away_5_C: 1 personal fouls)   FT 1/1: GOOD Home_5_C makes 1/1 from the line.
+Score: 8-11
+
+[08:04] Away possession (Score: 8-11)
+FOUL! Shooting foul on Home_1_PG. Away_1_PG to the line for 2 free throws. [BONUS: 5 team fouls] (Home_1_PG: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Away_1_PG makes 1/2 from the line.
+Score: 8-12
+
+[07:51] Home possession (Score: 8-12)
+Home_2_SG commits a violation (traveling/carry/out of bounds)! TURNOVER!
+
+[07:34] Away possession (Score: 8-12)
+Away_3_SF drives, picks up Home_3_SF. Help arrives from Home_1_PG! Away_3_SF attempts a Dunk. Contested by Home_1_PG (3.4 feet, MAN). Away_3_SF misses. Offensive rebound by Away_5_C! Away_5_C puts it back in!
+Score: 8-14
+
+[07:21] Home possession (Score: 8-14)
+FOUL! Shooting foul on Away_2_SG. Home_4_PF to the line for 2 free throws. [Team fouls: 2] (Away_2_SG: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Home_4_PF makes 2/2 from the line.
+Score: 10-14
+
+[07:03] Away possession (Score: 10-14)
+Away_2_SG attempts a 3Pt. Contested by Home_2_SG (3.7 feet, MAN). Away_2_SG misses. Rebound secured by Home_5_C.
+
+[06:44] Home possession (Score: 10-14)
+Home_7_SG throws a bad pass! Stolen by Away_2_SG! TURNOVER!
+
+[06:44] Substitution (Home): Home_2_SG OUT (stamina: 58) → Home_7_SG IN (stamina)
+
+[06:44] Substitution (Home): Home_3_SF OUT (stamina: 59) → Home_9_PF IN (stamina)
+
+[06:44] Substitution (Away): Away_1_PG OUT (stamina: 59) → Away_6_PG IN (stamina)
+
+[06:27] Away possession (Score: 10-14)
+Away_3_SF throws a bad pass out of bounds! TURNOVER!
+
+[06:27] Substitution (Home): Home_4_PF OUT (stamina: 59) → Home_8_SF IN (stamina)
+
+[06:09] Home possession (Score: 10-14)
+Home_1_PG attempts a 3Pt. Contested by Away_6_PG (3.3 feet, MAN). HOME_1_PG MAKES IT! Assist: Home_7_SG
+Score: 13-14
+
+[05:54] Away possession (Score: 13-14)
+Away_3_SF attempts a Midrange. Contested by Home_8_SF (3.4 feet, MAN). Away_3_SF misses. Rebound secured by Home_1_PG.
+
+[05:35] Home possession (Score: 13-14)
+Home_8_SF attempts a 3Pt. Contested by Away_3_SF (2.7 feet, MAN). Home_8_SF misses. Rebound secured by Away_8_SF.
+
+[05:35] Substitution (Home): Home_1_PG OUT (stamina: 58) → Home_6_PG IN (stamina)
+
+[05:35] Substitution (Home): Home_5_C OUT (stamina: 59) → Home_10_C IN (stamina)
+
+[05:35] Substitution (Away): Away_4_PF OUT (stamina: 60) → Away_8_SF IN (stamina)
+
+[05:22] Away possession (Score: 13-14)
+Away_8_SF attempts a 3Pt. Contested by Home_8_SF (3.4 feet, MAN). AWAY_8_SF MAKES IT! Assist: Away_6_PG
+Score: 13-17
+
+[05:22] Substitution (Away): Away_2_SG OUT (stamina: 60) → Away_7_SG IN (stamina)
+
+[05:11] Home possession (Score: 13-17)
+Home_6_PG attempts a Layup. Contested by Away_6_PG (3.3 feet, MAN). Home_6_PG misses. Offensive rebound by Home_9_PF! Home_9_PF puts it back in!
+Score: 15-17
+
+[04:58] Away possession (Score: 15-17)
+Away_6_PG drives and kicks out. Away_7_SG attempts a Midrange. Contested by Home_7_SG (3.5 feet, MAN). Away_7_SG misses. Offensive rebound by Away_3_SF! Away_3_SF's putback is no good. Offensive rebound by Away_3_SF! Away_3_SF kicks it out.
+
+[04:38] Away possession (Score: 15-17)
+Away_6_PG drives and kicks out. Away_6_PG attempts a 3Pt. Contested by Home_6_PG (3.6 feet, MAN). Away_6_PG misses. Offensive rebound by Away_3_SF! Away_3_SF puts it back in!
+Score: 15-19
+
+[04:20] Home possession (Score: 15-19)
+Home_8_SF attempts a Midrange. Contested by Away_3_SF (2.9 feet, MAN). Home_8_SF misses. Rebound secured by Away_5_C.
+
+[04:00] Away possession (Score: 15-19)
+Away_10_C attempts a Midrange. Contested by Home_10_C (2.9 feet, MAN). AWAY_10_C MAKES IT! Assist: Away_9_PF
+Score: 15-21
+
+[04:00] Substitution (Away): Away_3_SF OUT (stamina: 59) → Away_9_PF IN (stamina)
+
+[04:00] Substitution (Away): Away_5_C OUT (stamina: 56) → Away_10_C IN (stamina)
+
+[03:44] Home possession (Score: 15-21)
+Home_9_PF attempts a Midrange. Contested by Away_9_PF (3.1 feet, MAN). Home_9_PF misses. Rebound secured by Away_10_C.
+
+[03:24] Away possession (Score: 15-21)
+Away_9_PF drives, picks up Home_9_PF. Help arrives from Home_6_PG! Away_9_PF attempts a Dunk. Contested by Home_6_PG (3.1 feet, MAN). Away_9_PF misses. FOUL! Loose ball foul on Home_9_PF during the rebound battle. [IN THE BONUS! 6 team fouls] Away_8_SF to the line for 2 free throws. (Home_9_PF: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Away_8_SF makes 2/2 from the line.
+Score: 15-23
+
+[03:09] Home possession (Score: 15-23)
+Home_6_PG drives to the basket... Home_6_PG loses the ball! TURNOVER!
+
+[02:56] Away possession (Score: 15-23)
+Away_8_SF attempts a Midrange. Contested by Home_8_SF (3.7 feet, MAN). Away_8_SF misses. Offensive rebound by Away_10_C! Away_10_C puts it back in!
+Score: 15-25
+
+[02:36] Home possession (Score: 15-25)
+Home_8_SF attempts a Layup. Contested by Away_8_SF (2.9 feet, MAN). Home_8_SF misses. Rebound secured by Away_1_PG.
+
+[02:36] Substitution (Home): Home_7_SG OUT (stamina: 75) → Home_2_SG IN (minutes)
+
+[02:36] Substitution (Home): Home_9_PF OUT (stamina: 75) → Home_3_SF IN (minutes)
+
+[02:36] Substitution (Away): Away_6_PG OUT (stamina: 77) → Away_1_PG IN (minutes)
+
+[02:36] TIMEOUT - Home (stop opponent momentum) - 6 timeouts remaining
+
+[02:22] Away possession (Score: 15-25)
+Away_7_SG attempts a Layup. Contested by Home_2_SG (3.1 feet, MAN). Away_7_SG misses. Rebound secured by Home_2_SG.
+
+[02:02] Home possession (Score: 15-25)
+Home_10_C attempts a 3Pt. Contested by Away_10_C (3.1 feet, MAN). Home_10_C misses. Offensive rebound by Home_3_SF! Home_3_SF's putback is no good. Offensive rebound by Home_3_SF! Home_3_SF kicks it out.
+
+[02:02] Substitution (Home): Home_8_SF OUT (stamina: 70) → Home_4_PF IN (minutes)
+
+[01:42] Home possession (Score: 15-25)
+Home_6_PG throws a bad pass! Stolen by Away_1_PG! TURNOVER!
+
+[01:31] Away possession (Score: 15-25)
+Away_1_PG throws a bad pass! Stolen by Home_6_PG! TURNOVER!
+
+[01:16] Home possession (Score: 15-25)
+Home_2_SG makes the 3Pt and draws the foul on Away_6_PG! And-1! Home_2_SG to the line for 1. [Team fouls: 4] (Away_6_PG: 1 personal fouls)   FT 1/1: GOOD Home_2_SG makes 1/1 from the line.
+Score: 19-25
+
+[01:16] Substitution (Home): Home_6_PG OUT (stamina: 74) → Home_7_SG IN (minutes)
+
+[01:16] Substitution (Home): Home_10_C OUT (stamina: 76) → Home_5_C IN (minutes)
+
+[01:16] Substitution (Away): Away_7_SG OUT (stamina: 75) → Away_6_PG IN (minutes)
+
+[01:16] Substitution (Away): Away_8_SF OUT (stamina: 74) → Away_4_PF IN (minutes)
+
+[01:05] Away possession (Score: 19-25)
+Away_10_C attempts a 3Pt. Contested by Home_5_C (2.4 feet, MAN). Away_10_C misses. Rebound secured by Home_3_SF.
+
+[00:44] Home possession (Score: 19-25)
+Home_5_C attempts a Midrange. Contested by Away_10_C (3.1 feet, MAN). HOME_5_C MAKES IT!
+Score: 21-25
+
+[00:29] Away possession (Score: 21-25)
+Away_9_PF throws a bad pass! Stolen by Home_4_PF! TURNOVER!
+
+[00:10] Home possession (Score: 21-25)
+Home_5_C drives and kicks out. Home_5_C attempts a Midrange. Contested by Away_10_C (3.2 feet, MAN). Home_5_C misses. Offensive rebound by Home_5_C! Home_5_C puts it back in!
+Score: 23-25
+
+================================================================================
+                              1ST QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Home 23, Away 25
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Home_5_C                0    6    3    0   0   3/3   100.0     0/0   0.0
+Home_1_PG               0    3    2    0   0   1/1   100.0     0/0   0.0
+Home_2_SG               0    2    1    0   0   1/1   100.0     0/0   0.0
+Home_9_PF               0    2    1    0   0   1/1   100.0     0/0   0.0
+Home_4_PF               0    0    0    1   0   0/0     0.0     0/0   0.0
+Home_7_SG               0    0    0    1   0   0/0     0.0     0/0   0.0
+Home_3_SF               0    0    2    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 6/14 (42.9%), 3PT: 1/5 (20.0%), REB: 9 (4 off, 5 def), AST: 2, TO: 5
+TEAM FOULS: 6 [OPPONENT IN BONUS]
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Away_3_SF               0    4    3    0   0   2/2   100.0     0/0   0.0
+Away_10_C               0    4    2    0   0   2/2   100.0     0/0   0.0
+Away_1_PG               0    3    1    0   0   1/1   100.0     0/0   0.0
+Away_8_SF               0    3    1    0   0   1/1   100.0     0/0   0.0
+Away_5_C                0    2    6    1   0   1/1   100.0     0/0   0.0
+Away_6_PG               0    0    0    1   0   0/0     0.0     0/0   0.0
+Away_9_PF               0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 7/12 (58.3%), 3PT: 3/5 (60.0%), REB: 13 (5 off, 8 def), AST: 3, TO: 3
+TEAM FOULS: 4
+
+================================================================================
+
+================================================================================
+                           2ND QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 23-25)
+Home_1_PG attempts a 3Pt. Contested by Away_1_PG (3.5 feet, MAN). Home_1_PG misses. Rebound secured by Away_5_C.
+
+[11:47] Away possession (Score: 23-25)
+Away_2_SG attempts a 3Pt. Contested by Home_2_SG (3.5 feet, MAN). AWAY_2_SG MAKES IT! Assist: Away_4_PF
+Score: 23-28
+
+[11:47] Substitution (Away): Away_3_SF OUT (stamina: 74) → Away_8_SF IN (minutes)
+
+[11:47] Substitution (Away): Away_5_C OUT (stamina: 71) → Away_10_C IN (minutes)
+
+[11:28] Home possession (Score: 23-28)
+Home_3_SF drives, picks up Away_8_SF. Help arrives from Away_2_SG! Home_3_SF attempts a Layup. Contested by Away_2_SG (2.9 feet, MAN). HOME_3_SF MAKES IT! Assist: Home_4_PF
+Score: 25-28
+
+[11:14] Away possession (Score: 25-28)
+Away_1_PG attempts a 3Pt. Contested by Home_1_PG (2.7 feet, MAN). AWAY_1_PG MAKES IT! Assist: Away_2_SG
+Score: 25-31
+
+[10:59] Home possession (Score: 25-31)
+Home_1_PG drives, Away_1_PG stays with him. Home_1_PG attempts a Layup. Contested by Away_1_PG (3.7 feet, MAN). HOME_1_PG MAKES IT! Assist: Home_2_SG
+Score: 27-31
+
+[10:43] Away possession (Score: 27-31)
+Away_1_PG attempts a Midrange. Contested by Home_1_PG (2.8 feet, MAN). Away_1_PG misses. Rebound secured by Home_5_C.
+
+[10:23] Home possession (Score: 27-31)
+Home_1_PG commits a violation (traveling/carry/out of bounds)! TURNOVER!
+
+[10:23] Substitution (Home): Home_2_SG OUT (stamina: 60) → Home_6_PG IN (minutes)
+
+[10:23] Substitution (Home): Home_3_SF OUT (stamina: 61) → Home_9_PF IN (minutes)
+
+[10:23] Substitution (Home): Home_4_PF OUT (stamina: 65) → Home_8_SF IN (minutes)
+
+[10:23] Substitution (Home): Home_5_C OUT (stamina: 67) → Home_10_C IN (minutes)
+
+[10:23] Substitution (Away): Away_1_PG OUT (stamina: 61) → Away_7_SG IN (minutes)
+
+[10:23] Substitution (Away): Away_2_SG OUT (stamina: 73) → Away_6_PG IN (minutes)
+
+[10:23] Substitution (Away): Away_4_PF OUT (stamina: 67) → Away_9_PF IN (minutes)
+
+[10:03] Away possession (Score: 27-31)
+Away_6_PG drives, Home_6_PG stays with him. Away_6_PG attempts a Layup. Contested by Home_6_PG (3.6 feet, MAN). AWAY_6_PG MAKES IT!
+Score: 27-33
+
+[10:03] Substitution (Home): Home_1_PG OUT (stamina: 71) → Home_7_SG IN (minutes)
+
+[09:40] Home possession (Score: 27-33)
+Home_10_C attempts a 3Pt. Contested by Away_10_C (3.4 feet, MAN). Home_10_C misses. Rebound secured by Away_9_PF.
+
+[09:20] Away possession (Score: 27-33)
+Away_9_PF drives to the basket... Away_9_PF loses the ball! TURNOVER!
+
+[09:20] Substitution (Away): Away_8_SF OUT (stamina: 71) → Away_3_SF IN (minutes)
+
+[09:20] Substitution (Away): Away_10_C OUT (stamina: 69) → Away_5_C IN (minutes)
+
+[09:05] Home possession (Score: 27-33)
+Home_9_PF attempts a Midrange. Contested by Away_9_PF (3.3 feet, MAN). Home_9_PF misses. Offensive rebound by Home_10_C! Home_10_C puts it back in!
+Score: 29-33
+
+[08:46] Away possession (Score: 29-33)
+Away_5_C attempts a Midrange. Contested by Home_10_C (2.9 feet, MAN). Away_5_C misses. Offensive rebound by Away_5_C! Away_5_C puts it back in!
+Score: 29-35
+
+[08:26] Home possession (Score: 29-35)
+FOUL! Shooting foul on Away_5_C. Home_10_C to the line for 2 free throws. [Team fouls: 1] (Away_5_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Home_10_C makes 2/2 from the line.
+Score: 31-35
+
+[08:10] Away possession (Score: 31-35)
+FOUL! Reach-in foul on Home_8_SF during the drive. [Team fouls: 1] No free throws, side out. (Home_8_SF: 1 personal fouls)
+
+[07:54] Home possession (Score: 31-35)
+Home_1_PG drives, picks up Away_2_SG. Help arrives from Away_3_SF! Home_1_PG attempts a Dunk. Contested by Away_3_SF (2.6 feet, MAN). HOME_1_PG MAKES IT!
+Score: 33-35
+
+[07:54] Substitution (Home): Home_7_SG OUT (stamina: 72) → Home_1_PG IN (minutes)
+
+[07:54] Substitution (Home): Home_6_PG OUT (stamina: 73) → Home_7_SG IN (minutes)
+
+[07:54] Substitution (Home): Home_9_PF OUT (stamina: 76) → Home_4_PF IN (minutes)
+
+[07:54] Substitution (Home): Home_8_SF OUT (stamina: 72) → Home_9_PF IN (minutes)
+
+[07:54] Substitution (Home): Home_10_C OUT (stamina: 74) → Home_5_C IN (minutes)
+
+[07:54] Substitution (Away): Away_7_SG OUT (stamina: 74) → Away_2_SG IN (minutes)
+
+[07:54] Substitution (Away): Away_6_PG OUT (stamina: 72) → Away_7_SG IN (minutes)
+
+[07:54] Substitution (Away): Away_9_PF OUT (stamina: 70) → Away_8_SF IN (minutes)
+
+[07:38] Away possession (Score: 33-35)
+Away_8_SF attempts a Midrange. Contested by Home_9_PF (3.0 feet, MAN). Away_8_SF misses. Offensive rebound by Away_5_C! Away_5_C's putback is no good. Offensive rebound by Away_5_C! Away_5_C kicks it out.
+
+[07:23] Away possession (Score: 33-35)
+Away_5_C attempts a 3Pt. Contested by Home_5_C (2.6 feet, MAN). Away_5_C misses. Offensive rebound by Away_3_SF! Away_3_SF's putback is no good. Offensive rebound by Away_3_SF! Away_3_SF kicks it out.
+
+[07:07] Away possession (Score: 33-35)
+Away_8_SF attempts a 3Pt. Contested by Home_9_PF (3.0 feet, MAN). Away_8_SF misses. Rebound secured by Home_4_PF.
+
+[06:52] Home possession (Score: 33-35)
+Home_4_PF attempts a Layup. Contested by Away_4_PF (2.6 feet, MAN). HOME_4_PF MAKES IT!
+Score: 35-35
+
+[06:52] Substitution (Away): Away_3_SF OUT (stamina: 70) → Away_4_PF IN (minutes)
+
+[06:52] Substitution (Away): Away_5_C OUT (stamina: 69) → Away_10_C IN (minutes)
+
+[06:37] Away possession (Score: 35-35)
+FOUL! Reach-in foul on Home_7_SG during the drive. [Team fouls: 2] No free throws, side out. (Home_7_SG: 1 personal fouls)
+
+[06:16] Home possession (Score: 35-35)
+Home_9_PF attempts a 3Pt. Contested by Away_4_PF (2.7 feet, MAN). Home_9_PF misses. Offensive rebound by Home_1_PG! Home_1_PG kicks it out.
+
+[06:02] Home possession (Score: 35-35)
+Home_1_PG drives and kicks out. FOUL! Shooting foul on Away_4_PF. Home_9_PF to the line for 3 free throws. [Team fouls: 2] (Away_4_PF: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: MISS   FT 3/3: MISS Home_9_PF makes 1/3 from the line.
+Score: 36-35
+
+[05:39] Away possession (Score: 36-35)
+Away_1_PG attempts a Midrange. Contested by Home_6_PG (3.6 feet, MAN). AWAY_1_PG MAKES IT! Assist: Away_6_PG
+Score: 36-37
+
+[05:39] Substitution (Home): Home_1_PG OUT (stamina: 69) → Home_6_PG IN (minutes)
+
+[05:39] Substitution (Home): Home_7_SG OUT (stamina: 65) → Home_2_SG IN (minutes)
+
+[05:39] Substitution (Home): Home_4_PF OUT (stamina: 65) → Home_8_SF IN (minutes)
+
+[05:39] Substitution (Home): Home_9_PF OUT (stamina: 69) → Home_3_SF IN (minutes)
+
+[05:39] Substitution (Home): Home_5_C OUT (stamina: 66) → Home_10_C IN (minutes)
+
+[05:39] Substitution (Away): Away_2_SG OUT (stamina: 70) → Away_6_PG IN (minutes)
+
+[05:39] Substitution (Away): Away_7_SG OUT (stamina: 67) → Away_1_PG IN (minutes)
+
+[05:39] Substitution (Away): Away_8_SF OUT (stamina: 68) → Away_9_PF IN (minutes)
+
+[05:25] Home possession (Score: 36-37)
+FOUL! Shooting foul on Away_10_C. Home_10_C to the line for 2 free throws. [Team fouls: 3] (Away_10_C: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Home_10_C makes 2/2 from the line.
+Score: 38-37
+
+[05:09] Away possession (Score: 38-37)
+FOUL! Shooting foul on Home_6_PG. Away_1_PG to the line for 3 free throws. [Team fouls: 3] (Home_6_PG: 1 personal fouls)   FT 1/3: MISS   FT 2/3: GOOD   FT 3/3: MISS Away_1_PG makes 1/3 from the line.
+Score: 38-38
+
+[04:54] Home possession (Score: 38-38)
+Home_6_PG drives, Away_1_PG stays with him. Home_6_PG attempts a Dunk. Contested by Away_1_PG (3.3 feet, MAN). Home_6_PG misses. Rebound secured by Away_4_PF.
+
+[04:41] Away possession (Score: 38-38)
+Away_5_C attempts a Layup. Contested by Home_10_C (3.0 feet, MAN). AWAY_5_C MAKES IT!
+Score: 38-40
+
+[04:41] Substitution (Away): Away_4_PF OUT (stamina: 69) → Away_3_SF IN (minutes)
+
+[04:41] Substitution (Away): Away_10_C OUT (stamina: 68) → Away_5_C IN (minutes)
+
+[04:25] Home possession (Score: 38-40)
+Home_8_SF attempts a Midrange. Contested by Away_3_SF (2.3 feet, MAN). Home_8_SF misses. Rebound secured by Away_6_PG.
+
+[04:07] Away possession (Score: 38-40)
+Away_1_PG attempts a 3Pt. Contested by Home_6_PG (3.7 feet, MAN). AWAY_1_PG MAKES IT! Assist: Away_5_C
+Score: 38-43
+
+[03:44] Home possession (Score: 38-43)
+Home_10_C attempts a 3Pt. Contested by Away_5_C (2.5 feet, MAN). Home_10_C misses. Offensive rebound by Home_2_SG! Home_2_SG kicks it out.
+
+[03:28] Home possession (Score: 38-43)
+Home_2_SG attempts a Midrange. Contested by Away_3_SF (2.4 feet, MAN). Home_2_SG misses. Rebound secured by Away_6_PG.
+
+[03:14] Away possession (Score: 38-43)
+Away_8_SF attempts a Layup. Contested by Home_9_PF (3.0 feet, MAN). AWAY_8_SF MAKES IT!
+Score: 38-45
+
+[03:14] Substitution (Home): Home_6_PG OUT (stamina: 70) → Home_1_PG IN (minutes)
+
+[03:14] Substitution (Home): Home_2_SG OUT (stamina: 65) → Home_7_SG IN (minutes)
+
+[03:14] Substitution (Home): Home_8_SF OUT (stamina: 69) → Home_9_PF IN (minutes)
+
+[03:14] Substitution (Home): Home_3_SF OUT (stamina: 65) → Home_4_PF IN (minutes)
+
+[03:14] Substitution (Home): Home_10_C OUT (stamina: 71) → Home_5_C IN (minutes)
+
+[03:14] Substitution (Away): Away_6_PG OUT (stamina: 69) → Away_2_SG IN (minutes)
+
+[03:14] Substitution (Away): Away_1_PG OUT (stamina: 66) → Away_7_SG IN (minutes)
+
+[03:14] Substitution (Away): Away_9_PF OUT (stamina: 68) → Away_8_SF IN (minutes)
+
+[02:58] Home possession (Score: 38-45)
+Home_1_PG attempts a 3Pt. Contested by Away_2_SG (2.7 feet, MAN). Home_1_PG misses. Rebound secured by Away_3_SF.
+
+[02:40] Away possession (Score: 38-45)
+Away_8_SF attempts a Midrange. Contested by Home_9_PF (3.0 feet, MAN). Away_8_SF misses. Rebound secured by Home_4_PF.
+
+[02:40] Substitution (Away): Away_3_SF OUT (stamina: 69) → Away_4_PF IN (minutes)
+
+[02:40] Substitution (Away): Away_5_C OUT (stamina: 69) → Away_10_C IN (minutes)
+
+[02:18] Home possession (Score: 38-45)
+Home_9_PF attempts a Midrange. Contested by Away_4_PF (2.7 feet, MAN). Home_9_PF misses. Offensive rebound by Home_5_C! Home_5_C puts it back in!
+Score: 40-45
+
+[02:04] Away possession (Score: 40-45)
+FOUL! Shooting foul on Home_9_PF. Away_8_SF to the line for 2 free throws. [Team fouls: 4] (Home_9_PF: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Away_8_SF makes 2/2 from the line.
+Score: 40-47
+
+[01:51] Home possession (Score: 40-47)
+Home_1_PG drives, Away_2_SG stays with him. Home_1_PG attempts a Layup. Contested by Away_2_SG (2.8 feet, MAN). Home_1_PG misses. Offensive rebound by Home_1_PG! Home_1_PG kicks it out.
+
+[01:32] Home possession (Score: 40-47)
+Home_1_PG drives, Away_2_SG stays with him. Home_1_PG attempts a Dunk. Contested by Away_2_SG (2.9 feet, MAN). HOME_1_PG MAKES IT!
+Score: 42-47
+
+[01:10] Away possession (Score: 42-47)
+Away_8_SF attempts a Midrange. Contested by Home_9_PF (3.2 feet, MAN). Away_8_SF misses. Offensive rebound by Away_4_PF! Away_4_PF's putback is no good. Rebound secured by Home_1_PG.
+
+[00:47] Home possession (Score: 42-47)
+Home_8_SF attempts a Midrange. Contested by Away_4_PF (2.9 feet, MAN). HOME_8_SF MAKES IT! Assist: Home_3_SF
+Score: 44-47
+
+[00:47] Substitution (Home): Home_1_PG OUT (stamina: 67) → Home_6_PG IN (minutes)
+
+[00:47] Substitution (Home): Home_7_SG OUT (stamina: 65) → Home_2_SG IN (minutes)
+
+[00:47] Substitution (Home): Home_9_PF OUT (stamina: 68) → Home_8_SF IN (minutes)
+
+[00:47] Substitution (Home): Home_4_PF OUT (stamina: 65) → Home_3_SF IN (minutes)
+
+[00:47] Substitution (Home): Home_5_C OUT (stamina: 66) → Home_10_C IN (minutes)
+
+[00:47] Substitution (Away): Away_2_SG OUT (stamina: 68) → Away_6_PG IN (minutes)
+
+[00:47] Substitution (Away): Away_7_SG OUT (stamina: 67) → Away_1_PG IN (minutes)
+
+[00:47] Substitution (Away): Away_8_SF OUT (stamina: 67) → Away_9_PF IN (minutes)
+
+[00:27] Away possession (Score: 44-47)
+Away_9_PF drives to the basket... Away_9_PF loses the ball! TURNOVER!
+
+[00:12] Home possession (Score: 44-47)
+Home_10_C attempts a 3Pt. Contested by Away_5_C (2.4 feet, MAN). HOME_10_C MAKES IT! Assist: Home_2_SG
+Score: 47-47
+
+[00:12] Substitution (Away): Away_4_PF OUT (stamina: 67) → Away_3_SF IN (minutes)
+
+[00:12] Substitution (Away): Away_10_C OUT (stamina: 67) → Away_5_C IN (minutes)
+
+================================================================================
+                              2ND QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Home 24, Away 22
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Home_10_C               0    5    1    0   0   2/2   100.0     0/0   0.0
+Home_3_SF               0    2    0    1   0   1/1   100.0     0/0   0.0
+Home_4_PF               0    2    2    1   0   1/1   100.0     0/0   0.0
+Home_5_C                0    2    2    0   0   1/1   100.0     0/0   0.0
+Home_8_SF               0    2    0    0   0   1/1   100.0     0/0   0.0
+Home_2_SG               0    0    1    2   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 9/15 (60.0%), 3PT: 1/4 (25.0%), REB: 8 (5 off, 3 def), AST: 4, TO: 1
+TEAM FOULS: 4
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Away_1_PG               0    8    0    0   0   3/3   100.0     0/0   0.0
+Home_1_PG               0    6    3    0   0   3/3   100.0     0/0   0.0
+Away_5_C                0    4    3    1   0   2/2   100.0     0/0   0.0
+Away_2_SG               0    3    0    1   0   1/1   100.0     0/0   0.0
+Away_6_PG               0    2    2    1   0   1/1   100.0     0/0   0.0
+Away_8_SF               0    2    0    0   0   1/1   100.0     0/0   0.0
+Away_4_PF               0    0    1    1   0   0/0     0.0     0/0   0.0
+Away_9_PF               0    0    1    0   0   0/0     0.0     0/0   0.0
+Away_3_SF               0    0    2    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 8/12 (66.7%), 3PT: 3/4 (75.0%), REB: 10 (4 off, 6 def), AST: 4, TO: 2
+TEAM FOULS: 3
+
+================================================================================
+
+================================================================================
+                           3RD QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 47-47)
+Home_10_C attempts a Midrange. Contested by Away_10_C (3.1 feet, MAN). HOME_10_C MAKES IT! Assist: Home_7_SG
+Score: 49-47
+
+[12:00] Substitution (Home): Home_1_PG OUT (stamina: 100) → Home_6_PG IN (minutes)
+
+[12:00] Substitution (Home): Home_2_SG OUT (stamina: 100) → Home_7_SG IN (minutes)
+
+[12:00] Substitution (Home): Home_3_SF OUT (stamina: 100) → Home_8_SF IN (minutes)
+
+[12:00] Substitution (Home): Home_4_PF OUT (stamina: 100) → Home_9_PF IN (minutes)
+
+[12:00] Substitution (Home): Home_5_C OUT (stamina: 100) → Home_10_C IN (minutes)
+
+[12:00] Substitution (Away): Away_1_PG OUT (stamina: 100) → Away_6_PG IN (minutes)
+
+[12:00] Substitution (Away): Away_2_SG OUT (stamina: 100) → Away_7_SG IN (minutes)
+
+[12:00] Substitution (Away): Away_3_SF OUT (stamina: 100) → Away_8_SF IN (minutes)
+
+[12:00] Substitution (Away): Away_4_PF OUT (stamina: 100) → Away_9_PF IN (minutes)
+
+[12:00] Substitution (Away): Away_5_C OUT (stamina: 100) → Away_10_C IN (minutes)
+
+[11:40] Away possession (Score: 49-47)
+Away_7_SG attempts a 3Pt. Contested by Home_7_SG (3.4 feet, MAN). Away_7_SG misses. Offensive rebound by Away_8_SF! Away_8_SF puts it back in!
+Score: 49-49
+
+[11:22] Home possession (Score: 49-49)
+FOUL! Reach-in foul on Away_9_PF during the drive. [Team fouls: 1] No free throws, side out. (Away_9_PF: 1 personal fouls)
+
+[10:59] Away possession (Score: 49-49)
+Away_8_SF makes the Layup and draws the foul on Home_8_SF! And-1! Away_8_SF to the line for 1. [Team fouls: 1] (Home_8_SF: 1 personal fouls)   FT 1/1: GOOD Away_8_SF makes 1/1 from the line.
+Score: 49-52
+
+[10:45] Home possession (Score: 49-52)
+Home_8_SF throws a bad pass! Stolen by Away_8_SF! TURNOVER!
+
+[10:29] Away possession (Score: 49-52)
+Away_8_SF drives, picks up Home_8_SF. Help arrives from Home_6_PG! Away_8_SF attempts a Layup. Contested by Home_6_PG (3.3 feet, MAN). Away_8_SF misses. Offensive rebound by Away_6_PG! Away_6_PG kicks it out.
+
+[10:16] Away possession (Score: 49-52)
+Away_9_PF drives to the basket... Away_9_PF loses the ball! TURNOVER!
+
+[09:59] Home possession (Score: 49-52)
+Home_4_PF attempts a 3Pt. Contested by Away_4_PF (2.5 feet, MAN). Home_4_PF misses. Rebound secured by Away_5_C.
+
+[09:59] Substitution (Home): Home_6_PG OUT (stamina: 94) → Home_1_PG IN (minutes)
+
+[09:59] Substitution (Home): Home_7_SG OUT (stamina: 94) → Home_2_SG IN (minutes)
+
+[09:59] Substitution (Home): Home_8_SF OUT (stamina: 94) → Home_3_SF IN (minutes)
+
+[09:59] Substitution (Home): Home_9_PF OUT (stamina: 94) → Home_4_PF IN (minutes)
+
+[09:59] Substitution (Home): Home_10_C OUT (stamina: 94) → Home_5_C IN (minutes)
+
+[09:59] Substitution (Away): Away_6_PG OUT (stamina: 94) → Away_1_PG IN (minutes)
+
+[09:59] Substitution (Away): Away_7_SG OUT (stamina: 94) → Away_2_SG IN (minutes)
+
+[09:59] Substitution (Away): Away_8_SF OUT (stamina: 94) → Away_3_SF IN (minutes)
+
+[09:59] Substitution (Away): Away_9_PF OUT (stamina: 94) → Away_4_PF IN (minutes)
+
+[09:59] Substitution (Away): Away_10_C OUT (stamina: 94) → Away_5_C IN (minutes)
+
+[09:45] Away possession (Score: 49-52)
+Away_4_PF attempts a Layup. Contested by Home_4_PF (2.8 feet, MAN). Away_4_PF misses. Rebound secured by Home_3_SF.
+
+[09:30] Home possession (Score: 49-52)
+Home_1_PG drives and kicks out. Home_1_PG attempts a Midrange. Contested by Away_1_PG (3.1 feet, MAN). Home_1_PG misses. Rebound secured by Away_5_C.
+
+[09:14] Away possession (Score: 49-52)
+FOUL! Shooting foul on Home_4_PF. Away_4_PF to the line for 2 free throws. [Team fouls: 2] (Home_4_PF: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Away_4_PF makes 2/2 from the line.
+Score: 49-54
+
+[08:59] Home possession (Score: 49-54)
+Home_2_SG attempts a 3Pt. Contested by Away_2_SG (2.6 feet, MAN). Home_2_SG misses. Rebound secured by Away_5_C.
+
+[08:44] Away possession (Score: 49-54)
+Away_2_SG drives and kicks out. Away_2_SG attempts a Midrange. Contested by Home_2_SG (2.9 feet, MAN). AWAY_2_SG MAKES IT!
+Score: 49-56
+
+[08:32] Home possession (Score: 49-56)
+Home_2_SG attempts a Midrange. Contested by Away_2_SG (2.6 feet, MAN). Home_2_SG misses. Offensive rebound by Home_1_PG! Home_1_PG kicks it out.
+
+[08:12] Home possession (Score: 49-56)
+Home_3_SF drives, Away_3_SF stays with him. Home_3_SF attempts a Dunk. Contested by Away_3_SF (2.1 feet, MAN). HOME_3_SF MAKES IT! Assist: Home_4_PF
+Score: 51-56
+
+[07:56] Away possession (Score: 51-56)
+Away_4_PF drives, picks up Home_4_PF. Help arrives from Home_1_PG! Away_4_PF attempts a Dunk. Contested by Home_1_PG (2.8 feet, MAN). AWAY_4_PF MAKES IT!
+Score: 51-58
+
+[07:39] Home possession (Score: 51-58)
+Home_3_SF drives to the basket... Home_3_SF loses the ball! TURNOVER!
+
+[07:24] Away possession (Score: 51-58)
+Away_9_PF throws a bad pass! Stolen by Home_9_PF! TURNOVER!
+
+[07:24] Substitution (Home): Home_1_PG OUT (stamina: 91) → Home_6_PG IN (minutes)
+
+[07:24] Substitution (Home): Home_2_SG OUT (stamina: 91) → Home_7_SG IN (minutes)
+
+[07:24] Substitution (Home): Home_3_SF OUT (stamina: 91) → Home_8_SF IN (minutes)
+
+[07:24] Substitution (Home): Home_4_PF OUT (stamina: 92) → Home_9_PF IN (minutes)
+
+[07:24] Substitution (Home): Home_5_C OUT (stamina: 92) → Home_10_C IN (minutes)
+
+[07:24] Substitution (Away): Away_1_PG OUT (stamina: 91) → Away_6_PG IN (minutes)
+
+[07:24] Substitution (Away): Away_2_SG OUT (stamina: 91) → Away_7_SG IN (minutes)
+
+[07:24] Substitution (Away): Away_3_SF OUT (stamina: 91) → Away_8_SF IN (minutes)
+
+[07:24] Substitution (Away): Away_4_PF OUT (stamina: 92) → Away_9_PF IN (minutes)
+
+[07:24] Substitution (Away): Away_5_C OUT (stamina: 92) → Away_10_C IN (minutes)
+
+[07:05] Home possession (Score: 51-58)
+Home_7_SG attempts a Midrange. Contested by Away_7_SG (3.6 feet, MAN). Home_7_SG misses. Rebound secured by Away_6_PG.
+
+[06:52] Away possession (Score: 51-58)
+Away_6_PG throws a bad pass out of bounds! TURNOVER!
+
+[06:29] Home possession (Score: 51-58)
+Home_7_SG attempts a Midrange. Contested by Away_7_SG (3.6 feet, MAN). Home_7_SG misses. Rebound secured by Away_10_C.
+
+[06:14] Away possession (Score: 51-58)
+Away_6_PG attempts a 3Pt. Contested by Home_6_PG (3.5 feet, MAN). Away_6_PG misses. Offensive rebound by Away_8_SF! Away_8_SF puts it back in!
+Score: 51-60
+
+[05:56] Home possession (Score: 51-60)
+Home_6_PG attempts a 3Pt. Contested by Away_6_PG (3.3 feet, MAN). Home_6_PG misses. Rebound secured by Away_6_PG.
+
+[05:41] Away possession (Score: 51-60)
+Away_9_PF drives, Home_9_PF stays with him. Away_9_PF attempts a Layup. Contested by Home_9_PF (2.8 feet, MAN). Away_9_PF misses. Offensive rebound by Away_6_PG! Away_6_PG kicks it out.
+
+[05:24] Away possession (Score: 51-60)
+Away_10_C attempts a 3Pt. Contested by Home_10_C (2.9 feet, MAN). Away_10_C misses. FOUL! Loose ball foul on Home_10_C during the rebound battle. [Team fouls: 3] No free throws, side out. (Home_10_C: 1 personal fouls)
+
+[05:07] Away possession (Score: 51-60)
+Away_1_PG drives and kicks out. Away_3_SF attempts a 3Pt. Contested by Home_3_SF (2.7 feet, MAN). Away_3_SF misses. Offensive rebound by Away_3_SF! Away_3_SF's putback is no good. Rebound secured by Home_3_SF.
+
+[05:07] Substitution (Home): Home_6_PG OUT (stamina: 89) → Home_1_PG IN (minutes)
+
+[05:07] Substitution (Home): Home_7_SG OUT (stamina: 89) → Home_2_SG IN (minutes)
+
+[05:07] Substitution (Home): Home_8_SF OUT (stamina: 89) → Home_4_PF IN (minutes)
+
+[05:07] Substitution (Home): Home_9_PF OUT (stamina: 89) → Home_3_SF IN (minutes)
+
+[05:07] Substitution (Home): Home_10_C OUT (stamina: 89) → Home_5_C IN (minutes)
+
+[05:07] Substitution (Away): Away_6_PG OUT (stamina: 89) → Away_1_PG IN (minutes)
+
+[05:07] Substitution (Away): Away_7_SG OUT (stamina: 89) → Away_2_SG IN (minutes)
+
+[05:07] Substitution (Away): Away_8_SF OUT (stamina: 89) → Away_4_PF IN (minutes)
+
+[05:07] Substitution (Away): Away_9_PF OUT (stamina: 89) → Away_3_SF IN (minutes)
+
+[05:07] Substitution (Away): Away_10_C OUT (stamina: 89) → Away_5_C IN (minutes)
+
+[04:51] Home possession (Score: 51-60)
+Home_4_PF makes the Dunk and draws the foul on Away_4_PF! And-1! Home_4_PF to the line for 1. [Team fouls: 2] (Away_4_PF: 1 personal fouls)   FT 1/1: MISS Home_4_PF makes 0/1 from the line.
+Score: 53-60
+
+[04:37] Away possession (Score: 53-60)
+Away_5_C attempts a Midrange. Contested by Home_5_C (2.3 feet, MAN). AWAY_5_C MAKES IT! Assist: Away_3_SF
+Score: 53-62
+
+[04:23] Home possession (Score: 53-62)
+Home_5_C attempts a 3Pt. Contested by Away_5_C (2.3 feet, MAN). HOME_5_C MAKES IT! Assist: Home_2_SG
+Score: 56-62
+
+[04:04] Away possession (Score: 56-62)
+Away_2_SG attempts a 3Pt. Contested by Home_2_SG (2.9 feet, MAN). Away_2_SG misses. Offensive rebound by Away_5_C! Away_5_C's putback is no good. Offensive rebound by Away_3_SF! Away_3_SF kicks it out.
+
+[03:48] Away possession (Score: 56-62)
+Away_1_PG attempts a 3Pt. Contested by Home_1_PG (2.6 feet, MAN). Away_1_PG misses. Rebound secured by Home_1_PG.
+
+[03:33] Home possession (Score: 56-62)
+Home_2_SG makes the 3Pt and draws the foul on Away_2_SG! And-1! Home_2_SG to the line for 1. [Team fouls: 3] (Away_2_SG: 1 personal fouls)   FT 1/1: GOOD Home_2_SG makes 1/1 from the line.
+Score: 60-62
+
+[03:17] Away possession (Score: 60-62)
+Away_1_PG drives, picks up Home_1_PG. Help arrives from Home_4_PF! Away_1_PG attempts a Dunk. Contested by Home_4_PF (2.6 feet, MAN). AWAY_1_PG MAKES IT!
+Score: 60-64
+
+[03:00] Home possession (Score: 60-64)
+Home_4_PF attempts a Midrange. Contested by Away_4_PF (2.5 feet, MAN). HOME_4_PF MAKES IT! Assist: Home_5_C
+Score: 62-64
+
+[02:41] Away possession (Score: 62-64)
+Away_4_PF attempts a 3Pt. Contested by Home_4_PF (2.8 feet, MAN). Away_4_PF misses. Offensive rebound by Away_3_SF! Away_3_SF puts it back in!
+Score: 62-66
+
+[02:23] Home possession (Score: 62-66)
+Home_2_SG attempts a 3Pt. Contested by Away_2_SG (2.6 feet, MAN). Home_2_SG misses. Offensive rebound by Home_5_C! Home_5_C's putback is no good. Rebound secured by Away_2_SG.
+
+[02:08] Away possession (Score: 62-66)
+Away_7_SG attempts a Midrange. Contested by Home_7_SG (3.4 feet, MAN). AWAY_7_SG MAKES IT! Assist: Away_10_C
+Score: 62-68
+
+[02:08] Substitution (Home): Home_1_PG OUT (stamina: 83) → Home_6_PG IN (minutes)
+
+[02:08] Substitution (Home): Home_2_SG OUT (stamina: 83) → Home_7_SG IN (minutes)
+
+[02:08] Substitution (Home): Home_4_PF OUT (stamina: 85) → Home_8_SF IN (minutes)
+
+[02:08] Substitution (Home): Home_3_SF OUT (stamina: 83) → Home_9_PF IN (minutes)
+
+[02:08] Substitution (Home): Home_5_C OUT (stamina: 85) → Home_10_C IN (minutes)
+
+[02:08] Substitution (Away): Away_1_PG OUT (stamina: 83) → Away_6_PG IN (minutes)
+
+[02:08] Substitution (Away): Away_2_SG OUT (stamina: 83) → Away_7_SG IN (minutes)
+
+[02:08] Substitution (Away): Away_4_PF OUT (stamina: 85) → Away_8_SF IN (minutes)
+
+[02:08] Substitution (Away): Away_3_SF OUT (stamina: 83) → Away_9_PF IN (minutes)
+
+[02:08] Substitution (Away): Away_5_C OUT (stamina: 85) → Away_10_C IN (minutes)
+
+[01:55] Home possession (Score: 62-68)
+Home_9_PF attempts a Midrange. Contested by Away_9_PF (3.1 feet, MAN). Home_9_PF misses. Rebound secured by Away_10_C.
+
+[01:38] Away possession (Score: 62-68)
+Away_10_C attempts a 3Pt. Contested by Home_10_C (2.9 feet, MAN). Away_10_C misses. Rebound secured by Home_8_SF.
+
+[01:21] Home possession (Score: 62-68)
+Home_10_C drives and kicks out. Home_8_SF attempts a 3Pt. Contested by Away_8_SF (2.9 feet, MAN). Home_8_SF misses. Rebound secured by Away_10_C.
+
+[01:06] Away possession (Score: 62-68)
+Away_6_PG attempts a Midrange. Contested by Home_6_PG (3.5 feet, MAN). AWAY_6_PG MAKES IT! Assist: Away_7_SG
+Score: 62-70
+
+[00:54] Home possession (Score: 62-70)
+Home_9_PF attempts a 3Pt. Contested by Away_9_PF (3.1 feet, MAN). Home_9_PF misses. Offensive rebound by Home_10_C! Home_10_C puts it back in!
+Score: 64-70
+
+[00:38] Away possession (Score: 64-70)
+FOUL! Holding foul on Home_8_SF. [Team fouls: 4] No free throws, side out. (Home_8_SF: 2 personal fouls)
+
+[00:18] Home possession (Score: 64-70)
+Home_8_SF drives, picks up Away_8_SF. Help arrives from Away_6_PG! Home_8_SF attempts a Dunk. Contested by Away_6_PG (2.9 feet, MAN). HOME_8_SF MAKES IT! Assist: Home_10_C
+Score: 66-70
+
+================================================================================
+                              3RD QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Home 19, Away 23
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Home_10_C               0    4    1    1   0   2/2   100.0     0/0   0.0
+Home_5_C                0    3    0    1   0   1/1   100.0     0/0   0.0
+Away_2_SG               0    2    1    0   0   1/1   100.0     0/0   0.0
+Home_4_PF               0    2    0    1   0   1/1   100.0     0/0   0.0
+Home_8_SF               0    2    1    0   0   1/1   100.0     0/0   0.0
+Home_7_SG               0    0    0    1   0   0/0     0.0     0/0   0.0
+Home_1_PG               0    0    2    0   0   0/0     0.0     0/0   0.0
+Home_2_SG               0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 6/15 (40.0%), 3PT: 2/6 (33.3%), REB: 6 (3 off, 3 def), AST: 5, TO: 2
+TEAM FOULS: 4
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Away_8_SF               0    4    3    0   0   2/2   100.0     0/0   0.0
+Away_6_PG               0    2    4    0   0   1/1   100.0     0/0   0.0
+Away_5_C                0    2    3    0   0   1/1   100.0     0/0   0.0
+Home_3_SF               0    2    2    0   0   1/1   100.0     0/0   0.0
+Away_4_PF               0    2    0    0   0   1/1   100.0     0/0   0.0
+Away_3_SF               0    2    2    1   0   1/1   100.0     0/0   0.0
+Away_1_PG               0    2    0    0   0   1/1   100.0     0/0   0.0
+Away_7_SG               0    2    0    1   0   1/1   100.0     0/0   0.0
+Away_10_C               0    0    3    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 9/13 (69.2%), 3PT: 3/5 (60.0%), REB: 16 (8 off, 8 def), AST: 3, TO: 3
+TEAM FOULS: 3
+
+================================================================================
+
+================================================================================
+                           4TH QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 66-70)
+Home_1_PG drives to the basket... Home_1_PG loses the ball! TURNOVER!
+
+[12:00] Substitution (Home): Home_1_PG OUT (stamina: 85) → Home_6_PG IN (minutes)
+
+[12:00] Substitution (Home): Home_2_SG OUT (stamina: 85) → Home_1_PG IN (minutes)
+
+[12:00] Substitution (Home): Home_3_SF OUT (stamina: 85) → Home_8_SF IN (minutes)
+
+[12:00] Substitution (Home): Home_4_PF OUT (stamina: 87) → Home_3_SF IN (minutes)
+
+[12:00] Substitution (Home): Home_5_C OUT (stamina: 87) → Home_10_C IN (minutes)
+
+[12:00] Substitution (Away): Away_1_PG OUT (stamina: 85) → Away_6_PG IN (minutes)
+
+[12:00] Substitution (Away): Away_2_SG OUT (stamina: 85) → Away_1_PG IN (minutes)
+
+[12:00] Substitution (Away): Away_3_SF OUT (stamina: 85) → Away_8_SF IN (minutes)
+
+[12:00] Substitution (Away): Away_4_PF OUT (stamina: 87) → Away_3_SF IN (minutes)
+
+[12:00] Substitution (Away): Away_5_C OUT (stamina: 87) → Away_10_C IN (minutes)
+
+[11:42] Away possession (Score: 66-70)
+Away_8_SF attempts a 3Pt. Contested by Home_3_SF (2.7 feet, MAN). Away_8_SF misses. Rebound secured by Home_1_PG.
+
+[11:22] Home possession (Score: 66-70)
+Home_6_PG drives, Away_1_PG stays with him. Home_6_PG attempts a Dunk. Contested by Away_1_PG (3.1 feet, MAN). Home_6_PG misses. Offensive rebound by Home_3_SF! Home_3_SF's putback is no good. Offensive rebound by Home_1_PG! Home_1_PG kicks it out.
+
+[11:07] Home possession (Score: 66-70)
+Home_10_C attempts a 3Pt. Contested by Away_10_C (3.1 feet, MAN). Home_10_C misses. Rebound secured by Away_8_SF.
+
+[10:49] Away possession (Score: 66-70)
+Away_8_SF drives to the basket... Away_8_SF loses the ball! TURNOVER!
+
+[10:36] Home possession (Score: 66-70)
+Home_3_SF attempts a 3Pt. Contested by Away_3_SF (2.1 feet, MAN). Home_3_SF misses. Rebound secured by Away_8_SF.
+
+[10:16] Away possession (Score: 66-70)
+Away_3_SF throws a bad pass out of bounds! TURNOVER!
+
+[09:58] Home possession (Score: 66-70)
+Home_7_SG attempts a 3Pt. Contested by Away_2_SG (2.6 feet, MAN). Home_7_SG misses. Rebound secured by Away_5_C.
+
+[09:58] Substitution (Home): Home_6_PG OUT (stamina: 79) → Home_2_SG IN (minutes)
+
+[09:58] Substitution (Home): Home_1_PG OUT (stamina: 79) → Home_7_SG IN (minutes)
+
+[09:58] Substitution (Home): Home_8_SF OUT (stamina: 79) → Home_4_PF IN (minutes)
+
+[09:58] Substitution (Home): Home_3_SF OUT (stamina: 79) → Home_9_PF IN (minutes)
+
+[09:58] Substitution (Home): Home_10_C OUT (stamina: 79) → Home_5_C IN (minutes)
+
+[09:58] Substitution (Away): Away_6_PG OUT (stamina: 79) → Away_2_SG IN (minutes)
+
+[09:58] Substitution (Away): Away_1_PG OUT (stamina: 79) → Away_7_SG IN (minutes)
+
+[09:58] Substitution (Away): Away_8_SF OUT (stamina: 79) → Away_4_PF IN (minutes)
+
+[09:58] Substitution (Away): Away_3_SF OUT (stamina: 79) → Away_9_PF IN (minutes)
+
+[09:58] Substitution (Away): Away_10_C OUT (stamina: 79) → Away_5_C IN (minutes)
+
+[09:43] Away possession (Score: 66-70)
+Away_4_PF attempts a Midrange. Contested by Home_4_PF (2.8 feet, MAN). Away_4_PF misses. Rebound secured by Home_2_SG.
+
+[09:27] Home possession (Score: 66-70)
+Home_7_SG attempts a 3Pt. Contested by Away_2_SG (2.6 feet, MAN). Home_7_SG misses. Rebound secured by Away_4_PF.
+
+[09:05] Away possession (Score: 66-70)
+FOUL! Shooting foul on Home_5_C. Away_5_C to the line for 3 free throws. [Team fouls: 1] (Home_5_C: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Away_5_C makes 3/3 from the line.
+Score: 66-73
+
+[08:44] Home possession (Score: 66-73)
+Home_4_PF attempts a 3Pt. Contested by Away_4_PF (2.5 feet, MAN). HOME_4_PF MAKES IT! Assist: Home_7_SG
+Score: 69-73
+
+[08:29] Away possession (Score: 69-73)
+Away_9_PF attempts a 3Pt. Contested by Home_4_PF (2.8 feet, MAN). Away_9_PF misses. Rebound secured by Home_5_C.
+
+[08:15] Home possession (Score: 69-73)
+FOUL! Shooting foul on Away_2_SG. Home_4_PF to the line for 2 free throws. [Team fouls: 1] (Away_2_SG: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Home_4_PF makes 1/2 from the line.
+Score: 70-73
+
+[07:59] Away possession (Score: 70-73)
+Away_5_C throws a bad pass! Stolen by Home_5_C! TURNOVER!
+
+[07:44] Home possession (Score: 70-73)
+Home_6_PG attempts a Layup. Contested by Away_1_PG (3.1 feet, MAN). HOME_6_PG MAKES IT!
+Score: 72-73
+
+[07:44] Substitution (Home): Home_2_SG OUT (stamina: 80) → Home_6_PG IN (minutes)
+
+[07:44] Substitution (Home): Home_7_SG OUT (stamina: 81) → Home_1_PG IN (minutes)
+
+[07:44] Substitution (Home): Home_4_PF OUT (stamina: 83) → Home_8_SF IN (minutes)
+
+[07:44] Substitution (Home): Home_9_PF OUT (stamina: 81) → Home_4_PF IN (minutes)
+
+[07:44] Substitution (Home): Home_5_C OUT (stamina: 83) → Home_10_C IN (minutes)
+
+[07:44] Substitution (Away): Away_2_SG OUT (stamina: 80) → Away_6_PG IN (minutes)
+
+[07:44] Substitution (Away): Away_7_SG OUT (stamina: 81) → Away_1_PG IN (minutes)
+
+[07:44] Substitution (Away): Away_4_PF OUT (stamina: 83) → Away_8_SF IN (minutes)
+
+[07:44] Substitution (Away): Away_9_PF OUT (stamina: 81) → Away_3_SF IN (minutes)
+
+[07:44] Substitution (Away): Away_5_C OUT (stamina: 83) → Away_10_C IN (minutes)
+
+[07:26] Away possession (Score: 72-73)
+Away_1_PG drives and kicks out. Away_8_SF attempts a Midrange. Contested by Home_8_SF (3.3 feet, MAN). Away_8_SF misses. Offensive rebound by Away_3_SF! Away_3_SF puts it back in!
+Score: 72-75
+
+[07:12] Home possession (Score: 72-75)
+Home_8_SF drives and kicks out. Home_8_SF attempts a 3Pt. Contested by Away_3_SF (2.1 feet, MAN). Home_8_SF misses. Rebound secured by Away_6_PG.
+
+[06:51] Away possession (Score: 72-75)
+Away_8_SF attempts a 3Pt. Contested by Home_8_SF (3.3 feet, MAN). Away_8_SF misses. Rebound secured by Home_4_PF.
+
+[06:37] Home possession (Score: 72-75)
+Home_4_PF attempts a Midrange. Contested by Away_3_SF (2.1 feet, MAN). HOME_4_PF MAKES IT!
+Score: 74-75
+
+[06:18] Away possession (Score: 74-75)
+FOUL! Reach-in foul on Home_1_PG during the drive. [Team fouls: 2] No free throws, side out. (Home_1_PG: 1 personal fouls)
+
+[06:02] Home possession (Score: 74-75)
+Home_8_SF drives and kicks out. Home_8_SF attempts a Midrange. Contested by Away_3_SF (2.2 feet, MAN). HOME_8_SF MAKES IT! Assist: Home_1_PG
+Score: 76-75
+
+[05:49] Away possession (Score: 76-75)
+Away_6_PG attempts a 3Pt. Contested by Home_1_PG (2.7 feet, MAN). Away_6_PG misses. Rebound secured by Home_4_PF.
+
+[05:32] Home possession (Score: 76-75)
+Home_7_SG attempts a 3Pt. Contested by Away_2_SG (2.6 feet, MAN). Home_7_SG misses. Rebound secured by Away_5_C.
+
+[05:32] Substitution (Home): Home_6_PG OUT (stamina: 76) → Home_7_SG IN (minutes)
+
+[05:32] Substitution (Home): Home_1_PG OUT (stamina: 75) → Home_2_SG IN (minutes)
+
+[05:32] Substitution (Home): Home_8_SF OUT (stamina: 76) → Home_3_SF IN (minutes)
+
+[05:32] Substitution (Home): Home_4_PF OUT (stamina: 76) → Home_9_PF IN (minutes)
+
+[05:32] Substitution (Home): Home_10_C OUT (stamina: 76) → Home_5_C IN (minutes)
+
+[05:32] Substitution (Away): Away_6_PG OUT (stamina: 76) → Away_7_SG IN (minutes)
+
+[05:32] Substitution (Away): Away_1_PG OUT (stamina: 75) → Away_2_SG IN (minutes)
+
+[05:32] Substitution (Away): Away_8_SF OUT (stamina: 76) → Away_4_PF IN (minutes)
+
+[05:32] Substitution (Away): Away_3_SF OUT (stamina: 75) → Away_9_PF IN (minutes)
+
+[05:32] Substitution (Away): Away_10_C OUT (stamina: 76) → Away_5_C IN (minutes)
+
+[05:18] Away possession (Score: 76-75)
+Away_2_SG attempts a Layup. Contested by Home_2_SG (2.9 feet, MAN). AWAY_2_SG MAKES IT!
+Score: 76-77
+
+[05:02] Home possession (Score: 76-77)
+FOUL! Reach-in foul on Away_4_PF during the drive. [Team fouls: 2] No free throws, side out. (Away_4_PF: 1 personal fouls)
+
+[04:47] Away possession (Score: 76-77)
+Away_5_C drives and kicks out. Away_4_PF attempts a 3Pt. Contested by Home_9_PF (2.8 feet, MAN). Away_4_PF misses. Offensive rebound by Away_5_C! Away_5_C puts it back in!
+Score: 76-79
+
+[04:30] Home possession (Score: 76-79)
+Home_5_C attempts a 3Pt. Contested by Away_5_C (2.3 feet, MAN). Home_5_C misses. Rebound secured by Away_2_SG.
+
+[04:15] Away possession (Score: 76-79)
+Away_9_PF attempts a 3Pt. Contested by Home_9_PF (2.8 feet, MAN). Away_9_PF misses. Rebound secured by Home_3_SF.
+
+[04:00] Home possession (Score: 76-79)
+Home_9_PF drives, Away_4_PF stays with him. Home_9_PF attempts a Layup. Contested by Away_4_PF (2.5 feet, MAN). HOME_9_PF MAKES IT! Assist: Home_1_PG
+Score: 78-79
+
+[04:00] Substitution (Home): Home_7_SG OUT (stamina: 79) → Home_1_PG IN (comeback_detected)
+
+[04:00] Substitution (Away): Away_7_SG OUT (stamina: 79) → Away_1_PG IN (comeback_detected)
+
+[03:48] Away possession (Score: 78-79)
+Away_4_PF attempts a 3Pt. Contested by Home_4_PF (2.8 feet, MAN). Away_4_PF misses. Offensive rebound by Away_3_SF! Away_3_SF puts it back in!
+Score: 78-81
+
+[03:48] Substitution (Home): Home_9_PF OUT (stamina: 78) → Home_4_PF IN (comeback_detected)
+
+[03:48] Substitution (Away): Away_9_PF OUT (stamina: 78) → Away_3_SF IN (comeback_detected)
+
+[03:29] Home possession (Score: 78-81)
+Home_2_SG attempts a Midrange. Contested by Away_2_SG (2.7 feet, MAN). Home_2_SG misses. Rebound secured by Away_3_SF.
+
+[03:29] Substitution (Home): Home_1_PG OUT (stamina: 76) → Home_6_PG IN (comeback_detected)
+
+[03:29] Substitution (Away): Away_1_PG OUT (stamina: 77) → Away_6_PG IN (comeback_detected)
+
+[03:13] Away possession (Score: 78-81)
+Away_10_C makes the Layup and draws the foul on Home_1_PG! And-1! Away_10_C to the line for 1. [Team fouls: 3] (Home_1_PG: 2 personal fouls)   FT 1/1: GOOD Away_10_C makes 1/1 from the line.
+Score: 78-84
+
+[03:13] Substitution (Home): Home_6_PG OUT (stamina: 79) → Home_1_PG IN (comeback_detected)
+
+[03:13] Substitution (Away): Away_6_PG OUT (stamina: 79) → Away_1_PG IN (comeback_detected)
+
+[03:13] Substitution (Home): Home_2_SG OUT (stamina: 75) → Home_7_SG IN (minutes)
+
+[03:13] Substitution (Home): Home_3_SF OUT (stamina: 77) → Home_8_SF IN (minutes)
+
+[03:13] Substitution (Home): Home_5_C OUT (stamina: 78) → Home_10_C IN (minutes)
+
+[03:13] Substitution (Away): Away_2_SG OUT (stamina: 76) → Away_7_SG IN (minutes)
+
+[03:13] Substitution (Away): Away_4_PF OUT (stamina: 78) → Away_8_SF IN (minutes)
+
+[03:13] Substitution (Away): Away_5_C OUT (stamina: 78) → Away_10_C IN (minutes)
+
+[02:55] Home possession (Score: 78-84)
+Home_8_SF attempts a 3Pt. Contested by Away_3_SF (2.2 feet, MAN). Home_8_SF misses. Offensive rebound by Home_1_PG! Home_1_PG kicks it out.
+
+[02:55] Substitution (Home): Home_7_SG OUT (stamina: 80) → Home_2_SG IN (comeback_detected)
+
+[02:55] Substitution (Away): Away_7_SG OUT (stamina: 80) → Away_2_SG IN (comeback_detected)
+
+[02:40] Home possession (Score: 78-84)
+Home_10_C makes the Midrange and draws the foul on Away_10_C! And-1! Home_10_C to the line for 1. [Team fouls: 3] (Away_10_C: 1 personal fouls)   FT 1/1: GOOD Home_10_C makes 1/1 from the line.
+Score: 81-84
+
+[02:40] Substitution (Home): Home_8_SF OUT (stamina: 79) → Home_3_SF IN (comeback_detected)
+
+[02:40] Substitution (Away): Away_8_SF OUT (stamina: 79) → Away_4_PF IN (comeback_detected)
+
+[02:23] Away possession (Score: 81-84)
+FOUL! Holding foul on Home_2_SG. [Team fouls: 4] No free throws, side out. (Home_2_SG: 1 personal fouls)
+
+[02:23] Substitution (Home): Home_10_C OUT (stamina: 78) → Home_5_C IN (comeback_detected)
+
+[02:23] Substitution (Away): Away_10_C OUT (stamina: 78) → Away_5_C IN (comeback_detected)
+
+[02:09] Home possession (Score: 81-84)
+Home_2_SG makes the Dunk and draws the foul on Away_2_SG! And-1! Home_2_SG to the line for 1. [Team fouls: 4] (Away_2_SG: 2 personal fouls)   FT 1/1: GOOD Home_2_SG makes 1/1 from the line.
+Score: 84-84
+
+[02:09] Substitution (Home): Home_1_PG OUT (stamina: 73) → Home_9_PF IN (comeback_detected)
+
+[02:09] Substitution (Away): Away_1_PG OUT (stamina: 73) → Away_9_PF IN (comeback_detected)
+
+[01:55] Away possession (Score: 84-84)
+Away_2_SG commits an offensive foul! Home_2_SG drew the charge! TURNOVER!
+
+[01:55] Substitution (Home): Home_9_PF OUT (stamina: 80) → Home_1_PG IN (comeback_detected)
+
+[01:55] Substitution (Away): Away_9_PF OUT (stamina: 80) → Away_1_PG IN (comeback_detected)
+
+[01:35] Home possession (Score: 84-84)
+Home_5_C drives and kicks out. Home_9_PF attempts a 3Pt. Contested by Away_4_PF (2.6 feet, MAN). Home_9_PF misses. Offensive rebound by Home_5_C! Home_5_C puts it back in!
+Score: 86-84
+
+[01:35] Substitution (Home): Home_1_PG OUT (stamina: 73) → Home_6_PG IN (comeback_detected)
+
+[01:35] Substitution (Away): Away_1_PG OUT (stamina: 73) → Away_6_PG IN (comeback_detected)
+
+[01:35] Substitution (Home): Home_4_PF OUT (stamina: 73) → Home_9_PF IN (minutes)
+
+[01:35] Substitution (Away): Away_3_SF OUT (stamina: 71) → Away_9_PF IN (minutes)
+
+[01:21] Away possession (Score: 86-84)
+Away_1_PG attempts a 3Pt. Contested by Home_1_PG (2.8 feet, MAN). Away_1_PG misses. Rebound secured by Home_5_C.
+
+[01:21] Substitution (Home): Home_6_PG OUT (stamina: 81) → Home_1_PG IN (comeback_detected)
+
+[01:21] Substitution (Away): Away_6_PG OUT (stamina: 81) → Away_1_PG IN (comeback_detected)
+
+[01:04] Home possession (Score: 86-84)
+Home_5_C attempts a 3Pt. Contested by Away_5_C (2.4 feet, MAN). Home_5_C misses. Rebound secured by Away_5_C.
+
+[01:04] Substitution (Home): Home_9_PF OUT (stamina: 79) → Home_4_PF IN (comeback_detected)
+
+[01:04] Substitution (Away): Away_9_PF OUT (stamina: 79) → Away_3_SF IN (comeback_detected)
+
+[01:04] Substitution (Home): Home_1_PG OUT (stamina: 73) → Home_7_SG IN (minutes)
+
+[01:04] Substitution (Away): Away_1_PG OUT (stamina: 72) → Away_7_SG IN (minutes)
+
+[00:51] Away possession (Score: 86-84)
+Away_1_PG attempts a Layup. Contested by Home_1_PG (2.8 feet, MAN). Away_1_PG misses. Offensive rebound by Away_3_SF! Away_3_SF puts it back in!
+Score: 86-86
+
+[00:51] Substitution (Home): Home_7_SG OUT (stamina: 82) → Home_1_PG IN (comeback_detected)
+
+[00:51] Substitution (Away): Away_7_SG OUT (stamina: 82) → Away_1_PG IN (comeback_detected)
+
+[00:51] Substitution (Home): Home_2_SG OUT (stamina: 69) → Home_6_PG IN (minutes)
+
+[00:51] Substitution (Away): Away_2_SG OUT (stamina: 69) → Away_6_PG IN (minutes)
+
+[00:35] Home possession (Score: 86-86)
+Home_3_SF drives and kicks out. FOUL! Shooting foul on Away_1_PG. Home_1_PG to the line for 2 free throws. [BONUS: 5 team fouls] (Away_1_PG: 1 personal fouls)   FT 1/2: MISS   FT 2/2: MISS Home_1_PG makes 0/2 from the line.
+
+[00:35] Substitution (Home): Home_6_PG OUT (stamina: 81) → Home_2_SG IN (comeback_detected)
+
+[00:35] Substitution (Away): Away_6_PG OUT (stamina: 81) → Away_2_SG IN (comeback_detected)
+
+[00:17] Away possession (Score: 86-86)
+Away_9_PF drives to the basket... Away_9_PF loses the ball! TURNOVER!
+
+[00:17] Substitution (Home): Home_1_PG OUT (stamina: 71) → Home_8_SF IN (comeback_detected)
+
+[00:17] Substitution (Away): Away_1_PG OUT (stamina: 71) → Away_8_SF IN (comeback_detected)
+
+[00:17] Substitution (Home): Home_3_SF OUT (stamina: 70) → Home_9_PF IN (minutes)
+
+[00:17] Substitution (Home): Home_5_C OUT (stamina: 73) → Home_10_C IN (minutes)
+
+[00:17] Substitution (Away): Away_4_PF OUT (stamina: 72) → Away_9_PF IN (minutes)
+
+[00:17] Substitution (Away): Away_5_C OUT (stamina: 73) → Away_10_C IN (minutes)
+
+[00:01] Home possession (Score: 86-86)
+FOUL! Holding foul on Away_1_PG. [IN THE BONUS! 6 team fouls] Home_1_PG to the line for 2 free throws. (Away_1_PG: 2 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Home_1_PG makes 1/2 from the line.
+Score: 87-86
+
+[00:01] Substitution (Home): Home_8_SF OUT (stamina: 82) → Home_1_PG IN (comeback_detected)
+
+[00:01] Substitution (Away): Away_8_SF OUT (stamina: 82) → Away_1_PG IN (comeback_detected)
+
+[00:00] TIMEOUT - Away (desperation timeout) - 6 timeouts remaining
+
+================================================================================
+                              4TH QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Home 21, Away 16
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Home_4_PF               0    5    2    0   0   2/2   100.0     0/0   0.0
+Home_5_C                0    2    3    0   0   1/1   100.0     0/0   0.0
+Home_6_PG               0    2    0    0   0   1/1   100.0     0/0   0.0
+Home_8_SF               0    2    0    0   0   1/1   100.0     0/0   0.0
+Home_9_PF               0    2    0    0   0   1/1   100.0     0/0   0.0
+Home_1_PG               0    0    3    2   0   0/0     0.0     0/0   0.0
+Home_2_SG               0    0    1    0   0   0/0     0.0     0/0   0.0
+Home_7_SG               0    0    0    1   0   0/0     0.0     0/0   0.0
+Home_3_SF               0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 6/15 (40.0%), 3PT: 1/8 (12.5%), REB: 10 (3 off, 7 def), AST: 3, TO: 1
+TEAM FOULS: 4
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Away_3_SF               0    6    4    0   0   3/3   100.0     0/0   0.0
+Away_5_C                0    2    4    0   0   1/1   100.0     0/0   0.0
+Away_2_SG               0    2    1    0   0   1/1   100.0     0/0   0.0
+Away_8_SF               0    0    2    0   0   0/0     0.0     0/0   0.0
+Away_4_PF               0    0    1    0   0   0/0     0.0     0/0   0.0
+Away_6_PG               0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 5/12 (41.7%), 3PT: 1/7 (14.3%), REB: 13 (4 off, 9 def), AST: 0, TO: 5
+TEAM FOULS: 6 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                               FULL GAME COMPLETE                               
+================================================================================
+
+FINAL SCORE: Home 87, Away 86
+
+SCORING BY QUARTER:
+--------------------------------------------------------------------------------
+Team                     Q1     Q2     Q3     Q4    FINAL
+--------------------------------------------------------------------------------
+Home                     23     24     19     21       87
+Away                     25     22     23     16       86
+--------------------------------------------------------------------------------
+
+FULL GAME BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Home_4_PF              27   14    4    3   2   5/7    71.4     0/0   0.0
+Home_5_C               26   17    8    1   0   5/8    62.5     0/0   0.0
+Home_1_PG              26   10   10    2   1   4/7    57.1     0/0   0.0
+Home_2_SG              26   13    3    3   1   5/9    55.6     0/0   0.0
+Home_3_SF              25    4    5    1   0   2/5    40.0     0/0   0.0
+Home_7_SG              23    0    0    3   1   0/5     0.0     0/0   0.0
+Home_9_PF              23    5    1    0   0   4/6    66.7     0/0   0.0
+Home_10_C              22   16    2    1   1   3/6    50.0     0/0   0.0
+Home_8_SF              22    6    1    0   1   3/8    37.5     0/0   0.0
+Home_6_PG              22    2    0    0   2   2/4    50.0     0/0   0.0
+
+TEAM: FG: 27/59 (45.8%), 3PT: 5/23 (21.7%), REB: 33 (15 off, 18 def), AST: 14, TO: 9
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Away_4_PF              26    5    2    1   0   3/5    60.0     0/0   0.0
+Away_3_SF              26   17   11    1   2   2/3    66.7     0/0   0.0
+Away_2_SG              26    7    2    1   1   3/5    60.0     0/0   0.0
+Away_1_PG              26   15    1    0   1   7/11   63.6     0/0   0.0
+Away_5_C               25   13   16    2   1   5/5   100.0     0/0   0.0
+Away_10_C              23    7    5    1   2   2/4    50.0     0/0   0.0
+Away_8_SF              23   16    6    0   0   4/9    44.4     0/0   0.0
+Away_6_PG              23    4    7    2   3   4/5    80.0     0/0   0.0
+Away_7_SG              22    2    0    1   0   2/3    66.7     0/0   0.0
+Away_9_PF              21    0    1    1   3   0/2     0.0     0/0   0.0
+
+TEAM: FG: 29/49 (59.2%), 3PT: 10/21 (47.6%), REB: 52 (21 off, 31 def), AST: 10, TO: 13
+
+================================================================================

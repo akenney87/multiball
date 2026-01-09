@@ -1,0 +1,109 @@
+{
+  "game_number": 63,
+  "home_team": "Team_022",
+  "away_team": "Team_038",
+  "final_score": {
+    "home": 61,
+    "away": 61
+  },
+  "quarter_scores": [
+    [
+      25,
+      20
+    ],
+    [
+      13,
+      8
+    ],
+    [
+      11,
+      21
+    ],
+    [
+      12,
+      12
+    ]
+  ],
+  "game_statistics": {
+    "home_team": "Team_022",
+    "away_team": "Team_038",
+    "home_score": 61,
+    "away_score": 61,
+    "home_stats": {
+      "points": 47,
+      "fgm": 19,
+      "fga": 60,
+      "fg3m": 8,
+      "fg3a": 25,
+      "oreb": 13,
+      "dreb": 34,
+      "ast": 9,
+      "tov": 18
+    },
+    "away_stats": {
+      "points": 50,
+      "fgm": 20,
+      "fga": 55,
+      "fg3m": 11,
+      "fg3a": 29,
+      "oreb": 10,
+      "dreb": 40,
+      "ast": 14,
+      "tov": 19
+    },
+    "total_possessions": 180
+  },
+  "statistics": {
+    "home_totals": {
+      "points": 61,
+      "fgm": 19,
+      "fga": 60,
+      "fg3m": 8,
+      "fg3a": 25,
+      "ftm": 0,
+      "fta": 0,
+      "oreb": 13,
+      "dreb": 34,
+      "reb": 47,
+      "ast": 9,
+      "stl": 0,
+      "blk": 0,
+      "tov": 18,
+      "pf": 0,
+      "fg_pct": 31.666666666666664,
+      "fg3_pct": 32.0,
+      "ft_pct": 0,
+      "oreb_pct": 27.659574468085108
+    },
+    "away_totals": {
+      "points": 61,
+      "fgm": 20,
+      "fga": 55,
+      "fg3m": 11,
+      "fg3a": 29,
+      "ftm": 0,
+      "fta": 0,
+      "oreb": 10,
+      "dreb": 40,
+      "reb": 50,
+      "ast": 14,
+      "stl": 0,
+      "blk": 0,
+      "tov": 19,
+      "pf": 0,
+      "fg_pct": 36.36363636363637,
+      "fg3_pct": 37.93103448275862,
+      "ft_pct": 0,
+      "oreb_pct": 20.0
+    },
+    "possessions": 64.5,
+    "home_score": 61,
+    "away_score": 61,
+    "margin": 0,
+    "game_number": 63,
+    "home_team": "Team_022",
+    "away_team": "Team_038",
+    "home_rating": 63.8,
+    "away_rating": 68.2
+  }
+}

@@ -146,8 +146,8 @@ describe('Turnover System', () => {
       const zoneTypes: string[] = [];
       const manTypes: string[] = [];
 
-      // Sample 100 turnovers for each
-      for (let i = 0; i < 100; i++) {
+      // Sample 1000 turnovers for each (increased from 100 for statistical reliability)
+      for (let i = 0; i < 1000; i++) {
         zoneTypes.push(selectTurnoverType(mockPossessionContext, mockTacticalSettings, 'zone'));
         manTypes.push(selectTurnoverType(mockPossessionContext, mockTacticalSettings, 'man'));
       }
@@ -162,7 +162,7 @@ describe('Turnover System', () => {
       const lowClockContext = { ...mockPossessionContext, shotClock: 3 };
       const types: string[] = [];
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 1000; i++) {
         types.push(selectTurnoverType(lowClockContext, mockTacticalSettings));
       }
 

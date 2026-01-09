@@ -1,0 +1,147 @@
+================================================================================
+PHASE 1 IMPLEMENTATION RESULTS - BASELINE SHOT DISTRIBUTION ADJUSTMENT
+================================================================================
+
+CHANGES MADE:
+  Baseline 3PT:      0.40 -> 0.42 (+2%)
+  Baseline Midrange: 0.20 -> 0.28 (+8%)
+  Baseline Rim:      0.40 -> 0.30 (-10%)
+
+File Modified: src/constants.py (lines 280-288)
+
+================================================================================
+VALIDATION RESULTS (20 Games)
+================================================================================
+
+Shot Distribution:
+--------------------------------------------------------------------------------
+Shot Type          BEFORE    AFTER    NBA Target   Change    Status
+--------------------------------------------------------------------------------
+3PT                37.0%     39.9%    40.0%        +2.9%     ✓ ON TARGET
+Midrange            5.4%     11.1%    25.0%        +5.7%     → IMPROVED (still low)
+Rim                57.6%     49.0%    35.0%        -8.6%     → IMPROVED (still high)
+
+FG% by Shot Type:
+--------------------------------------------------------------------------------
+3PT:      36.5% (NBA ~36%) ✓
+Midrange: 48.2% (NBA ~40-45%) ✓
+Rim:      66.4% (NBA ~60-62%) ✗ (still too high)
+
+Overall Statistics:
+--------------------------------------------------------------------------------
+Overall FG%:  52.4% (previous: 54.6%, target: 46-50%)
+Average PPG:  99.4  (previous: 100.2, target: 108-114)
+FGA per game: 75.1  (previous: 74.3)
+
+================================================================================
+ASSESSMENT
+================================================================================
+
+SUCCESSES:
+  ✓ 3PT attempts: 37.0% -> 39.9% (PERFECT - within 0.1% of NBA target!)
+  ✓ Rim attempts: 57.6% -> 49.0% (MAJOR IMPROVEMENT - 8.6% reduction)
+  ✓ Midrange: 5.4% -> 11.1% (DOUBLED - moving in right direction)
+  ✓ Overall FG% decreased from 54.6% -> 52.4% (moving toward 46-50% target)
+
+REMAINING ISSUES:
+  ✗ Rim attempts still 14% above NBA target (49.0% vs 35%)
+  ✗ Midrange still 13.9% below NBA target (11.1% vs 25%)
+  ✗ Rim FG% still too high (66.4% vs 60-62% target)
+  ✗ Overall PPG still low (99.4 vs 108-114 target)
+
+IMPACT ANALYSIS:
+  - Phase 1 had SIGNIFICANT IMPACT (8.6% reduction in rim attempts)
+  - The change worked as predicted: rim dropped, 3PT and midrange increased
+  - However, the system is still overcompensating toward rim attempts
+  - Position bonuses (+25% for centers) are likely still pushing rim too high
+
+================================================================================
+DIAGNOSIS
+================================================================================
+
+Why is rim still at 49% instead of 35%?
+
+The baseline dropped from 40% to 30% (10% reduction), but the final distribution
+only dropped from 57.6% to 49% (8.6% reduction). This means:
+
+1. COMPOUNDING MODIFIERS are still amplifying rim attempts:
+   - Position bonuses (Centers +25%, PFs +10%)
+   - Player composite bonuses (elite finishers up to +32%)
+   - Bravery modifier (+8% for brave players)
+   - Transition bonus (+20% in fast breaks)
+   - Fast pace bonus (+5%)
+
+2. The NEW baseline (30%) is still being multiplied by all these modifiers:
+   30% base * 1.25 (center) * 1.32 (elite finisher) * 1.08 (brave) = 53%+
+
+3. Midrange is still too low (11.1% vs 25%) because:
+   - Baseline of 28% is getting REDUCED by other modifiers
+   - Position adjustments SUBTRACT from midrange to add to rim
+   - Player composites favor 3PT and rim over midrange
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+PROCEED TO PHASE 2: Reduce Position Bonuses
+
+Phase 1 alone is not sufficient. The position bonuses are too aggressive:
+  - Centers: +25% rim -> Reduce to +15% rim
+  - PFs: +10% rim -> Reduce to +5% rim
+
+This should:
+  1. Further reduce rim attempts (49% -> 42-44%)
+  2. Allow midrange to increase naturally (11% -> 18-20%)
+  3. Maintain the perfect 3PT rate (39.9%)
+
+ALTERNATIVE: Run Phase 2-3 together for faster iteration
+  - Phase 2: Position bonuses
+  - Phase 3: Player composite bonuses
+
+Expected Combined Impact: Rim 49% -> 38-40%
+
+================================================================================
+CONFIDENCE ASSESSMENT
+================================================================================
+
+Phase 1 Confidence: HIGH ✓
+  - Changes worked as predicted
+  - No breaking issues
+  - Clear measurable impact
+  - Direction is correct
+
+Phase 2 Necessity: HIGH ✓
+  - Rim still 14% above target
+  - Midrange still 13.9% below target
+  - Additional tuning clearly needed
+
+Risk Assessment for Phase 2: MEDIUM
+  - Position bonuses affect big men heavily
+  - May need to balance midrange increases with position changes
+  - Should test with 20 games again before full 100-game validation
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+OPTION A (Conservative):
+  1. Implement Phase 2 only (position bonuses)
+  2. Run 20-game validation
+  3. Assess results
+  4. Implement Phase 3 if needed
+
+OPTION B (Aggressive):
+  1. Implement Phase 2 + Phase 3 together
+  2. Run 20-game validation
+  3. Fine-tune if needed
+  4. Run 100-game validation
+
+OPTION C (Data-Driven):
+  1. Run full 100-game validation with Phase 1 only
+  2. Get more stable statistics
+  3. Determine exact additional reduction needed
+  4. Implement Phase 2-3 based on data
+
+RECOMMENDED: Option A (implement Phase 2, test, iterate)
+
+================================================================================

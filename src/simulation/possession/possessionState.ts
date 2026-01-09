@@ -187,17 +187,17 @@ export class PossessionState {
     }
 
     // Dead ball: check reason
-    // SIMPLIFIED SUBSTITUTION RULES (per user request):
-    // Substitutions allowed ONLY during:
+    // SUBSTITUTION RULES (per user request):
+    // Substitutions allowed during:
     // - Timeouts
-    // - Violations (turnovers, out of bounds)
-    // - Offensive fouls (dead ball turnovers)
+    // - Violations (turnovers, out of bounds, offensive fouls)
+    // - After fouls (IMMEDIATELY, before free throws)
     // - Quarter breaks
-    // NOT after shooting fouls, free throws, or made baskets
+    // NOT after made baskets or made free throws
     const legalSubReasons = [
       DeadBallReason.TIMEOUT,
       DeadBallReason.VIOLATION,
-      DeadBallReason.FOUL, // FIX: Allow subs after offensive fouls (dead ball)
+      DeadBallReason.FOUL,  // Allow subs after fouls (before FTs)
       DeadBallReason.QUARTER_END,
     ];
 
@@ -329,28 +329,29 @@ export class PossessionState {
 
     this.currentPossessionTeam = teamThatGotBall;
 
-    // USER FIX: Distinguish between live ball (steals) and dead ball (violations/fouls)
+    // USER FIX: Distinguish between live ball (steals) and dead ball (violations/offensive fouls)
     //
     // Substitution rules (per user): ONLY during timeout/violation/quarter-start
     // - Steals (bad_pass/lost_ball + stolen) → LIVE BALL, no subs
     // - Out of bounds (bad_pass/lost_ball + not stolen) → DEAD BALL (VIOLATION), subs allowed
     // - Violation (traveling, carry) → DEAD BALL (VIOLATION), subs allowed
-    // - Offensive foul → DEAD BALL (FOUL), no subs (it's a foul, not a violation)
+    // - Offensive foul → DEAD BALL (VIOLATION), subs allowed (it's a turnover)
 
     if (wasStolen) {
       // Live ball steal: play continues immediately
       this.ballState = BallState.LIVE;
       this.deadBallReason = DeadBallReason.NONE;
-    } else if (turnoverType === 'offensive_foul') {
-      // Dead ball foul: whistle blown, but it's a FOUL not a VIOLATION
-      // User said subs only during violations, not fouls
-      this.ballState = BallState.DEAD;
-      this.deadBallReason = DeadBallReason.FOUL;
     } else {
-      // Dead ball violation: out of bounds, traveling, carry, etc.
-      // Substitutions allowed
+      // Dead ball: whistle blown for violation OR offensive foul
       this.ballState = BallState.DEAD;
-      this.deadBallReason = DeadBallReason.VIOLATION;
+
+      // Distinguish between offensive foul and violation
+      if (turnoverType === 'offensive_foul') {
+        this.deadBallReason = DeadBallReason.FOUL;
+      } else {
+        // Other turnovers (out of bounds, traveling, carry, etc.) are violations
+        this.deadBallReason = DeadBallReason.VIOLATION;
+      }
     }
   }
 

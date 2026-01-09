@@ -1,0 +1,492 @@
+================================================================================
+ATTRIBUTE IMPACT ANALYSIS - ALL 25 ATTRIBUTES
+================================================================================
+Complete breakdown of every attribute and which game actions they affect
+
+Legend: Weight percentages show how much each attribute contributes to that action
+Format: Action Name (Weight%)
+
+================================================================================
+PHYSICAL ATTRIBUTES (12)
+================================================================================
+
+1. GRIP_STRENGTH
+   ------------------------------------------------
+   - Rebounding (10%)
+   - Turnover Prevention (5%)
+
+   Total Actions: 2
+   Average Weight: 7.5%
+   Usage: Low (ball security specialist)
+
+
+2. ARM_STRENGTH
+   ------------------------------------------------
+   - Dunk (20%)
+   - Drive → Dunk (20%)
+
+   Total Actions: 2
+   Average Weight: 20%
+   Usage: Moderate (rim finisher)
+
+
+3. CORE_STRENGTH
+   ------------------------------------------------
+   - Rebounding (14%)
+
+   Total Actions: 1
+   Average Weight: 14%
+   Usage: Low (rebounding specialist)
+
+
+4. AGILITY
+   ------------------------------------------------
+   - 3PT Shooting (4%)
+   - Midrange Shooting (2%)
+   - Dunk (10%)
+   - Drive → Dunk (10%)
+   - Contest Defense (33.34%)
+   - Transition Success (15%)
+   - Block Defense (12%)
+   - Block Avoidance (8%)
+
+   Total Actions: 8
+   Average Weight: 11.8%
+   Usage: Very High (versatile - defense, movement, shooting)
+
+
+5. ACCELERATION
+   ------------------------------------------------
+   - Drive → Dunk (8%)
+   - Drive → Layup (10%)
+   - Transition Success (25%)
+
+   Total Actions: 3
+   Average Weight: 14.3%
+   Usage: Moderate (first-step explosiveness)
+
+
+6. TOP_SPEED
+   ------------------------------------------------
+   - Transition Success (20%)
+
+   Total Actions: 1
+   Average Weight: 20%
+   Usage: Low (open court specialist)
+
+
+7. JUMPING
+   ------------------------------------------------
+   - Dunk (40%)
+   - Layup (15%)
+   - Rebounding (18%)
+   - Drive → Dunk (40%)
+   - Drive → Layup (15%)
+   - Block Defense (25%)
+   - Block Avoidance (12%)
+
+   Total Actions: 7
+   Average Weight: 23.6%
+   Usage: Very High (rim play dominant)
+
+
+8. REACTIONS
+   ------------------------------------------------
+   - Rebounding (9%)
+   - Contest Defense (33.33%)
+   - Block Defense (15%)
+
+   Total Actions: 3
+   Average Weight: 19.1%
+   Usage: High (defensive specialist)
+
+
+9. STAMINA
+   ------------------------------------------------
+   - Transition Success (10%)
+   - [Also affects: Attribute degradation when < 80]
+
+   Total Actions: 1 (+ system-wide impact)
+   Average Weight: 10%
+   Usage: Moderate (conditioning, passive degradation system)
+
+
+10. BALANCE
+    ------------------------------------------------
+    - 3PT Shooting (10%)
+    - Midrange Shooting (11%)
+    - Layup (20%)
+    - Drive → Layup (20%)
+    - Block Defense (5%)
+
+    Total Actions: 5
+    Average Weight: 13.2%
+    Usage: High (shooting and finishing)
+
+
+11. HEIGHT
+    ------------------------------------------------
+    - Dunk (30%)
+    - Rebounding (22%)
+    - Contest Defense (33.33%)
+    - Drive → Dunk (22%)
+    - Block Defense (20%)
+    - Block Avoidance (20%)
+    - [Also affects: Putback attempt threshold (>75)]
+
+    Total Actions: 6
+    Average Weight: 24.6%
+    Usage: Very High (size dominant - defense and rim)
+
+
+12. DURABILITY
+    ------------------------------------------------
+    **NO DIRECT IMPACT ON GAMEPLAY**
+
+    Total Actions: 0
+    Usage: None (reserved for future injury system)
+
+
+================================================================================
+MENTAL ATTRIBUTES (7)
+================================================================================
+
+13. AWARENESS
+    ------------------------------------------------
+    - Rebounding (18%)
+    - Drive → Kickout (35%)
+    - Drive → Turnover Prevention (40%)
+    - Transition Success (15%)
+    - Block Defense (10%)
+    - Block Avoidance (15%)
+
+    Total Actions: 6
+    Average Weight: 22.2%
+    Usage: Very High (decision-making across all systems)
+
+
+14. CREATIVITY
+    ------------------------------------------------
+    - Block Avoidance (10%)
+
+    Total Actions: 1
+    Average Weight: 10%
+    Usage: Low (shot variation specialist)
+
+
+15. DETERMINATION
+    ------------------------------------------------
+    - Rebounding (9%)
+
+    Total Actions: 1
+    Average Weight: 9%
+    Usage: Low (effort specialist)
+
+
+16. BRAVERY
+    ------------------------------------------------
+    - Block Defense (8%)
+
+    Total Actions: 1
+    Average Weight: 8%
+    Usage: Low (challenge specialist)
+
+
+17. CONSISTENCY
+    ------------------------------------------------
+    - 3PT Shooting (6%)
+    - Midrange Shooting (5%)
+    - Turnover Prevention (19%)
+    - Drive → Turnover Prevention (20%)
+
+    Total Actions: 4
+    Average Weight: 12.5%
+    Usage: Moderate (reliability specialist)
+
+
+18. COMPOSURE
+    ------------------------------------------------
+    - 3PT Shooting (8%)
+    - Midrange Shooting (8%)
+    - Turnover Prevention (28%)
+    - Drive → Kickout (25%)
+    - Drive → Turnover Prevention (30%)
+    - Transition Success (10%)
+    - Block Avoidance (10%)
+
+    Total Actions: 7
+    Average Weight: 17%
+    Usage: Very High (pressure situations)
+
+
+19. PATIENCE
+    ------------------------------------------------
+    **NO DIRECT IMPACT ON GAMEPLAY**
+
+    Total Actions: 0
+    Usage: None (placeholder for future offensive sets system)
+
+
+================================================================================
+TECHNICAL ATTRIBUTES (6)
+================================================================================
+
+20. HAND_EYE_COORDINATION
+    ------------------------------------------------
+    - 3PT Shooting (12%)
+    - Midrange Shooting (13%)
+    - Layup (30%)
+    - Drive → Layup (30%)
+    - Turnover Prevention (10%)
+    - Drive → Turnover Prevention (10%)
+    - Transition Success (5%)
+    - Block Defense (5%)
+
+    Total Actions: 8
+    Average Weight: 14.4%
+    Usage: Very High (ball control and touch)
+
+
+21. THROW_ACCURACY
+    ------------------------------------------------
+    - 3PT Shooting (20%)
+    - Midrange Shooting (18%)
+
+    Total Actions: 2
+    Average Weight: 19%
+    Usage: Moderate (shooting specialist)
+
+
+22. FORM_TECHNIQUE
+    ------------------------------------------------
+    - 3PT Shooting (25%)
+    - Midrange Shooting (23%)
+
+    Total Actions: 2
+    Average Weight: 24%
+    Usage: Moderate (shooting specialist)
+
+
+23. FINESSE
+    ------------------------------------------------
+    - 3PT Shooting (15%)
+    - Midrange Shooting (20%)
+    - Layup (35%)
+    - Drive → Layup (25%)
+    - Block Avoidance (18%)
+
+    Total Actions: 5
+    Average Weight: 22.6%
+    Usage: High (touch and control)
+
+
+24. DECEPTION
+    ------------------------------------------------
+    - Block Avoidance (7%)
+
+    Total Actions: 1
+    Average Weight: 7%
+    Usage: Low (fake specialist)
+
+
+25. TEAMWORK
+    ------------------------------------------------
+    - Drive → Kickout (40%)
+
+    Total Actions: 1
+    Average Weight: 40%
+    Usage: Low (passing specialist)
+
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+ATTRIBUTES BY USAGE TIER:
+--------------------------
+Very High Usage (6+ actions):
+    - Agility (8 actions, 11.8% avg)
+    - Jumping (7 actions, 23.6% avg)
+    - Composure (7 actions, 17% avg)
+    - Height (6 actions, 24.6% avg)
+    - Awareness (6 actions, 22.2% avg)
+    - Hand-Eye Coordination (8 actions, 14.4% avg)
+
+High Usage (4-5 actions):
+    - Balance (5 actions, 13.2% avg)
+    - Finesse (5 actions, 22.6% avg)
+    - Consistency (4 actions, 12.5% avg)
+
+Moderate Usage (2-3 actions):
+    - Arm Strength (2 actions, 20% avg)
+    - Acceleration (3 actions, 14.3% avg)
+    - Reactions (3 actions, 19.1% avg)
+    - Throw Accuracy (2 actions, 19% avg)
+    - Form Technique (2 actions, 24% avg)
+    - Grip Strength (2 actions, 7.5% avg)
+
+Low Usage (1 action):
+    - Core Strength (1 action, 14% avg)
+    - Top Speed (1 action, 20% avg)
+    - Stamina (1 action + system-wide, 10% avg)
+    - Creativity (1 action, 10% avg)
+    - Determination (1 action, 9% avg)
+    - Bravery (1 action, 8% avg)
+    - Deception (1 action, 7% avg)
+    - Teamwork (1 action, 40% avg)
+
+No Impact (0 actions):
+    - Durability (reserved for injury system)
+    - Patience (placeholder for offensive sets)
+
+
+ATTRIBUTES BY CATEGORY IMPACT:
+-------------------------------
+Shooting (3PT, Midrange):
+    - Form Technique (25%, 23%)
+    - Throw Accuracy (20%, 18%)
+    - Finesse (15%, 20%)
+    - Hand-Eye Coordination (12%, 13%)
+    - Balance (10%, 11%)
+    - Composure (8%, 8%)
+    - Consistency (6%, 5%)
+    - Agility (4%, 2%)
+
+Rim Finishing (Dunks, Layups):
+    - Jumping (40%, 15%)
+    - Finesse (-, 35%)
+    - Height (30%, -)
+    - Hand-Eye Coordination (-, 30%)
+    - Arm Strength (20%, -)
+    - Balance (-, 20%)
+    - Agility (10%, -)
+
+Defense (Contest, Blocks):
+    - Height (33.33%, 20%)
+    - Agility (33.34%, 12%)
+    - Reactions (33.33%, 15%)
+    - Jumping (-, 25%)
+    - Awareness (-, 10%)
+    - Bravery (-, 8%)
+    - Hand-Eye Coordination (-, 5%)
+    - Balance (-, 5%)
+
+Rebounding:
+    - Height (22%)
+    - Jumping (18%)
+    - Awareness (18%)
+    - Core Strength (14%)
+    - Grip Strength (10%)
+    - Reactions (9%)
+    - Determination (9%)
+
+Ball Security (Turnover Prevention):
+    - Awareness (38%, 40% on drives)
+    - Composure (28%, 30% on drives)
+    - Consistency (19%, 20% on drives)
+    - Hand-Eye Coordination (10%, 10% on drives)
+    - Grip Strength (5%)
+
+Playmaking (Kickout passes):
+    - Teamwork (40%)
+    - Awareness (35%)
+    - Composure (25%)
+
+Transition:
+    - Acceleration (25%)
+    - Top Speed (20%)
+    - Awareness (15%)
+    - Agility (15%)
+    - Stamina (10%)
+    - Composure (10%)
+    - Hand-Eye Coordination (5%)
+
+
+HIGHEST WEIGHT ATTRIBUTES:
+---------------------------
+1. Teamwork in Drive Kickout: 40%
+2. Jumping in Dunks: 40%
+3. Jumping in Drive Dunk: 40%
+4. Awareness in Drive Turnover: 40%
+5. Finesse in Layups: 35%
+6. Awareness in Drive Kickout: 35%
+7. Height in Contest Defense: 33.33%
+8. Reactions in Contest Defense: 33.33%
+9. Agility in Contest Defense: 33.34%
+10. Hand-Eye Coordination in Layups: 30%
+
+
+MOST VERSATILE ATTRIBUTES:
+---------------------------
+(Used in most different action types)
+
+1. Hand-Eye Coordination: 8 actions
+2. Agility: 8 actions
+3. Jumping: 7 actions
+4. Composure: 7 actions
+5. Height: 6 actions
+6. Awareness: 6 actions
+
+
+SPECIALIST ATTRIBUTES:
+----------------------
+(High weight in few actions)
+
+1. Teamwork: 40% in one action (Drive Kickout)
+2. Top Speed: 20% in one action (Transition)
+3. Acceleration: 25% in one action (Transition)
+4. Form Technique: 25% in one action (3PT)
+5. Throw Accuracy: 20% in one action (3PT)
+
+
+UNUSED ATTRIBUTES:
+------------------
+1. Durability (0 actions) - Reserved for future injury system
+2. Patience (0 actions) - Placeholder for offensive sets/playcalling
+
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+UNDERUTILIZED ATTRIBUTES:
+    - Durability: Should be integrated into injury system (Milestone 3)
+    - Patience: Could affect:
+        * Shot selection (patient players take better shots)
+        * Drive timing (waiting for openings)
+        * Offensive decision-making speed
+
+    - Top Speed: Only used in transition (20%)
+        * Could affect: Fast break defense, getting back on D
+
+    - Creativity: Only used in block avoidance (10%)
+        * Could affect: Shot variety, unconventional finishes
+
+    - Deception: Only used in block avoidance (7%)
+        * Could affect: Drive success, getting open
+
+    - Core Strength: Only used in rebounding (14%)
+        * Could affect: Contact finishes, post defense
+
+
+WELL-INTEGRATED ATTRIBUTES:
+    - Hand-Eye Coordination: 8 actions, clearly impacts ball skills
+    - Agility: 8 actions, affects movement in all contexts
+    - Jumping: 7 actions, dominant in rim play
+    - Composure: 7 actions, critical under pressure
+    - Height: 6 actions, defensive and rebounding impact
+    - Awareness: 6 actions, decision-making across systems
+
+
+ATTRIBUTES MEETING PILLAR #3:
+(All attributes meaningfully impact gameplay)
+
+FULLY INTEGRATED (22/25):
+    All except Durability, Patience, and partially Top Speed/Creativity/Deception
+
+NEEDS EXPANSION (3/25):
+    - Durability: Awaiting injury system
+    - Patience: Needs shot selection/tempo system
+    - Creativity/Deception/Top Speed: Could use broader application
+
+================================================================================

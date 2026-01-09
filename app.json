@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Multiball",
+    "slug": "multiball",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1a2e"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.multiball.app"
+    },
+    "android": {
+      "package": "com.multiball.app"
+    }
+  }
+}

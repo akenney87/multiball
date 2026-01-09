@@ -1,0 +1,78 @@
+{
+  "num_games": 100,
+  "min_attempts": 30,
+  "qualified_players": 5,
+  "correlation": 0.78752194171722,
+  "spread_pp": 33.87096774193549,
+  "bucket_averages": {
+    "50-55": 0.22580645161290322,
+    "55-60": 0.16129032258064516,
+    "60-65": 0.24324324324324326,
+    "65-70": 0.3142857142857143,
+    "70-80": 0.5
+  },
+  "top_10": [
+    {
+      "name": "Michael Ginobili",
+      "composite": 70.2,
+      "pct": 0.5,
+      "attempts": 30
+    },
+    {
+      "name": "Bam Iverson",
+      "composite": 68.76,
+      "pct": 0.3142857142857143,
+      "attempts": 35
+    },
+    {
+      "name": "Isaiah Siakam",
+      "composite": 60.41,
+      "pct": 0.24324324324324326,
+      "attempts": 37
+    },
+    {
+      "name": "Cole Griffin",
+      "composite": 54.02,
+      "pct": 0.22580645161290322,
+      "attempts": 31
+    },
+    {
+      "name": "James Murray",
+      "composite": 59.78,
+      "pct": 0.16129032258064516,
+      "attempts": 31
+    }
+  ],
+  "bottom_10": [
+    {
+      "name": "Michael Ginobili",
+      "composite": 70.2,
+      "pct": 0.5,
+      "attempts": 30
+    },
+    {
+      "name": "Bam Iverson",
+      "composite": 68.76,
+      "pct": 0.3142857142857143,
+      "attempts": 35
+    },
+    {
+      "name": "Isaiah Siakam",
+      "composite": 60.41,
+      "pct": 0.24324324324324326,
+      "attempts": 37
+    },
+    {
+      "name": "Cole Griffin",
+      "composite": 54.02,
+      "pct": 0.22580645161290322,
+      "attempts": 31
+    },
+    {
+      "name": "James Murray",
+      "composite": 59.78,
+      "pct": 0.16129032258064516,
+      "attempts": 31
+    }
+  ]
+}

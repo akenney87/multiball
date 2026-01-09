@@ -1,0 +1,217 @@
+================================================================================
+WEIGHTED SIGMOID FORMULA FIX - STATUS REPORT
+================================================================================
+Date: 2025-11-07
+Status: PARTIAL COMPLETION - Formula fixed, but system needs recalibration
+
+================================================================================
+WORK COMPLETED
+================================================================================
+
+1. ✓ IDENTIFIED ROOT CAUSE
+   - Weighted sigmoid formula was mathematically broken
+   - At diff=0, gave BaseRate + 50% instead of BaseRate
+   - Example: 30% 3PT shot became 65% for equal players
+   - This inflated ALL success rates across the board
+
+2. ✓ FIXED CORE FORMULA (src/core/probability.py)
+   - Implemented centered sigmoid formula
+   - At diff=0: now correctly returns BaseRate
+   - Formula verified mathematically correct
+   - Test: 30% base with diff=0 → 30.0% ✓
+
+3. ✓ RESTORED ORIGINAL SPEC BASE RATES (src/constants.py)
+   - 3PT: 0.27 → 0.30 (SPEC ORIGINAL)
+   - Layup: 0.58 → 0.62
+   - Dunk: 0.77 → 0.80
+   - Midrange Short: 0.42 → 0.45
+   - Midrange Long: 0.34 → 0.37
+
+   Reasoning: M4.1 lowered these to compensate for broken formula.
+   With formula now fixed, restored to original spec values.
+
+4. ✓ DISCOVERED CASCADING CALIBRATION ISSUE
+   - Contest penalties (-15% for heavy contest) were also calibrated
+     for the broken formula
+   - With fixed formula + contest penalties, shooting % too low:
+     * Overall FG%: 22.5% (should be ~46%)
+     * 3PT%: 9.4% (should be ~35%)
+     * PPG: 56.1 (should be ~105)
+
+================================================================================
+CURRENT PROBLEM
+================================================================================
+
+The entire defensive system was calibrated for the broken formula:
+
+BROKEN FORMULA SYSTEM:
+   Base 30% 3PT → 65% for equal players (inflated)
+   Contest -15% → 50% final (reasonable)
+   Result: Realistic game stats
+
+FIXED FORMULA SYSTEM:
+   Base 30% 3PT → 30% for equal players (correct)
+   Contest -15% → 15% final (TOO LOW)
+   Result: Unrealistic 9% 3PT%, 22% FG%, 56 PPG
+
+ROOT ISSUE: Contest penalties, defensive modifiers, help defense, and all
+defensive mechanics were calibrated assuming inflated base probabilities.
+
+================================================================================
+VALIDATION RESULTS COMPARISON
+================================================================================
+
+                    Broken Formula      Fixed Formula       NBA Target
+                    (M4.1 rates)        (Spec rates)
+-----------------------------------------------------------------------------
+Points/Game         102.2               56.1                ~105
+FG%                 48.3%               22.5%               ~46%
+3PT%                ~35%                9.4%                ~35%
+Correlation         0.162               [Not measured]      0.35-0.50
+
+Broken formula: Good stats, poor correlation (skill diff washed out)
+Fixed formula: Poor stats, correlation unknown (too harsh on shooting)
+
+================================================================================
+WHY CORRELATION WAS LOW (0.162)
+================================================================================
+
+The broken formula compressed skill differences:
+
+For 30% 3PT shot with ±10 attribute difference:
+   Broken: Elite (68.5%) vs Poor (61.5%) = 7% gap
+   Fixed:  Elite (37.0%) vs Poor (27.0%) = 10% gap
+
+Skill impact increased 43% with fixed formula!
+
+This is why correlation was low - team quality wasn't translating to wins
+because the broken formula washed out attribute advantages.
+
+================================================================================
+PATH FORWARD (REQUIRES USER DECISION)
+================================================================================
+
+OPTION 1: FULL RECALIBRATION (Recommended)
+   Systematically recalibrate ALL defensive mechanics for fixed formula:
+
+   Items to recalibrate:
+   - Contest penalties (currently -15% heavy, -5% light)
+   - Help defense modifiers
+   - Block rates
+   - Defensive attribute scaling
+   - Potentially adjust k=0.02 sigmoid steepness
+
+   Pros: Mathematically sound, best long-term
+   Cons: Time-intensive, requires careful validation
+
+   Estimated effort: 3-5 hours of iterative tuning + validation
+
+OPTION 2: HYBRID APPROACH
+   Keep fixed formula but use intermediate base rates:
+   - Not as low as M4.1 (0.27), not as high as spec (0.30)
+   - Try 3PT: 0.32, Layup: 0.68, Dunk: 0.85, etc.
+   - Adjust contest penalties slightly
+
+   Pros: Faster, may get "good enough" stats quickly
+   Cons: Still mathematically arbitrary, may need iteration
+
+   Estimated effort: 1-2 hours of tuning + validation
+
+OPTION 3: REVERT TO BROKEN FORMULA (Not recommended)
+   Keep the mathematically incorrect formula since it "works"
+
+   Pros: Game stats already realistic
+   Cons:
+   - Mathematically wrong
+   - Low correlation will persist (0.162)
+   - Future attribute integration will be unpredictable
+   - Technical debt
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+OPTION 1 (Full Recalibration) is strongly recommended because:
+
+1. The fixed formula is mathematically correct
+2. It will DRAMATICALLY improve correlation (0.162 → 0.35-0.50 expected)
+3. Future attribute integration will be predictable
+4. All mechanics will be properly grounded
+
+The current low correlation (0.162) is the REAL problem - it means team
+quality barely matters for game outcomes. Fixing this is critical for
+the simulation's credibility.
+
+With proper recalibration:
+   - Better team should consistently beat worse team
+   - Attribute advantages should meaningfully impact outcomes
+   - User tactical choices should matter more
+   - Correlation should reach 0.35-0.50 range
+
+================================================================================
+NEXT STEPS (Awaiting User Direction)
+================================================================================
+
+1. User decides: Option 1, 2, or 3?
+
+2. If Option 1 (recommended):
+   a. Start with contest penalty adjustment
+   b. Test with 10-game validation suite
+   c. Iteratively tune defensive modifiers
+   d. Run full 100-game validation
+   e. Measure correlation improvement
+   f. Document new baseline
+
+3. If Option 2:
+   a. Test base rates at 0.32/0.68/0.85
+   b. Quick 10-game validation
+   c. Adjust if needed
+   d. Full 100-game validation
+
+4. If Option 3:
+   a. Revert probability.py changes
+   b. Revert constants.py base rates
+   c. Accept low correlation as status quo
+
+================================================================================
+FILES MODIFIED
+================================================================================
+
+✓ src/core/probability.py (lines 97-159)
+   - Implemented centered weighted sigmoid
+   - Formula now mathematically correct
+
+✓ src/constants.py (lines 24-34)
+   - Restored original spec base rates
+   - Updated comments to reflect fix
+
+Created investigation files:
+- output/CORRELATION_INVESTIGATION_FINAL_REPORT.txt
+- output/FORMULA_FIX_ANALYSIS.txt
+- test_sigmoid_formula.py
+- test_realistic_scenarios.py
+- analyze_attribute_usage.py
+- recalculate_correlation.py
+- investigate_correlation.py
+
+================================================================================
+TECHNICAL DETAILS
+================================================================================
+
+BROKEN FORMULA:
+   P = BaseRate + (1 - BaseRate) * sigmoid(k * diff)
+   At diff=0: P = BaseRate + (1-BaseRate) × 0.5 = 0.5(BaseRate + 1)
+
+FIXED FORMULA:
+   centered = (sigmoid(k * diff) - 0.5) * 2.0
+   if centered >= 0:
+       P = BaseRate + (1 - BaseRate) * centered
+   else:
+       P = BaseRate * (1 + centered)
+   At diff=0: centered=0, P = BaseRate ✓
+
+VERIFICATION:
+   For all base rates [0.10, 0.30, 0.50, 0.70, 0.90]:
+   diff=0 gives exactly BaseRate (tested)
+
+================================================================================

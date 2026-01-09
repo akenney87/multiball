@@ -23,6 +23,6 @@ module.exports = {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-native-async-storage)/)',
+    'node_modules/(?!(react-native|@react-native|@react-native-async-storage|@react-navigation|react-native-screens|react-native-safe-area-context|@testing-library)/)',
   ],
 };

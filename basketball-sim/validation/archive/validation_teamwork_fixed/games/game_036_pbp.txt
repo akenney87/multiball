@@ -1,0 +1,1050 @@
+================================================================================
+                        FULL GAME - Team_086 vs Team_018                        
+================================================================================
+
+================================================================================
+                       1ST QUARTER - Team_086 vs Team_018                       
+================================================================================
+
+[12:00] Team_086 possession (Score: 0-0)
+Team_086_Player_C_5 attempts a Midrange. Contested by Team_018_Player_PF_4 (3.9 feet, MAN). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_PF_4.
+
+[11:45] Team_018 possession (Score: 0-0)
+Team_018_Player_PG_1 attempts a 3Pt. Wide open! Team_086_Player_SG_2 is 7.1 feet away. [ZONE] Team_018_Player_PG_1 misses. Rebound secured by Team_086_Player_PF_4.
+
+[11:29] Team_086 possession (Score: 0-0)
+Team_086_Player_C_5 drives and kicks out. Team_086_Player_SG_2 attempts a 3Pt. Contested by Team_018_Player_SG_2 (3.2 feet, MAN). Team_086_Player_SG_2 misses. Rebound secured by Team_018_Player_SF_3.
+
+[11:14] Team_018 possession (Score: 0-0)
+Team_018_Player_C_5 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[11:14] Substitution (Team_086): Team_086_Player_SG_2 OUT → Team_086_Player_SG_7 IN (stamina_rule2)
+
+[11:14] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_PF_9 IN (stamina_rule2)
+
+[11:14] Substitution (Team_086): Team_086_Player_PF_4 OUT → Team_086_Player_SF_3 IN (stamina_rule2)
+
+[11:14] Substitution (Team_018): Team_018_Player_SG_2 OUT → Team_018_Player_PG_6 IN (stamina_rule2)
+
+[11:14] Substitution (Team_018): Team_018_Player_SF_3 OUT → Team_018_Player_SF_8 IN (stamina_rule2)
+
+[11:14] Substitution (Team_018): Team_018_Player_PF_4 OUT → Team_018_Player_SF_3 IN (stamina_rule2)
+
+[11:14] Substitution (Team_018): Team_018_Player_C_5 OUT → Team_018_Player_C_10 IN (stamina_rule2)
+
+[10:59] Team_086 possession (Score: 0-0)
+Team_086_Player_PF_9 drives to the basket... Team_086_Player_PF_9 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[10:59] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_PF_4 IN (stamina_rule2)
+
+[10:59] Substitution (Team_018): Team_018_Player_SF_3 OUT → Team_018_Player_PF_4 IN (stamina_rule2)
+
+[10:42] Team_018 possession (Score: 0-0)
+Team_018_Player_C_10 attempts a 3Pt. Contested by Team_086_Player_C_5 (3.3 feet, MAN). Team_018_Player_C_10 misses. Offensive rebound by Team_018_Player_PF_4! Team_018_Player_PF_4 kicks it out.
+
+[10:31] Team_018 possession (Score: 0-0)
+FOUL! Shooting foul on Team_086_Player_PF_9. Team_018_Player_PG_1 to the line for 2 free throws. [Team fouls: 1] (Team_086_Player_PF_9: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_PG_1 makes 2/2 from the line.
+Score: 0-2
+
+[10:16] Team_086 possession (Score: 0-2)
+Team_086_Player_PF_9 attempts a 3Pt. Contested by Team_018_Player_PF_4 (4.1 feet, MAN). TEAM_086_PLAYER_PF_9 MAKES IT! Assist: Team_086_Player_PG_1
+Score: 3-2
+
+[10:04] Team_018 possession (Score: 3-2)
+Team_018_Player_PG_1 attempts a Midrange. Wide open! Team_086_Player_PF_9 is 6.8 feet away. [ZONE] Team_018_Player_PG_1 misses. Rebound secured by Team_086_Player_C_5.
+
+[09:49] Team_086 possession (Score: 3-2)
+Team_086_Player_PG_1 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[09:49] Substitution (Team_086): Team_086_Player_PF_4 OUT → Team_086_Player_SF_3 IN (stamina_rule2)
+
+[09:49] Substitution (Team_018): Team_018_Player_PG_1 OUT → Team_018_Player_SG_2 IN (stamina_rule2)
+
+[09:49] Substitution (Team_018): Team_018_Player_PF_4 OUT → Team_018_Player_SF_3 IN (stamina_rule2)
+
+[09:30] Team_018 possession (Score: 3-2)
+Team_018_Player_PG_6 attempts a Layup. Contested by Team_086_Player_C_5 (3.4 feet, ZONE). Team_018_Player_PG_6 misses. Rebound secured by Team_086_Player_C_5.
+
+[09:14] Team_086 possession (Score: 3-2)
+FOUL! Shooting foul on Team_018_Player_C_10. Team_086_Player_PF_9 to the line for 2 free throws. [Team fouls: 2] (Team_018_Player_C_10: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_PF_9 makes 2/2 from the line.
+Score: 5-2
+
+[08:56] Team_018 possession (Score: 5-2)
+Team_018_Player_PG_6 attempts a Layup. BLOCKED BY TEAM_086_PLAYER_PF_9! Ball goes out of bounds. Turnover!
+
+[08:56] Substitution (Team_086): Team_086_Player_PG_1 OUT → Team_086_Player_PG_6 IN (stamina_rule2)
+
+[08:56] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_SF_8 IN (stamina_rule2)
+
+[08:56] Substitution (Team_086): Team_086_Player_C_5 OUT → Team_086_Player_C_10 IN (stamina_rule2)
+
+[08:56] Substitution (Team_018): Team_018_Player_SF_3 OUT → Team_018_Player_PF_9 IN (stamina_rule2)
+
+[08:44] Team_086 possession (Score: 5-2)
+Team_086_Player_PF_9 attempts a 3Pt. Contested by Team_018_Player_PF_9 (4.7 feet, MAN). Team_086_Player_PF_9 misses. Rebound secured by Team_018_Player_PF_9.
+
+[08:29] Team_018 possession (Score: 5-2)
+Team_018_Player_PG_6 drives, Team_086_Player_PG_6 stays with him. Team_018_Player_PG_6 attempts a Dunk. Wide open! Team_086_Player_PG_6 is 6.8 feet away. [MAN] Team_018_Player_PG_6 misses. Rebound secured by Team_086_Player_PG_6.
+
+[08:18] Team_086 possession (Score: 5-2)
+Team_086_Player_SF_8 attempts a Layup. Wide open! Team_018_Player_SF_8 is 6.6 feet away. [MAN] TEAM_086_PLAYER_SF_8 MAKES IT! Assist: Team_086_Player_C_10
+Score: 7-2
+
+[08:01] Team_018 possession (Score: 7-2)
+Team_018_Player_SF_8 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.6 feet, ZONE). TEAM_018_PLAYER_SF_8 MAKES IT! Assist: Team_018_Player_C_10
+Score: 7-5
+
+[07:47] Team_086 possession (Score: 7-5)
+Team_086_Player_C_10 attempts a 3Pt. Contested by Team_018_Player_SG_2 (3.3 feet, ZONE). Team_086_Player_C_10 misses. Rebound secured by Team_018_Player_PF_9.
+
+[07:36] Team_018 possession (Score: 7-5)
+Team_018_Player_PF_9 attempts a Midrange. Contested by Team_086_Player_SG_7 (5.6 feet, ZONE). TEAM_018_PLAYER_PF_9 MAKES IT! Assist: Team_018_Player_SG_2
+Score: 7-7
+
+[07:17] Team_086 possession (Score: 7-7)
+Team_086_Player_PG_6 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[07:17] Substitution (Team_018): Team_018_Player_SG_2 OUT → Team_018_Player_PG_1 IN (stamina_rule2)
+
+[07:05] Team_018 possession (Score: 7-7)
+Team_018_Player_PG_6 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.6 feet, ZONE). TEAM_018_PLAYER_PG_6 MAKES IT! Assist: Team_018_Player_C_10
+Score: 7-10
+
+[06:51] Team_086 possession (Score: 7-10)
+Team_086_Player_PF_9 makes the Dunk and draws the foul on Team_018_Player_PG_1! And-1! Team_086_Player_PF_9 to the line for 1. [Team fouls: 3] (Team_018_Player_PG_1: 1 personal fouls)   FT 1/1: MISS Team_086_Player_PF_9 makes 0/1 from the line. Rebound secured by Team_018_Player_PF_9.
+Score: 9-10
+
+[06:41] Team_018 possession (Score: 9-10)
+Team_018_Player_SF_8 loses the ball! Stripped by Team_086_Player_SF_8! TURNOVER! (live ball)
+
+[06:25] Team_086 possession (Score: 9-10)
+Team_086_Player_PG_6 drives, picks up Team_018_Player_PG_1. Help arrives from Team_018_Player_SF_8! Team_086_Player_PG_6 attempts a Layup. Contested by Team_018_Player_SF_8 (4.5 feet, MAN). Team_086_Player_PG_6 misses. Offensive rebound by Team_086_Player_PG_6! Team_086_Player_PG_6 kicks it out.
+
+[06:11] Team_086 possession (Score: 9-10)
+Team_086_Player_C_10 commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[05:56] Team_018 possession (Score: 9-10)
+Team_018_Player_C_10 drives and kicks out. Team_018_Player_C_10 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.7 feet, ZONE). TEAM_018_PLAYER_C_10 MAKES IT! Assist: Team_018_Player_PG_1
+Score: 9-13
+
+[05:41] Team_086 possession (Score: 9-13)
+Team_086_Player_PF_9 makes the Layup and draws the foul on Team_018_Player_PF_9! And-1! Team_086_Player_PF_9 to the line for 1. [Team fouls: 4] (Team_018_Player_PF_9: 1 personal fouls)   FT 1/1: MISS Team_086_Player_PF_9 makes 0/1 from the line. Rebound secured by Team_018_Player_C_10.
+Score: 11-13
+
+[05:29] Team_018 possession (Score: 11-13)
+Team_018_Player_PF_9 drives and kicks out. Team_018_Player_C_10 attempts a Midrange. Wide open! Team_086_Player_SF_8 is 7.1 feet away. [ZONE] Team_018_Player_C_10 misses. Rebound secured by Team_086_Player_PF_9.
+
+[05:12] Team_086 possession (Score: 11-13)
+FOUL! Shooting foul on Team_018_Player_PF_9. Team_086_Player_SF_8 to the line for 2 free throws. [BONUS: 5 team fouls] (Team_018_Player_PF_9: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_SF_8 makes 2/2 from the line.
+Score: 13-13
+
+[04:57] Team_018 possession (Score: 13-13)
+Team_018_Player_PF_9 loses the ball! Stripped by Team_086_Player_PF_9! TURNOVER! (live ball)
+
+[04:46] Team_086 possession (Score: 13-13)
+Team_086_Player_C_10 commits an offensive foul! Team_018_Player_C_10 drew the charge! TURNOVER! (dead ball)
+
+[04:29] Team_018 possession (Score: 13-13)
+Team_018_Player_PG_1 attempts a 3Pt. Wide open! Team_086_Player_PG_6 is 7.3 feet away. [MAN] TEAM_018_PLAYER_PG_1 MAKES IT! Assist: Team_018_Player_C_10
+Score: 13-16
+
+[04:14] Team_086 possession (Score: 13-16)
+Team_086_Player_PG_6 attempts a 3Pt. Contested by Team_018_Player_PG_1 (4.8 feet, ZONE). Team_086_Player_PG_6 misses. Rebound secured by Team_018_Player_C_10.
+
+[04:00] Team_018 possession (Score: 13-16)
+Team_018_Player_PG_1 commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[04:00] Substitution (Team_018): Team_018_Player_PG_1 OUT → Team_018_Player_SG_2 IN (stamina_rule2)
+
+[03:44] Team_086 possession (Score: 13-16)
+Team_086_Player_SF_8 attempts a Midrange. Contested by Team_018_Player_PF_9 (5.7 feet, ZONE). TEAM_086_PLAYER_SF_8 MAKES IT! Assist: Team_086_Player_C_10
+Score: 15-16
+
+[03:30] Team_018 possession (Score: 15-16)
+Team_018_Player_C_10 drives to the basket... Team_018_Player_C_10 commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[03:20] Team_086 possession (Score: 15-16)
+Team_086_Player_PG_6 commits an offensive foul! Team_018_Player_PG_6 drew the charge! TURNOVER! (dead ball)
+
+[03:06] Team_018 possession (Score: 15-16)
+Team_018_Player_C_10 attempts a 3Pt. Wide open! Team_086_Player_SG_7 is 6.0 feet away. [ZONE] Team_018_Player_C_10 misses. Rebound secured by Team_086_Player_PG_6.
+
+[02:49] Team_086 possession (Score: 15-16)
+FOUL! Shooting foul on Team_018_Player_SG_2. Team_086_Player_C_10 to the line for 2 free throws. [BONUS: 6 team fouls] (Team_018_Player_SG_2: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_C_10 makes 2/2 from the line.
+Score: 17-16
+
+[02:35] Team_018 possession (Score: 17-16)
+Team_018_Player_SF_8 attempts a 3Pt. Wide open! Team_086_Player_SF_8 is 7.5 feet away. [ZONE] TEAM_018_PLAYER_SF_8 MAKES IT! Assist: Team_018_Player_C_10
+Score: 17-19
+
+[02:22] Team_086 possession (Score: 17-19)
+Team_086_Player_SG_7 attempts a 3Pt. Contested by Team_018_Player_SG_2 (3.2 feet, MAN). Team_086_Player_SG_7 misses. Offensive rebound by Team_086_Player_SG_7! Team_086_Player_SG_7 kicks it out.
+
+[02:09] Team_086 possession (Score: 17-19)
+Team_086_Player_PG_6 attempts a Layup. BLOCKED BY TEAM_018_PLAYER_C_10! Ball goes out of bounds. Turnover!
+
+[02:09] Substitution (Team_018): Team_018_Player_SG_2 OUT → Team_018_Player_SG_7 IN (stamina_rule2)
+
+[01:58] Team_018 possession (Score: 17-19)
+Team_018_Player_PF_9 attempts a 3Pt. Wide open! Team_086_Player_SG_7 is 6.2 feet away. [ZONE] Team_018_Player_PF_9 misses. FOUL! Loose ball foul on Team_086_Player_SG_7 during the rebound battle. [IN THE BONUS! 7 team fouls] Team_018_Player_C_10 to the line for 2 free throws. (Team_086_Player_SG_7: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_C_10 makes 2/2 from the line.
+Score: 17-21
+
+[01:45] Team_086 possession (Score: 17-21)
+Team_086_Player_SG_7 attempts a Layup. Wide open! Team_018_Player_PF_9 is 6.1 feet away. [ZONE] TEAM_086_PLAYER_SG_7 MAKES IT!
+Score: 19-21
+
+[01:30] Team_018 possession (Score: 19-21)
+Team_018_Player_PF_9 attempts a Midrange. Wide open! Team_086_Player_PF_9 is 7.7 feet away. [MAN] TEAM_018_PLAYER_PF_9 MAKES IT! Assist: Team_018_Player_PG_6
+Score: 19-23
+
+[01:14] Team_086 possession (Score: 19-23)
+Team_086_Player_PG_6 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[00:56] Team_018 possession (Score: 19-23)
+Team_018_Player_PF_9 attempts a 3Pt. Wide open! Team_086_Player_PF_9 is 7.8 feet away. [MAN] TEAM_018_PLAYER_PF_9 MAKES IT! Assist: Team_018_Player_PG_6
+Score: 19-26
+
+[00:41] Team_086 possession (Score: 19-26)
+FOUL! Reach-in foul on Team_018_Player_PG_6 during the drive. [IN THE BONUS! 8 team fouls] Team_086_Player_PG_6 to the line for 2 free throws. (Team_018_Player_PG_6: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_PG_6 makes 2/2 from the line.
+Score: 21-26
+
+[00:31] Team_018 possession (Score: 21-26)
+Team_018_Player_C_10 attempts a 3Pt. Wide open! Team_086_Player_C_10 is 7.8 feet away. [MAN] Team_018_Player_C_10 misses. Rebound secured by Team_086_Player_SG_7.
+
+[00:18] Team_086 possession (Score: 21-26)
+Team_086_Player_SG_7 commits an offensive foul! Team_018_Player_SG_7 drew the charge! TURNOVER! (dead ball)
+
+[00:01] Team_018 possession (Score: 21-26)
+FOUL! Reach-in foul on Team_086_Player_PF_9 during the drive. [IN THE BONUS! 9 team fouls] Team_018_Player_C_10 to the line for 2 free throws. (Team_086_Player_PF_9: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_C_10 makes 2/2 from the line.
+Score: 21-28
+
+================================================================================
+                              1ST QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_086 21, Team_018 28
+
+BOX SCORE:
+================================================================================
+
+Team_086
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_086_Player_SF_8    0    4    0    0   0   2/2   100.0     0/0   0.0
+Team_086_Player_PF_9    0    3    1    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_SG_7    0    2    2    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_PF_4    0    0    1    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_PG_1    0    0    0    1   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_5     0    0    2    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_PG_6    0    0    3    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_10    0    0    0    2   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 4/11 (36.4%), 3PT: 1/4 (25.0%), REB: 9 (2 off, 7 def), AST: 3, TO: 9
+TEAM FOULS: 0
+
+
+Team_018
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_018_Player_PF_9    0    7    3    0   0   3/3   100.0     0/0   0.0
+Team_018_Player_SF_8    0    6    0    0   0   2/2   100.0     0/0   0.0
+Team_018_Player_C_10    0    3    2    4   0   1/1   100.0     0/0   0.0
+Team_018_Player_PG_6    0    3    0    2   0   1/1   100.0     0/0   0.0
+Team_018_Player_PG_1    0    3    0    1   0   1/1   100.0     0/0   0.0
+Team_018_Player_PF_4    0    0    2    0   0   0/0     0.0     0/0   0.0
+Team_018_Player_SF_3    0    0    1    0   0   0/0     0.0     0/0   0.0
+Team_018_Player_SG_2    0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 8/15 (53.3%), 3PT: 5/8 (62.5%), REB: 8 (1 off, 7 def), AST: 8, TO: 6
+TEAM FOULS: 9 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                       2ND QUARTER - Team_086 vs Team_018                       
+================================================================================
+
+[12:00] Team_086 possession (Score: 21-28)
+Team_086_Player_PF_4 commits an offensive foul! Team_018_Player_PF_4 drew the charge! TURNOVER! (dead ball)
+
+[11:47] Team_018 possession (Score: 21-28)
+Team_018_Player_PG_1 throws a bad pass! Stolen by Team_086_Player_PG_1! TURNOVER! (live ball)
+
+[11:34] Team_086 possession (Score: 21-28)
+FOUL! Holding foul on Team_018_Player_PG_1. [Team fouls: 1] No free throws, side out. (Team_018_Player_PG_1: 1 personal fouls)
+
+[11:18] Team_018 possession (Score: 21-28)
+Team_018_Player_SG_2 attempts a Midrange. BLOCKED BY TEAM_086_PLAYER_SG_2! Offensive rebound by Team_018_Player_PF_4! Team_018_Player_PF_4 kicks it out.
+
+[11:05] Team_018 possession (Score: 21-28)
+Team_018_Player_PG_1 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.4 feet, ZONE). TEAM_018_PLAYER_PG_1 MAKES IT! Assist: Team_018_Player_SF_3
+Score: 21-31
+
+[10:50] Team_086 possession (Score: 21-31)
+Team_086_Player_SG_2 drives, Team_018_Player_PF_4 stays with him. Team_086_Player_SG_2 attempts a Dunk. Contested by Team_018_Player_PF_4 (3.0 feet, ZONE). TEAM_086_PLAYER_SG_2 MAKES IT!
+Score: 23-31
+
+[10:32] Team_018 possession (Score: 23-31)
+Team_018_Player_PF_4 attempts a Layup. Contested by Team_086_Player_C_5 (3.1 feet, ZONE). TEAM_018_PLAYER_PF_4 MAKES IT! Assist: Team_018_Player_C_5
+Score: 23-33
+
+[10:15] Team_086 possession (Score: 23-33)
+Team_086_Player_PF_4 attempts a Layup. Contested by Team_018_Player_PF_4 (3.0 feet, ZONE). Team_086_Player_PF_4 misses. Rebound secured by Team_018_Player_PF_4.
+
+[10:04] Team_018 possession (Score: 23-33)
+Team_018_Player_SF_3 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.4 feet, ZONE). TEAM_018_PLAYER_SF_3 MAKES IT! Assist: Team_018_Player_PF_4
+Score: 23-36
+
+[09:49] Team_086 possession (Score: 23-36)
+Team_086_Player_PG_1 attempts a 3Pt. Contested by Team_018_Player_PG_1 (4.5 feet, ZONE). Team_086_Player_PG_1 misses. Rebound secured by Team_018_Player_SF_3.
+
+[09:37] Team_018 possession (Score: 23-36)
+Team_018_Player_C_5 drives, Team_086_Player_C_5 stays with him. Team_018_Player_C_5 attempts a Dunk. Contested by Team_086_Player_C_5 (3.1 feet, MAN). TEAM_018_PLAYER_C_5 MAKES IT! Assist: Team_018_Player_SF_3
+Score: 23-38
+
+[09:20] Team_086 possession (Score: 23-38)
+Team_086_Player_SF_3 attempts a Midrange. Contested by Team_018_Player_PG_1 (4.5 feet, ZONE). Team_086_Player_SF_3 misses. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[09:01] Team_086 possession (Score: 23-38)
+Team_086_Player_PF_4 attempts a Layup. Contested by Team_018_Player_PF_4 (3.2 feet, MAN). TEAM_086_PLAYER_PF_4 MAKES IT! Assist: Team_086_Player_SF_3
+Score: 25-38
+
+[08:44] Team_018 possession (Score: 25-38)
+Team_018_Player_SF_3 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.4 feet, ZONE). Team_018_Player_SF_3 misses. Offensive rebound by Team_018_Player_C_5! Team_018_Player_C_5 puts it back in!
+Score: 25-40
+
+[08:28] Team_086 possession (Score: 25-40)
+Team_086_Player_PF_4 attempts a 3Pt. Contested by Team_018_Player_PG_1 (4.6 feet, ZONE). TEAM_086_PLAYER_PF_4 MAKES IT! Assist: Team_086_Player_SF_3
+Score: 28-40
+
+[08:14] Team_018 possession (Score: 28-40)
+Team_018_Player_C_5 drives, Team_086_Player_C_5 stays with him. Team_018_Player_C_5 attempts a Layup. Contested by Team_086_Player_C_5 (3.1 feet, MAN). Team_018_Player_C_5 misses. Offensive rebound by Team_018_Player_C_5! Team_018_Player_C_5 puts it back in!
+Score: 28-42
+
+[08:04] Team_086 possession (Score: 28-42)
+Team_086_Player_SF_3 attempts a 3Pt. Contested by Team_018_Player_SF_3 (3.6 feet, MAN). Team_086_Player_SF_3 misses. Rebound secured by Team_018_Player_C_5.
+
+[07:53] Team_018 possession (Score: 28-42)
+Team_018_Player_SF_3 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.5 feet, ZONE). Team_018_Player_SF_3 misses. Offensive rebound by Team_018_Player_C_5! Team_018_Player_C_5 puts it back in!
+Score: 28-44
+
+[07:36] Team_086 possession (Score: 28-44)
+Team_086_Player_SF_3 attempts a Midrange. Contested by Team_018_Player_SG_2 (3.3 feet, ZONE). Team_086_Player_SF_3 misses. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[07:24] Team_086 possession (Score: 28-44)
+Team_086_Player_SF_3 commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[07:24] Substitution (Team_086): Team_086_Player_SG_2 OUT → Team_086_Player_SG_7 IN (stamina_rule2)
+
+[07:24] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_PF_9 IN (stamina_rule2)
+
+[07:24] Substitution (Team_086): Team_086_Player_PF_4 OUT → Team_086_Player_SF_3 IN (stamina_rule2)
+
+[07:24] Substitution (Team_018): Team_018_Player_PG_1 OUT → Team_018_Player_SG_7 IN (stamina_rule2)
+
+[07:24] Substitution (Team_018): Team_018_Player_SG_2 OUT → Team_018_Player_PG_6 IN (stamina_rule2)
+
+[07:24] Substitution (Team_018): Team_018_Player_PF_4 OUT → Team_018_Player_PF_9 IN (stamina_rule2)
+
+[07:10] Team_018 possession (Score: 28-44)
+Team_018_Player_SG_7 attempts a Layup. Contested by Team_086_Player_C_5 (3.2 feet, ZONE). Team_018_Player_SG_7 misses. Rebound secured by Team_086_Player_PG_1.
+
+[06:51] Team_086 possession (Score: 28-44)
+FOUL! Holding foul on Team_018_Player_SG_7. [Team fouls: 3] No free throws, side out. (Team_018_Player_SG_7: 1 personal fouls)
+
+[06:40] Team_018 possession (Score: 28-44)
+Team_018_Player_PG_6 attempts a Midrange. Contested by Team_086_Player_PG_1 (4.6 feet, MAN). Team_018_Player_PG_6 misses. Rebound secured by Team_086_Player_SF_3.
+
+[06:23] Team_086 possession (Score: 28-44)
+Team_086_Player_SG_7 attempts a Layup. Contested by Team_018_Player_SG_7 (5.9 feet, MAN). TEAM_086_PLAYER_SG_7 MAKES IT! Assist: Team_086_Player_C_5
+Score: 30-44
+
+[06:09] Team_018 possession (Score: 30-44)
+Team_018_Player_C_5 attempts a Midrange. Wide open! Team_086_Player_PF_9 is 6.9 feet away. [ZONE] Team_018_Player_C_5 misses. Rebound secured by Team_086_Player_SF_3.
+
+[05:50] Team_086 possession (Score: 30-44)
+Team_086_Player_PF_9 drives to the basket... Team_086_Player_PF_9 loses the ball! Stripped by Team_018_Player_PF_9! TURNOVER! (live ball)
+
+[05:34] Team_018 possession (Score: 30-44)
+FOUL! Shooting foul on Team_086_Player_SF_3. Team_018_Player_SF_3 to the line for 2 free throws. [Team fouls: 4] (Team_086_Player_SF_3: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_SF_3 makes 2/2 from the line.
+Score: 30-46
+
+[05:18] Team_086 possession (Score: 30-46)
+Team_086_Player_PF_9 attempts a 3Pt. Contested by Team_018_Player_PF_9 (4.9 feet, MAN). Team_086_Player_PF_9 misses. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[05:05] Team_086 possession (Score: 30-46)
+Team_086_Player_SG_7 attempts a Layup. Contested by Team_018_Player_SG_7 (5.9 feet, MAN). Team_086_Player_SG_7 misses. Rebound secured by Team_018_Player_C_5.
+
+[04:53] Team_018 possession (Score: 30-46)
+Team_018_Player_C_5 makes the Layup and draws the foul on Team_086_Player_C_5! And-1! Team_018_Player_C_5 to the line for 1. [BONUS: 5 team fouls] (Team_086_Player_C_5: 1 personal fouls)   FT 1/1: GOOD Team_018_Player_C_5 makes 1/1 from the line.
+Score: 30-49
+
+[04:40] TIMEOUT - Team_086 (stop opponent momentum) - 6 timeouts remaining
+
+[04:39] Team_086 possession (Score: 30-49)
+Team_086_Player_PG_1 attempts a Layup. Contested by Team_018_Player_C_5 (4.5 feet, ZONE). Team_086_Player_PG_1 misses. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[04:27] Team_086 possession (Score: 30-49)
+Team_086_Player_SG_7 attempts a Layup. Contested by Team_018_Player_C_5 (4.6 feet, ZONE). TEAM_086_PLAYER_SG_7 MAKES IT! Assist: Team_086_Player_C_5
+Score: 32-49
+
+[04:08] Team_018 possession (Score: 32-49)
+FOUL! Shooting foul on Team_086_Player_PG_1. Team_018_Player_C_5 to the line for 3 free throws. [BONUS: 6 team fouls] (Team_086_Player_PG_1: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: MISS   FT 3/3: GOOD Team_018_Player_C_5 makes 2/3 from the line.
+Score: 32-51
+
+[03:52] Team_086 possession (Score: 32-51)
+Team_086_Player_SF_3 drives to the basket... Team_086_Player_SF_3 loses the ball! Stripped by Team_018_Player_C_5! TURNOVER! (live ball)
+
+[03:39] Team_018 possession (Score: 32-51)
+Team_018_Player_PF_9 attempts a 3Pt. Contested by Team_086_Player_C_5 (3.4 feet, MAN). Team_018_Player_PF_9 misses. Offensive rebound by Team_018_Player_C_5! Team_018_Player_C_5's putback is no good. Rebound secured by Team_086_Player_PG_1.
+
+[03:20] Team_086 possession (Score: 32-51)
+Team_086_Player_C_5 makes the Layup and draws the foul on Team_018_Player_C_5! And-1! Team_086_Player_C_5 to the line for 1. [BONUS: 7 team fouls] (Team_018_Player_C_5: 1 personal fouls)   FT 1/1: GOOD Team_086_Player_C_5 makes 1/1 from the line.
+Score: 35-51
+
+[03:05] Team_018 possession (Score: 35-51)
+FOUL! Shooting foul on Team_086_Player_C_5. Team_018_Player_PG_6 to the line for 2 free throws. [BONUS: 8 team fouls] (Team_086_Player_C_5: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Team_018_Player_PG_6 makes 1/2 from the line. Rebound secured by Team_086_Player_C_5.
+Score: 35-52
+
+[02:48] Team_086 possession (Score: 35-52)
+Team_086_Player_SG_7 attempts a 3Pt. Contested by Team_018_Player_SF_3 (4.1 feet, ZONE). Team_086_Player_SG_7 misses. Rebound secured by Team_018_Player_SF_3.
+
+[02:38] Team_018 possession (Score: 35-52)
+Team_018_Player_PF_9 attempts a 3Pt. Wide open! Team_086_Player_PF_9 is 7.1 feet away. [ZONE] TEAM_018_PLAYER_PF_9 MAKES IT! Assist: Team_018_Player_SF_3
+Score: 35-55
+
+[02:24] Team_086 possession (Score: 35-55)
+Team_086_Player_SF_3 attempts a 3Pt. Contested by Team_018_Player_SF_3 (4.1 feet, MAN). Team_086_Player_SF_3 misses. Offensive rebound by Team_086_Player_C_5! Team_086_Player_C_5's putback is no good. Rebound secured by Team_018_Player_SF_3.
+
+[02:12] Team_018 possession (Score: 35-55)
+FOUL! Reach-in foul on Team_086_Player_C_5 during the drive. [IN THE BONUS! 9 team fouls] Team_018_Player_PF_9 to the line for 2 free throws. (Team_086_Player_C_5: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_PF_9 makes 2/2 from the line.
+Score: 35-57
+
+[01:59] Team_086 possession (Score: 35-57)
+Team_086_Player_PG_1 drives to the basket... Team_086_Player_PG_1 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[01:59] Substitution (Team_086): Team_086_Player_PG_1 OUT → Team_086_Player_PG_6 IN (stamina_rule2)
+
+[01:59] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_PF_4 IN (stamina_rule2)
+
+[01:59] Substitution (Team_086): Team_086_Player_C_5 OUT → Team_086_Player_C_10 IN (stamina_rule2)
+
+[01:59] Substitution (Team_018): Team_018_Player_SF_3 OUT → Team_018_Player_PF_4 IN (stamina_rule2)
+
+[01:59] Substitution (Team_018): Team_018_Player_C_5 OUT → Team_018_Player_C_10 IN (stamina_rule2)
+
+[01:45] Team_018 possession (Score: 35-57)
+Team_018_Player_PF_4 drives, Team_086_Player_PF_4 stays with him. Team_018_Player_PF_4 attempts a Layup. Contested by Team_086_Player_PF_4 (5.0 feet, ZONE). TEAM_018_PLAYER_PF_4 MAKES IT! Assist: Team_018_Player_PG_6
+Score: 35-59
+
+[01:31] Team_086 possession (Score: 35-59)
+Team_086_Player_PF_4 loses the ball! Stripped by Team_018_Player_PF_4! TURNOVER! (live ball)
+
+[01:18] Team_018 possession (Score: 35-59)
+Team_018_Player_SG_7 attempts a 3Pt. Contested by Team_086_Player_PF_4 (5.0 feet, ZONE). TEAM_018_PLAYER_SG_7 MAKES IT! Assist: Team_018_Player_PF_4
+Score: 35-62
+
+[00:59] Team_086 possession (Score: 35-62)
+Team_086_Player_PG_6 attempts a Layup. Contested by Team_018_Player_PF_4 (3.0 feet, ZONE). Team_086_Player_PG_6 misses. Rebound secured by Team_018_Player_C_10.
+
+[00:41] Team_018 possession (Score: 35-62)
+FOUL! Holding foul on Team_086_Player_PF_4. [IN THE BONUS! 10 team fouls] Team_018_Player_PF_4 to the line for 2 free throws. (Team_086_Player_PF_4: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_PF_4 makes 2/2 from the line.
+Score: 35-64
+
+[00:27] TIMEOUT - Team_086 (stop opponent momentum) - 5 timeouts remaining
+
+[00:26] Team_086 possession (Score: 35-64)
+Team_086_Player_PF_4 throws a bad pass! Stolen by Team_018_Player_PF_4! TURNOVER! (live ball)
+
+[00:12] Team_018 possession (Score: 35-64)
+Team_018_Player_C_10 attempts a 3Pt. Contested by Team_086_Player_PF_4 (5.0 feet, MAN). Team_018_Player_C_10 misses. Rebound secured by Team_086_Player_C_10.
+
+================================================================================
+                              2ND QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_086 14, Team_018 36
+
+BOX SCORE:
+================================================================================
+
+Team_086
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_086_Player_PF_4    0    5    0    0   0   2/2   100.0     0/0   0.0
+Team_086_Player_SG_7    0    4    0    0   0   2/2   100.0     0/0   0.0
+Team_018_Player_SF_3    0    3    3    3   0   1/1   100.0     0/0   0.0
+Team_086_Player_SG_2    0    2    0    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_SF_3    0    0    6    2   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_5     0    0    1    2   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_10    0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 5/12 (41.7%), 3PT: 1/5 (20.0%), REB: 10 (5 off, 5 def), AST: 4, TO: 7
+TEAM FOULS: 0
+
+
+Team_018
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_018_Player_C_5     0    8    5    1   0   4/4   100.0     0/0   0.0
+Team_018_Player_PF_4    0    4    2    2   0   2/2   100.0     0/0   0.0
+Team_018_Player_PG_1    0    3    0    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_PF_9    0    3    0    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_SG_7    0    3    0    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_PG_1    0    0    2    0   0   0/0     0.0     0/0   0.0
+Team_018_Player_PG_6    0    0    0    1   0   0/0     0.0     0/0   0.0
+Team_018_Player_C_10    0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 10/16 (62.5%), 3PT: 6/8 (75.0%), REB: 11 (5 off, 6 def), AST: 7, TO: 1
+TEAM FOULS: 10 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                       3RD QUARTER - Team_086 vs Team_018                       
+================================================================================
+
+[12:00] Team_086 possession (Score: 35-64)
+Team_086_Player_PG_1 drives and kicks out. Team_086_Player_C_5 attempts a 3Pt. Contested by Team_018_Player_PF_4 (3.0 feet, MAN). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_SF_3.
+
+[11:49] Team_018 possession (Score: 35-64)
+Team_018_Player_SF_3 drives and kicks out. Team_018_Player_C_5 attempts a Midrange. Contested by Team_086_Player_C_5 (3.1 feet, MAN). Team_018_Player_C_5 misses. Rebound secured by Team_086_Player_SF_3.
+
+[11:33] Team_086 possession (Score: 35-64)
+Team_086_Player_C_5 attempts a Midrange. Contested by Team_018_Player_SG_2 (2.9 feet, ZONE). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_PF_4.
+
+[11:18] Team_018 possession (Score: 35-64)
+Team_018_Player_SG_2 attempts a 3Pt. Contested by Team_086_Player_SG_2 (5.3 feet, MAN). Team_018_Player_SG_2 misses. Rebound secured by Team_086_Player_PF_4.
+
+[11:03] Team_086 possession (Score: 35-64)
+FOUL! Shooting foul on Team_018_Player_PF_4. Team_086_Player_PF_4 to the line for 2 free throws. [Team fouls: 1] (Team_018_Player_PF_4: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_PF_4 makes 2/2 from the line.
+Score: 37-64
+
+[10:50] Team_018 possession (Score: 37-64)
+Team_018_Player_PG_1 attempts a Layup. Contested by Team_086_Player_C_5 (3.1 feet, ZONE). Team_018_Player_PG_1 misses. Rebound secured by Team_086_Player_PF_4.
+
+[10:33] Team_086 possession (Score: 37-64)
+Team_086_Player_PG_1 drives and kicks out. Team_086_Player_PF_4 attempts a Midrange. Contested by Team_018_Player_PF_4 (3.0 feet, MAN). Team_086_Player_PF_4 misses. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[10:21] Team_086 possession (Score: 37-64)
+Team_086_Player_PG_1 makes the Layup and draws the foul on Team_018_Player_PG_1! And-1! Team_086_Player_PG_1 to the line for 1. [Team fouls: 2] (Team_018_Player_PG_1: 1 personal fouls)   FT 1/1: GOOD Team_086_Player_PG_1 makes 1/1 from the line.
+Score: 40-64
+
+[10:09] Team_018 possession (Score: 40-64)
+Team_018_Player_PG_1 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.4 feet, MAN). Team_018_Player_PG_1 misses. Rebound secured by Team_086_Player_SF_3.
+
+[09:55] Team_086 possession (Score: 40-64)
+Team_086_Player_PF_4 attempts a 3Pt. Contested by Team_018_Player_PG_1 (4.3 feet, ZONE). Team_086_Player_PF_4 misses. Rebound secured by Team_018_Player_PF_4.
+
+[09:41] Team_018 possession (Score: 40-64)
+Team_018_Player_SF_3 drives to the basket... Team_018_Player_SF_3 commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[09:30] Team_086 possession (Score: 40-64)
+FOUL! Reach-in foul on Team_018_Player_PF_4 during the drive. [Team fouls: 3] No free throws, side out. (Team_018_Player_PF_4: 2 personal fouls)
+
+[09:16] Team_018 possession (Score: 40-64)
+FOUL! Shooting foul on Team_086_Player_C_5. Team_018_Player_PF_4 to the line for 2 free throws. [Team fouls: 4] (Team_086_Player_C_5: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_PF_4 makes 2/2 from the line.
+Score: 40-66
+
+[09:00] Team_086 possession (Score: 40-66)
+Team_086_Player_PG_1 attempts a Midrange. Contested by Team_018_Player_PG_1 (4.3 feet, MAN). Team_086_Player_PG_1 misses. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[08:45] Team_086 possession (Score: 40-66)
+Team_086_Player_SF_3 attempts a 3Pt. Contested by Team_018_Player_SF_3 (3.5 feet, MAN). TEAM_086_PLAYER_SF_3 MAKES IT! Assist: Team_086_Player_SG_2
+Score: 43-66
+
+[08:29] Team_018 possession (Score: 43-66)
+Team_018_Player_SF_3 attempts a 3Pt. Contested by Team_086_Player_SF_3 (4.3 feet, MAN). Team_018_Player_SF_3 misses. Rebound secured by Team_086_Player_SF_3.
+
+[08:14] Team_086 possession (Score: 43-66)
+Team_086_Player_PF_4 attempts a 3Pt. Contested by Team_018_Player_PG_1 (4.3 feet, ZONE). Team_086_Player_PF_4 misses. Rebound secured by Team_018_Player_SF_3.
+
+[07:58] Team_018 possession (Score: 43-66)
+Team_018_Player_SG_2 drives and kicks out. Team_018_Player_C_5 attempts a Midrange. Contested by Team_086_Player_SG_2 (5.3 feet, ZONE). TEAM_018_PLAYER_C_5 MAKES IT!
+Score: 43-68
+
+[07:46] Team_086 possession (Score: 43-68)
+FOUL! Shooting foul on Team_018_Player_PG_1. Team_086_Player_SG_2 to the line for 3 free throws. [BONUS: 5 team fouls] (Team_018_Player_PG_1: 2 personal fouls)   FT 1/3: GOOD   FT 2/3: MISS   FT 3/3: GOOD Team_086_Player_SG_2 makes 2/3 from the line.
+Score: 45-68
+
+[07:36] Team_018 possession (Score: 45-68)
+Team_018_Player_PF_4 throws a bad pass! Stolen by Team_086_Player_C_5! TURNOVER! (live ball)
+
+[07:22] Team_086 possession (Score: 45-68)
+Team_086_Player_PF_4 attempts a 3Pt. Contested by Team_018_Player_PF_4 (3.0 feet, MAN). TEAM_086_PLAYER_PF_4 MAKES IT!
+Score: 48-68
+
+[07:10] Team_018 possession (Score: 48-68)
+Team_018_Player_PF_4 drives, picks up Team_086_Player_C_5. Help arrives from Team_086_Player_PG_1! Team_018_Player_PF_4 attempts a Dunk. Contested by Team_086_Player_PG_1 (3.1 feet, ZONE). Team_018_Player_PF_4 misses. Rebound secured by Team_086_Player_C_5.
+
+[07:00] Team_086 possession (Score: 48-68)
+Team_086_Player_PF_4 attempts a Midrange. Contested by Team_018_Player_PF_4 (3.0 feet, MAN). Team_086_Player_PF_4 misses. Offensive rebound by Team_086_Player_C_5! Team_086_Player_C_5's putback is no good. Offensive rebound by Team_086_Player_SF_3! Team_086_Player_SF_3 kicks it out.
+
+[06:48] Team_086 possession (Score: 48-68)
+Team_086_Player_SG_2 attempts a 3Pt. Contested by Team_018_Player_PG_1 (4.3 feet, ZONE). Team_086_Player_SG_2 misses. Rebound secured by Team_018_Player_PF_4.
+
+[06:36] Team_018 possession (Score: 48-68)
+Team_018_Player_PF_4 makes the Dunk and draws the foul on Team_086_Player_C_5! And-1! Team_018_Player_PF_4 to the line for 1. [BONUS: 6 team fouls] (Team_086_Player_C_5: 2 personal fouls)   FT 1/1: GOOD Team_018_Player_PF_4 makes 1/1 from the line.
+Score: 48-71
+
+[06:24] Team_086 possession (Score: 48-71)
+Team_086_Player_SF_3 attempts a 3Pt. Contested by Team_018_Player_SF_3 (3.5 feet, MAN). Team_086_Player_SF_3 misses. Rebound secured by Team_018_Player_SF_3.
+
+[06:12] Team_018 possession (Score: 48-71)
+Team_018_Player_PG_1 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.4 feet, ZONE). Team_018_Player_PG_1 misses. Rebound secured by Team_086_Player_SF_3.
+
+[05:55] Team_086 possession (Score: 48-71)
+Team_086_Player_PF_4 makes the Layup and draws the foul on Team_018_Player_PF_4! And-1! Team_086_Player_PF_4 to the line for 1. [BONUS: 7 team fouls] (Team_018_Player_PF_4: 3 personal fouls)   FT 1/1: GOOD Team_086_Player_PF_4 makes 1/1 from the line.
+Score: 51-71
+
+[05:39] Team_018 possession (Score: 51-71)
+Team_018_Player_SG_2 attempts a Midrange. Contested by Team_086_Player_SF_3 (4.3 feet, ZONE). Team_018_Player_SG_2 misses. FOUL! Loose ball foul on Team_086_Player_PF_4 during the rebound battle. [IN THE BONUS! 8 team fouls] Team_018_Player_PF_4 to the line for 2 free throws. (Team_086_Player_PF_4: 1 personal fouls)   FT 1/2: MISS   FT 2/2: MISS Team_018_Player_PF_4 makes 0/2 from the line. Rebound secured by Team_086_Player_C_5.
+
+[05:20] Team_086 possession (Score: 51-71)
+Team_086_Player_SF_3 drives, Team_018_Player_PF_4 stays with him. Team_086_Player_SF_3 attempts a Dunk. Contested by Team_018_Player_PF_4 (3.0 feet, ZONE). Team_086_Player_SF_3 misses. Rebound secured by Team_018_Player_SF_3.
+
+[05:08] Team_018 possession (Score: 51-71)
+Team_018_Player_SF_3 attempts a Layup. Contested by Team_086_Player_SF_3 (4.3 feet, MAN). TEAM_018_PLAYER_SF_3 MAKES IT! Assist: Team_018_Player_C_5
+Score: 51-73
+
+[04:54] Team_086 possession (Score: 51-73)
+Team_086_Player_SG_2 attempts a Midrange. BLOCKED BY TEAM_018_PLAYER_SG_2! Ball goes out of bounds. Turnover!
+
+[04:37] Team_018 possession (Score: 51-73)
+FOUL! Reach-in foul on Team_086_Player_C_5 during the drive. [IN THE BONUS! 9 team fouls] Team_018_Player_SF_3 to the line for 2 free throws. (Team_086_Player_C_5: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Team_018_Player_SF_3 makes 1/2 from the line. Rebound secured by Team_086_Player_C_5.
+Score: 51-74
+
+[04:20] Team_086 possession (Score: 51-74)
+Team_086_Player_C_5 attempts a Midrange. Contested by Team_018_Player_SF_3 (3.6 feet, ZONE). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_SF_3.
+
+[04:02] Team_018 possession (Score: 51-74)
+Team_018_Player_SF_3 attempts a 3Pt. Contested by Team_086_Player_SF_3 (4.4 feet, MAN). Team_018_Player_SF_3 misses. Rebound secured by Team_086_Player_SF_3.
+
+[03:47] Team_086 possession (Score: 51-74)
+Team_086_Player_PF_4 drives, Team_018_Player_C_5 stays with him. Team_086_Player_PF_4 attempts a Layup. Contested by Team_018_Player_C_5 (4.4 feet, ZONE). TEAM_086_PLAYER_PF_4 MAKES IT! Assist: Team_086_Player_SF_3
+Score: 53-74
+
+[03:32] Team_018 possession (Score: 53-74)
+Team_018_Player_SF_3 drives to the basket... Team_018_Player_SF_3 throws a bad pass! Stolen by Team_086_Player_C_5! TURNOVER! (live ball)
+
+[03:20] Team_086 possession (Score: 53-74)
+Team_086_Player_PG_1 attempts a Layup. Contested by Team_018_Player_PF_4 (3.3 feet, ZONE). Team_086_Player_PG_1 misses. Rebound secured by Team_018_Player_SF_3.
+
+[03:05] Team_018 possession (Score: 53-74)
+Team_018_Player_PF_4 attempts a 3Pt. Contested by Team_086_Player_C_5 (3.2 feet, MAN). Team_018_Player_PF_4 misses. Offensive rebound by Team_018_Player_PF_4! Team_018_Player_PF_4's putback is no good. Offensive rebound by Team_018_Player_PF_4! Team_018_Player_PF_4 kicks it out.
+
+[02:55] Team_018 possession (Score: 53-74)
+Team_018_Player_PG_1 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.6 feet, MAN). Team_018_Player_PG_1 misses. Rebound secured by Team_086_Player_SF_3.
+
+[02:42] Team_086 possession (Score: 53-74)
+Team_086_Player_C_5 attempts a 3Pt. Contested by Team_018_Player_PF_4 (3.4 feet, MAN). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_PF_4.
+
+[02:24] Team_018 possession (Score: 53-74)
+Team_018_Player_PG_1 drives and kicks out. Team_018_Player_PF_4 attempts a 3Pt. Contested by Team_086_Player_C_5 (3.3 feet, MAN). Team_018_Player_PF_4 misses. Offensive rebound by Team_018_Player_C_5! Team_018_Player_C_5's putback is no good. Rebound secured by Team_086_Player_PF_4.
+
+[02:12] Team_086 possession (Score: 53-74)
+Team_086_Player_C_5 drives and kicks out. Team_086_Player_SF_3 attempts a Midrange. Contested by Team_018_Player_SF_3 (3.8 feet, MAN). Team_086_Player_SF_3 misses. Rebound secured by Team_018_Player_PF_4.
+
+[01:59] Team_018 possession (Score: 53-74)
+Team_018_Player_PG_1 attempts a 3Pt. Contested by Team_086_Player_PG_1 (4.7 feet, MAN). Team_018_Player_PG_1 misses. Offensive rebound by Team_018_Player_PF_4! Team_018_Player_PF_4 puts it back in!
+Score: 53-76
+
+[01:42] Team_086 possession (Score: 53-76)
+Team_086_Player_PG_1 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[01:42] Substitution (Team_086): Team_086_Player_PG_1 OUT → Team_086_Player_PG_6 IN (stamina_rule2)
+
+[01:42] Substitution (Team_086): Team_086_Player_SG_2 OUT → Team_086_Player_SG_7 IN (stamina_rule2)
+
+[01:42] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_SF_8 IN (stamina_rule2)
+
+[01:42] Substitution (Team_086): Team_086_Player_PF_4 OUT → Team_086_Player_PF_9 IN (stamina_rule2)
+
+[01:42] Substitution (Team_086): Team_086_Player_C_5 OUT → Team_086_Player_C_10 IN (stamina_rule2)
+
+[01:42] Substitution (Team_018): Team_018_Player_PG_1 OUT → Team_018_Player_PG_6 IN (stamina_rule2)
+
+[01:42] Substitution (Team_018): Team_018_Player_SG_2 OUT → Team_018_Player_SG_7 IN (stamina_rule2)
+
+[01:42] Substitution (Team_018): Team_018_Player_SF_3 OUT → Team_018_Player_SF_8 IN (stamina_rule2)
+
+[01:42] Substitution (Team_018): Team_018_Player_PF_4 OUT → Team_018_Player_PF_9 IN (stamina_rule2)
+
+[01:42] Substitution (Team_018): Team_018_Player_C_5 OUT → Team_018_Player_C_10 IN (stamina_rule2)
+
+[01:32] Team_018 possession (Score: 53-76)
+Team_018_Player_PG_6 drives, Team_086_Player_C_10 stays with him. Team_018_Player_PG_6 attempts a Dunk. Wide open! Team_086_Player_C_10 is 6.5 feet away. [ZONE] TEAM_018_PLAYER_PG_6 MAKES IT! Assist: Team_018_Player_C_10
+Score: 53-78
+
+[01:22] Team_086 possession (Score: 53-78)
+Team_086_Player_PG_6 attempts a Layup. Contested by Team_018_Player_PF_9 (3.8 feet, ZONE). Team_086_Player_PG_6 misses. Rebound secured by Team_018_Player_PF_9.
+
+[01:03] Team_018 possession (Score: 53-78)
+Team_018_Player_SG_7 drives, Team_086_Player_C_10 stays with him. Team_018_Player_SG_7 attempts a Dunk. Wide open! Team_086_Player_C_10 is 6.5 feet away. [ZONE] TEAM_018_PLAYER_SG_7 MAKES IT! Assist: Team_018_Player_SF_8
+Score: 53-80
+
+[00:49] Team_086 possession (Score: 53-80)
+Team_086_Player_SG_7 drives, Team_018_Player_PF_9 stays with him. Team_086_Player_SG_7 attempts a Dunk. Contested by Team_018_Player_PF_9 (3.8 feet, ZONE). TEAM_086_PLAYER_SG_7 MAKES IT! Assist: Team_086_Player_SF_8
+Score: 55-80
+
+[00:40] Team_018 possession (Score: 55-80)
+Team_018_Player_C_10 commits an offensive foul! Team_086_Player_C_10 drew the charge! TURNOVER! (dead ball)
+
+[00:28] Team_086 possession (Score: 55-80)
+Team_086_Player_PG_6 attempts a Layup. BLOCKED BY TEAM_018_PLAYER_PG_6! Ball goes out of bounds. Turnover!
+
+[00:14] Team_018 possession (Score: 55-80)
+Team_018_Player_SG_7 attempts a Midrange. Wide open! Team_086_Player_PF_9 is 6.4 feet away. [ZONE] Team_018_Player_SG_7 misses. Rebound secured by Team_086_Player_PF_9.
+
+[00:04] Team_086 possession (Score: 55-80)
+Team_086_Player_SG_7 attempts a Layup. Contested by Team_018_Player_PF_9 (3.8 feet, ZONE). Team_086_Player_SG_7 misses. Rebound secured by Team_018_Player_C_10.
+
+================================================================================
+                              3RD QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_086 20, Team_018 16
+
+BOX SCORE:
+================================================================================
+
+Team_086
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_086_Player_SF_3    0    3    9    1   0   1/1   100.0     0/0   0.0
+Team_086_Player_SG_7    0    2    0    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_SG_2    0    0    0    1   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_5     0    0    3    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_SF_8    0    0    0    1   0   0/0     0.0     0/0   0.0
+Team_086_Player_PF_9    0    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 4/17 (23.5%), 3PT: 2/7 (28.6%), REB: 14 (3 off, 11 def), AST: 3, TO: 3
+TEAM FOULS: 0
+
+
+Team_018
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_086_Player_PF_4    0    5    3    0   0   2/2   100.0     0/0   0.0
+Team_018_Player_SF_3    0    2    6    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_PF_4    0    2    7    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_C_5     0    2    0    1   0   1/1   100.0     0/0   0.0
+Team_018_Player_PG_6    0    2    0    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_SG_7    0    2    0    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_C_10    0    0    1    1   0   0/0     0.0     0/0   0.0
+Team_018_Player_PF_9    0    0    1    0   0   0/0     0.0     0/0   0.0
+Team_018_Player_SF_8    0    0    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 5/18 (27.8%), 3PT: 1/7 (14.3%), REB: 17 (4 off, 13 def), AST: 3, TO: 4
+TEAM FOULS: 9 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                       4TH QUARTER - Team_086 vs Team_018                       
+================================================================================
+
+[12:00] Substitution (Team_086): Team_086_Player_PG_1 OUT (stamina: 79) → Team_086_Player_PG_6 IN (comeback_detected)
+
+[12:00] Substitution (Team_018): Team_018_Player_PG_1 OUT (stamina: 79) → Team_018_Player_PG_6 IN (comeback_detected)
+
+[12:00] Team_086 possession (Score: 55-80)
+Team_086_Player_SG_2 attempts a 3Pt. Contested by Team_018_Player_PG_6 (5.5 feet, ZONE). TEAM_086_PLAYER_SG_2 MAKES IT! Assist: Team_086_Player_PG_6
+Score: 58-80
+
+[11:46] Team_018 possession (Score: 58-80)
+Team_018_Player_SG_2 attempts a Layup. Contested by Team_086_Player_C_5 (3.1 feet, ZONE). Team_018_Player_SG_2 misses. Rebound secured by Team_086_Player_SF_3.
+
+[11:31] Team_086 possession (Score: 58-80)
+Team_086_Player_PG_6 attempts a Midrange. Contested by Team_018_Player_PG_6 (5.5 feet, MAN). TEAM_086_PLAYER_PG_6 MAKES IT!
+Score: 60-80
+
+[11:17] Team_018 possession (Score: 60-80)
+Team_018_Player_PF_4 attempts a Midrange. Contested by Team_086_Player_PF_4 (5.2 feet, ZONE). Team_018_Player_PF_4 misses. Rebound secured by Team_086_Player_PF_4.
+
+[11:03] Team_086 possession (Score: 60-80)
+Team_086_Player_C_5 attempts a Layup. BLOCKED BY TEAM_018_PLAYER_PF_4! Ball goes out of bounds. Turnover!
+
+[11:03] Substitution (Team_086): Team_086_Player_SG_2 OUT → Team_086_Player_SG_7 IN (stamina_rule2)
+
+[10:46] Team_018 possession (Score: 60-80)
+Team_018_Player_PG_6 attempts a 3Pt. Wide open! Team_086_Player_PG_6 is 6.3 feet away. [ZONE] Team_018_Player_PG_6 misses. Rebound secured by Team_086_Player_SF_3.
+
+[10:31] Team_086 possession (Score: 60-80)
+Team_086_Player_C_5 attempts a 3Pt. Contested by Team_018_Player_PF_4 (3.3 feet, MAN). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_PF_4.
+
+[10:20] Team_018 possession (Score: 60-80)
+Team_018_Player_SG_2 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.4 feet, MAN). TEAM_018_PLAYER_SG_2 MAKES IT! Assist: Team_018_Player_PF_4
+Score: 60-83
+
+[10:06] Team_086 possession (Score: 60-83)
+Team_086_Player_SG_7 attempts a Layup. Contested by Team_018_Player_PF_4 (3.4 feet, ZONE). Team_086_Player_SG_7 misses. Rebound secured by Team_018_Player_PF_4.
+
+[09:49] Team_018 possession (Score: 60-83)
+Team_018_Player_C_5 attempts a Midrange. Contested by Team_086_Player_SG_7 (5.4 feet, ZONE). Team_018_Player_C_5 misses. FOUL! Loose ball foul on Team_086_Player_SF_3 during the rebound battle. [Team fouls: 1] No free throws, side out. (Team_086_Player_SF_3: 1 personal fouls)
+
+[09:35] Team_018 possession (Score: 60-83)
+Team_018_Player_PG_6 attempts a 3Pt. Wide open! Team_086_Player_PG_6 is 6.3 feet away. [MAN] TEAM_018_PLAYER_PG_6 MAKES IT! Assist: Team_018_Player_PF_4
+Score: 60-86
+
+[09:22] Team_086 possession (Score: 60-86)
+Team_086_Player_SF_3 attempts a Midrange. Contested by Team_018_Player_PF_4 (3.5 feet, ZONE). Team_086_Player_SF_3 misses. Rebound secured by Team_018_Player_SF_3.
+
+[09:09] Team_018 possession (Score: 60-86)
+Team_018_Player_PF_4 attempts a 3Pt. Contested by Team_086_Player_C_5 (3.4 feet, MAN). Team_018_Player_PF_4 misses. Rebound secured by Team_086_Player_PF_4.
+
+[08:55] Team_086 possession (Score: 60-86)
+Team_086_Player_C_5 attempts a 3Pt. Contested by Team_018_Player_PF_4 (3.5 feet, MAN). Team_086_Player_C_5 misses. Rebound secured by Team_018_Player_PF_4.
+
+[08:43] Team_018 possession (Score: 60-86)
+Team_018_Player_C_5 attempts a Midrange. Contested by Team_086_Player_C_5 (3.4 feet, MAN). Team_018_Player_C_5 misses. Rebound secured by Team_086_Player_C_5.
+
+[08:25] Team_086 possession (Score: 60-86)
+FOUL! Shooting foul on Team_018_Player_SF_3. Team_086_Player_SF_3 to the line for 2 free throws. [Team fouls: 2] (Team_018_Player_SF_3: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Team_086_Player_SF_3 makes 1/2 from the line.
+Score: 61-86
+
+[08:06] Team_018 possession (Score: 61-86)
+Team_018_Player_SG_2 drives to the basket... Team_018_Player_SG_2 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[08:06] Substitution (Team_086): Team_086_Player_SF_3 OUT → Team_086_Player_SF_8 IN (stamina_rule2)
+
+[08:06] Substitution (Team_086): Team_086_Player_PF_4 OUT → Team_086_Player_PF_9 IN (stamina_rule2)
+
+[08:06] Substitution (Team_086): Team_086_Player_C_5 OUT → Team_086_Player_C_10 IN (stamina_rule2)
+
+[08:06] Substitution (Team_018): Team_018_Player_SG_2 OUT → Team_018_Player_SG_7 IN (stamina_rule2)
+
+[08:06] Substitution (Team_018): Team_018_Player_SF_3 OUT → Team_018_Player_SF_8 IN (stamina_rule2)
+
+[08:06] Substitution (Team_018): Team_018_Player_PF_4 OUT → Team_018_Player_PF_9 IN (stamina_rule2)
+
+[08:06] Substitution (Team_018): Team_018_Player_C_5 OUT → Team_018_Player_C_10 IN (stamina_rule2)
+
+[07:53] Team_086 possession (Score: 61-86)
+Team_086_Player_SG_7 attempts a Midrange. Contested by Team_018_Player_SG_7 (5.9 feet, MAN). TEAM_086_PLAYER_SG_7 MAKES IT!
+Score: 63-86
+
+[07:43] Team_018 possession (Score: 63-86)
+Team_018_Player_SG_7 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.4 feet, MAN). TEAM_018_PLAYER_SG_7 MAKES IT! Assist: Team_018_Player_SF_8
+Score: 63-89
+
+[07:28] Team_086 possession (Score: 63-89)
+Team_086_Player_PF_9 makes the Layup and draws the foul on Team_018_Player_PG_6! And-1! Team_086_Player_PF_9 to the line for 1. [Team fouls: 3] (Team_018_Player_PG_6: 1 personal fouls)   FT 1/1: GOOD Team_086_Player_PF_9 makes 1/1 from the line.
+Score: 66-89
+
+[07:12] Team_018 possession (Score: 66-89)
+Team_018_Player_SF_8 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.4 feet, ZONE). Team_018_Player_SF_8 misses. Rebound secured by Team_086_Player_PG_6.
+
+[07:01] Team_086 possession (Score: 66-89)
+Team_086_Player_C_10 drives and kicks out. Team_086_Player_SG_7 attempts a Midrange. Contested by Team_018_Player_SG_7 (5.9 feet, MAN). Team_086_Player_SG_7 misses. Rebound secured by Team_018_Player_SF_8.
+
+[06:47] Team_018 possession (Score: 66-89)
+Team_018_Player_C_10 makes the Dunk and draws the foul on Team_086_Player_C_10! And-1! Team_018_Player_C_10 to the line for 1. [Team fouls: 4] (Team_086_Player_C_10: 1 personal fouls)   FT 1/1: GOOD Team_018_Player_C_10 makes 1/1 from the line.
+Score: 66-92
+
+[06:31] Team_086 possession (Score: 66-92)
+Team_086_Player_SF_8 drives, Team_018_Player_SF_8 stays with him. Team_086_Player_SF_8 attempts a Dunk. Contested by Team_018_Player_SF_8 (5.1 feet, MAN). TEAM_086_PLAYER_SF_8 MAKES IT! Assist: Team_086_Player_PG_6
+Score: 68-92
+
+[06:18] Team_018 possession (Score: 68-92)
+Team_018_Player_PG_6 attempts a Midrange. Contested by Team_086_Player_SG_7 (5.4 feet, ZONE). TEAM_018_PLAYER_PG_6 MAKES IT!
+Score: 68-94
+
+[06:02] Team_086 possession (Score: 68-94)
+Team_086_Player_SF_8 drives to the basket... Team_086_Player_SF_8 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[05:51] Team_018 possession (Score: 68-94)
+Team_018_Player_SG_7 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.4 feet, MAN). TEAM_018_PLAYER_SG_7 MAKES IT! Assist: Team_018_Player_SF_8
+Score: 68-97
+
+[05:36] Team_086 possession (Score: 68-97)
+Team_086_Player_SF_8 attempts a 3Pt. Contested by Team_018_Player_PG_6 (5.6 feet, ZONE). Team_086_Player_SF_8 misses. Rebound secured by Team_018_Player_C_10.
+
+[05:22] Team_018 possession (Score: 68-97)
+Team_018_Player_C_10 drives and kicks out. Team_018_Player_SG_7 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.4 feet, MAN). Team_018_Player_SG_7 misses. Offensive rebound by Team_018_Player_C_10! Team_018_Player_C_10 kicks it out.
+
+[05:09] Team_018 possession (Score: 68-97)
+FOUL! Holding foul on Team_086_Player_PG_6. [IN THE BONUS! 5 team fouls] Team_018_Player_PG_6 to the line for 2 free throws. (Team_086_Player_PG_6: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_PG_6 makes 2/2 from the line.
+Score: 68-99
+
+[04:56] Team_086 possession (Score: 68-99)
+Team_086_Player_SG_7 attempts a 3Pt. Contested by Team_018_Player_PG_6 (5.6 feet, ZONE). TEAM_086_PLAYER_SG_7 MAKES IT! Assist: Team_086_Player_C_10
+Score: 71-99
+
+[04:42] Team_018 possession (Score: 71-99)
+Team_018_Player_PF_9 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.4 feet, ZONE). Team_018_Player_PF_9 misses. Rebound secured by Team_086_Player_SF_8.
+
+[04:26] Team_086 possession (Score: 71-99)
+Team_086_Player_PG_6 attempts a 3Pt. Contested by Team_018_Player_PG_6 (5.6 feet, MAN). Team_086_Player_PG_6 misses. Rebound secured by Team_018_Player_PF_9.
+
+[04:12] Team_018 possession (Score: 71-99)
+Team_018_Player_PG_6 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.5 feet, ZONE). TEAM_018_PLAYER_PG_6 MAKES IT! Assist: Team_018_Player_PF_9
+Score: 71-102
+
+[04:00] Team_086 possession (Score: 71-102)
+Team_086_Player_PG_6 drives, Team_018_Player_PG_6 stays with him. Team_086_Player_PG_6 attempts a Layup. Contested by Team_018_Player_PG_6 (5.7 feet, MAN). TEAM_086_PLAYER_PG_6 MAKES IT! Assist: Team_086_Player_C_10
+Score: 73-102
+
+[03:44] Team_018 possession (Score: 73-102)
+FOUL! Shooting foul on Team_086_Player_SG_7. Team_018_Player_C_10 to the line for 2 free throws. [BONUS: 6 team fouls] (Team_086_Player_SG_7: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Team_018_Player_C_10 makes 1/2 from the line.
+Score: 73-103
+
+[03:29] Team_086 possession (Score: 73-103)
+FOUL! Shooting foul on Team_018_Player_PG_6. Team_086_Player_PG_6 to the line for 2 free throws. [BONUS: 7 team fouls] (Team_018_Player_PG_6: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_PG_6 makes 2/2 from the line.
+Score: 75-103
+
+[03:15] Team_018 possession (Score: 75-103)
+FOUL! Holding foul on Team_086_Player_SF_8. [IN THE BONUS! 8 team fouls] Team_018_Player_SF_8 to the line for 2 free throws. (Team_086_Player_SF_8: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_018_Player_SF_8 makes 2/2 from the line.
+Score: 75-105
+
+[03:00] Team_086 possession (Score: 75-105)
+FOUL! Reach-in foul on Team_018_Player_PF_9 during the drive. [IN THE BONUS! 9 team fouls] Team_086_Player_PF_9 to the line for 2 free throws. (Team_018_Player_PF_9: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_PF_9 makes 2/2 from the line.
+Score: 77-105
+
+[02:42] Team_018 possession (Score: 77-105)
+Team_018_Player_SF_8 drives and kicks out. Team_018_Player_PF_9 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.6 feet, ZONE). Team_018_Player_PF_9 misses. Rebound secured by Team_086_Player_PF_9.
+
+[02:29] Team_086 possession (Score: 77-105)
+Team_086_Player_PG_6 drives to the basket... Team_086_Player_PG_6 commits an offensive foul! TURNOVER! (dead ball)
+
+[02:19] Team_018 possession (Score: 77-105)
+Team_018_Player_SG_7 attempts a Midrange. Contested by Team_086_Player_SG_7 (5.6 feet, MAN). Team_018_Player_SG_7 misses. Rebound secured by Team_086_Player_PF_9.
+
+[02:00] Team_086 possession (Score: 77-105)
+Team_086_Player_SF_8 attempts a 3Pt. Contested by Team_018_Player_PG_6 (5.9 feet, ZONE). Team_086_Player_SF_8 misses. Rebound secured by Team_018_Player_PF_9.
+
+[01:46] Team_018 possession (Score: 77-105)
+Team_018_Player_C_10 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.6 feet, ZONE). Team_018_Player_C_10 misses. FOUL! Loose ball foul on Team_086_Player_PF_9 during the rebound battle. [IN THE BONUS! 10 team fouls] Team_018_Player_C_10 to the line for 2 free throws. (Team_086_Player_PF_9: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Team_018_Player_C_10 makes 1/2 from the line.
+Score: 77-106
+
+[01:33] Team_086 possession (Score: 77-106)
+Team_086_Player_SG_7 makes the Layup and draws the foul on Team_018_Player_SG_7! And-1! Team_086_Player_SG_7 to the line for 1. [BONUS: 11 team fouls] (Team_018_Player_SG_7: 1 personal fouls)   FT 1/1: GOOD Team_086_Player_SG_7 makes 1/1 from the line.
+Score: 80-106
+
+[01:16] Team_018 possession (Score: 80-106)
+Team_018_Player_PF_9 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.7 feet, ZONE). TEAM_018_PLAYER_PF_9 MAKES IT! Assist: Team_018_Player_SF_8
+Score: 80-109
+
+[01:02] Team_086 possession (Score: 80-109)
+FOUL! Holding foul on Team_018_Player_C_10. [IN THE BONUS! 12 team fouls] Team_086_Player_C_10 to the line for 2 free throws. (Team_018_Player_C_10: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Team_086_Player_C_10 makes 2/2 from the line.
+Score: 82-109
+
+[00:51] Team_018 possession (Score: 82-109)
+Team_018_Player_SF_8 attempts a Midrange. Wide open! Team_086_Player_SF_8 is 6.1 feet away. [MAN] TEAM_018_PLAYER_SF_8 MAKES IT!
+Score: 82-111
+
+[00:38] Team_086 possession (Score: 82-111)
+Team_086_Player_SF_8 makes the Dunk and draws the foul on Team_018_Player_SG_7! And-1! Team_086_Player_SF_8 to the line for 1. [BONUS: 13 team fouls] (Team_018_Player_SG_7: 2 personal fouls)   FT 1/1: GOOD Team_086_Player_SF_8 makes 1/1 from the line.
+Score: 85-111
+
+[00:24] Team_018 possession (Score: 85-111)
+Team_018_Player_C_10 attempts a 3Pt. Contested by Team_086_Player_SG_7 (5.8 feet, ZONE). Team_018_Player_C_10 misses. Rebound secured by Team_086_Player_PF_9.
+
+[00:08] Team_086 possession (Score: 85-111)
+Team_086_Player_PF_9 commits an offensive foul! Team_018_Player_PF_9 drew the charge! TURNOVER! (dead ball)
+
+================================================================================
+                              4TH QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_086 30, Team_018 31
+
+BOX SCORE:
+================================================================================
+
+Team_086
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_086_Player_SG_7    0    5    0    0   0   2/2   100.0     0/0   0.0
+Team_086_Player_PG_6    0    4    1    2   0   2/2   100.0     0/0   0.0
+Team_086_Player_SG_2    0    3    0    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_SF_8    0    2    1    0   0   1/1   100.0     0/0   0.0
+Team_086_Player_SF_3    0    0    2    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_PF_4    0    0    2    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_5     0    0    1    0   0   0/0     0.0     0/0   0.0
+Team_086_Player_C_10    0    0    0    2   0   0/0     0.0     0/0   0.0
+Team_086_Player_PF_9    0    0    3    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 6/14 (42.9%), 3PT: 2/7 (28.6%), REB: 10 (0 off, 10 def), AST: 4, TO: 4
+TEAM FOULS: 0
+
+
+Team_018
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Team_018_Player_PG_6    0    8    0    0   0   3/3   100.0     0/0   0.0
+Team_018_Player_SG_7    0    6    0    0   0   2/2   100.0     0/0   0.0
+Team_018_Player_SG_2    0    3    0    0   0   1/1   100.0     0/0   0.0
+Team_018_Player_PF_9    0    3    2    1   0   1/1   100.0     0/0   0.0
+Team_018_Player_SF_8    0    2    1    3   0   1/1   100.0     0/0   0.0
+Team_018_Player_PF_4    0    0    3    2   0   0/0     0.0     0/0   0.0
+Team_018_Player_C_5     0    0    1    0   0   0/0     0.0     0/0   0.0
+Team_018_Player_SF_3    0    0    1    0   0   0/0     0.0     0/0   0.0
+Team_018_Player_C_10    0    0    2    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 8/18 (44.4%), 3PT: 6/11 (54.5%), REB: 10 (2 off, 8 def), AST: 6, TO: 1
+TEAM FOULS: 13 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                               FULL GAME COMPLETE                               
+================================================================================
+
+FINAL SCORE: Team_086 85, Team_018 111
+
+SCORING BY QUARTER:
+--------------------------------------------------------------------------------
+Team                     Q1     Q2     Q3     Q4    FINAL
+--------------------------------------------------------------------------------
+Team_086                 21     14     20     30       85
+Team_018                 28     36     16     31      111
+--------------------------------------------------------------------------------
+
+FULL GAME BOX SCORE:
+================================================================================
+
+Team_086
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Team_086_Player_SG_7   31   16    2    0   2   7/11   63.6   1/2    50.0   1/1     0   0
+Team_086_Player_PF_9   28   10    5    0   2   2/5    40.0   1/2    50.0   5/5     1   1
+Team_086_Player_C_5    28    3    7    2   1   1/9    11.1   0/3     0.0   1/1     2   0
+Team_086_Player_SF_3   27    4   17    3   5   1/6    16.7   1/4    25.0   1/2     0   0
+Team_086_Player_PG_6   25    8    4    2   5   2/6    33.3   0/2     0.0   4/4     0   0
+Team_086_Player_PG_1   24    3    2    1   2   1/4    25.0   0/1     0.0   1/1     1   0
+Team_086_Player_PF_4   23   15    6    0   3   5/8    62.5   2/4    50.0   3/3     0   0
+Team_086_Player_C_10   21    4    1    4   3   0/2     0.0   0/1     0.0   4/4     0   0
+Team_086_Player_SF_8   19   11    1    1   0   4/6    66.7   0/2     0.0   3/3     1   0
+Team_086_Player_SG_2   18    7    0    1   0   2/3    66.7   1/2    50.0   2/3     0   1
+
+TEAM: FG: 19/54 (35.2%), 3PT: 6/23 (26.1%), REB: 43 (10 off, 33 def), AST: 14, TO: 23
+
+
+Team_018
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Team_018_Player_PG_6   32   15    0    3   0   5/10   50.0   3/4    75.0   2/2     0   1
+Team_018_Player_SF_3   27    7   11    3   1   4/8    50.0   3/5    60.0   2/2     0   0
+Team_018_Player_PF_9   26   15    6    1   1   5/8    62.5   3/5    60.0   2/2     1   0
+Team_018_Player_C_5    26   15    6    2   2   3/5    60.0   0/0     0.0   3/4     1   0
+Team_018_Player_SG_2   25    3    0    1   1   2/5    40.0   1/2    50.0   0/0     0   1
+Team_018_Player_PF_4   23   13   14    4   2   3/6    50.0   0/1     0.0   5/5     2   1
+Team_018_Player_C_10   23   12    6    5   1   2/6    33.3   0/4     0.0   4/9     0   1
+Team_018_Player_PG_1   21    8    0    1   2   3/10   30.0   3/7    42.9   2/2     0   0
+Team_018_Player_SF_8   21   10    1    4   2   3/5    60.0   2/3    66.7   2/2     0   0
+Team_018_Player_SG_7   19   11    0    0   0   4/7    57.1   3/3   100.0   0/0     0   0
+
+TEAM: FG: 31/67 (46.3%), 3PT: 18/34 (52.9%), REB: 46 (12 off, 34 def), AST: 24, TO: 12
+
+================================================================================

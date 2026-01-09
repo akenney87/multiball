@@ -1,0 +1,683 @@
+====================================================================================================
+BASKETBALL SIMULATOR - PLAY-BY-PLAY REVIEW GAME
+====================================================================================================
+
+HOME: Team Alpha
+AWAY: Team Beta
+
+PLAYER SPECIALIZATIONS:
+
+Team Alpha:
+  Chris Maestro (PG) - Elite Playmaker (Teamwork 92, Creativity 90, Awareness 88)
+  Ray Sniper (SG) - Elite 3PT Shooter (Form 95, Throw Acc 92, Hand-Eye 90)
+  Marcus Slasher (SF) - Elite Slasher (Acceleration 92, Agility 88, Deception 88)
+  Dennis Boardman (PF) - Elite Rebounder (Jumping 92, Arm Str 88, Awareness 85)
+  Hassan Swatter (C) - Elite Shot Blocker (Jumping 95, Reactions 90, Awareness 88)
+  Tony Lockdown (PG) - Defensive Specialist (Reactions 92, Agility 90, Awareness 90)
+  Jerry Midrange (SG) - Midrange Specialist (Form 92, Throw Acc 90, Finesse 90)
+  Vince Skywalker (SF) - Elite Dunker (Jumping 98, Arm Str 88, Bravery 90)
+  Karl Post-Up (PF) - Post Scorer (Core Str 90, Finesse 88, Patience 90)
+  Dikembe Wall (C) - Defensive Anchor (Height 88, Awareness 92, Reactions 90)
+
+Team Beta:
+  Steve Facilitator (PG) - Elite Playmaker (Teamwork 90, Creativity 88, Awareness 90)
+  Reggie Shooter (SG) - Elite 3PT Shooter (Throw Acc 95, Hand-Eye 92, Form 92)
+  Dwyane Slasher (SF) - Elite Slasher (Agility 90, Deception 90, Acceleration 88)
+  Andre Rebounder (PF) - Elite Rebounder (Jumping 95, Arm Str 90, Awareness 88)
+  Mutombo Blocker (C) - Elite Shot Blocker (Reactions 92, Jumping 92, Awareness 90)
+  Gary Defender (PG) - Defensive Specialist (Agility 92, Awareness 92, Reactions 90)
+  Kobe Midrange (SG) - Midrange Specialist (Finesse 92, Throw Acc 92, Hand-Eye 90)
+  Dominique Dunker (SF) - Elite Dunker (Jumping 95, Arm Str 90, Bravery 92)
+  Hakeem Post (PF) - Post Scorer (Core Str 92, Patience 92, Finesse 90)
+  Ben Anchor (C) - Defensive Anchor (Height 90, Awareness 90, Teamwork 90)
+
+====================================================================================================
+
+
+Simulating Quarter 1...
+Quarter 1 complete: Team Alpha 34, Team Beta 23
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 2...
+Quarter 2 complete: Team Alpha 59, Team Beta 53
+
+Halftime (15 min): All players fully recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Team Alpha 93, Team Beta 76
+
+Quarter break (2:10): Players recovering stamina...
+
+Simulating Quarter 4...
+Quarter 4 complete: Team Alpha 118, Team Beta 106
+
+====================================================================================================
+QUARTER 1
+====================================================================================================
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 2 - Team Beta 0
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 2 - Team Beta 2
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 2 - Team Beta 2
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 2 - Team Beta 4
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 4 - Team Beta 4
+
+Team Beta: Reggie Shooter makes the rim! (+2)
+  Score: Team Alpha 4 - Team Beta 6
+
+Team Alpha: Chris Maestro misses the three-pointer | Rebound: Dwyane Slasher
+  Score: Team Alpha 4 - Team Beta 6
+
+Team Beta: Reggie Shooter loses the ball (Steal: Hassan Swatter)
+  Score: Team Alpha 4 - Team Beta 6
+
+Team Alpha: Chris Maestro misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 4 - Team Beta 6
+
+Team Beta: Steve Facilitator's rim is BLOCKED by Hassan Swatter!
+  Score: Team Alpha 4 - Team Beta 6
+
+Team Alpha: Dennis Boardman commits a BAD PASS turnover (Steal: Andre Rebounder)
+  Score: Team Alpha 4 - Team Beta 6
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 4 - Team Beta 8
+
+Team Alpha: Hassan Swatter makes the rim! (+2)
+  Score: Team Alpha 6 - Team Beta 8
+
+Team Beta: Dwyane Slasher makes the rim! (+2)
+  Score: Team Alpha 6 - Team Beta 10
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 8 - Team Beta 10
+
+Team Beta: Reggie Shooter loses the ball
+  Score: Team Alpha 8 - Team Beta 10
+
+Team Alpha: Dennis Boardman hits the midrange jumper! (+2)
+  Score: Team Alpha 10 - Team Beta 10
+
+Team Beta: Steve Facilitator commits an offensive foul (Turnover)
+  Score: Team Alpha 10 - Team Beta 10
+
+Team Alpha: Ray Sniper makes the rim! (+2)
+  Score: Team Alpha 12 - Team Beta 10
+
+Team Beta: Steve Facilitator makes the rim! (+2)
+  Score: Team Alpha 12 - Team Beta 12
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 14 - Team Beta 12
+
+Team Beta: Andre Rebounder makes the rim! (+2)
+  Score: Team Alpha 14 - Team Beta 14
+
+Team Alpha: Ray Sniper makes a THREE-POINTER! (+3)
+  Score: Team Alpha 17 - Team Beta 14
+
+Team Beta: Dwyane Slasher makes the rim! (+2)
+  Score: Team Alpha 17 - Team Beta 16
+
+Team Alpha: Chris Maestro makes a THREE-POINTER! (+3)
+  Score: Team Alpha 20 - Team Beta 16
+
+Team Beta: Andre Rebounder makes the rim! (+2)
+  Score: Team Alpha 20 - Team Beta 18
+
+Team Alpha: Hassan Swatter misses the rim | Rebound: Dwyane Slasher
+  Score: Team Alpha 20 - Team Beta 18
+
+Team Beta: Andre Rebounder misses the midrange jumper | Rebound: Marcus Slasher
+  Score: Team Alpha 20 - Team Beta 18
+
+Team Alpha: Chris Maestro misses the three-pointer | Rebound: Andre Rebounder
+  Score: Team Alpha 20 - Team Beta 18
+
+Team Beta: Andre Rebounder misses the three-pointer | Rebound: Dennis Boardman
+  Score: Team Alpha 20 - Team Beta 18
+
+Team Alpha: Hassan Swatter makes the rim! (+3)
+  Score: Team Alpha 23 - Team Beta 18
+
+Team Beta: Mutombo Blocker misses the rim | Rebound: Marcus Slasher
+  Score: Team Alpha 23 - Team Beta 18
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 25 - Team Beta 18
+
+Team Beta: Steve Facilitator misses the three-pointer | Rebound: Marcus Slasher
+  Score: Team Alpha 25 - Team Beta 18
+
+Team Alpha: Ray Sniper makes the rim! (+2)
+  Score: Team Alpha 27 - Team Beta 18
+
+Team Beta: Reggie Shooter commits an offensive foul (Turnover)
+  Score: Team Alpha 27 - Team Beta 18
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 27 - Team Beta 18
+
+Team Beta: Andre Rebounder's rim is BLOCKED by Dennis Boardman!
+  Score: Team Alpha 27 - Team Beta 18
+
+Team Alpha: Marcus Slasher misses the three-pointer | Rebound: Dwyane Slasher
+  Score: Team Alpha 27 - Team Beta 18
+
+Team Beta: Mutombo Blocker makes the rim! (+3)
+  Score: Team Alpha 27 - Team Beta 21
+
+Team Alpha: Unknown misses the rim
+  Score: Team Alpha 27 - Team Beta 21
+
+Team Beta: Dwyane Slasher makes a THREE-POINTER! (+3)
+  Score: Team Alpha 27 - Team Beta 23
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 29 - Team Beta 23
+
+Team Beta: Reggie Shooter misses the three-pointer | Rebound: Hassan Swatter
+  Score: Team Alpha 29 - Team Beta 23
+
+Team Alpha: Hassan Swatter makes the rim! (+3)
+  Score: Team Alpha 32 - Team Beta 23
+
+Team Beta: Andre Rebounder loses the ball
+  Score: Team Alpha 32 - Team Beta 23
+
+Team Alpha: Karl Post-Up makes the rim! (+2)
+  Score: Team Alpha 34 - Team Beta 23
+
+----------------------------------------------------------------------------------------------------
+END OF QUARTER 1
+Score: Team Alpha 34 - Team Beta 23
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+QUARTER 2
+====================================================================================================
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 36 - Team Beta 23
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 36 - Team Beta 25
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 36 - Team Beta 25
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 36 - Team Beta 27
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 38 - Team Beta 27
+
+Team Beta: Reggie Shooter makes the rim! (+2)
+  Score: Team Alpha 38 - Team Beta 29
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 38 - Team Beta 29
+
+Team Beta: Andre Rebounder misses the rim | Rebound: Marcus Slasher
+  Score: Team Alpha 38 - Team Beta 29
+
+Team Alpha: Hassan Swatter's rim is BLOCKED by Mutombo Blocker!
+  Score: Team Alpha 38 - Team Beta 29
+
+Team Beta: Andre Rebounder commits a BAD PASS turnover (Steal: Dennis Boardman)
+  Score: Team Alpha 38 - Team Beta 29
+
+Team Alpha: Hassan Swatter makes the rim! (+2)
+  Score: Team Alpha 40 - Team Beta 29
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 40 - Team Beta 31
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 42 - Team Beta 31
+
+Team Beta: Andre Rebounder makes the rim! (+2)
+  Score: Team Alpha 42 - Team Beta 33
+
+Team Alpha: Ray Sniper loses the ball
+  Score: Team Alpha 42 - Team Beta 33
+
+Team Beta: Hakeem Post hits the midrange jumper! (+2)
+  Score: Team Alpha 42 - Team Beta 35
+
+Team Alpha: Tony Lockdown commits an offensive foul (Turnover)
+  Score: Team Alpha 42 - Team Beta 35
+
+Team Beta: Kobe Midrange makes the rim! (+2)
+  Score: Team Alpha 42 - Team Beta 37
+
+Team Alpha: Tony Lockdown makes the rim! (+2)
+  Score: Team Alpha 44 - Team Beta 37
+
+Team Beta: Hakeem Post makes the rim! (+2)
+  Score: Team Alpha 44 - Team Beta 39
+
+Team Alpha: Karl Post-Up makes the rim! (+2)
+  Score: Team Alpha 46 - Team Beta 39
+
+Team Beta: Kobe Midrange makes a THREE-POINTER! (+3)
+  Score: Team Alpha 46 - Team Beta 42
+
+Team Alpha: Vince Skywalker makes the rim! (+2)
+  Score: Team Alpha 48 - Team Beta 42
+
+Team Beta: Gary Defender makes the rim! (+2)
+  Score: Team Alpha 48 - Team Beta 44
+
+Team Alpha: Tony Lockdown misses the rim
+  Score: Team Alpha 48 - Team Beta 44
+
+Team Beta: Dominique Dunker makes the rim! (+2)
+  Score: Team Alpha 48 - Team Beta 46
+
+Team Alpha: Dikembe Wall commits an offensive foul (Turnover)
+  Score: Team Alpha 48 - Team Beta 46
+
+Team Beta: Hakeem Post misses the midrange jumper | Rebound: Dikembe Wall
+  Score: Team Alpha 48 - Team Beta 46
+
+Team Alpha: Jerry Midrange makes a THREE-POINTER! (+3)
+  Score: Team Alpha 51 - Team Beta 46
+
+Team Beta: Dominique Dunker makes a THREE-POINTER! (+3)
+  Score: Team Alpha 51 - Team Beta 49
+
+Team Alpha: Tony Lockdown misses the three-pointer | Rebound: Ben Anchor
+  Score: Team Alpha 51 - Team Beta 49
+
+Team Beta: Ben Anchor commits a BAD PASS turnover (Steal: Dikembe Wall)
+  Score: Team Alpha 51 - Team Beta 49
+
+Team Alpha: Tony Lockdown makes the rim! (+3)
+  Score: Team Alpha 54 - Team Beta 49
+
+Team Beta: Hakeem Post makes the rim! (+2)
+  Score: Team Alpha 54 - Team Beta 51
+
+Team Alpha: Dikembe Wall makes the rim! (+3)
+  Score: Team Alpha 57 - Team Beta 51
+
+Team Beta: Dominique Dunker commits a BAD PASS turnover
+  Score: Team Alpha 57 - Team Beta 51
+
+Team Alpha: Dikembe Wall makes the rim! (+2)
+  Score: Team Alpha 59 - Team Beta 51
+
+Team Beta: Hakeem Post misses the rim | Rebound: Dikembe Wall
+  Score: Team Alpha 59 - Team Beta 51
+
+Team Alpha: Tony Lockdown commits an offensive foul (Turnover)
+  Score: Team Alpha 59 - Team Beta 51
+
+Team Beta: Gary Defender misses the three-pointer | Rebound: Karl Post-Up
+  Score: Team Alpha 59 - Team Beta 51
+
+Team Alpha: Dikembe Wall's rim is BLOCKED by Ben Anchor!
+  Score: Team Alpha 59 - Team Beta 51
+
+Team Beta: Gary Defender makes the rim! (+2)
+  Score: Team Alpha 59 - Team Beta 53
+
+----------------------------------------------------------------------------------------------------
+END OF QUARTER 2
+Score: Team Alpha 25 - Team Beta 30
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+QUARTER 3
+====================================================================================================
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 61 - Team Beta 53
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 61 - Team Beta 55
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 61 - Team Beta 55
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 61 - Team Beta 57
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 63 - Team Beta 57
+
+Team Beta: Reggie Shooter makes the rim! (+2)
+  Score: Team Alpha 63 - Team Beta 59
+
+Team Alpha: Chris Maestro misses the three-pointer | Rebound: Dwyane Slasher
+  Score: Team Alpha 63 - Team Beta 59
+
+Team Beta: Reggie Shooter loses the ball (Steal: Hassan Swatter)
+  Score: Team Alpha 63 - Team Beta 59
+
+Team Alpha: Chris Maestro misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 63 - Team Beta 59
+
+Team Beta: Steve Facilitator's rim is BLOCKED by Hassan Swatter!
+  Score: Team Alpha 63 - Team Beta 59
+
+Team Alpha: Dennis Boardman commits a BAD PASS turnover (Steal: Andre Rebounder)
+  Score: Team Alpha 63 - Team Beta 59
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 63 - Team Beta 61
+
+Team Alpha: Hassan Swatter makes the rim! (+2)
+  Score: Team Alpha 65 - Team Beta 61
+
+Team Beta: Dwyane Slasher makes the rim! (+2)
+  Score: Team Alpha 65 - Team Beta 63
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 67 - Team Beta 63
+
+Team Beta: Reggie Shooter loses the ball
+  Score: Team Alpha 67 - Team Beta 63
+
+Team Alpha: Dennis Boardman hits the midrange jumper! (+2)
+  Score: Team Alpha 69 - Team Beta 63
+
+Team Beta: Steve Facilitator commits an offensive foul (Turnover)
+  Score: Team Alpha 69 - Team Beta 63
+
+Team Alpha: Ray Sniper makes the rim! (+2)
+  Score: Team Alpha 71 - Team Beta 63
+
+Team Beta: Steve Facilitator makes the rim! (+2)
+  Score: Team Alpha 71 - Team Beta 65
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 73 - Team Beta 65
+
+Team Beta: Andre Rebounder makes the rim! (+2)
+  Score: Team Alpha 73 - Team Beta 67
+
+Team Alpha: Ray Sniper makes a THREE-POINTER! (+3)
+  Score: Team Alpha 76 - Team Beta 67
+
+Team Beta: Dwyane Slasher makes the rim! (+2)
+  Score: Team Alpha 76 - Team Beta 69
+
+Team Alpha: Chris Maestro makes a THREE-POINTER! (+3)
+  Score: Team Alpha 79 - Team Beta 69
+
+Team Beta: Andre Rebounder makes the rim! (+2)
+  Score: Team Alpha 79 - Team Beta 71
+
+Team Alpha: Hassan Swatter misses the rim | Rebound: Dwyane Slasher
+  Score: Team Alpha 79 - Team Beta 71
+
+Team Beta: Andre Rebounder misses the midrange jumper | Rebound: Marcus Slasher
+  Score: Team Alpha 79 - Team Beta 71
+
+Team Alpha: Chris Maestro misses the three-pointer | Rebound: Andre Rebounder
+  Score: Team Alpha 79 - Team Beta 71
+
+Team Beta: Andre Rebounder misses the three-pointer | Rebound: Dennis Boardman
+  Score: Team Alpha 79 - Team Beta 71
+
+Team Alpha: Hassan Swatter makes the rim! (+3)
+  Score: Team Alpha 82 - Team Beta 71
+
+Team Beta: Mutombo Blocker misses the rim | Rebound: Marcus Slasher
+  Score: Team Alpha 82 - Team Beta 71
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 84 - Team Beta 71
+
+Team Beta: Steve Facilitator misses the three-pointer | Rebound: Marcus Slasher
+  Score: Team Alpha 84 - Team Beta 71
+
+Team Alpha: Ray Sniper makes the rim! (+2)
+  Score: Team Alpha 86 - Team Beta 71
+
+Team Beta: Reggie Shooter commits an offensive foul (Turnover)
+  Score: Team Alpha 86 - Team Beta 71
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 86 - Team Beta 71
+
+Team Beta: Andre Rebounder's rim is BLOCKED by Dennis Boardman!
+  Score: Team Alpha 86 - Team Beta 71
+
+Team Alpha: Marcus Slasher misses the three-pointer | Rebound: Dwyane Slasher
+  Score: Team Alpha 86 - Team Beta 71
+
+Team Beta: Mutombo Blocker makes the rim! (+3)
+  Score: Team Alpha 86 - Team Beta 74
+
+Team Alpha: Unknown misses the rim
+  Score: Team Alpha 86 - Team Beta 74
+
+Team Beta: Dwyane Slasher makes a THREE-POINTER! (+3)
+  Score: Team Alpha 86 - Team Beta 76
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 88 - Team Beta 76
+
+Team Beta: Reggie Shooter misses the three-pointer | Rebound: Hassan Swatter
+  Score: Team Alpha 88 - Team Beta 76
+
+Team Alpha: Hassan Swatter makes the rim! (+3)
+  Score: Team Alpha 91 - Team Beta 76
+
+Team Beta: Andre Rebounder loses the ball
+  Score: Team Alpha 91 - Team Beta 76
+
+Team Alpha: Karl Post-Up makes the rim! (+2)
+  Score: Team Alpha 93 - Team Beta 76
+
+----------------------------------------------------------------------------------------------------
+END OF QUARTER 3
+Score: Team Alpha 34 - Team Beta 23
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+QUARTER 4
+====================================================================================================
+
+Team Alpha: Dennis Boardman makes the rim! (+2)
+  Score: Team Alpha 95 - Team Beta 76
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 95 - Team Beta 78
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 95 - Team Beta 78
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 95 - Team Beta 80
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 97 - Team Beta 80
+
+Team Beta: Reggie Shooter makes the rim! (+2)
+  Score: Team Alpha 97 - Team Beta 82
+
+Team Alpha: Ray Sniper misses the three-pointer | Rebound: Mutombo Blocker
+  Score: Team Alpha 97 - Team Beta 82
+
+Team Beta: Andre Rebounder misses the rim | Rebound: Marcus Slasher
+  Score: Team Alpha 97 - Team Beta 82
+
+Team Alpha: Hassan Swatter's rim is BLOCKED by Mutombo Blocker!
+  Score: Team Alpha 97 - Team Beta 82
+
+Team Beta: Andre Rebounder commits a BAD PASS turnover (Steal: Dennis Boardman)
+  Score: Team Alpha 97 - Team Beta 82
+
+Team Alpha: Hassan Swatter makes the rim! (+2)
+  Score: Team Alpha 99 - Team Beta 82
+
+Team Beta: Mutombo Blocker makes the rim! (+2)
+  Score: Team Alpha 99 - Team Beta 84
+
+Team Alpha: Marcus Slasher makes the rim! (+2)
+  Score: Team Alpha 101 - Team Beta 84
+
+Team Beta: Andre Rebounder makes the rim! (+2)
+  Score: Team Alpha 101 - Team Beta 86
+
+Team Alpha: Ray Sniper loses the ball
+  Score: Team Alpha 101 - Team Beta 86
+
+Team Beta: Hakeem Post hits the midrange jumper! (+2)
+  Score: Team Alpha 101 - Team Beta 88
+
+Team Alpha: Tony Lockdown commits an offensive foul (Turnover)
+  Score: Team Alpha 101 - Team Beta 88
+
+Team Beta: Kobe Midrange makes the rim! (+2)
+  Score: Team Alpha 101 - Team Beta 90
+
+Team Alpha: Tony Lockdown makes the rim! (+2)
+  Score: Team Alpha 103 - Team Beta 90
+
+Team Beta: Hakeem Post makes the rim! (+2)
+  Score: Team Alpha 103 - Team Beta 92
+
+Team Alpha: Karl Post-Up makes the rim! (+2)
+  Score: Team Alpha 105 - Team Beta 92
+
+Team Beta: Kobe Midrange makes a THREE-POINTER! (+3)
+  Score: Team Alpha 105 - Team Beta 95
+
+Team Alpha: Vince Skywalker makes the rim! (+2)
+  Score: Team Alpha 107 - Team Beta 95
+
+Team Beta: Gary Defender makes the rim! (+2)
+  Score: Team Alpha 107 - Team Beta 97
+
+Team Alpha: Tony Lockdown misses the rim
+  Score: Team Alpha 107 - Team Beta 97
+
+Team Beta: Dominique Dunker makes the rim! (+2)
+  Score: Team Alpha 107 - Team Beta 99
+
+Team Alpha: Dikembe Wall commits an offensive foul (Turnover)
+  Score: Team Alpha 107 - Team Beta 99
+
+Team Beta: Hakeem Post misses the midrange jumper | Rebound: Dikembe Wall
+  Score: Team Alpha 107 - Team Beta 99
+
+Team Alpha: Jerry Midrange makes a THREE-POINTER! (+3)
+  Score: Team Alpha 110 - Team Beta 99
+
+Team Beta: Dominique Dunker makes a THREE-POINTER! (+3)
+  Score: Team Alpha 110 - Team Beta 102
+
+Team Alpha: Tony Lockdown misses the three-pointer | Rebound: Ben Anchor
+  Score: Team Alpha 110 - Team Beta 102
+
+Team Beta: Ben Anchor commits a BAD PASS turnover (Steal: Dikembe Wall)
+  Score: Team Alpha 110 - Team Beta 102
+
+Team Alpha: Tony Lockdown makes the rim! (+3)
+  Score: Team Alpha 113 - Team Beta 102
+
+Team Beta: Hakeem Post makes the rim! (+2)
+  Score: Team Alpha 113 - Team Beta 104
+
+Team Alpha: Dikembe Wall makes the rim! (+3)
+  Score: Team Alpha 116 - Team Beta 104
+
+Team Beta: Dominique Dunker commits a BAD PASS turnover
+  Score: Team Alpha 116 - Team Beta 104
+
+Team Alpha: Dikembe Wall makes the rim! (+2)
+  Score: Team Alpha 118 - Team Beta 104
+
+Team Beta: Hakeem Post misses the rim | Rebound: Dikembe Wall
+  Score: Team Alpha 118 - Team Beta 104
+
+Team Alpha: Tony Lockdown commits an offensive foul (Turnover)
+  Score: Team Alpha 118 - Team Beta 104
+
+Team Beta: Gary Defender misses the three-pointer | Rebound: Karl Post-Up
+  Score: Team Alpha 118 - Team Beta 104
+
+Team Alpha: Dikembe Wall's rim is BLOCKED by Ben Anchor!
+  Score: Team Alpha 118 - Team Beta 104
+
+Team Beta: Gary Defender makes the rim! (+2)
+  Score: Team Alpha 118 - Team Beta 106
+
+----------------------------------------------------------------------------------------------------
+END OF QUARTER 4
+Score: Team Alpha 25 - Team Beta 30
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+FINAL SCORE
+====================================================================================================
+Team Alpha: 118
+Team Beta: 106
+
+====================================================================================================
+BOX SCORE
+====================================================================================================
+
+Team Alpha:
+Player               PTS    FGM-FGA      3PM-3PA      FTM-FTA      REB    AST    STL    BLK    TO    
+----------------------------------------------------------------------------------------------------
+Chris Maestro        6      2-8          2-8          0-0          0      0      0      0      0     
+Ray Sniper           14     6-14         2-10         0-0          0      0      0      0      2     
+Marcus Slasher       20     10-12        0-2          0-0          8      0      0      0      0     
+Dennis Boardman      20     10-10        0-0          0-0          2      0      2      2      2     
+Hassan Swatter       20     8-12         0-0          0-0          4      0      2      2      0     
+Tony Lockdown        10     4-8          0-2          0-0          0      0      0      0      4     
+Jerry Midrange       6      2-2          2-2          0-0          0      0      0      0      0     
+Vince Skywalker      4      2-2          0-0          0-0          6      0      0      0      0     
+Karl Post-Up         8      4-4          0-0          0-0          2      0      0      0      0     
+Dikembe Wall         10     4-6          0-0          0-0          4      0      2      0      2     
+
+Team Beta:
+Player               PTS    FGM-FGA      3PM-3PA      FTM-FTA      REB    AST    STL    BLK    TO    
+----------------------------------------------------------------------------------------------------
+Steve Facilitator    4      2-6          0-2          0-0          0      0      0      0      2     
+Reggie Shooter       8      4-6          0-2          0-0          0      0      0      0      6     
+Dwyane Slasher       12     6-6          2-2          0-0          6      0      0      0      0     
+Andre Rebounder      12     6-14         0-2          0-0          4      0      2      0      4     
+Mutombo Blocker      30     14-16        0-0          0-0          14     0      0      2      0     
+Gary Defender        8      4-6          0-2          0-0          0      0      0      0      0     
+Kobe Midrange        10     4-4          2-2          0-0          0      0      0      0      0     
+Dominique Dunker     10     4-4          2-2          0-0          0      0      0      0      2     
+Hakeem Post          12     6-10         0-0          0-0          0      0      0      0      0     
+Ben Anchor           0      0-0          0-0          0-0          2      0      0      2      2     
+
+====================================================================================================
+TEAM TOTALS
+====================================================================================================
+
+Team Alpha:
+  FG: 52/80 (65.0%)
+  3PT: 6/24 (25.0%)
+  Assists: 34
+  Rebounds: 30 (Off: 8)
+  Blocks: 8
+  Turnovers: 10
+
+Team Beta:
+  FG: 50/72 (69.4%)
+  3PT: 6/14 (42.9%)
+  Assists: 38
+  Rebounds: 38 (Off: 10)
+  Blocks: 4
+  Turnovers: 16
+
+====================================================================================================

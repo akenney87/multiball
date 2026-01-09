@@ -1,0 +1,127 @@
+================================================================================
+WEIGHTED SIGMOID FORMULA FIX - COMPREHENSIVE ANALYSIS
+================================================================================
+
+PROBLEM IDENTIFIED:
+-------------------
+The weighted sigmoid formula was mathematically incorrect, but this created a
+cascading calibration problem throughout the entire codebase.
+
+OLD FORMULA (BROKEN):
+    P = BaseRate + (1 - BaseRate) * sigmoid(k * AttributeDiff)
+
+At diff=0 (equal players):
+    P = BaseRate + (1 - BaseRate) * 0.5
+    P = 0.5 * (BaseRate + 1)
+
+Example: 30% 3PT shot → 65% success for equal players (+35% inflation)
+
+NEW FORMULA (CORRECT):
+    centered = (sigmoid(k * diff) - 0.5) * 2.0
+    if centered >= 0:
+        P = BaseRate + (1 - BaseRate) * centered
+    else:
+        P = BaseRate * (1 + centered)
+
+At diff=0 (equal players):
+    P = BaseRate ✓ (CORRECT)
+
+Example: 30% 3PT shot → 30% success for equal players
+
+
+IMPACT ON GAME BALANCE:
+-----------------------
+The broken formula inflated ALL success rates, so base rates in constants.py
+were calibrated DOWNWARD to compensate:
+
+ORIGINAL SPEC VALUES:
+    3PT: 30%
+    Layup: 62%
+    Dunk: 80%
+    Midrange Short: 45%
+    Midrange Long: 37%
+
+CURRENT CONSTANTS.PY (M4.1 RECALIBRATION):
+    3PT: 27%
+    Layup: 58%
+    Dunk: 77%
+    Midrange Short: 42%
+    Midrange Long: 34%
+
+These lowered rates, when fed into the BROKEN formula, produced realistic
+game outputs (102 PPG, 48% FG%, 35% 3PT%).
+
+With the FIXED formula, these lowered rates produce unrealistic outputs:
+    - 52 PPG (should be ~105)
+    - 20% FG% (should be ~46%)
+    - 8% 3PT% (should be ~35%)
+
+
+FORMULA COMPARISON TABLE:
+-------------------------
+Diff     Old Formula     New Formula     Change
+        (3PT 30% base)  (3PT 30% base)
+------------------------------------------------------------
+0        0.650           0.300           -0.350
++5       0.667           0.335           -0.333
++10      0.685           0.370           -0.315
++20      0.719           0.438           -0.281
+-10      0.615           0.270           -0.345
+-20      0.581           0.241           -0.340
+
+The old formula consistently inflated probabilities by ~30-35% for typical
+attribute differences.
+
+
+VALIDATION RESULTS:
+-------------------
+With BROKEN formula + M4.1 lowered base rates:
+    Points per game: 102.2
+    FG%: 48.3%
+    3PT%: ~35%
+    Correlation: 0.162 (LOW due to skill differences being washed out)
+
+With FIXED formula + M4.1 lowered base rates:
+    Points per game: 52.0 (TERRIBLE)
+    FG%: 20.0% (TERRIBLE)
+    3PT%: 8.1% (TERRIBLE)
+    Correlation: [Not yet measured]
+
+
+SOLUTION:
+---------
+1. KEEP the fixed centered sigmoid formula (mathematically correct)
+2. RESTORE base rates to ORIGINAL SPEC VALUES:
+    3PT: 30%
+    Layup: 62%
+    Dunk: 80%
+    Midrange Short: 45%
+    Midrange Long: 37%
+
+Expected outcome:
+    - Game outputs return to NBA-realistic (105 PPG, 46% FG%, 35% 3PT%)
+    - Correlation IMPROVES dramatically (0.162 → 0.35-0.50 range)
+    - Skill differences properly impact outcomes without inflation
+
+
+WHY THIS FIXES CORRELATION:
+----------------------------
+The broken formula compressed skill differences:
+    - Elite vs Average: OLD gave 68.5%, NEW gives 37.0%
+    - Average vs Elite: OLD gave 61.5%, NEW gives 27.0%
+    - Skill gap impact: OLD = 7%, NEW = 10% (43% more impactful)
+
+With proper centering, attribute differences have MORE impact on outcomes,
+which increases correlation between team rating gap and game margin.
+
+
+IMPLEMENTATION STATUS:
+----------------------
+✓ Fixed weighted_sigmoid_probability() in src/core/probability.py
+✓ Validated formula mathematically correct (diff=0 gives base_rate)
+✓ Identified base rate calibration issue
+⚠ Need to restore original spec base rates
+⚠ Need to re-run validation with corrected base rates
+⚠ Need to measure new correlation
+
+================================================================================

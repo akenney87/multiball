@@ -1,0 +1,1005 @@
+================================================================================
+                        FULL GAME - Team_071 vs Team_030                        
+================================================================================
+
+================================================================================
+                       1ST QUARTER - Team_071 vs Team_030                       
+================================================================================
+
+[12:00] Team_071 possession (Score: 0-0)
+FOUL! Holding foul on Player_PG_1. [Team fouls: 1] No free throws, side out. (Player_PG_1: 1 personal fouls)
+
+[11:48] Team_030 possession (Score: 0-0)
+Player_SF_3 attempts a Layup. Contested by Player_SF_3 (2.9 feet, MAN). Player_SF_3 misses. Offensive rebound by Player_C_5! Player_C_5 puts it back in!
+Score: 0-2
+
+[11:32] Team_071 possession (Score: 0-2)
+FOUL! Shooting foul on Player_PG_1. Player_PG_1 to the line for 2 free throws. [Team fouls: 2] (Player_PG_1: 2 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Player_PG_1 makes 1/2 from the line.
+Score: 1-2
+
+[11:15] Team_030 possession (Score: 1-2)
+Player_C_5 drives to the basket... Player_C_5 loses the ball! Stripped by Player_C_5! TURNOVER! (live ball)
+
+[11:00] Team_071 possession (Score: 1-2)
+Player_SG_2 drives and kicks out. Player_PF_4 attempts a 3Pt. Contested by Player_PF_4 (4.0 feet, MAN). PLAYER_PF_4 MAKES IT! Assist: Player_PG_1
+Score: 4-2
+
+[10:44] Team_030 possession (Score: 4-2)
+Player_PG_1 loses the ball! Stripped by Player_PG_1! TURNOVER! (live ball)
+
+[10:27] Team_071 possession (Score: 4-2)
+Player_PF_4 attempts a Midrange. Contested by Player_PF_4 (4.1 feet, MAN). Player_PF_4 misses. Rebound secured by Player_SG_2.
+
+[10:12] Team_030 possession (Score: 4-2)
+Player_PG_1 attempts a 3Pt. Contested by Player_PG_1 (2.3 feet, MAN). Player_PG_1 misses. Rebound secured by Player_C_5.
+
+[09:55] Team_071 possession (Score: 4-2)
+Player_SG_2 attempts a 3Pt. Heavily contested by Player_PG_1 (1.4 feet, ZONE)! Player_SG_2 misses. Rebound secured by Player_SG_2.
+
+[09:39] Team_030 possession (Score: 4-2)
+Player_SG_2 drives, picks up Player_C_5. Help arrives from Player_SG_2! Player_SG_2 attempts a Layup. Contested by Player_SG_2 (2.7 feet, ZONE). Player_SG_2 misses. Rebound secured by Player_SG_2.
+
+[09:24] Team_071 possession (Score: 4-2)
+FOUL! Reach-in foul on Player_PF_4 during the drive. [Team fouls: 3] No free throws, side out. (Player_PF_4: 1 personal fouls)
+
+[09:08] Team_030 possession (Score: 4-2)
+Player_PG_1 attempts a 3Pt. Contested by Player_PF_4 (3.6 feet, ZONE). PLAYER_PG_1 MAKES IT!
+Score: 4-5
+
+[08:56] Team_071 possession (Score: 4-5)
+Player_C_5 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[08:56] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[08:56] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[08:56] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[08:56] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[08:56] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[08:56] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[08:47] Team_030 possession (Score: 4-5)
+Player_PG_1 attempts a Midrange. Contested by Player_PG_1 (2.6 feet, MAN). Player_PG_1 misses. Rebound secured by Player_SF_8.
+
+[08:33] Team_071 possession (Score: 4-5)
+Player_SF_8 attempts a Midrange. Contested by Player_SF_8 (2.5 feet, MAN). PLAYER_SF_8 MAKES IT!
+Score: 6-5
+
+[08:21] Team_030 possession (Score: 6-5)
+FOUL! Reach-in foul on Player_C_10 during the drive. [Team fouls: 4] No free throws, side out. (Player_C_10: 1 personal fouls)
+
+[08:09] Team_071 possession (Score: 6-5)
+Player_PF_9 attempts a Midrange. Contested by Player_PF_9 (4.3 feet, MAN). Player_PF_9 misses. Rebound secured by Player_C_10.
+
+[07:51] Team_030 possession (Score: 6-5)
+Player_PF_9 attempts a 3Pt. Contested by Player_PG_1 (2.8 feet, ZONE). PLAYER_PF_9 MAKES IT! Assist: Player_C_10
+Score: 6-8
+
+[07:37] Team_071 possession (Score: 6-8)
+Player_SF_8 attempts a 3Pt. Heavily contested by Player_PG_1 (2.0 feet, ZONE)! Player_SF_8 misses. Rebound secured by Player_SG_2.
+
+[07:23] Team_030 possession (Score: 6-8)
+Player_PG_1 drives, Player_C_10 stays with him. Player_PG_1 attempts a Dunk. Contested by Player_C_10 (2.7 feet, ZONE). PLAYER_PG_1 MAKES IT!
+Score: 6-10
+
+[07:08] Team_071 possession (Score: 6-10)
+Player_PF_9 attempts a 3Pt. Contested by Player_PF_9 (4.5 feet, MAN). PLAYER_PF_9 MAKES IT! Assist: Player_C_10
+Score: 9-10
+
+[06:51] Team_030 possession (Score: 9-10)
+Player_PF_9 drives and kicks out. Player_SF_8 attempts a Midrange. Contested by Player_C_10 (2.8 feet, ZONE). Player_SF_8 misses. Rebound secured by Player_C_10.
+
+[06:37] Team_071 possession (Score: 9-10)
+Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (2.3 feet, ZONE). Player_SG_2 misses. Rebound secured by Player_SG_2.
+
+[06:24] Team_030 possession (Score: 9-10)
+Player_C_10 attempts a 3Pt. Contested by Player_PF_9 (3.8 feet, ZONE). PLAYER_C_10 MAKES IT! Assist: Player_PF_9
+Score: 9-13
+
+[06:09] Team_071 possession (Score: 9-13)
+Player_PF_9 attempts a 3Pt. Contested by Player_PF_9 (4.7 feet, MAN). Player_PF_9 misses. Rebound secured by Player_C_10.
+
+[05:56] Team_030 possession (Score: 9-13)
+Player_PG_1 attempts a 3Pt. Contested by Player_PG_1 (3.4 feet, ZONE). PLAYER_PG_1 MAKES IT! Assist: Player_C_10
+Score: 9-16
+
+[05:38] Team_071 possession (Score: 9-16)
+Player_SG_2 attempts a Midrange. Contested by Player_SG_2 (4.4 feet, MAN). PLAYER_SG_2 MAKES IT! Assist: Player_PF_9
+Score: 11-16
+
+[05:21] Team_030 possession (Score: 11-16)
+Player_PF_9 attempts a 3Pt. Contested by Player_PG_1 (3.5 feet, ZONE). PLAYER_PF_9 MAKES IT! Assist: Player_C_10
+Score: 11-19
+
+[05:10] Team_071 possession (Score: 11-19)
+Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (2.8 feet, ZONE). Player_SG_2 misses. Offensive rebound by Player_C_10! Player_C_10 puts it back in!
+Score: 13-19
+
+[04:53] Team_030 possession (Score: 13-19)
+Player_C_10 attempts a 3Pt. Contested by Player_C_10 (3.4 feet, MAN). PLAYER_C_10 MAKES IT! Assist: Player_PF_9
+Score: 13-22
+
+[04:40] Team_071 possession (Score: 13-22)
+Player_PG_1 attempts a 3Pt. Contested by Player_SG_2 (4.6 feet, ZONE). Player_PG_1 misses. Rebound secured by Player_SF_8.
+
+[04:24] Team_030 possession (Score: 13-22)
+Player_PG_1 attempts a Midrange. Contested by Player_SG_2 (3.0 feet, ZONE). Player_PG_1 misses. Offensive rebound by Player_C_10! Player_C_10's putback is no good. Rebound secured by Player_SF_8.
+
+[04:10] Team_071 possession (Score: 13-22)
+Player_C_10 loses the ball! Stripped by Player_C_10! TURNOVER! (live ball)
+
+[03:53] Team_030 possession (Score: 13-22)
+Player_C_10 attempts a Midrange. Contested by Player_C_10 (3.8 feet, MAN). Player_C_10 misses. Rebound secured by Player_SF_8.
+
+[03:41] Team_071 possession (Score: 13-22)
+Player_PF_9 attempts a 3Pt. Contested by Player_PF_9 (5.4 feet, MAN). Player_PF_9 misses. FOUL! Loose ball foul on Player_SF_8 during the rebound battle. [IN THE BONUS! 5 team fouls] Player_SF_8 to the line for 2 free throws. (Player_SF_8: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_SF_8 makes 2/2 from the line.
+Score: 15-22
+
+[03:24] Team_030 possession (Score: 15-22)
+Player_SG_2 attempts a Midrange. Contested by Player_PF_9 (4.7 feet, ZONE). PLAYER_SG_2 MAKES IT!
+Score: 15-24
+
+[03:09] Team_071 possession (Score: 15-24)
+Player_C_10 drives and kicks out. Player_PG_1 attempts a Midrange. Contested by Player_PG_1 (3.5 feet, MAN). PLAYER_PG_1 MAKES IT!
+Score: 17-24
+
+[02:56] Team_030 possession (Score: 17-24)
+FOUL! Reach-in foul on Player_PG_1 during the drive. [IN THE BONUS! 6 team fouls] Player_PG_1 to the line for 2 free throws. (Player_PG_1: 3 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Player_PG_1 makes 1/2 from the line.
+Score: 17-25
+
+[02:44] Team_071 possession (Score: 17-25)
+Player_SF_8 drives and kicks out. Player_PG_1 attempts a 3Pt. Contested by Player_SG_2 (5.1 feet, ZONE). PLAYER_PG_1 MAKES IT! Assist: Player_SF_8
+Score: 20-25
+
+[02:28] Team_030 possession (Score: 20-25)
+Player_PG_1 attempts a 3Pt. Contested by Player_PG_1 (4.5 feet, ZONE). Player_PG_1 misses. Rebound secured by Player_SG_2.
+
+[02:13] Team_071 possession (Score: 20-25)
+Player_SG_2 loses the ball! Stripped by Player_SG_2! TURNOVER! (live ball)
+
+[02:02] Team_030 possession (Score: 20-25)
+Player_PF_9 drives and kicks out. Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (4.7 feet, ZONE). Player_SG_2 misses. Offensive rebound by Player_C_10! Player_C_10 kicks it out.
+
+[01:46] Team_030 possession (Score: 20-25)
+Player_PG_1 attempts a 3Pt. Contested by Player_PG_1 (4.8 feet, MAN). Player_PG_1 misses. Rebound secured by Player_SF_8.
+
+[01:32] Team_071 possession (Score: 20-25)
+Player_SF_8 attempts a Layup. Wide open! Player_PF_9 is 6.1 feet away. [ZONE] Player_SF_8 misses. Offensive rebound by Player_C_10! Player_C_10 kicks it out.
+
+[01:14] Team_071 possession (Score: 20-25)
+Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (4.3 feet, ZONE). Player_SG_2 misses. Rebound secured by Player_C_10.
+
+[00:57] Team_030 possession (Score: 20-25)
+Player_SF_8 drives and kicks out. Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (5.1 feet, ZONE). PLAYER_SG_2 MAKES IT! Assist: Player_PF_9
+Score: 20-28
+
+[00:44] Team_071 possession (Score: 20-28)
+Player_PG_1 attempts a Layup. Wide open! Player_C_10 is 6.1 feet away. [ZONE] PLAYER_PG_1 MAKES IT! Assist: Player_SF_8
+Score: 22-28
+
+[00:34] Team_030 possession (Score: 22-28)
+Player_PG_1 attempts a 3Pt. Contested by Player_PG_1 (5.2 feet, ZONE). Player_PG_1 misses. Rebound secured by Player_SG_2.
+
+[00:18] Team_071 possession (Score: 22-28)
+Player_SG_2 attempts a Midrange. Contested by Player_SG_2 (5.8 feet, MAN). Player_SG_2 misses. Rebound secured by Player_SG_2.
+
+[00:07] Team_030 possession (Score: 22-28)
+FOUL! Reach-in foul on Player_C_10 during the drive. [IN THE BONUS! 7 team fouls] Player_PG_1 to the line for 2 free throws. (Player_C_10: 2 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Player_PG_1 makes 1/2 from the line.
+Score: 22-29
+
+================================================================================
+                              1ST QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_071 22, Team_030 29
+
+BOX SCORE:
+================================================================================
+
+Team_071
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_SF_8             0    4    5    2   0   1/1   100.0     0/0   0.0
+Player_PF_4             0    3    0    0   0   1/1   100.0     0/0   0.0
+Player_C_5              0    2    2    0   0   1/1   100.0     0/0   0.0
+
+TEAM: FG: 8/17 (47.1%), 3PT: 2/8 (25.0%), REB: 10 (2 off, 8 def), AST: 5, TO: 3
+TEAM FOULS: 0
+
+
+Team_030
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_PG_1             0   18    0    1   0   6/6   100.0     0/0   0.0
+Player_PF_9             0    9    0    4   0   3/3   100.0     0/0   0.0
+Player_C_10             0    8    7    4   0   3/3   100.0     0/0   0.0
+Player_SG_2             0    7    8    0   0   3/3   100.0     0/0   0.0
+
+TEAM: FG: 10/19 (52.6%), 3PT: 6/10 (60.0%), REB: 12 (3 off, 9 def), AST: 6, TO: 2
+TEAM FOULS: 7 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                       2ND QUARTER - Team_071 vs Team_030                       
+================================================================================
+
+[12:00] Team_071 possession (Score: 22-29)
+Player_C_5 attempts a 3Pt. Contested by Player_C_5 (2.8 feet, MAN). PLAYER_C_5 MAKES IT! Assist: Player_PF_4
+Score: 25-29
+
+[11:44] Team_030 possession (Score: 25-29)
+FOUL! Holding foul on Player_SG_2. [Team fouls: 1] No free throws, side out. (Player_SG_2: 1 personal fouls)
+
+[11:31] Team_071 possession (Score: 25-29)
+Player_PF_4 attempts a 3Pt. Contested by Player_PF_4 (3.2 feet, MAN). Player_PF_4 misses. Offensive rebound by Player_PF_4! Player_PF_4's putback is no good. Rebound secured by Player_PF_4.
+
+[11:15] Team_030 possession (Score: 25-29)
+Player_SF_3 drives, Player_PF_4 stays with him. Player_SF_3 attempts a Dunk. Contested by Player_PF_4 (2.1 feet, ZONE). PLAYER_SF_3 MAKES IT! Assist: Player_PG_1
+Score: 25-31
+
+[11:01] Team_071 possession (Score: 25-31)
+Player_SF_3 attempts a Layup. Contested by Player_C_5 (2.8 feet, ZONE). PLAYER_SF_3 MAKES IT!
+Score: 27-31
+
+[10:46] Team_030 possession (Score: 27-31)
+Player_SF_3 attempts a 3Pt. Contested by Player_SF_3 (2.7 feet, ZONE). Player_SF_3 misses. Rebound secured by Player_C_5.
+
+[10:27] Team_071 possession (Score: 27-31)
+FOUL! Shooting foul on Player_SF_3. Player_SF_3 to the line for 2 free throws. [Team fouls: 2] (Player_SF_3: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_SF_3 makes 2/2 from the line.
+Score: 29-31
+
+[10:17] Team_030 possession (Score: 29-31)
+Player_SF_3 drives and kicks out. FOUL! Shooting foul on Player_SG_2. Player_SF_3 to the line for 2 free throws. [Team fouls: 3] (Player_SG_2: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_SF_3 makes 2/2 from the line.
+Score: 29-33
+
+[10:03] Team_071 possession (Score: 29-33)
+Player_SF_3 attempts a Layup. Contested by Player_C_5 (2.8 feet, ZONE). Player_SF_3 misses. Rebound secured by Player_C_5.
+
+[09:45] Team_030 possession (Score: 29-33)
+Player_C_5 attempts a 3Pt. Contested by Player_SF_3 (2.7 feet, ZONE). Player_C_5 misses. Rebound secured by Player_PF_4.
+
+[09:31] Team_071 possession (Score: 29-33)
+Player_C_5 attempts a 3Pt. Contested by Player_SF_3 (3.2 feet, ZONE). Player_C_5 misses. Rebound secured by Player_C_5.
+
+[09:19] Team_030 possession (Score: 29-33)
+Player_PG_1 drives, Player_PF_4 stays with him. Player_PG_1 attempts a Layup. Contested by Player_PF_4 (2.1 feet, ZONE). PLAYER_PG_1 MAKES IT!
+Score: 29-35
+
+[09:00] Team_071 possession (Score: 29-35)
+Player_SF_3 attempts a 3Pt. Contested by Player_SF_3 (3.2 feet, ZONE). PLAYER_SF_3 MAKES IT! Assist: Player_SG_2
+Score: 32-35
+
+[08:43] Team_030 possession (Score: 32-35)
+Player_SF_3 attempts a Midrange. Contested by Player_SF_3 (2.8 feet, MAN). PLAYER_SF_3 MAKES IT! Assist: Player_PF_4
+Score: 32-37
+
+[08:25] Team_071 possession (Score: 32-37)
+Player_SG_2 drives, picks up Player_SG_2. Help arrives from Player_SF_3! Player_SG_2 attempts a Layup. Wide open! Player_SF_3 is 6.2 feet away. [MAN] PLAYER_SG_2 MAKES IT!
+Score: 34-37
+
+[08:15] Team_030 possession (Score: 34-37)
+Player_PG_1 attempts a 3Pt. Contested by Player_SG_2 (5.0 feet, ZONE). PLAYER_PG_1 MAKES IT! Assist: Player_SF_3
+Score: 34-40
+
+[08:05] Team_071 possession (Score: 34-40)
+Player_SG_2 attempts a Layup. Contested by Player_C_5 (3.1 feet, ZONE). Player_SG_2 misses. Offensive rebound by Player_C_5! Player_C_5 puts it back in!
+Score: 36-40
+
+[07:50] Team_030 possession (Score: 36-40)
+Player_SF_3 makes the Layup and draws the foul on Player_SF_3! And-1! Player_SF_3 to the line for 1. [Team fouls: 4] (Player_SF_3: 2 personal fouls)   FT 1/1: GOOD Player_SF_3 makes 1/1 from the line.
+Score: 36-43
+
+[07:39] Team_071 possession (Score: 36-43)
+Player_SF_3 attempts a 3Pt. Contested by Player_SF_3 (3.4 feet, MAN). PLAYER_SF_3 MAKES IT! Assist: Player_PF_4
+Score: 39-43
+
+[07:25] Team_030 possession (Score: 39-43)
+FOUL! Shooting foul on Player_SF_3. Player_PF_4 to the line for 2 free throws. [BONUS: 5 team fouls] (Player_SF_3: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_PF_4 makes 2/2 from the line.
+Score: 39-45
+
+[07:11] Team_071 possession (Score: 39-45)
+Player_C_5 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[07:11] Substitution (Team_071): Player_PG_1 OUT → Player_PG_6 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_SG_2 OUT → Player_SG_7 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_PG_1 OUT → Player_PG_6 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_SG_2 OUT → Player_SG_7 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[07:11] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[06:56] Team_030 possession (Score: 39-45)
+Player_C_10 throws a bad pass! Stolen by Player_C_10! TURNOVER! (live ball)
+
+[06:40] Team_071 possession (Score: 39-45)
+FOUL! Reach-in foul on Player_C_10 during the drive. [IN THE BONUS! 6 team fouls] Player_SG_7 to the line for 2 free throws. (Player_C_10: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_SG_7 makes 2/2 from the line.
+Score: 41-45
+
+[06:28] Team_030 possession (Score: 41-45)
+Player_PF_9 attempts a Midrange. Contested by Player_PF_9 (3.3 feet, MAN). Player_PF_9 misses. Rebound secured by Player_C_10.
+
+[06:09] Team_071 possession (Score: 41-45)
+Player_PF_9 attempts a Layup. Contested by Player_C_10 (4.2 feet, ZONE). PLAYER_PF_9 MAKES IT! Assist: Player_PG_6
+Score: 43-45
+
+[05:53] Team_030 possession (Score: 43-45)
+Player_C_10 attempts a 3Pt. BLOCKED BY PLAYER_SG_7! Ball goes out of bounds. Turnover!
+
+[05:35] Team_071 possession (Score: 43-45)
+Player_PF_9 makes the Layup and draws the foul on Player_C_10! And-1! Player_PF_9 to the line for 1. [BONUS: 7 team fouls] (Player_C_10: 2 personal fouls)   FT 1/1: GOOD Player_PF_9 makes 1/1 from the line.
+Score: 46-45
+
+[05:21] Team_030 possession (Score: 46-45)
+Player_PG_6 attempts a 3Pt. Contested by Player_PG_6 (3.0 feet, MAN). Player_PG_6 misses. Rebound secured by Player_SF_8.
+
+[05:07] Team_071 possession (Score: 46-45)
+Player_PG_6 attempts a 3Pt. Contested by Player_SG_7 (3.5 feet, ZONE). Player_PG_6 misses. Rebound secured by Player_C_10.
+
+[04:57] Team_030 possession (Score: 46-45)
+FOUL! Shooting foul on Player_SG_7. Player_SG_7 to the line for 3 free throws. [BONUS: 8 team fouls] (Player_SG_7: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Player_SG_7 makes 3/3 from the line.
+Score: 46-48
+
+[04:43] Team_071 possession (Score: 46-48)
+Player_C_10 attempts a 3Pt. Contested by Player_PG_6 (2.6 feet, ZONE). Player_C_10 misses. Rebound secured by Player_SF_8.
+
+[04:29] Team_030 possession (Score: 46-48)
+Player_PG_6 attempts a Layup. Contested by Player_PG_6 (3.0 feet, MAN). PLAYER_PG_6 MAKES IT! Assist: Player_C_10
+Score: 46-50
+
+[04:14] Team_071 possession (Score: 46-50)
+Player_SF_8 attempts a Midrange. Contested by Player_PF_9 (4.8 feet, ZONE). PLAYER_SF_8 MAKES IT!
+Score: 48-50
+
+[03:57] Team_030 possession (Score: 48-50)
+Player_PG_6 attempts a 3Pt. Contested by Player_SG_7 (2.6 feet, ZONE). Player_PG_6 misses. Rebound secured by Player_C_10.
+
+[03:38] Team_071 possession (Score: 48-50)
+Player_PF_9 commits an offensive foul! Player_PF_9 drew the charge! TURNOVER! (dead ball)
+
+[03:22] Team_030 possession (Score: 48-50)
+Player_SG_7 drives to the basket... Player_SG_7 loses the ball! Stripped by Player_SG_7! TURNOVER! (live ball)
+
+[03:04] Team_071 possession (Score: 48-50)
+Player_PF_9 loses the ball! Stripped by Player_PF_9! TURNOVER! (live ball)
+
+[02:52] Team_030 possession (Score: 48-50)
+FOUL! Reach-in foul on Player_C_10 during the drive. [IN THE BONUS! 9 team fouls] Player_PF_9 to the line for 2 free throws. (Player_C_10: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_PF_9 makes 2/2 from the line.
+Score: 48-52
+
+[02:38] Team_071 possession (Score: 48-52)
+Player_PF_9 makes the Layup and draws the foul on Player_C_10! And-1! Player_PF_9 to the line for 1. [BONUS: 10 team fouls] (Player_C_10: 4 personal fouls)   FT 1/1: GOOD Player_PF_9 makes 1/1 from the line.
+Score: 51-52
+
+[02:24] Team_030 possession (Score: 51-52)
+FOUL! Holding foul on Player_PF_9. [IN THE BONUS! 11 team fouls] Player_PF_9 to the line for 2 free throws. (Player_PF_9: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_PF_9 makes 2/2 from the line.
+Score: 51-54
+
+[02:05] Team_071 possession (Score: 51-54)
+Player_SF_8 attempts a 3Pt. Contested by Player_SF_8 (3.8 feet, MAN). Player_SF_8 misses. Rebound secured by Player_SG_7.
+
+[01:47] Team_030 possession (Score: 51-54)
+Player_PG_6 drives, Player_C_10 stays with him. Player_PG_6 attempts a Layup. Contested by Player_C_10 (4.0 feet, ZONE). PLAYER_PG_6 MAKES IT! Assist: Player_SF_8
+Score: 51-56
+
+[01:31] Team_071 possession (Score: 51-56)
+Player_SF_8 attempts a 3Pt. Contested by Player_SF_8 (3.9 feet, MAN). Player_SF_8 misses. Rebound secured by Player_SF_8.
+
+[01:19] Team_030 possession (Score: 51-56)
+Player_SG_7 attempts a 3Pt. Contested by Player_SG_7 (2.8 feet, ZONE). Player_SG_7 misses. Rebound secured by Player_C_10.
+
+[01:05] Team_071 possession (Score: 51-56)
+Player_SF_8 attempts a 3Pt. Contested by Player_SF_8 (4.1 feet, MAN). PLAYER_SF_8 MAKES IT! Assist: Player_SG_7
+Score: 54-56
+
+[00:53] Team_030 possession (Score: 54-56)
+FOUL! Reach-in foul on Player_C_10 during the drive. [IN THE BONUS! 12 team fouls] Player_C_10 to the line for 2 free throws. (Player_C_10: 5 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Player_C_10 makes 1/2 from the line. Rebound secured by Player_C_10.
+Score: 54-57
+
+[00:38] Team_071 possession (Score: 54-57)
+Player_C_10 attempts a 3Pt. Contested by Player_C_10 (5.7 feet, MAN). Player_C_10 misses. Rebound secured by Player_SG_7.
+
+[00:24] Team_030 possession (Score: 54-57)
+Player_SG_7 attempts a Midrange. Contested by Player_SG_7 (3.1 feet, MAN). Player_SG_7 misses. Offensive rebound by Player_SG_7! Player_SG_7 kicks it out.
+
+[00:07] Team_030 possession (Score: 54-57)
+Player_SF_8 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[00:07] Substitution (Team_071): Player_SF_8 OUT → Player_SF_3 IN (starter_return_rule1)
+
+[00:07] Substitution (Team_071): Player_C_10 OUT → Player_C_5 IN (starter_return_rule1)
+
+[00:07] Substitution (Team_071): Player_PF_9 OUT → Player_SF_3 IN (starter_return_rule1)
+
+================================================================================
+                              2ND QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_071 32, Team_030 28
+
+BOX SCORE:
+================================================================================
+
+Team_071
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_SF_3             0   19    0    1   0   5/5   100.0     0/0   0.0
+Player_C_5              0    5    4    0   0   2/2   100.0     0/0   0.0
+Player_SF_8             0    5    3    1   0   2/2   100.0     0/0   0.0
+Player_SG_2             0    2    0    1   0   1/1   100.0     0/0   0.0
+Player_C_10             0    0    5    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 9/17 (52.9%), 3PT: 4/11 (36.4%), REB: 9 (2 off, 7 def), AST: 5, TO: 3
+TEAM FOULS: 0
+
+
+Team_030
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_PF_9             0   12    0    0   0   1/1   100.0     0/0   0.0
+Player_PG_1             0    5    0    1   0   2/2   100.0     0/0   0.0
+Player_SG_7             0    5    3    1   0   0/0     0.0     0/0   0.0
+Player_PG_6             0    4    0    1   0   2/2   100.0     0/0   0.0
+Player_PF_4             0    2    2    3   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 6/13 (46.2%), 3PT: 1/6 (16.7%), REB: 8 (1 off, 7 def), AST: 5, TO: 4
+TEAM FOULS: 12 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                       3RD QUARTER - Team_071 vs Team_030                       
+================================================================================
+
+[12:00] Team_071 possession (Score: 54-57)
+Player_PF_4 drives, Player_C_5 stays with him. Player_PF_4 attempts a Dunk. Contested by Player_C_5 (2.8 feet, ZONE). PLAYER_PF_4 MAKES IT! Assist: Player_PG_1
+Score: 56-57
+
+[11:50] Team_030 possession (Score: 56-57)
+Player_C_5 attempts a 3Pt. Heavily contested by Player_C_5 (1.7 feet, MAN)! Player_C_5 misses. Offensive rebound by Player_C_5! Player_C_5's putback is no good. Offensive rebound by Player_C_5! Player_C_5 kicks it out.
+
+[11:32] Team_030 possession (Score: 56-57)
+Player_SF_3 drives to the basket... Player_SF_3 commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[11:17] Team_071 possession (Score: 56-57)
+Player_PG_1 makes the Layup and draws the foul on Player_C_5! And-1! Player_PG_1 to the line for 1. [Team fouls: 2] (Player_C_5: 1 personal fouls)   FT 1/1: GOOD Player_PG_1 makes 1/1 from the line.
+Score: 59-57
+
+[11:00] Team_030 possession (Score: 59-57)
+Player_C_5 attempts a Midrange. Heavily contested by Player_SG_2 (1.9 feet, ZONE)! Player_C_5 misses. Offensive rebound by Player_PF_4! Player_PF_4 puts it back in!
+Score: 59-59
+
+[10:43] Team_071 possession (Score: 59-59)
+Player_PG_1 attempts a 3Pt. Heavily contested by Player_PG_1 (1.3 feet, ZONE)! Player_PG_1 misses. Offensive rebound by Player_PF_4! Player_PF_4 puts it back in!
+Score: 61-59
+
+[10:31] Team_030 possession (Score: 61-59)
+Player_C_5 drives, Player_PF_4 stays with him. Player_C_5 attempts a Dunk. Contested by Player_PF_4 (2.1 feet, ZONE). Player_C_5 misses. Rebound secured by Player_PF_4.
+
+[10:15] Team_071 possession (Score: 61-59)
+Player_PF_4 attempts a 3Pt. Contested by Player_PF_4 (3.2 feet, MAN). PLAYER_PF_4 MAKES IT!
+Score: 64-59
+
+[10:05] Team_030 possession (Score: 64-59)
+Player_PF_4 attempts a Midrange. Contested by Player_SF_3 (2.7 feet, ZONE). Player_PF_4 misses. Rebound secured by Player_PF_4.
+
+[09:50] Team_071 possession (Score: 64-59)
+Player_SG_2 attempts a 3Pt. Heavily contested by Player_PG_1 (1.3 feet, ZONE)! Player_SG_2 misses. Rebound secured by Player_SG_2.
+
+[09:39] Team_030 possession (Score: 64-59)
+Player_PF_4 commits an offensive foul! Player_PF_4 drew the charge! TURNOVER! (dead ball)
+
+[09:25] Team_071 possession (Score: 64-59)
+Player_SF_3 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[09:10] Team_030 possession (Score: 64-59)
+Player_PF_4 attempts a Layup. Contested by Player_PF_4 (2.1 feet, ZONE). PLAYER_PF_4 MAKES IT! Assist: Player_C_5
+Score: 64-61
+
+[08:56] Team_071 possession (Score: 64-61)
+Player_PF_4 drives, Player_PF_4 stays with him. Player_PF_4 attempts a Dunk. Contested by Player_PF_4 (3.2 feet, MAN). Player_PF_4 misses. Rebound secured by Player_SG_2.
+
+[08:42] Team_030 possession (Score: 64-61)
+Player_SF_3 attempts a 3Pt. Contested by Player_SF_3 (2.7 feet, MAN). Player_SF_3 misses. Rebound secured by Player_SF_3.
+
+[08:30] Team_071 possession (Score: 64-61)
+Player_PG_1 drives to the basket... Player_PG_1 loses the ball! Stripped by Player_C_5! TURNOVER! (live ball)
+
+[08:15] Team_030 possession (Score: 64-61)
+Player_PF_4 attempts a Dunk. BLOCKED BY PLAYER_SG_2! Offensive rebound by Player_C_5! Player_C_5 kicks it out.
+
+[08:03] Team_030 possession (Score: 64-61)
+Player_SG_2 attempts a Midrange. Heavily contested by Player_SG_2 (1.9 feet, MAN)! Player_SG_2 misses. Rebound secured by Player_SF_3.
+
+[07:47] Team_071 possession (Score: 64-61)
+Player_PF_4 drives and kicks out. Player_C_5 attempts a Midrange. Contested by Player_C_5 (3.0 feet, MAN). Player_C_5 misses. Offensive rebound by Player_C_5! Player_C_5's putback is no good. Rebound secured by Player_PF_4.
+
+[07:33] Team_030 possession (Score: 64-61)
+Player_C_5 attempts a 3Pt. Contested by Player_PG_1 (2.3 feet, ZONE). Player_C_5 misses. Offensive rebound by Player_C_5! Player_C_5 puts it back in!
+Score: 64-63
+
+[07:20] Team_071 possession (Score: 64-63)
+Player_PG_1 attempts a 3Pt. Contested by Player_SF_3 (3.3 feet, ZONE). Player_PG_1 misses. Offensive rebound by Player_PF_4! Player_PF_4's putback is no good. Rebound secured by Player_SG_2.
+
+[07:06] Team_030 possession (Score: 64-63)
+Player_SF_3 attempts a 3Pt. Contested by Player_SF_3 (2.9 feet, MAN). PLAYER_SF_3 MAKES IT! Assist: Player_PF_4
+Score: 64-66
+
+[06:53] Team_071 possession (Score: 64-66)
+Player_SF_3 loses the ball! Stripped by Player_SF_3! TURNOVER! (live ball)
+
+[06:38] Team_030 possession (Score: 64-66)
+Player_PF_4 drives, Player_PF_4 stays with him. Player_PF_4 attempts a Dunk. Contested by Player_PF_4 (2.5 feet, ZONE). PLAYER_PF_4 MAKES IT! Assist: Player_SG_2
+Score: 64-68
+
+[06:24] Team_071 possession (Score: 64-68)
+Player_SG_2 drives to the basket... Player_SG_2 throws a bad pass! Stolen by Player_C_5! TURNOVER! (live ball)
+
+[06:08] Team_030 possession (Score: 64-68)
+Player_SF_3 attempts a 3Pt. Contested by Player_PF_4 (2.7 feet, ZONE). Player_SF_3 misses. Rebound secured by Player_PF_4.
+
+[05:52] Team_071 possession (Score: 64-68)
+Player_C_5 attempts a 3Pt. Heavily contested by Player_PG_1 (1.8 feet, ZONE)! Player_C_5 misses. Rebound secured by Player_PF_4.
+
+[05:42] Team_030 possession (Score: 64-68)
+Player_PF_4 attempts a Midrange. Contested by Player_PF_4 (2.8 feet, MAN). Player_PF_4 misses. Rebound secured by Player_C_5.
+
+[05:30] Team_071 possession (Score: 64-68)
+Player_PG_1 attempts a 3Pt. Heavily contested by Player_PG_1 (1.9 feet, ZONE)! PLAYER_PG_1 MAKES IT! Assist: Player_SG_2
+Score: 67-68
+
+[05:15] Team_030 possession (Score: 67-68)
+Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (2.9 feet, ZONE). Player_SG_2 misses. Rebound secured by Player_C_5.
+
+[05:03] Team_071 possession (Score: 67-68)
+Player_SF_3 attempts a 3Pt. Contested by Player_PG_1 (2.1 feet, ZONE). Player_SF_3 misses. Offensive rebound by Player_C_5! Player_C_5 puts it back in!
+Score: 69-68
+
+[04:49] Team_030 possession (Score: 69-68)
+Player_PG_1 attempts a 3Pt. Contested by Player_PG_1 (3.0 feet, MAN). Player_PG_1 misses. Rebound secured by Player_SF_3.
+
+[04:32] Team_071 possession (Score: 69-68)
+Player_C_5 attempts a 3Pt. Contested by Player_PG_1 (2.2 feet, ZONE). Player_C_5 misses. Rebound secured by Player_PF_4.
+
+[04:19] Team_030 possession (Score: 69-68)
+Player_C_5 attempts a Midrange. Contested by Player_SF_3 (3.6 feet, ZONE). Player_C_5 misses. Offensive rebound by Player_C_5! Player_C_5's putback is no good. Rebound secured by Player_C_5.
+
+[04:05] Team_071 possession (Score: 69-68)
+Player_PF_4 attempts a 3Pt. Contested by Player_PG_1 (2.4 feet, ZONE). PLAYER_PF_4 MAKES IT! Assist: Player_C_5
+Score: 72-68
+
+[03:52] Team_030 possession (Score: 72-68)
+Player_SF_3 attempts a Layup. Contested by Player_SF_3 (3.8 feet, MAN). PLAYER_SF_3 MAKES IT!
+Score: 72-70
+
+[03:39] Team_071 possession (Score: 72-70)
+Player_C_5 throws a bad pass! Stolen by Player_C_5! TURNOVER! (live ball)
+
+[03:27] Team_030 possession (Score: 72-70)
+Player_C_5 drives to the basket... Player_C_5 commits an offensive foul! TURNOVER! (dead ball)
+
+[03:12] Team_071 possession (Score: 72-70)
+Player_C_5 commits an offensive foul! Player_C_5 drew the charge! TURNOVER! (dead ball)
+
+[02:57] Team_030 possession (Score: 72-70)
+Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (3.6 feet, ZONE). Player_SG_2 misses. Rebound secured by Player_PF_4.
+
+[02:39] Team_071 possession (Score: 72-70)
+Player_PG_1 attempts a Layup. BLOCKED BY PLAYER_PG_1! Rebound secured by Player_SG_2.
+
+[02:20] Team_030 possession (Score: 72-70)
+Player_C_5 attempts a 3Pt. BLOCKED BY PLAYER_C_5! Ball goes out of bounds. Turnover!
+
+[02:20] Substitution (Team_071): Player_PG_1 OUT → Player_PG_6 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_SG_2 OUT → Player_SG_7 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_PG_1 OUT → Player_PG_6 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_SG_2 OUT → Player_SG_7 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[02:20] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[02:09] Team_071 possession (Score: 72-70)
+Player_PG_6 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[01:57] Team_030 possession (Score: 72-70)
+FOUL! Shooting foul on Player_C_10. Player_C_10 to the line for 3 free throws. [Team fouls: 3] (Player_C_10: 1 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Player_C_10 makes 3/3 from the line.
+Score: 72-73
+
+[01:45] Team_071 possession (Score: 72-73)
+Player_C_10 attempts a Midrange. Contested by Player_C_10 (4.0 feet, MAN). Player_C_10 misses. Offensive rebound by Player_C_10! Player_C_10 puts it back in!
+Score: 74-73
+
+[01:32] Team_030 possession (Score: 74-73)
+Player_SG_7 drives, Player_SG_7 stays with him. Player_SG_7 attempts a Layup. Contested by Player_SG_7 (2.6 feet, MAN). Player_SG_7 misses. Rebound secured by Player_C_10.
+
+[01:17] Team_071 possession (Score: 74-73)
+Player_PF_9 attempts a Layup. Contested by Player_C_10 (4.0 feet, ZONE). Player_PF_9 misses. Offensive rebound by Player_C_10! Player_C_10 puts it back in!
+Score: 76-73
+
+[01:02] Team_030 possession (Score: 76-73)
+Player_SG_7 attempts a Layup. Contested by Player_C_10 (2.5 feet, ZONE). PLAYER_SG_7 MAKES IT! Assist: Player_PF_9
+Score: 76-75
+
+[00:47] Team_071 possession (Score: 76-75)
+Player_PG_6 attempts a Midrange. Contested by Player_PG_6 (2.6 feet, MAN). Player_PG_6 misses. Rebound secured by Player_C_10.
+
+[00:36] Team_030 possession (Score: 76-75)
+Player_PG_6 makes the Layup and draws the foul on Player_C_10! And-1! Player_PG_6 to the line for 1. [Team fouls: 4] (Player_C_10: 2 personal fouls)   FT 1/1: GOOD Player_PG_6 makes 1/1 from the line.
+Score: 76-78
+
+[00:24] Team_071 possession (Score: 76-78)
+Player_SG_7 attempts a 3Pt. Contested by Player_SG_7 (3.5 feet, MAN). PLAYER_SG_7 MAKES IT! Assist: Player_PG_6
+Score: 79-78
+
+[00:07] Team_030 possession (Score: 79-78)
+Player_PF_9 drives, Player_C_10 stays with him. Player_PF_9 attempts a Dunk. Contested by Player_C_10 (2.5 feet, ZONE). PLAYER_PF_9 MAKES IT! Assist: Player_SG_7
+Score: 79-80
+
+================================================================================
+                              3RD QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_071 25, Team_030 23
+
+BOX SCORE:
+================================================================================
+
+Team_071
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_PF_4             0   16    9    1   0   7/7   100.0     0/0   0.0
+Player_PG_1             0    6    0    1   0   1/1   100.0     0/0   0.0
+Player_C_5              0    4    7    2   0   2/2   100.0     0/0   0.0
+Player_PG_6             0    3    0    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 9/17 (52.9%), 3PT: 6/10 (60.0%), REB: 16 (6 off, 10 def), AST: 4, TO: 7
+TEAM FOULS: 0
+
+
+Team_030
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_C_10             0    7    4    0   0   2/2   100.0     0/0   0.0
+Player_SF_3             0    5    3    0   0   2/2   100.0     0/0   0.0
+Player_SG_7             0    5    0    1   0   2/2   100.0     0/0   0.0
+Player_PF_9             0    2    0    1   0   1/1   100.0     0/0   0.0
+Player_SG_2             0    0    4    2   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 8/19 (42.1%), 3PT: 2/7 (28.6%), REB: 11 (5 off, 6 def), AST: 5, TO: 4
+TEAM FOULS: 4
+
+================================================================================
+
+================================================================================
+                       4TH QUARTER - Team_071 vs Team_030                       
+================================================================================
+
+[12:00] Team_071 possession (Score: 79-80)
+Player_PG_1 attempts a 3Pt. Heavily contested by Player_PG_1 (1.5 feet, ZONE)! Player_PG_1 misses. Rebound secured by Player_C_5.
+
+[11:46] Team_030 possession (Score: 79-80)
+Player_PF_4 attempts a Midrange. Contested by Player_PF_4 (2.6 feet, MAN). Player_PF_4 misses. Rebound secured by Player_C_5.
+
+[11:31] Team_071 possession (Score: 79-80)
+Player_SG_2 drives and kicks out. Player_C_5 attempts a Midrange. Contested by Player_C_5 (3.3 feet, MAN). PLAYER_C_5 MAKES IT!
+Score: 81-80
+
+[11:18] Team_030 possession (Score: 81-80)
+Player_SF_3 attempts a Midrange. Contested by Player_SF_3 (3.1 feet, MAN). Player_SF_3 misses. Rebound secured by Player_C_5.
+
+[11:06] Team_071 possession (Score: 81-80)
+FOUL! Shooting foul on Player_SF_3. Player_PG_1 to the line for 2 free throws. [Team fouls: 1] (Player_SF_3: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Player_PG_1 makes 1/2 from the line.
+Score: 82-80
+
+[10:54] Team_030 possession (Score: 82-80)
+Player_PF_4 attempts a Midrange. Contested by Player_SG_2 (2.4 feet, ZONE). Player_PF_4 misses. Rebound secured by Player_SF_3.
+
+[10:38] Team_071 possession (Score: 82-80)
+Player_SG_2 attempts a 3Pt. Heavily contested by Player_PG_1 (1.9 feet, ZONE)! PLAYER_SG_2 MAKES IT! Assist: Player_PG_1
+Score: 85-80
+
+[10:23] Team_030 possession (Score: 85-80)
+Player_C_5 attempts a 3Pt. Contested by Player_C_5 (2.6 feet, MAN). PLAYER_C_5 MAKES IT! Assist: Player_SG_2
+Score: 85-83
+
+[10:07] Team_071 possession (Score: 85-83)
+Player_SF_3 makes the Midrange and draws the foul on Player_SF_3! And-1! Player_SF_3 to the line for 1. [Team fouls: 2] (Player_SF_3: 2 personal fouls)   FT 1/1: GOOD Player_SF_3 makes 1/1 from the line.
+Score: 88-83
+
+[09:52] Team_030 possession (Score: 88-83)
+Player_SF_3 attempts a Midrange. Contested by Player_PF_4 (3.2 feet, ZONE). Player_SF_3 misses. Rebound secured by Player_C_5.
+
+[09:38] Team_071 possession (Score: 88-83)
+Player_PF_4 drives, Player_PF_4 stays with him. Player_PF_4 attempts a Dunk. Contested by Player_PF_4 (4.3 feet, MAN). PLAYER_PF_4 MAKES IT!
+Score: 90-83
+
+[09:25] Team_030 possession (Score: 90-83)
+Player_PF_4 throws a bad pass! Stolen by Player_PF_4! TURNOVER! (live ball)
+
+[09:13] Team_071 possession (Score: 90-83)
+Player_C_5 attempts a 3Pt. Contested by Player_C_5 (4.1 feet, MAN). Player_C_5 misses. Rebound secured by Player_SG_2.
+
+[08:58] Team_030 possession (Score: 90-83)
+Player_C_5 drives to the basket... Player_C_5 commits an offensive foul! TURNOVER! (dead ball)
+
+[08:44] Team_071 possession (Score: 90-83)
+Player_C_5 drives to the basket... Player_C_5 loses the ball! Stripped by Player_C_5! TURNOVER! (live ball)
+
+[08:30] Team_030 possession (Score: 90-83)
+Player_C_5 drives to the basket... Player_C_5 commits an offensive foul! TURNOVER! (dead ball)
+
+[08:18] Team_071 possession (Score: 90-83)
+FOUL! Shooting foul on Player_SF_3. Player_SF_3 to the line for 2 free throws. [Team fouls: 3] (Player_SF_3: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_SF_3 makes 2/2 from the line.
+Score: 92-83
+
+[08:08] TIMEOUT - Team_030 (stop opponent momentum) - 6 timeouts remaining
+
+[08:07] Team_030 possession (Score: 92-83)
+Player_C_5 makes the Midrange and draws the foul on Player_C_5! And-1! Player_C_5 to the line for 1. [Team fouls: 4] (Player_C_5: 1 personal fouls)   FT 1/1: GOOD Player_C_5 makes 1/1 from the line.
+Score: 92-86
+
+[07:56] Team_071 possession (Score: 92-86)
+Player_PF_4 attempts a 3Pt. Contested by Player_PG_1 (2.5 feet, ZONE). Player_PF_4 misses. Rebound secured by Player_C_5.
+
+[07:44] Team_030 possession (Score: 92-86)
+FOUL! Reach-in foul on Player_PF_4 during the drive. [IN THE BONUS! 5 team fouls] Player_PG_1 to the line for 2 free throws. (Player_PF_4: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Player_PG_1 makes 1/2 from the line.
+Score: 92-87
+
+[07:32] Team_071 possession (Score: 92-87)
+Player_C_5 attempts a 3Pt. Contested by Player_PG_1 (2.7 feet, ZONE). PLAYER_C_5 MAKES IT! Assist: Player_PG_1
+Score: 95-87
+
+[07:15] Team_030 possession (Score: 95-87)
+Player_SF_3 attempts a 3Pt. Contested by Player_PG_1 (3.6 feet, ZONE). Player_SF_3 misses. Rebound secured by Player_C_5.
+
+[07:05] Team_071 possession (Score: 95-87)
+Player_C_5 attempts a 3Pt. Contested by Player_C_5 (4.6 feet, MAN). Player_C_5 misses. Rebound secured by Player_C_5.
+
+[06:51] Team_030 possession (Score: 95-87)
+Player_PF_4 attempts a 3Pt. Contested by Player_PG_1 (3.7 feet, ZONE). Player_PF_4 misses. Offensive rebound by Player_PF_4! Player_PF_4 kicks it out.
+
+[06:33] Team_030 possession (Score: 95-87)
+Player_PF_4 attempts a Layup. Contested by Player_PF_4 (4.3 feet, ZONE). Player_PF_4 misses. Rebound secured by Player_SF_3.
+
+[06:17] Team_071 possession (Score: 95-87)
+Player_SG_2 attempts a 3Pt. Contested by Player_PG_1 (3.1 feet, ZONE). Player_SG_2 misses. Rebound secured by Player_C_5.
+
+[06:03] Team_030 possession (Score: 95-87)
+Player_SF_3 drives to the basket... Player_SF_3 throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[06:03] Substitution (Team_071): Player_PG_1 OUT → Player_PG_6 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_SG_2 OUT → Player_SG_7 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_PG_1 OUT → Player_PG_6 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_SG_2 OUT → Player_SG_7 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_SF_3 OUT → Player_SF_8 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_PF_4 OUT → Player_PF_9 IN (stamina_rule2)
+
+[06:03] Substitution (Team_071): Player_C_5 OUT → Player_C_10 IN (stamina_rule2)
+
+[05:53] Team_071 possession (Score: 95-87)
+Player_SF_8 attempts a Midrange. Contested by Player_PF_9 (4.1 feet, ZONE). PLAYER_SF_8 MAKES IT! Assist: Player_PF_9
+Score: 97-87
+
+[05:42] Team_030 possession (Score: 97-87)
+Player_SF_8 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[05:27] Team_071 possession (Score: 97-87)
+Player_SF_8 attempts a 3Pt. Contested by Player_SF_8 (2.5 feet, MAN). PLAYER_SF_8 MAKES IT! Assist: Player_PG_6
+Score: 100-87
+
+[05:09] Team_030 possession (Score: 100-87)
+Player_C_10 attempts a Midrange. Contested by Player_C_10 (2.5 feet, MAN). Player_C_10 misses. Rebound secured by Player_C_10.
+
+[04:56] Team_071 possession (Score: 100-87)
+Player_PG_6 attempts a 3Pt. Contested by Player_SF_8 (2.5 feet, ZONE). PLAYER_PG_6 MAKES IT! Assist: Player_C_10
+Score: 103-87
+
+[04:41] Team_030 possession (Score: 103-87)
+Player_C_10 attempts a Midrange. Contested by Player_SG_7 (2.6 feet, ZONE). Player_C_10 misses. Rebound secured by Player_PF_9.
+
+[04:23] Team_071 possession (Score: 103-87)
+Player_SG_7 loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[04:10] Team_030 possession (Score: 103-87)
+Player_PG_6 loses the ball! Stripped by Player_PG_6! TURNOVER! (live ball)
+
+[04:00] Team_071 possession (Score: 103-87)
+Player_C_10 attempts a Midrange. Contested by Player_C_10 (4.0 feet, MAN). PLAYER_C_10 MAKES IT!
+Score: 105-87
+
+[03:50] Team_030 possession (Score: 105-87)
+Player_C_10 loses the ball! Stripped by Player_C_10! TURNOVER! (live ball)
+
+[03:32] Team_071 possession (Score: 105-87)
+FOUL! Reach-in foul on Player_C_10 during the drive. [IN THE BONUS! 6 team fouls] Player_C_10 to the line for 2 free throws. (Player_C_10: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Player_C_10 makes 2/2 from the line.
+Score: 107-87
+
+[03:19] TIMEOUT - Team_030 (stop opponent momentum) - 5 timeouts remaining
+
+[03:18] Team_030 possession (Score: 107-87)
+Player_SF_8 makes the Layup and draws the foul on Player_C_10! And-1! Player_SF_8 to the line for 1. [BONUS: 7 team fouls] (Player_C_10: 2 personal fouls)   FT 1/1: GOOD Player_SF_8 makes 1/1 from the line.
+Score: 107-90
+
+[03:04] Team_071 possession (Score: 107-90)
+Player_SF_8 drives, picks up Player_SF_8. Help arrives from Player_SG_7! Player_SF_8 attempts a Dunk. Contested by Player_SG_7 (2.5 feet, MAN). Player_SF_8 misses. FOUL! Loose ball foul on Player_SG_7 during the rebound battle. [IN THE BONUS! 8 team fouls] Player_SF_8 to the line for 2 free throws. (Player_SG_7: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Player_SF_8 makes 1/2 from the line.
+Score: 108-90
+
+[02:53] Team_030 possession (Score: 108-90)
+Player_PG_6 makes the Layup and draws the foul on Player_PG_6! And-1! Player_PG_6 to the line for 1. [BONUS: 9 team fouls] (Player_PG_6: 1 personal fouls)   FT 1/1: GOOD Player_PG_6 makes 1/1 from the line.
+Score: 108-93
+
+[02:41] Team_071 possession (Score: 108-93)
+Player_SG_7 drives, picks up Player_SG_7. Help arrives from Player_SF_8! Player_SG_7 attempts a Layup. Contested by Player_SF_8 (3.5 feet, MAN). Player_SG_7 misses. Offensive rebound by Player_SF_8! Player_SF_8 kicks it out.
+
+[02:29] Team_071 possession (Score: 108-93)
+Player_SF_8 attempts a 3Pt. Contested by Player_PG_6 (2.6 feet, ZONE). Player_SF_8 misses. Rebound secured by Player_C_10.
+
+[02:12] Team_030 possession (Score: 108-93)
+Player_PF_9 attempts a 3Pt. Contested by Player_SG_7 (2.6 feet, ZONE). Player_PF_9 misses. Offensive rebound by Player_SG_7! Player_SG_7 kicks it out.
+
+[01:57] Team_030 possession (Score: 108-93)
+Player_SG_7 makes the Dunk and draws the foul on Player_SG_7! And-1! Player_SG_7 to the line for 1. [BONUS: 10 team fouls] (Player_SG_7: 2 personal fouls)   FT 1/1: GOOD Player_SG_7 makes 1/1 from the line.
+Score: 108-96
+
+[01:46] Team_071 possession (Score: 108-96)
+Player_SF_8 attempts a Midrange. Contested by Player_PF_9 (4.1 feet, ZONE). Player_SF_8 misses. Rebound secured by Player_PF_9.
+
+[01:31] Team_030 possession (Score: 108-96)
+Player_SG_7 attempts a 3Pt. Contested by Player_SG_7 (2.6 feet, ZONE). Player_SG_7 misses. Rebound secured by Player_C_10.
+
+[01:20] Team_071 possession (Score: 108-96)
+Player_PG_6 attempts a Layup. Contested by Player_C_10 (4.1 feet, ZONE). Player_PG_6 misses. Rebound secured by Player_SF_8.
+
+[01:05] Team_030 possession (Score: 108-96)
+Player_SF_8 attempts a 3Pt. Contested by Player_SF_8 (3.9 feet, ZONE). PLAYER_SF_8 MAKES IT! Assist: Player_SG_7
+Score: 108-99
+
+[00:51] TIMEOUT - Team_071 (stop opponent momentum) - 6 timeouts remaining
+
+[00:50] Team_071 possession (Score: 108-99)
+Player_SG_7 attempts a 3Pt. Contested by Player_SF_8 (2.5 feet, ZONE). Player_SG_7 misses. Offensive rebound by Player_C_10! Player_C_10's putback is no good. Offensive rebound by Player_SF_8! Player_SF_8 kicks it out.
+
+[00:40] Team_071 possession (Score: 108-99)
+Player_C_10 attempts a Midrange. Contested by Player_SF_8 (2.6 feet, ZONE). Player_C_10 misses. Rebound secured by Player_SF_8.
+
+[00:29] Team_030 possession (Score: 108-99)
+Player_C_10 commits an offensive foul! Player_C_10 drew the charge! TURNOVER! (dead ball)
+
+[00:10] Team_071 possession (Score: 108-99)
+Player_PG_6 attempts a 3Pt. Contested by Player_SF_8 (2.6 feet, ZONE). Player_PG_6 misses. Rebound secured by Player_SF_8.
+
+================================================================================
+                              4TH QUARTER COMPLETE                              
+================================================================================
+
+FINAL SCORE: Team_071 29, Team_030 19
+
+BOX SCORE:
+================================================================================
+
+Team_071
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_SF_3             0    5    2    0   0   0/0     0.0     0/0   0.0
+Player_C_10             0    4    3    1   0   1/1   100.0     0/0   0.0
+Player_PG_1             0    2    0    2   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 8/18 (44.4%), 3PT: 4/11 (36.4%), REB: 11 (2 off, 9 def), AST: 5, TO: 2
+TEAM FOULS: 0
+
+
+Team_030
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Player_SF_8             0   12    5    0   0   3/3   100.0     0/0   0.0
+Player_C_5              0   11    8    0   0   3/3   100.0     0/0   0.0
+Player_PG_6             0    6    0    1   0   1/1   100.0     0/0   0.0
+Player_SG_2             0    3    1    1   0   1/1   100.0     0/0   0.0
+Player_SG_7             0    3    1    1   0   0/0     0.0     0/0   0.0
+Player_PF_4             0    2    1    0   0   1/1   100.0     0/0   0.0
+Player_PF_9             0    0    2    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 2/11 (18.2%), 3PT: 2/4 (50.0%), REB: 12 (2 off, 10 def), AST: 2, TO: 8
+TEAM FOULS: 10 [OPPONENT IN BONUS]
+
+================================================================================
+
+================================================================================
+                               FULL GAME COMPLETE                               
+================================================================================
+
+FINAL SCORE: Team_071 108, Team_030 99
+
+SCORING BY QUARTER:
+--------------------------------------------------------------------------------
+Team                     Q1     Q2     Q3     Q4    FINAL
+--------------------------------------------------------------------------------
+Team_071                 22     32     25     29      108
+Team_030                 29     28     23     19       99
+--------------------------------------------------------------------------------
+
+FULL GAME BOX SCORE:
+================================================================================
+
+Team_071
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Player_PG_1            66   31    0    5   4   9/20   45.0   5/13   38.5   6/11    1   1
+Player_SG_2            66   12   13    4   2   8/18   44.4   2/9    22.2   0/0     1   1
+Player_SF_3            48   29    5    1   4  11/18   61.1   4/8    50.0   8/8     1   0
+Player_PF_4            48   23   12    4   5   6/16   37.5   2/4    50.0   2/2     1   0
+Player_C_5             48   22   21    2   5   6/14   42.9   4/10   40.0   1/1     5   1
+Player_SF_8            48   21   13    3   3   9/14   64.3   3/7    42.9   1/5     0   0
+Player_PF_9            48   23    2    6   2   8/12   66.7   3/4    75.0   6/6     1   0
+Player_C_10            48   19   19    6   5   5/12   41.7   2/4    50.0   5/5     3   0
+Player_PG_6            31   13    0    3   2   5/11   45.5   1/5    20.0   2/2     1   0
+Player_SG_7            31   13    4    3   1   3/6    50.0   1/3    33.3   6/6     1   1
+
+TEAM: FG: 34/69 (49.3%), 3PT: 16/40 (40.0%), REB: 46 (12 off, 34 def), AST: 19, TO: 15
+
+
+Team_030
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Player_PG_1            66    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_SG_2            66    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_SF_3            48    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_PF_4            48    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_C_5             48    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_SF_8            48    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_PF_9            48    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_C_10            48    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_PG_6            31    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+Player_SG_7            31    0    0    0   0   0/0     0.0   0/0     0.0   0/0     0   0
+
+TEAM: FG: 26/62 (41.9%), 3PT: 11/27 (40.7%), REB: 43 (11 off, 32 def), AST: 18, TO: 18
+
+================================================================================

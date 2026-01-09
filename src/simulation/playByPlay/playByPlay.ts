@@ -14,8 +14,7 @@
  */
 
 import type { Player } from '../../data/types';
-import * as fs from 'fs';
-import * as path from 'path';
+import type { PossessionResult } from '../possession/possession';
 
 // =============================================================================
 // EVENT DATA STRUCTURES
@@ -51,6 +50,16 @@ export interface PossessionEvent {
   isOffensiveRebound: boolean;
   /** Whether this is an And-1 (made shot + foul) */
   isAndOne: boolean;
+  /** Foul event data (if foul occurred) */
+  foulEvent?: any;
+  /** Free throw result (if free throws were shot) */
+  freeThrowResult?: any;
+  /** Player who committed the turnover */
+  turnoverPlayer?: string;
+  /** Player who got the steal (on turnovers) */
+  stealPlayer?: string;
+  /** Player who blocked the shot */
+  blockPlayer?: string;
 }
 
 /**
@@ -99,6 +108,13 @@ interface PlayerStats {
   turnovers: number;
   fgm: number;
   fga: number;
+  fg3m: number;
+  fg3a: number;
+  ftm: number;
+  fta: number;
+  steals: number;
+  blocks: number;
+  personalFouls: number;
 }
 
 /**
@@ -205,6 +221,13 @@ export class QuarterStatistics {
         turnovers: 0,
         fgm: 0,
         fga: 0,
+        fg3m: 0,
+        fg3a: 0,
+        ftm: 0,
+        fta: 0,
+        steals: 0,
+        blocks: 0,
+        personalFouls: 0,
       });
     }
     return this.playerStats.get(playerName)!;
@@ -222,19 +245,65 @@ export class QuarterStatistics {
     // Update based on outcome
     if (possessionEvent.outcome === 'turnover') {
       this.teamStats[offenseTeam].tov += 1;
+
+      // Track player turnover
+      if (possessionEvent.turnoverPlayer) {
+        const stats = this.getPlayerStats(possessionEvent.turnoverPlayer);
+        stats.turnovers += 1;
+      }
+
+      // Track steal (defensive player who caused the turnover)
+      if (possessionEvent.stealPlayer) {
+        const stats = this.getPlayerStats(possessionEvent.stealPlayer);
+        stats.steals += 1;
+      }
     } else if (possessionEvent.outcome === 'offensive_rebound') {
       // Offensive rebound + kickout scenario
       if (possessionEvent.reboundPlayer) {
         const stats = this.getPlayerStats(possessionEvent.reboundPlayer);
         stats.rebounds += 1;
         this.teamStats[offenseTeam].oreb += 1;
-        this.playerToTeam.set(possessionEvent.reboundPlayer, offenseTeam);
+      }
+
+      // Track shooter's FGA/FG3A (they missed the shot that led to the offensive rebound)
+      if (possessionEvent.shooter) {
+        const shotType = possessionEvent.shotType ?? 'midrange';
+        const stats = this.getPlayerStats(possessionEvent.shooter);
+        stats.fga += 1;
+        this.teamStats[offenseTeam].fga += 1;
+
+        // Player 3PT attempt
+        if (shotType === '3pt') {
+          stats.fg3a += 1;
+          this.teamStats[offenseTeam].fg3a += 1;
+        }
       }
     }
 
     // BUG FIX v6: Handle And-1 situations (can have any outcome)
     if (possessionEvent.isAndOne) {
       const shotType = possessionEvent.shotType ?? 'midrange';
+
+      // Track and-1 free throw stats
+      if (possessionEvent.freeThrowResult) {
+        const ftResult = possessionEvent.freeThrowResult;
+        const shooter = ftResult.shooter || possessionEvent.scoringPlayer;
+
+        if (shooter) {
+          const stats = this.getPlayerStats(shooter);
+          stats.ftm += ftResult.made || 0;
+          stats.fta += ftResult.attempts || 0;
+        }
+      }
+
+      // Track personal fouls for and-1
+      if (possessionEvent.foulEvent) {
+        const foulingPlayer = possessionEvent.foulEvent.fouling_player;
+        if (foulingPlayer) {
+          const stats = this.getPlayerStats(foulingPlayer);
+          stats.personalFouls += 1;
+        }
+      }
 
       // Add points (basket + any FTs made)
       if (possessionEvent.pointsScored > 0) {
@@ -243,7 +312,6 @@ export class QuarterStatistics {
         if (possessionEvent.shooter) {
           const stats = this.getPlayerStats(possessionEvent.shooter);
           stats.points += possessionEvent.pointsScored;
-          this.playerToTeam.set(possessionEvent.shooter, offenseTeam);
         }
       }
 
@@ -262,12 +330,51 @@ export class QuarterStatistics {
         const stats = this.getPlayerStats(possessionEvent.shooter);
         stats.fga += 1;
         stats.fgm += 1;
-        this.playerToTeam.set(possessionEvent.shooter, offenseTeam);
+
+        // Player 3PT stats for and-1
+        if (shotType === '3pt') {
+          stats.fg3a += 1;
+          stats.fg3m += 1;
+        }
       }
     }
 
     // Process outcome-specific stats
     if (possessionEvent.outcome === 'foul') {
+      // Track FGA for shooting fouls (player attempted a shot and was fouled)
+      if (possessionEvent.shooter && possessionEvent.shotType) {
+        const shotType = possessionEvent.shotType;
+        const stats = this.getPlayerStats(possessionEvent.shooter);
+        stats.fga += 1;
+        this.teamStats[offenseTeam].fga += 1;
+
+        if (shotType === '3pt') {
+          stats.fg3a += 1;
+          this.teamStats[offenseTeam].fg3a += 1;
+        }
+      }
+
+      // Track free throw stats
+      if (possessionEvent.freeThrowResult) {
+        const ftResult = possessionEvent.freeThrowResult;
+        const shooter = ftResult.shooter || possessionEvent.scoringPlayer;
+
+        if (shooter) {
+          const stats = this.getPlayerStats(shooter);
+          stats.ftm += ftResult.made || 0;
+          stats.fta += ftResult.attempts || 0;
+        }
+      }
+
+      // Track personal fouls
+      if (possessionEvent.foulEvent) {
+        const foulingPlayer = possessionEvent.foulEvent.fouling_player;
+        if (foulingPlayer) {
+          const stats = this.getPlayerStats(foulingPlayer);
+          stats.personalFouls += 1;
+        }
+      }
+
       // Foul outcome - includes free throw points
       if (!possessionEvent.isAndOne && possessionEvent.pointsScored > 0) {
         this.teamStats[offenseTeam].points += possessionEvent.pointsScored;
@@ -275,7 +382,6 @@ export class QuarterStatistics {
         if (possessionEvent.scoringPlayer) {
           const stats = this.getPlayerStats(possessionEvent.scoringPlayer);
           stats.points += possessionEvent.pointsScored;
-          this.playerToTeam.set(possessionEvent.scoringPlayer, offenseTeam);
         }
       }
 
@@ -286,10 +392,8 @@ export class QuarterStatistics {
 
         if (possessionEvent.isOffensiveRebound) {
           this.teamStats[offenseTeam].oreb += 1;
-          this.playerToTeam.set(possessionEvent.reboundPlayer, offenseTeam);
         } else {
           this.teamStats[defenseTeam].dreb += 1;
-          this.playerToTeam.set(possessionEvent.reboundPlayer, defenseTeam);
         }
       }
     }
@@ -321,14 +425,24 @@ export class QuarterStatistics {
             const stats = this.getPlayerStats(possessionEvent.scoringPlayer);
             stats.points += possessionEvent.pointsScored;
             stats.fgm += 1;
-            this.playerToTeam.set(possessionEvent.scoringPlayer, offenseTeam);
+            stats.fga += 1;  // Always increment FGA for scoring player
+
+            // Player 3PT stats for made shot
+            if (shotType === '3pt') {
+              stats.fg3m += 1;
+              stats.fg3a += 1;  // Always increment 3PA for scoring player
+            }
           }
 
-          // Track FGA using shooter field
-          if (possessionEvent.shooter) {
+          // Track FGA for shooter only if different from scoringPlayer
+          if (possessionEvent.shooter && possessionEvent.shooter !== possessionEvent.scoringPlayer) {
             const stats = this.getPlayerStats(possessionEvent.shooter);
             stats.fga += 1;
-            this.playerToTeam.set(possessionEvent.shooter, offenseTeam);
+
+            // Player 3PT attempt
+            if (shotType === '3pt') {
+              stats.fg3a += 1;
+            }
           }
         } else {
           // Missed shot (non-And-1)
@@ -336,7 +450,11 @@ export class QuarterStatistics {
           if (possessionEvent.shooter) {
             const stats = this.getPlayerStats(possessionEvent.shooter);
             stats.fga += 1;
-            this.playerToTeam.set(possessionEvent.shooter, offenseTeam);
+
+            // Player 3PT attempt for missed shot
+            if (shotType === '3pt') {
+              stats.fg3a += 1;
+            }
           }
         }
       }
@@ -348,7 +466,6 @@ export class QuarterStatistics {
           this.teamStats[offenseTeam].ast += 1;
           const stats = this.getPlayerStats(possessionEvent.assistPlayer);
           stats.assists += 1;
-          this.playerToTeam.set(possessionEvent.assistPlayer, offenseTeam);
         }
 
         // Offensive rebound (for made putbacks)
@@ -356,7 +473,6 @@ export class QuarterStatistics {
           const stats = this.getPlayerStats(possessionEvent.reboundPlayer);
           stats.rebounds += 1;
           this.teamStats[offenseTeam].oreb += 1;
-          this.playerToTeam.set(possessionEvent.reboundPlayer, offenseTeam);
         }
       } else if (possessionEvent.outcome === 'missed_shot') {
         // Missed putback after made free throws
@@ -376,13 +492,17 @@ export class QuarterStatistics {
 
           if (possessionEvent.isOffensiveRebound) {
             this.teamStats[offenseTeam].oreb += 1;
-            this.playerToTeam.set(possessionEvent.reboundPlayer, offenseTeam);
           } else {
             this.teamStats[defenseTeam].dreb += 1;
-            this.playerToTeam.set(possessionEvent.reboundPlayer, defenseTeam);
           }
         }
       }
+    }
+
+    // Track block (defensive player who blocked the shot) - can happen with any outcome
+    if (possessionEvent.blockPlayer) {
+      const stats = this.getPlayerStats(possessionEvent.blockPlayer);
+      stats.blocks += 1;
     }
   }
 
@@ -541,7 +661,7 @@ export class PlayByPlayLogger {
   addPossession(
     gameClock: number,
     offenseTeam: 'Home' | 'Away',
-    possessionResult: any // Would be PossessionResult type
+    possessionResult: PossessionResult
   ): void {
     // Capture current GAME score before possession (cumulative + quarter)
     const scoreBefore: [number, number] = [
@@ -553,8 +673,8 @@ export class PlayByPlayLogger {
     let shotType: PossessionEvent['shotType'] | undefined;
     let isOffensiveRebound = false;
 
-    if (possessionResult.debug?.shot_type) {
-      shotType = possessionResult.debug.shot_type;
+    if (possessionResult.debug?.shotType) {
+      shotType = possessionResult.debug.shotType;
     }
 
     // Check for offensive rebound
@@ -562,36 +682,57 @@ export class PlayByPlayLogger {
       isOffensiveRebound = possessionResult.debug.rebound.offensive_rebound ?? false;
     }
 
-    // Prioritize scoring_player (correct for putbacks), fallback to debug.shooter
-    const shooter = possessionResult.scoring_player ?? possessionResult.debug?.shooter;
+    // Use debug.shooter (original shooter) if available, otherwise use scoringPlayer
+    // This ensures putbacks credit the original shooter with FGA, and putback scorer with FGM
+    const shooter = possessionResult.debug?.shooter ?? possessionResult.scoringPlayer;
 
     // Check for And-1 situations (made shot + foul)
-    let isAndOne = false;
-    if (possessionResult.foul_event?.and_one) {
-      isAndOne = possessionResult.foul_event.and_one;
+    const isAndOne = possessionResult.isAndOne || false;
+
+    // Extract turnover player from debug (ball handler who committed turnover)
+    let turnoverPlayer: string | undefined;
+    if (possessionResult.possessionOutcome === 'turnover' && possessionResult.debug?.ballHandler) {
+      turnoverPlayer = possessionResult.debug.ballHandler;
+    }
+
+    // Extract steal player from debug
+    let stealPlayer: string | undefined;
+    if (possessionResult.debug?.stealPlayer) {
+      stealPlayer = possessionResult.debug.stealPlayer;
+    }
+
+    // Extract block player from debug (stored in shotAttempt sub-object)
+    let blockPlayer: string | undefined;
+    if (possessionResult.debug?.shotAttempt?.blockingPlayer) {
+      blockPlayer = possessionResult.debug.shotAttempt.blockingPlayer;
     }
 
     const event: PossessionEvent = {
       gameClock,
       offenseTeam,
       scoreBefore,
-      playByPlayText: possessionResult.play_by_play_text,
-      pointsScored: possessionResult.points_scored,
-      outcome: possessionResult.possession_outcome,
-      scoringPlayer: possessionResult.scoring_player,
+      playByPlayText: possessionResult.playByPlayText,
+      pointsScored: possessionResult.pointsScored,
+      outcome: possessionResult.possessionOutcome,
+      scoringPlayer: possessionResult.scoringPlayer,
       shooter,
-      assistPlayer: possessionResult.assist_player,
-      reboundPlayer: possessionResult.rebound_player,
+      assistPlayer: possessionResult.assistPlayer,
+      reboundPlayer: possessionResult.reboundPlayer,
       shotType,
       isOffensiveRebound,
       isAndOne,
+      foulEvent: possessionResult.foulEvent,
+      freeThrowResult: possessionResult.freeThrowResult,
+      turnoverPlayer,
+      stealPlayer,
+      blockPlayer,
     };
 
     // Update score
     if (offenseTeam === 'Home') {
-      this.homeScore += possessionResult.points_scored;
+      this.homeScore += possessionResult.pointsScored;
     } else {
-      this.awayScore += possessionResult.points_scored;
+      this.awayScore += possessionResult.pointsScored;
     }
 
     // Add to event log
@@ -739,8 +880,9 @@ export class PlayByPlayLogger {
     for (const [player, stats] of homePlayers) {
       const mins = this.minutesPlayed[player] ?? 0;
       const fgPct = stats.fga > 0 ? ((stats.fgm / stats.fga) * 100).toFixed(1) : '0.0';
+      const fg3Pct = stats.fg3a > 0 ? ((stats.fg3m / stats.fg3a) * 100).toFixed(1) : '0.0';
       lines.push(
-        `${player.padEnd(20)} ${mins.toFixed(0).padStart(4)} ${stats.points.toString().padStart(4)} ${stats.rebounds.toString().padStart(4)} ${stats.assists.toString().padStart(4)} ${stats.turnovers.toString().padStart(3)} ${`${stats.fgm}/${stats.fga}`.padStart(7)} ${fgPct.padStart(5)} ${'0/0'.padStart(7)} ${'0.0'.padStart(5)}`
+        `${player.padEnd(20)} ${mins.toFixed(0).padStart(4)} ${stats.points.toString().padStart(4)} ${stats.rebounds.toString().padStart(4)} ${stats.assists.toString().padStart(4)} ${stats.turnovers.toString().padStart(3)} ${`${stats.fgm}/${stats.fga}`.padStart(7)} ${fgPct.padStart(5)} ${`${stats.fg3m}/${stats.fg3a}`.padStart(7)} ${fg3Pct.padStart(5)}`
       );
     }
 
@@ -775,8 +917,9 @@ export class PlayByPlayLogger {
     for (const [player, stats] of awayPlayers) {
       const mins = this.minutesPlayed[player] ?? 0;
       const fgPct = stats.fga > 0 ? ((stats.fgm / stats.fga) * 100).toFixed(1) : '0.0';
+      const fg3Pct = stats.fg3a > 0 ? ((stats.fg3m / stats.fg3a) * 100).toFixed(1) : '0.0';
       lines.push(
-        `${player.padEnd(20)} ${mins.toFixed(0).padStart(4)} ${stats.points.toString().padStart(4)} ${stats.rebounds.toString().padStart(4)} ${stats.assists.toString().padStart(4)} ${stats.turnovers.toString().padStart(3)} ${`${stats.fgm}/${stats.fga}`.padStart(7)} ${fgPct.padStart(5)} ${'0/0'.padStart(7)} ${'0.0'.padStart(5)}`
+        `${player.padEnd(20)} ${mins.toFixed(0).padStart(4)} ${stats.points.toString().padStart(4)} ${stats.rebounds.toString().padStart(4)} ${stats.assists.toString().padStart(4)} ${stats.turnovers.toString().padStart(3)} ${`${stats.fgm}/${stats.fga}`.padStart(7)} ${fgPct.padStart(5)} ${`${stats.fg3m}/${stats.fg3a}`.padStart(7)} ${fg3Pct.padStart(5)}`
       );
     }
 
@@ -802,21 +945,25 @@ export class PlayByPlayLogger {
 
   /**
    * Write play-by-play narrative to text file.
+   * Note: File writing is not supported in React Native.
+   * Use renderToText() instead and handle storage externally.
    *
-   * @param filepath - Path to output file
+   * @param _filepath - Path to output file (unused in mobile)
    */
-  writeToFile(filepath: string): void {
-    // Ensure output directory exists
-    const directory = path.dirname(filepath);
-    if (directory && !fs.existsSync(directory)) {
-      fs.mkdirSync(directory, { recursive: true });
-    }
+  writeToFile(_filepath: string): void {
+    // File writing not supported in React Native
+    // Use renderToText() to get the narrative as a string
+    console.warn('writeToFile is not supported in React Native. Use renderToText() instead.');
+  }
 
-    // Render to text
-    const narrative = this.renderToText();
-
-    // Write to file
-    fs.writeFileSync(filepath, narrative, 'utf-8');
+  /**
+   * Get player stats for a specific team
+   *
+   * @param team - 'Home' or 'Away'
+   * @returns Map of player name to stats
+   */
+  getPlayerStatsForTeam(team: 'Home' | 'Away'): Map<string, PlayerStats> {
+    return this.statistics.getPlayerStatsForTeam(team);
   }
 
   /**

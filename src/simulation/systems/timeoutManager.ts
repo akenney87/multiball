@@ -147,8 +147,8 @@ export class TimeoutManager {
     this.strategyParams = this.getStrategyParams(timeoutStrategy);
 
     // BUG FIX: Timeout cooldown tracking to prevent spam
-    this.lastTimeoutTimeHome = -999; // Game time in seconds when last timeout was called
-    this.lastTimeoutTimeAway = -999;
+    this.lastTimeoutTimeHome = 99999; // Game time in seconds when last timeout was called (init to high value so first timeout is allowed)
+    this.lastTimeoutTimeAway = 99999;
     this.minTimeoutGapSeconds = 15; // Minimum 15 seconds between timeouts
   }
 

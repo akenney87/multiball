@@ -1,0 +1,142 @@
+================================================================================
+INTENTIONAL FOUL FIX - SUMMARY
+================================================================================
+
+Date: 2025-11-14
+Files Modified: src/systems/end_game_modes.py (lines 257-289)
+
+================================================================================
+USER-REPORTED ISSUES
+================================================================================
+
+ISSUE #1: Down 2 with 59 seconds - Incorrect fouling behavior
+--------------------------------------------------------------
+OLD BEHAVIOR:
+  [00:59] Home possession (Score: 101-99)
+  Slasher intentionally fouls Elite_3PT_Shooter!
+
+PROBLEM: Trailing team was intentionally fouling when down 2 points with 59
+seconds remaining. This makes no basketball sense - they should play defense,
+try for a stop, and get the ball back for their own final shot.
+
+USER FEEDBACK: "That's insane and would never happen. The only situation where
+a losing team would intentionally foul in a 2-pt or 3-pt game is if there's
+less than 24 seconds remaining in the game."
+
+FIX: Modified should_intentional_foul() to only trigger when down 4-6 points
+(where multiple possessions are needed). Never foul when down 2-3 points.
+
+NEW BEHAVIOR: Defense will NOT foul when down 2-3 points, allowing them to:
+  1. Play defense and try for a stop
+  2. Get the ball back for their own final shot
+  3. Let last-second shot modes handle <24 second scenarios
+
+ISSUE #2: Down 2 with 7 seconds - Last-second mode not activating
+------------------------------------------------------------------
+OLD BEHAVIOR:
+  [00:07] Home possession (Score: 104-102)
+  Sharpshooter intentionally fouls Elite_3PT_Shooter!
+
+PROBLEM: This was the last action of the game. The last-second shot mode
+should have activated, but intentional foul logic prevented it.
+
+USER FEEDBACK: "Last-second - losing mode should have been activated. Why
+wasn't it?"
+
+ROOT CAUSE: should_intentional_foul() was triggering for 2-3 point games,
+returning early from possession flow and preventing last-second shot mode
+detection.
+
+FIX: Same fix as Issue #1 - by preventing fouls when down 2-3, the possession
+flow continues and last-second shot mode can activate properly.
+
+NEW BEHAVIOR: When down 2-3 with <24 seconds:
+  1. No intentional foul triggers
+  2. Last-second shot mode ('last_shot_losing') activates
+  3. Team holds for final shot at 5-8 seconds game clock
+  4. If down 3, forces 3PT attempt (need to tie)
+
+================================================================================
+TECHNICAL CHANGES
+================================================================================
+
+File: src/systems/end_game_modes.py
+Function: should_intentional_foul() (lines 257-289)
+
+OLD LOGIC:
+  - Down 2-6 points with <60 seconds: Foul
+
+NEW LOGIC:
+  - Down 4-6 points with <60 seconds: Foul (need multiple possessions)
+  - Down 2-3 points: NEVER foul (play defense, try for final shot)
+
+Basketball Strategy Rationale:
+  - Down 4-6: Need 2+ possessions, so fouling makes sense to stop clock
+  - Down 2-3: One possession can tie/win, so fouling gives free points
+  - <24 seconds: Last-second modes take over automatically
+
+================================================================================
+TEST RESULTS - ALL PASS
+================================================================================
+
+Test: Down 2 with 59 seconds
+  Should foul? False ✓
+  Expected: False (never foul when down 2-3 with time remaining)
+  Status: PASS
+
+Test: Down 2 with 7 seconds
+  Should foul? False ✓
+  Expected: False (let last-second mode handle it)
+  Last-second mode active? True ✓
+  Expected: True
+  Status: PASS
+
+Test: Down 3 with 30 seconds
+  Should foul? False ✓
+  Expected: False
+  Status: PASS
+
+Test: Down 3 with 10 seconds
+  Should foul? False ✓
+  Last-second mode active? True ✓
+  Status: PASS
+
+Test: Down 5 with 45 seconds
+  Should foul? True ✓
+  Expected: True (within 4-6 range, correct to foul)
+  Status: PASS
+
+================================================================================
+VERIFICATION
+================================================================================
+
+Unit Tests: PASS (test_both_fixes.py)
+  - All 5 test scenarios passed
+  - Both user-reported issues resolved
+  - Correct behavior for 4-6 point margins
+
+Mode Detection: VERIFIED
+  - Last-second shot mode activates when down 2-3 with <24 seconds
+  - Game clock target: 5-8 seconds (random)
+  - Force 3PT when down exactly 3
+
+Integration: VERIFIED
+  - Full game simulation runs without errors
+  - No intentional fouls at wrong margins
+  - Last-second modes function properly
+
+================================================================================
+SUMMARY
+================================================================================
+
+Both user-reported issues are completely resolved:
+
+✓ ISSUE #1: No more fouling when down 2-3 with time remaining
+✓ ISSUE #2: Last-second shot mode activates properly when down 2-3
+
+The fix aligns with proper basketball strategy:
+  - Teams only foul when down 4-6 (need multiple possessions)
+  - Teams never foul when down 2-3 (one possession can win/tie)
+  - Last-second modes handle final 24 seconds automatically
+
+All tests pass. No regression in existing functionality.

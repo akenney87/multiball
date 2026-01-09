@@ -1,0 +1,20 @@
+================================================================================
+VALIDATION GAMES CORRELATION (After Option A)
+================================================================================
+Games analyzed: 100
+Pearson correlation (rating_diff vs score_diff): 0.4963
+
+Rating distribution:
+  Min rating diff: -4.3
+  Max rating diff: 7.7
+  Avg rating diff: 2.1
+
+Score distribution:
+  Min score diff: -42
+  Max score diff: 45
+  Avg margin: 15.1
+
+Blowout analysis:
+  Blowouts (20+ points): 29/100 (29%)
+
+[WARNING] Correlation < 0.50 - Investigation needed!

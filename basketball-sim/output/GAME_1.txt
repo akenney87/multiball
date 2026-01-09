@@ -1,0 +1,916 @@
+================================================================================
+                            FULL GAME - Home vs Away                            
+================================================================================
+
+================================================================================
+                           1ST QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 0-0)
+Perimeter_Defender drives and kicks out. Elite_3PT_Shooter attempts a Midrange. Contested by Rim_Protector (5.7 feet, ZONE). ELITE_3PT_SHOOTER MAKES IT!
+Score: 2-0
+
+[11:50] Away possession (Score: 2-0)
+Slasher drives, picks up Perimeter_Defender. Help arrives from Rim_Finisher! Slasher attempts a Dunk. Contested by Rim_Finisher (2.9 feet, MAN). SLASHER MAKES IT! Assist: Rim_Protector
+Score: 2-2
+
+[11:32] Home possession (Score: 2-2)
+Perimeter_Defender throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[11:21] Away possession (Score: 2-2)
+Slasher makes the Midrange and draws the foul on Perimeter_Defender! And-1! Slasher to the line for 1. [Team fouls: 1] (Perimeter_Defender: 1 personal fouls)   FT 1/1: GOOD Slasher makes 1/1 from the line.
+Score: 2-5
+
+[11:08] Home possession (Score: 2-5)
+Elite_3PT_Shooter attempts a 3Pt. Wide open! Sharpshooter is 6.2 feet away. [ZONE] ELITE_3PT_SHOOTER MAKES IT! Assist: Perimeter_Defender
+Score: 5-5
+
+[10:54] Away possession (Score: 5-5)
+Slasher drives to the basket... Slasher loses the ball! Stripped by Perimeter_Defender! TURNOVER! (live ball)
+
+[10:43] Home possession (Score: 5-5)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Sharpshooter (1.1 feet, MAN)! ELITE_3PT_SHOOTER MAKES IT! Assist: Playmaker
+Score: 8-5
+
+[10:26] Away possession (Score: 8-5)
+Sharpshooter attempts a 3Pt. Contested by Perimeter_Defender (4.7 feet, ZONE). Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+[10:10] Home possession (Score: 8-5)
+Perimeter_Defender drives, picks up Rim_Protector. Help arrives from Slasher! Perimeter_Defender attempts a Dunk. Heavily contested by Slasher (1.6 feet, ZONE)! Perimeter_Defender misses. Rebound secured by Slasher.
+
+[09:56] Away possession (Score: 8-5)
+Rim_Protector drives, picks up Shot_Blocker. Help arrives from Rim_Finisher! Rim_Protector attempts a Dunk. Heavily contested by Rim_Finisher (0.5 feet, ZONE)! RIM_PROTECTOR MAKES IT!
+Score: 8-7
+
+[09:39] Home possession (Score: 8-7)
+Playmaker makes the Dunk and draws the foul on Slasher! And-1! Playmaker to the line for 1. [Team fouls: 1] (Slasher: 1 personal fouls)   FT 1/1: GOOD Playmaker makes 1/1 from the line.
+Score: 11-7
+
+[09:23] Away possession (Score: 11-7)
+Sharpshooter attempts a 3Pt. Contested by Perimeter_Defender (2.0 feet, ZONE). SHARPSHOOTER MAKES IT! Assist: Lockdown_Defender
+Score: 11-10
+
+[09:05] Home possession (Score: 11-10)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Sharpshooter (4.9 feet, ZONE). Elite_3PT_Shooter misses. Offensive rebound by Shot_Blocker! Shot_Blocker puts it back in!
+Score: 13-10
+
+[08:48] Away possession (Score: 13-10)
+FOUL! Reach-in foul on Perimeter_Defender during the drive. [Team fouls: 2] No free throws, side out. (Perimeter_Defender: 2 personal fouls)
+
+[08:33] Away possession (Score: 13-10)
+Sharpshooter attempts a 3Pt. Contested by Elite_3PT_Shooter (3.8 feet, MAN). Sharpshooter misses. Rebound secured by Perimeter_Defender.
+
+[08:15] Home possession (Score: 13-10)
+Shot clock violation! Elite_3PT_Shooter couldn't get a shot off in time! TURNOVER! (dead ball)
+
+[08:01] Away possession (Score: 13-10)
+Sharpshooter attempts a 3Pt. Contested by Elite_3PT_Shooter (2.5 feet, MAN). Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+[07:45] Home possession (Score: 13-10)
+Playmaker attempts a Midrange. Wide open! Floor_General is 6.1 feet away. [MAN] Playmaker misses. FOUL! Loose ball foul on Lockdown_Defender during the rebound battle. [Team fouls: 2] No free throws, side out. (Lockdown_Defender: 1 personal fouls)
+
+[07:29] Home possession (Score: 13-10)
+Shot_Blocker drives to the basket... Shot clock violation! Shot_Blocker couldn't get a shot off in time! TURNOVER! (dead ball)
+
+[07:15] Away possession (Score: 13-10)
+Slasher attempts a Midrange. Heavily contested by Perimeter_Defender (1.6 feet, ZONE)! Slasher misses. Rebound secured by Rim_Finisher.
+
+[07:01] Home possession (Score: 13-10)
+Rim_Finisher attempts a Midrange. Contested by Lockdown_Defender (4.1 feet, MAN). Rim_Finisher misses. Rebound secured by Slasher.
+
+[06:49] Away possession (Score: 13-10)
+Lockdown_Defender attempts a 3Pt. Heavily contested by Perimeter_Defender (0.5 feet, ZONE)! Lockdown_Defender misses. Rebound secured by Rim_Finisher.
+
+[06:38] Home possession (Score: 13-10)
+Perimeter_Defender attempts a 3Pt. Heavily contested by Lockdown_Defender (0.5 feet, MAN)! Perimeter_Defender misses. Rebound secured by Lockdown_Defender.
+
+[06:23] Away possession (Score: 13-10)
+Lockdown_Defender attempts a Midrange. Contested by Elite_3PT_Shooter (2.9 feet, ZONE). Lockdown_Defender misses. Rebound secured by Shot_Blocker.
+
+[06:07] Home possession (Score: 13-10)
+Playmaker attempts a 3Pt. Contested by Floor_General (5.5 feet, MAN). Playmaker misses. Rebound secured by Rim_Protector.
+
+[05:54] Away possession (Score: 13-10)
+Slasher attempts a Midrange. Wide open! Playmaker is 8.2 feet away. [ZONE] Slasher misses. Rebound secured by Rim_Finisher.
+
+[05:38] Home possession (Score: 13-10)
+FOUL! Shooting foul on Lockdown_Defender. Perimeter_Defender to the line for 3 free throws. [Team fouls: 3] (Lockdown_Defender: 2 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Perimeter_Defender makes 3/3 from the line.
+Score: 16-10
+
+[05:22] Home possession (Score: 16-10)
+Perimeter_Defender drives and kicks out. Shot_Blocker attempts a 3Pt. Contested by Rim_Protector (2.1 feet, MAN). Shot_Blocker misses. Rebound secured by Slasher.
+
+[05:08] Away possession (Score: 16-10)
+FOUL! Reach-in foul on Playmaker during the drive. [Team fouls: 3] No free throws, side out. (Playmaker: 1 personal fouls)
+
+[04:56] Away possession (Score: 16-10)
+Floor_General attempts a 3Pt. Contested by Perimeter_Defender (5.4 feet, ZONE). Floor_General misses. Rebound secured by Rim_Finisher.
+
+[04:45] Home possession (Score: 16-10)
+FOUL! Holding foul on Floor_General. [Team fouls: 4] No free throws, side out. (Floor_General: 1 personal fouls)
+
+[04:28] Home possession (Score: 16-10)
+Perimeter_Defender attempts a 3Pt. Contested by Lockdown_Defender (2.5 feet, ZONE). Perimeter_Defender misses. Rebound secured by Slasher.
+
+[04:09] Away possession (Score: 16-10)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (0.5 feet, ZONE)! Sharpshooter misses. Rebound secured by Perimeter_Defender.
+
+[03:52] Home possession (Score: 16-10)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Lockdown_Defender (0.8 feet, ZONE)! Elite_3PT_Shooter misses. Offensive rebound by Rim_Finisher! Rim_Finisher kicks it out.
+
+[03:37] Home possession (Score: 16-10)
+Shot_Blocker makes the Layup and draws the foul on Rim_Protector! And-1! Shot_Blocker to the line for 1. [BONUS: 5 team fouls] (Rim_Protector: 1 personal fouls)   FT 1/1: GOOD Shot_Blocker makes 1/1 from the line.
+Score: 19-10
+
+[03:27] Away possession (Score: 19-10)
+Rim_Protector attempts a Midrange. Wide open! Shot_Blocker is 6.3 feet away. [MAN] RIM_PROTECTOR MAKES IT! Assist: Floor_General
+Score: 19-12
+
+[03:11] Home possession (Score: 19-12)
+Perimeter_Defender attempts a 3Pt. Contested by Lockdown_Defender (3.5 feet, ZONE). Perimeter_Defender misses. Rebound secured by Rim_Protector.
+
+[02:56] Away possession (Score: 19-12)
+Lockdown_Defender attempts a Midrange. Contested by Rim_Finisher (4.5 feet, ZONE). Lockdown_Defender misses. Offensive rebound by Rim_Protector! Rim_Protector's putback is no good. Offensive rebound by Slasher! Slasher kicks it out.
+
+[02:39] Away possession (Score: 19-12)
+Slasher drives, Shot_Blocker stays with him. Slasher attempts a Layup. Contested by Shot_Blocker (3.8 feet, ZONE). SLASHER MAKES IT! Assist: Lockdown_Defender
+Score: 19-14
+
+[02:22] Home possession (Score: 19-14)
+Playmaker attempts a 3Pt. Contested by Lockdown_Defender (5.8 feet, ZONE). PLAYMAKER MAKES IT! Assist: Perimeter_Defender
+Score: 22-14
+
+[02:10] Away possession (Score: 22-14)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (0.7 feet, ZONE)! SHARPSHOOTER MAKES IT! Assist: Floor_General
+Score: 22-17
+
+[01:59] Home possession (Score: 22-17)
+Rim_Finisher attempts a Midrange. Heavily contested by Lockdown_Defender (1.6 feet, MAN)! Rim_Finisher misses. Offensive rebound by Shot_Blocker! Shot_Blocker's putback is no good. Rebound secured by Lockdown_Defender.
+
+[01:41] Away possession (Score: 22-17)
+Sharpshooter makes the 3Pt and draws the foul on Perimeter_Defender! And-1! Sharpshooter to the line for 1. [BONUS: 5 team fouls] (Perimeter_Defender: 4 personal fouls)   FT 1/1: GOOD Sharpshooter makes 1/1 from the line.
+Score: 22-21
+
+[01:28] Home possession (Score: 22-21)
+Shot_Blocker drives and kicks out. Perimeter_Defender attempts a Midrange. Contested by Lockdown_Defender (4.3 feet, MAN). Perimeter_Defender misses. Offensive rebound by Shot_Blocker! Shot_Blocker puts it back in!
+Score: 24-21
+
+[01:13] Away possession (Score: 24-21)
+Sharpshooter attempts a 3Pt. Contested by Elite_3PT_Shooter (4.7 feet, ZONE). Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+[01:00] Home possession (Score: 24-21)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Lockdown_Defender (0.5 feet, ZONE)! Elite_3PT_Shooter misses. Offensive rebound by Shot_Blocker! Shot_Blocker puts it back in!
+Score: 26-21
+
+[00:42] Away possession (Score: 26-21)
+Rim_Protector drives to the basket... Rim_Protector throws a bad pass! Stolen by Shot_Blocker! TURNOVER! (live ball)
+
+[00:25] Home possession (Score: 26-21)
+Perimeter_Defender drives and kicks out. Rim_Finisher attempts a 3Pt. Contested by Lockdown_Defender (2.9 feet, MAN). Rim_Finisher misses. Rebound secured by Rim_Protector.
+
+[00:14] Away possession (Score: 26-21)
+Sharpshooter attempts a 3Pt. Contested by Rim_Finisher (5.9 feet, ZONE). Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+================================================================================
+                              1ST QUARTER COMPLETE                              
+================================================================================
+
+1ST QUARTER SCORE: Home 26, Away 21
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Shot_Blocker           12    9    4    0   0   4/5    80.0     0/0   0.0
+Elite_3PT_Shooter      12    8    0    0   0   3/3   100.0     0/0   0.0
+Playmaker              12    6    0    1   0   2/3    66.7     0/0   0.0
+Perimeter_Defender     12    3    2    2   0   0/4     0.0     0/0   0.0
+Rim_Finisher           12    0   10    0   0   0/3     0.0     0/0   0.0
+Lockdown_Defender      12    0    2    2   0   0/2     0.0     0/0   0.0
+
+TEAM: FG: 9/18 (50.0%), 3PT: 5/11 (45.5%), REB: 17 (6 off, 11 def), AST: 3, TO: 3
+TEAM FOULS: 5 [Away in BONUS]
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Sharpshooter           12   10    0    0   0   3/9    33.3     0/0   0.0
+Slasher                12    7    5    0   0   3/5    60.0     0/0   0.0
+Rim_Protector          12    4    3    1   0   2/2   100.0     0/0   0.0
+Floor_General          12    0    0    2   0   0/1     0.0     0/0   0.0
+
+TEAM: FG: 8/19 (42.1%), 3PT: 3/11 (27.3%), REB: 9 (1 off, 8 def), AST: 5, TO: 2
+TEAM FOULS: 5 [Home in BONUS]
+
+================================================================================
+
+================================================================================
+                           2ND QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 26-21)
+Rim_Finisher attempts a Midrange. Wide open! Lockdown_Defender is 7.6 feet away. [MAN] RIM_FINISHER MAKES IT!
+Score: 28-21
+
+[11:50] Away possession (Score: 28-21)
+Floor_General drives and kicks out. Floor_General attempts a 3Pt. Contested by Perimeter_Defender (3.2 feet, ZONE). Floor_General misses. Rebound secured by Shot_Blocker.
+
+[11:38] Home possession (Score: 28-21)
+Playmaker makes the Midrange and draws the foul on Floor_General! And-1! Playmaker to the line for 1. [Team fouls: 1] (Floor_General: 2 personal fouls)   FT 1/1: GOOD Playmaker makes 1/1 from the line.
+Score: 31-21
+
+[11:25] Away possession (Score: 31-21)
+Slasher attempts a Midrange. Contested by Perimeter_Defender (3.4 feet, MAN). Slasher misses. Offensive rebound by Rim_Protector! Rim_Protector puts it back in!
+Score: 31-23
+
+[11:11] Home possession (Score: 31-23)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Lockdown_Defender (4.1 feet, ZONE). Elite_3PT_Shooter misses. Rebound secured by Slasher.
+
+[11:00] Away possession (Score: 31-23)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (1.4 feet, ZONE)! Sharpshooter misses. Offensive rebound by Rim_Protector! Rim_Protector's putback is no good. Offensive rebound by Rim_Protector! Rim_Protector kicks it out.
+
+[10:45] Away possession (Score: 31-23)
+Floor_General loses the ball! Stripped by Playmaker! TURNOVER! (live ball)
+
+[10:30] Home possession (Score: 31-23)
+Playmaker makes the Midrange and draws the foul on Sharpshooter! And-1! Playmaker to the line for 1. [Team fouls: 2] (Sharpshooter: 1 personal fouls)   FT 1/1: GOOD Playmaker makes 1/1 from the line.
+Score: 34-23
+
+[10:20] Away possession (Score: 34-23)
+FOUL! Reach-in foul on Shot_Blocker during the drive. [Team fouls: 1] No free throws, side out. (Shot_Blocker: 1 personal fouls)
+
+[10:08] Away possession (Score: 34-23)
+Rim_Protector attempts a Midrange. Contested by Shot_Blocker (4.9 feet, MAN). Rim_Protector misses. Offensive rebound by Slasher! Slasher kicks it out.
+
+[09:53] Away possession (Score: 34-23)
+FOUL! Offensive foul on Slasher! Perimeter_Defender drew the charge! [Team fouls: 3] (Slasher: 2 personal fouls) TURNOVER! (dead ball)
+
+[09:35] Home possession (Score: 34-23)
+Rim_Finisher throws a bad pass! Stolen by Lockdown_Defender! TURNOVER! (live ball)
+
+[09:22] Away possession (Score: 34-23)
+Lockdown_Defender attempts a 3Pt. Contested by Perimeter_Defender (3.3 feet, MAN). LOCKDOWN_DEFENDER MAKES IT! Assist: Floor_General
+Score: 34-26
+
+[09:09] Home possession (Score: 34-26)
+Playmaker attempts a 3Pt. Contested by Floor_General (5.0 feet, MAN). Playmaker misses. Rebound secured by Rim_Protector.
+
+[08:57] Away possession (Score: 34-26)
+Rim_Protector drives, Shot_Blocker stays with him. Rim_Protector attempts a Layup. Contested by Shot_Blocker (3.5 feet, ZONE). RIM_PROTECTOR MAKES IT! Assist: Floor_General
+Score: 34-28
+
+[08:44] Home possession (Score: 34-28)
+Playmaker attempts a Midrange. Wide open! Sharpshooter is 7.3 feet away. [ZONE] PLAYMAKER MAKES IT! Assist: Elite_3PT_Shooter
+Score: 36-28
+
+[08:28] Away possession (Score: 36-28)
+Sharpshooter drives and kicks out. Floor_General attempts a 3Pt. Wide open! Playmaker is 8.2 feet away. [MAN] Floor_General misses. Rebound secured by Shot_Blocker.
+
+[08:11] Home possession (Score: 36-28)
+Rim_Finisher loses the ball! Stripped by Lockdown_Defender! TURNOVER! (live ball)
+
+[07:59] Away possession (Score: 36-28)
+Lockdown_Defender drives and kicks out. Lockdown_Defender attempts a Midrange. Contested by Perimeter_Defender (2.9 feet, MAN). Lockdown_Defender misses. Offensive rebound by Rim_Protector! Rim_Protector puts it back in!
+Score: 36-30
+
+[07:45] Home possession (Score: 36-30)
+FOUL! Shooting foul on Sharpshooter. Shot_Blocker to the line for 2 free throws. [Team fouls: 4] (Sharpshooter: 2 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Shot_Blocker makes 1/2 from the line.
+Score: 37-30
+
+[07:35] Home possession (Score: 37-30)
+Playmaker attempts a 3Pt. Contested by Lockdown_Defender (4.8 feet, ZONE). Playmaker misses. Rebound secured by Rim_Protector.
+
+[07:21] Away possession (Score: 37-30)
+Lockdown_Defender attempts a 3Pt. Contested by Perimeter_Defender (3.7 feet, MAN). Lockdown_Defender misses. Rebound secured by Shot_Blocker.
+
+[07:08] Home possession (Score: 37-30)
+Elite_3PT_Shooter attempts a Layup. Contested by Lockdown_Defender (3.1 feet, MAN). ELITE_3PT_SHOOTER MAKES IT!
+Score: 39-30
+
+[06:56] Away possession (Score: 39-30)
+Slasher makes the Layup and draws the foul on Perimeter_Defender! And-1! Slasher to the line for 1. [Team fouls: 2] (Perimeter_Defender: 5 personal fouls)   FT 1/1: GOOD Slasher makes 1/1 from the line.
+Score: 39-33
+
+[06:38] Home possession (Score: 39-33)
+Elite_3PT_Shooter attempts a Midrange. Contested by Slasher (5.1 feet, ZONE). ELITE_3PT_SHOOTER MAKES IT! Assist: Playmaker
+Score: 41-33
+
+[06:20] Away possession (Score: 41-33)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (0.5 feet, MAN)! Sharpshooter misses. Offensive rebound by Slasher! Slasher kicks it out.
+
+[06:07] Away possession (Score: 41-33)
+Floor_General attempts a 3Pt. Contested by Perimeter_Defender (5.2 feet, ZONE). Floor_General misses. Rebound secured by Rim_Finisher.
+
+[05:50] Home possession (Score: 41-33)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Lockdown_Defender (3.5 feet, MAN). Elite_3PT_Shooter misses. Offensive rebound by Rim_Finisher! Rim_Finisher kicks it out.
+
+[05:37] Home possession (Score: 41-33)
+Playmaker attempts a Midrange. Wide open! Floor_General is 6.1 feet away. [MAN] PLAYMAKER MAKES IT! Assist: Perimeter_Defender
+Score: 43-33
+
+[05:22] Away possession (Score: 43-33)
+Rim_Protector attempts a Midrange. Contested by Shot_Blocker (4.3 feet, MAN). RIM_PROTECTOR MAKES IT! Assist: Sharpshooter
+Score: 43-35
+
+[05:09] Home possession (Score: 43-35)
+Perimeter_Defender drives, picks up Lockdown_Defender. Help arrives from Slasher! Perimeter_Defender attempts a Layup. Heavily contested by Slasher (0.5 feet, MAN)! Perimeter_Defender misses. Rebound secured by Lockdown_Defender.
+
+[04:51] Away possession (Score: 43-35)
+Floor_General attempts a Layup. BLOCKED BY SHOT_BLOCKER! Ball is loose! Offensive rebound by Rim_Protector! Rim_Protector kicks it out.
+
+[04:38] Away possession (Score: 43-35)
+Floor_General attempts a 3Pt. Wide open! Playmaker is 8.9 feet away. [MAN] FLOOR_GENERAL MAKES IT! Assist: Lockdown_Defender
+Score: 43-38
+
+[04:21] Home possession (Score: 43-38)
+Elite_3PT_Shooter makes the Midrange and draws the foul on Lockdown_Defender! And-1! Elite_3PT_Shooter to the line for 1. [BONUS: 5 team fouls] (Lockdown_Defender: 3 personal fouls)   FT 1/1: GOOD Elite_3PT_Shooter makes 1/1 from the line.
+Score: 46-38
+
+[04:06] Away possession (Score: 46-38)
+Floor_General drives, Playmaker stays with him. Floor_General attempts a Layup. Wide open! Playmaker is 7.4 feet away. [MAN] Floor_General misses. Rebound secured by Perimeter_Defender.
+
+[03:55] Home possession (Score: 46-38)
+Shot_Blocker drives, Rim_Protector stays with him. Shot_Blocker attempts a Dunk. Contested by Rim_Protector (5.5 feet, ZONE). SHOT_BLOCKER MAKES IT! Assist: Playmaker
+Score: 48-38
+
+[03:38] Away possession (Score: 48-38)
+Lockdown_Defender attempts a 3Pt. Contested by Perimeter_Defender (2.8 feet, MAN). Lockdown_Defender misses. Offensive rebound by Slasher! Slasher kicks it out.
+
+[03:20] Away possession (Score: 48-38)
+Rim_Protector drives and kicks out. Floor_General attempts a 3Pt. Heavily contested by Perimeter_Defender (0.9 feet, ZONE)! Floor_General misses. Rebound secured by Perimeter_Defender.
+
+[03:09] Home possession (Score: 48-38)
+Shot_Blocker attempts a Midrange. Heavily contested by Rim_Protector (0.8 feet, MAN)! Shot_Blocker misses. Rebound secured by Rim_Protector.
+
+[02:58] Away possession (Score: 48-38)
+Sharpshooter attempts a 3Pt. Contested by Perimeter_Defender (2.4 feet, MAN). Sharpshooter misses. Rebound secured by Perimeter_Defender.
+
+[02:42] Home possession (Score: 48-38)
+Rim_Finisher makes the Dunk and draws the foul on Lockdown_Defender! And-1! Rim_Finisher to the line for 1. [BONUS: 6 team fouls] (Lockdown_Defender: 4 personal fouls)   FT 1/1: GOOD Rim_Finisher makes 1/1 from the line.
+Score: 51-38
+
+[02:31] Away possession (Score: 51-38)
+FOUL! Reach-in foul on Shot_Blocker during the drive. [Team fouls: 3] No free throws, side out. (Shot_Blocker: 2 personal fouls)
+
+[02:15] Away possession (Score: 51-38)
+Lockdown_Defender drives and kicks out. Floor_General attempts a 3Pt. Contested by Perimeter_Defender (3.4 feet, ZONE). Floor_General misses. Offensive rebound by Slasher! Slasher kicks it out.
+
+[02:05] Away possession (Score: 51-38)
+FOUL! Shooting foul on Perimeter_Defender. Lockdown_Defender to the line for 2 free throws. [Team fouls: 4] (Perimeter_Defender: 6 personal fouls) Perimeter_Defender FOULS OUT!   FT 1/2: GOOD   FT 2/2: GOOD Lockdown_Defender makes 2/2 from the line.
+Score: 51-40
+
+[01:55] Away possession (Score: 51-40)
+Sharpshooter attempts a 3Pt. Contested by Perimeter_Defender (4.3 feet, MAN). Sharpshooter misses. Rebound secured by Shot_Blocker.
+
+[01:41] Home possession (Score: 51-40)
+Playmaker attempts a Layup. Contested by Floor_General (5.9 feet, MAN). PLAYMAKER MAKES IT! Assist: Rim_Finisher
+Score: 53-40
+
+[01:27] Away possession (Score: 53-40)
+FOUL! Shooting foul on Perimeter_Defender. Rim_Protector to the line for 2 free throws. [BONUS: 5 team fouls] (Perimeter_Defender: 7 personal fouls) Perimeter_Defender FOULS OUT!   FT 1/2: GOOD   FT 2/2: GOOD Rim_Protector makes 2/2 from the line.
+Score: 53-42
+
+[01:15] Away possession (Score: 53-42)
+Floor_General makes the Dunk and draws the foul on Shot_Blocker! And-1! Floor_General to the line for 1. [BONUS: 6 team fouls] (Shot_Blocker: 3 personal fouls)   FT 1/1: GOOD Floor_General makes 1/1 from the line.
+Score: 53-45
+
+[01:03] Home possession (Score: 53-45)
+Shot_Blocker attempts a Midrange. Heavily contested by Lockdown_Defender (1.1 feet, ZONE)! Shot_Blocker misses. Rebound secured by Lockdown_Defender.
+
+[00:46] Away possession (Score: 53-45)
+Lockdown_Defender throws a bad pass! Stolen by Perimeter_Defender! TURNOVER! (live ball)
+
+[00:33] Home possession (Score: 53-45)
+Playmaker attempts a 3Pt. Contested by Lockdown_Defender (2.6 feet, ZONE). Playmaker misses. Offensive rebound by Shot_Blocker! Shot_Blocker's putback is no good. Rebound secured by Slasher.
+
+[00:20] Away possession (Score: 53-45)
+Sharpshooter attempts a 3Pt. Contested by Perimeter_Defender (2.8 feet, MAN). SHARPSHOOTER MAKES IT! Assist: Lockdown_Defender
+Score: 53-48
+
+[00:02] Home possession (Score: 53-48)
+Perimeter_Defender attempts a Midrange. Wide open! Sharpshooter is 6.2 feet away. [ZONE] PERIMETER_DEFENDER MAKES IT! Assist: Playmaker
+Score: 55-48
+
+================================================================================
+                              2ND QUARTER COMPLETE                              
+================================================================================
+
+2ND QUARTER SCORE: Home 29, Away 27
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Playmaker              24   12    0    3   0   5/8    62.5     0/0   0.0
+Elite_3PT_Shooter      24    7    0    1   0   3/4    75.0     0/0   0.0
+Rim_Finisher           24    5    2    1   0   2/2   100.0     0/0   0.0
+Shot_Blocker           24    3    4    0   0   1/3    33.3     0/0   0.0
+Slasher                24    3    6    0   0   1/1   100.0     0/0   0.0
+Perimeter_Defender     24    2    3    1   0   1/2    50.0     0/0   0.0
+
+TEAM: FG: 12/19 (63.2%), 3PT: 0/4 (0.0%), REB: 10 (2 off, 8 def), AST: 6, TO: 2
+TEAM FOULS: 6 [Away in BONUS]
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Rim_Protector          24   10    7    0   0   4/4   100.0     0/0   0.0
+Floor_General          24    6    0    2   0   2/7    28.6     0/0   0.0
+Lockdown_Defender      24    5    2    2   0   1/2    50.0     0/0   0.0
+Sharpshooter           24    3    0    1   0   1/3    33.3     0/0   0.0
+
+TEAM: FG: 9/17 (52.9%), 3PT: 3/10 (30.0%), REB: 14 (8 off, 6 def), AST: 5, TO: 3
+TEAM FOULS: 6 [Home in BONUS]
+
+================================================================================
+
+================================================================================
+                           3RD QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 55-48)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Sharpshooter (4.4 feet, MAN). Elite_3PT_Shooter misses. Offensive rebound by Rim_Finisher! Rim_Finisher kicks it out.
+
+[11:45] Home possession (Score: 55-48)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Sharpshooter (3.6 feet, MAN). ELITE_3PT_SHOOTER MAKES IT! Assist: Playmaker
+Score: 58-48
+
+[11:30] Away possession (Score: 58-48)
+Slasher attempts a Midrange. Contested by Elite_3PT_Shooter (4.3 feet, ZONE). SLASHER MAKES IT!
+Score: 58-50
+
+[11:19] Home possession (Score: 58-50)
+Shot_Blocker drives and kicks out. Shot_Blocker attempts a Midrange. Wide open! Rim_Protector is 8.2 feet away. [MAN] Shot_Blocker misses. Rebound secured by Lockdown_Defender.
+
+[11:09] Away possession (Score: 58-50)
+Slasher attempts a Midrange. Contested by Playmaker (4.0 feet, ZONE). Slasher misses. Rebound secured by Rim_Finisher.
+
+[10:54] Home possession (Score: 58-50)
+Shot_Blocker attempts a Layup. Wide open! Rim_Protector is 8.5 feet away. [ZONE] SHOT_BLOCKER MAKES IT! Assist: Elite_3PT_Shooter
+Score: 60-50
+
+[10:38] Away possession (Score: 60-50)
+Lockdown_Defender attempts a 3Pt. Contested by Perimeter_Defender (2.3 feet, ZONE). Lockdown_Defender misses. FOUL! Loose ball foul on Shot_Blocker during the rebound battle. [Team fouls: 1] No free throws, side out. (Shot_Blocker: 4 personal fouls)
+
+[10:24] Away possession (Score: 60-50)
+FOUL! Reach-in foul on Elite_3PT_Shooter during the drive. [Team fouls: 2] No free throws, side out. (Elite_3PT_Shooter: 1 personal fouls)
+
+[10:05] Away possession (Score: 60-50)
+Floor_General makes the Layup and draws the foul on Playmaker! And-1! Floor_General to the line for 1. [Team fouls: 3] (Playmaker: 2 personal fouls)   FT 1/1: MISS Floor_General makes 0/1 from the line. Offensive rebound by Slasher! Slasher kicks it out.
+Score: 60-52
+
+[09:54] Away possession (Score: 60-52)
+Sharpshooter attempts a 3Pt. Wide open! Playmaker is 6.3 feet away. [ZONE] SHARPSHOOTER MAKES IT! Assist: Lockdown_Defender
+Score: 60-55
+
+[09:40] Home possession (Score: 60-55)
+Playmaker attempts a 3Pt. Contested by Floor_General (5.2 feet, MAN). PLAYMAKER MAKES IT! Assist: Perimeter_Defender
+Score: 63-55
+
+[09:26] Away possession (Score: 63-55)
+Lockdown_Defender loses the ball! Stripped by Perimeter_Defender! TURNOVER! (live ball)
+
+[09:12] Home possession (Score: 63-55)
+Playmaker attempts a 3Pt. Contested by Floor_General (3.5 feet, MAN). Playmaker misses. Rebound secured by Rim_Protector.
+
+[08:52] Away possession (Score: 63-55)
+Floor_General attempts a 3Pt. Contested by Playmaker (4.5 feet, MAN). FLOOR_GENERAL MAKES IT! Assist: Sharpshooter
+Score: 63-58
+
+[08:37] Home possession (Score: 63-58)
+FOUL! Holding foul on Floor_General. [Team fouls: 1] No free throws, side out. (Floor_General: 3 personal fouls)
+
+[08:25] Home possession (Score: 63-58)
+Perimeter_Defender commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[08:09] Away possession (Score: 63-58)
+Lockdown_Defender attempts a 3Pt. Heavily contested by Perimeter_Defender (0.9 feet, MAN)! Lockdown_Defender misses. Rebound secured by Rim_Finisher.
+
+[07:54] Home possession (Score: 63-58)
+FOUL! Reach-in foul on Floor_General during the drive. [Team fouls: 2] No free throws, side out. (Floor_General: 4 personal fouls)
+
+[07:39] Home possession (Score: 63-58)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Sharpshooter (4.8 feet, MAN). ELITE_3PT_SHOOTER MAKES IT! Assist: Playmaker
+Score: 66-58
+
+[07:28] Away possession (Score: 66-58)
+Sharpshooter attempts a 3Pt. Contested by Rim_Finisher (3.9 feet, ZONE). Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+[07:11] Home possession (Score: 66-58)
+Perimeter_Defender attempts a Midrange. Heavily contested by Lockdown_Defender (1.2 feet, MAN)! Perimeter_Defender misses. Rebound secured by Rim_Protector.
+
+[06:56] Away possession (Score: 66-58)
+Floor_General attempts a 3Pt. Contested by Playmaker (4.9 feet, MAN). Floor_General misses. Rebound secured by Shot_Blocker.
+
+[06:36] Home possession (Score: 66-58)
+Rim_Finisher drives to the basket... Rim_Finisher throws a bad pass! Stolen by Rim_Protector! TURNOVER! (live ball)
+
+[06:24] Away possession (Score: 66-58)
+Sharpshooter attempts a 3Pt. Contested by Perimeter_Defender (2.5 feet, ZONE). SHARPSHOOTER MAKES IT! Assist: Floor_General
+Score: 66-61
+
+[06:13] Home possession (Score: 66-61)
+Playmaker throws a bad pass! Stolen by Floor_General! TURNOVER! (live ball)
+
+[05:54] Away possession (Score: 66-61)
+Slasher attempts a Dunk. BLOCKED BY PERIMETER_DEFENDER! Ball deflects out of bounds off Slasher.
+
+[05:40] Home possession (Score: 66-61)
+Playmaker attempts a 3Pt. Wide open! Floor_General is 7.2 feet away. [MAN] Playmaker misses. Rebound secured by Rim_Protector.
+
+[05:27] Away possession (Score: 66-61)
+Floor_General attempts a Midrange. Wide open! Playmaker is 9.6 feet away. [MAN] FLOOR_GENERAL MAKES IT!
+Score: 66-63
+
+[05:13] Home possession (Score: 66-63)
+Shot_Blocker attempts a Midrange. Contested by Lockdown_Defender (4.2 feet, ZONE). SHOT_BLOCKER MAKES IT! Assist: Playmaker
+Score: 68-63
+
+[04:58] Away possession (Score: 68-63)
+Floor_General drives and kicks out. Slasher attempts a Midrange. BLOCKED BY PERIMETER_DEFENDER! Ball is loose! Offensive rebound by Slasher! Slasher kicks it out.
+
+[04:42] Away possession (Score: 68-63)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (1.3 feet, ZONE)! SHARPSHOOTER MAKES IT! Assist: Floor_General
+Score: 68-66
+
+[04:30] Home possession (Score: 68-66)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Sharpshooter (4.8 feet, MAN). ELITE_3PT_SHOOTER MAKES IT! Assist: Playmaker
+Score: 71-66
+
+[04:18] Away possession (Score: 71-66)
+Rim_Protector throws a bad pass! Stolen by Shot_Blocker! TURNOVER! (live ball)
+
+[04:02] Home possession (Score: 71-66)
+Rim_Finisher drives, picks up Rim_Protector. Help arrives from Slasher! Rim_Finisher attempts a Dunk. Contested by Slasher (2.6 feet, ZONE). RIM_FINISHER MAKES IT! Assist: Perimeter_Defender
+Score: 73-66
+
+[03:46] Away possession (Score: 73-66)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (0.5 feet, ZONE)! SHARPSHOOTER MAKES IT! Assist: Rim_Protector
+Score: 73-69
+
+[03:36] Home possession (Score: 73-69)
+Perimeter_Defender attempts a Midrange. Heavily contested by Lockdown_Defender (0.8 feet, ZONE)! PERIMETER_DEFENDER MAKES IT! Assist: Shot_Blocker
+Score: 75-69
+
+[03:22] Away possession (Score: 75-69)
+Floor_General drives to the basket... Floor_General throws a bad pass! Stolen by Shot_Blocker! TURNOVER! (live ball)
+
+[03:06] Home possession (Score: 75-69)
+Playmaker attempts a 3Pt. Contested by Lockdown_Defender (3.7 feet, ZONE). Playmaker misses. Rebound secured by Rim_Protector.
+
+[02:52] Away possession (Score: 75-69)
+Floor_General attempts a 3Pt. Heavily contested by Perimeter_Defender (1.2 feet, ZONE)! Floor_General misses. Rebound secured by Shot_Blocker.
+
+[02:39] Home possession (Score: 75-69)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Sharpshooter (1.8 feet, MAN)! Elite_3PT_Shooter misses. Rebound secured by Rim_Protector.
+
+[02:22] Away possession (Score: 75-69)
+Slasher attempts a 3Pt. Heavily contested by Perimeter_Defender (0.6 feet, ZONE)! Slasher misses. Rebound secured by Rim_Finisher.
+
+[02:07] Home possession (Score: 75-69)
+FOUL! Reach-in foul on Floor_General during the drive. [Team fouls: 3] No free throws, side out. (Floor_General: 5 personal fouls)
+
+[01:50] Home possession (Score: 75-69)
+Perimeter_Defender attempts a 3Pt. Heavily contested by Lockdown_Defender (0.5 feet, ZONE)! Perimeter_Defender misses. Offensive rebound by Rim_Finisher! Rim_Finisher kicks it out.
+
+[01:33] Home possession (Score: 75-69)
+Perimeter_Defender attempts a 3Pt. Wide open! Lockdown_Defender is 7.2 feet away. [MAN] Perimeter_Defender misses. Rebound secured by Slasher.
+
+[01:18] Away possession (Score: 75-69)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (1.8 feet, ZONE)! Sharpshooter misses. Offensive rebound by Slasher! Slasher kicks it out.
+
+[01:05] Away possession (Score: 75-69)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (0.5 feet, ZONE)! Sharpshooter misses. Rebound secured by Perimeter_Defender.
+
+[00:49] Home possession (Score: 75-69)
+Rim_Finisher attempts a Dunk. BLOCKED BY RIM_PROTECTOR! Ball is loose! Rebound secured by Lockdown_Defender.
+
+[00:38] Away possession (Score: 75-69)
+FOUL! Holding foul on Shot_Blocker. [IN THE BONUS! 5 team fouls] Rim_Protector to the line for 2 free throws. (Shot_Blocker: 6 personal fouls) Shot_Blocker FOULS OUT!   FT 1/2: GOOD   FT 2/2: GOOD Rim_Protector makes 2/2 from the line.
+Score: 75-71
+
+[00:23] Home possession (Score: 75-71)
+Playmaker throws a bad pass! Stolen by Floor_General! TURNOVER! (live ball)
+
+[00:08] Away possession (Score: 75-71)
+Rim_Protector attempts a Midrange. Contested by Rim_Finisher (5.1 feet, ZONE). RIM_PROTECTOR MAKES IT! Assist: Sharpshooter
+Score: 75-73
+
+================================================================================
+                              3RD QUARTER COMPLETE                              
+================================================================================
+
+3RD QUARTER SCORE: Home 20, Away 25
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Elite_3PT_Shooter      36    9    0    1   0   3/4    75.0     0/0   0.0
+Shot_Blocker           36    4    2    1   0   2/3    66.7     0/0   0.0
+Playmaker              36    3    0    4   0   1/4    25.0     0/0   0.0
+Rim_Finisher           36    2    6    0   0   1/2    50.0     0/0   0.0
+Perimeter_Defender     36    2    1    2   0   1/3    33.3     0/0   0.0
+
+TEAM: FG: 8/16 (50.0%), 3PT: 4/9 (44.4%), REB: 9 (2 off, 7 def), AST: 8, TO: 4
+TEAM FOULS: 5 [Away in BONUS]
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Sharpshooter           36   12    0    2   0   4/6    66.7     0/0   0.0
+Floor_General          36    7    0    2   0   3/5    60.0     0/0   0.0
+Rim_Protector          36    4    5    1   0   2/2   100.0     0/0   0.0
+Slasher                36    2    5    0   0   1/4    25.0     0/0   0.0
+Lockdown_Defender      36    0    2    1   0   0/1     0.0     0/0   0.0
+
+TEAM: FG: 10/18 (55.6%), 3PT: 5/11 (45.5%), REB: 12 (4 off, 8 def), AST: 6, TO: 3
+TEAM FOULS: 3
+
+================================================================================
+
+================================================================================
+                           4TH QUARTER - Home vs Away                           
+================================================================================
+
+[12:00] Home possession (Score: 75-73)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Lockdown_Defender (4.9 feet, MAN). Elite_3PT_Shooter misses. Rebound secured by Lockdown_Defender.
+
+[11:45] Away possession (Score: 75-73)
+Rim_Protector attempts a Midrange. Heavily contested by Shot_Blocker (1.8 feet, MAN)! Rim_Protector misses. Rebound secured by Perimeter_Defender.
+
+[11:31] Home possession (Score: 75-73)
+Perimeter_Defender attempts a Midrange. Contested by Slasher (2.5 feet, ZONE). PERIMETER_DEFENDER MAKES IT!
+Score: 77-73
+
+[11:16] Away possession (Score: 77-73)
+Floor_General throws a bad pass! Stolen by Playmaker! TURNOVER! (live ball)
+
+[11:05] Home possession (Score: 77-73)
+FOUL! Offensive foul on Elite_3PT_Shooter! Lockdown_Defender drew the charge! [Team fouls: 1] (Elite_3PT_Shooter: 2 personal fouls) TURNOVER! (dead ball)
+
+[10:52] Away possession (Score: 77-73)
+Sharpshooter throws a bad pass! Stolen by Perimeter_Defender! TURNOVER! (live ball)
+
+[10:40] Home possession (Score: 77-73)
+Playmaker attempts a Midrange. Contested by Floor_General (3.6 feet, MAN). Playmaker misses. Offensive rebound by Rim_Finisher! Rim_Finisher kicks it out.
+
+[10:25] Home possession (Score: 77-73)
+Playmaker attempts a Midrange. Wide open! Floor_General is 7.0 feet away. [MAN] PLAYMAKER MAKES IT!
+Score: 79-73
+
+[10:10] Away possession (Score: 79-73)
+FOUL! Holding foul on Playmaker. [Team fouls: 2] No free throws, side out. (Playmaker: 3 personal fouls)
+
+[09:58] Away possession (Score: 79-73)
+FOUL! Reach-in foul on Shot_Blocker during the drive. [Team fouls: 3] No free throws, side out. (Shot_Blocker: 7 personal fouls) Shot_Blocker FOULS OUT!
+
+[09:41] Away possession (Score: 79-73)
+FOUL! Shooting foul on Rim_Finisher. Slasher to the line for 2 free throws. [Team fouls: 4] (Rim_Finisher: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Slasher makes 1/2 from the line. Offensive rebound by Rim_Protector! Rim_Protector's putback is no good.
+Score: 79-74
+
+[09:23] Home possession (Score: 79-74)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Lockdown_Defender (1.6 feet, ZONE)! ELITE_3PT_SHOOTER MAKES IT! Assist: Perimeter_Defender
+Score: 82-74
+
+[09:08] Away possession (Score: 82-74)
+Rim_Protector attempts a Midrange. Contested by Rim_Finisher (3.3 feet, ZONE). RIM_PROTECTOR MAKES IT! Assist: Lockdown_Defender
+Score: 82-76
+
+[08:58] Home possession (Score: 82-76)
+Elite_3PT_Shooter attempts a Midrange. Heavily contested by Lockdown_Defender (1.8 feet, MAN)! ELITE_3PT_SHOOTER MAKES IT! Assist: Playmaker
+Score: 84-76
+
+[08:44] Away possession (Score: 84-76)
+Slasher drives to the basket... Slasher throws a bad pass! Stolen by Perimeter_Defender! TURNOVER! (live ball)
+
+[08:29] Home possession (Score: 84-76)
+Playmaker attempts a Midrange. Contested by Lockdown_Defender (4.5 feet, ZONE). PLAYMAKER MAKES IT!
+Score: 86-76
+
+[08:14] Away possession (Score: 86-76)
+Sharpshooter attempts a Midrange. Heavily contested by Perimeter_Defender (0.5 feet, MAN)! Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+[08:02] Home possession (Score: 86-76)
+Shot_Blocker attempts a Midrange. BLOCKED BY RIM_PROTECTOR! Ball is loose! Rebound secured by Lockdown_Defender.
+
+[07:45] Away possession (Score: 86-76)
+Sharpshooter attempts a 3Pt. Contested by Playmaker (5.8 feet, ZONE). SHARPSHOOTER MAKES IT! Assist: Lockdown_Defender
+Score: 86-79
+
+[07:33] Home possession (Score: 86-79)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Lockdown_Defender (0.7 feet, ZONE)! ELITE_3PT_SHOOTER MAKES IT! Assist: Perimeter_Defender
+Score: 89-79
+
+[07:19] Away possession (Score: 89-79)
+Slasher attempts a Midrange. Contested by Rim_Finisher (4.7 feet, ZONE). SLASHER MAKES IT!
+Score: 89-81
+
+[07:02] Home possession (Score: 89-81)
+Perimeter_Defender throws a bad pass! Stolen by Lockdown_Defender! TURNOVER! (live ball)
+
+[06:45] Away possession (Score: 89-81)
+FOUL! Holding foul on Playmaker. [IN THE BONUS! 5 team fouls] Floor_General to the line for 2 free throws. (Playmaker: 4 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Floor_General makes 1/2 from the line.
+Score: 89-82
+
+[06:33] Home possession (Score: 89-82)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Lockdown_Defender (3.9 feet, MAN). ELITE_3PT_SHOOTER MAKES IT! Assist: Perimeter_Defender
+Score: 92-82
+
+[06:23] Away possession (Score: 92-82)
+Sharpshooter attempts a 3Pt. Heavily contested by Perimeter_Defender (0.5 feet, MAN)! SHARPSHOOTER MAKES IT! Assist: Lockdown_Defender
+Score: 92-85
+
+[06:10] Home possession (Score: 92-85)
+Elite_3PT_Shooter drives to the basket... FOUL! Offensive foul on Elite_3PT_Shooter! Lockdown_Defender drew the charge! [Team fouls: 6] (Elite_3PT_Shooter: 3 personal fouls) TURNOVER! (dead ball)
+
+[05:59] Away possession (Score: 92-85)
+Floor_General attempts a 3Pt. Wide open! Playmaker is 7.1 feet away. [MAN] FLOOR_GENERAL MAKES IT! Assist: Lockdown_Defender
+Score: 92-88
+
+[05:47] Home possession (Score: 92-88)
+Elite_3PT_Shooter attempts a 3Pt. Contested by Lockdown_Defender (3.9 feet, MAN). Elite_3PT_Shooter misses. Rebound secured by Slasher.
+
+[05:34] Away possession (Score: 92-88)
+Floor_General attempts a Midrange. Heavily contested by Perimeter_Defender (0.7 feet, ZONE)! Floor_General misses. FOUL! Loose ball foul on Shot_Blocker during the rebound battle. [IN THE BONUS! 7 team fouls] Rim_Protector to the line for 2 free throws. (Shot_Blocker: 8 personal fouls) Shot_Blocker FOULS OUT!   FT 1/2: GOOD   FT 2/2: GOOD Rim_Protector makes 2/2 from the line.
+Score: 92-90
+
+[05:20] Home possession (Score: 92-90)
+Shot_Blocker drives and kicks out. Elite_3PT_Shooter attempts a Midrange. Wide open! Slasher is 6.9 feet away. [ZONE] ELITE_3PT_SHOOTER MAKES IT!
+Score: 94-90
+
+[05:06] Away possession (Score: 94-90)
+Floor_General attempts a Midrange. Wide open! Playmaker is 6.1 feet away. [MAN] Floor_General misses. Rebound secured by Shot_Blocker.
+
+[04:53] Home possession (Score: 94-90)
+Rim_Finisher attempts a Midrange. Wide open! Floor_General is 10.0 feet away. [ZONE] Rim_Finisher misses. Rebound secured by Slasher.
+
+[04:41] Away possession (Score: 94-90)
+Floor_General commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[04:30] Home possession (Score: 94-90)
+Elite_3PT_Shooter attempts a 3Pt. Heavily contested by Lockdown_Defender (1.0 feet, MAN)! Elite_3PT_Shooter misses. Rebound secured by Rim_Protector.
+
+[04:15] Away possession (Score: 94-90)
+Floor_General drives to the basket... Floor_General loses the ball! Stripped by Playmaker! TURNOVER! (live ball)
+
+[04:04] Home possession (Score: 94-90)
+FOUL! Shooting foul on Lockdown_Defender. Elite_3PT_Shooter to the line for 3 free throws. [Team fouls: 1] (Lockdown_Defender: 5 personal fouls)   FT 1/3: MISS   FT 2/3: GOOD   FT 3/3: GOOD Elite_3PT_Shooter makes 2/3 from the line.
+Score: 96-90
+
+[03:50] Home possession (Score: 96-90)
+Rim_Finisher drives and kicks out. Perimeter_Defender attempts a 3Pt. Contested by Lockdown_Defender (4.9 feet, MAN). Perimeter_Defender misses. Rebound secured by Lockdown_Defender.
+
+[03:35] Away possession (Score: 96-90)
+Slasher attempts a Dunk. BLOCKED BY PERIMETER_DEFENDER! Ball is loose! Offensive rebound by Slasher! Slasher kicks it out.
+
+[03:20] Away possession (Score: 96-90)
+Sharpshooter drives to the basket... FOUL! Offensive foul on Sharpshooter! Shot_Blocker drew the charge! [Team fouls: 2] (Sharpshooter: 3 personal fouls) TURNOVER! (dead ball)
+
+[03:01] Home possession (Score: 96-90)
+Perimeter_Defender drives, picks up Rim_Protector. Help arrives from Slasher! Perimeter_Defender attempts a Dunk. Contested by Slasher (2.6 feet, ZONE). PERIMETER_DEFENDER MAKES IT! Assist: Playmaker
+Score: 98-90
+
+[02:48] Away possession (Score: 98-90)
+Floor_General attempts a 3Pt. Wide open! Playmaker is 6.9 feet away. [MAN] FLOOR_GENERAL MAKES IT! Assist: Sharpshooter
+Score: 98-93
+
+[02:36] Home possession (Score: 98-93)
+FOUL! Holding foul on Rim_Protector. [Team fouls: 3] No free throws, side out. (Rim_Protector: 2 personal fouls)
+
+[02:21] Home possession (Score: 98-93)
+Perimeter_Defender makes the Layup and draws the foul on Lockdown_Defender! And-1! Perimeter_Defender to the line for 1. [Team fouls: 4] (Lockdown_Defender: 6 personal fouls) Lockdown_Defender FOULS OUT!   FT 1/1: GOOD Perimeter_Defender makes 1/1 from the line.
+Score: 101-93
+
+[02:06] Away possession (Score: 101-93)
+Floor_General makes the 3Pt and draws the foul on Perimeter_Defender! And-1! Floor_General to the line for 1. [BONUS: 8 team fouls] (Perimeter_Defender: 8 personal fouls) Perimeter_Defender FOULS OUT!   FT 1/1: GOOD Floor_General makes 1/1 from the line.
+Score: 101-97
+
+[01:57] Home possession (Score: 101-97)
+Shot_Blocker attempts a Midrange. Contested by Slasher (4.8 feet, ZONE). Shot_Blocker misses. Rebound secured by Rim_Protector.
+
+[01:40] Away possession (Score: 101-97)
+Slasher attempts a Midrange. Heavily contested by Perimeter_Defender (0.5 feet, MAN)! Slasher misses. Offensive rebound by Rim_Protector! Rim_Protector puts it back in!
+Score: 101-99
+
+[01:28] Home possession (Score: 101-99)
+Playmaker attempts a 3Pt. Wide open! Floor_General is 7.5 feet away. [MAN] Playmaker misses. Rebound secured by Lockdown_Defender.
+
+[01:13] Away possession (Score: 101-99)
+FOUL! Offensive foul on Lockdown_Defender! Perimeter_Defender drew the charge! [Team fouls: 5] (Lockdown_Defender: 7 personal fouls) TURNOVER! (dead ball)
+
+[00:59] Home possession (Score: 101-99)
+Slasher intentionally fouls Elite_3PT_Shooter! [BONUS: 6 team fouls] (Slasher: 3 personal fouls) Elite_3PT_Shooter to the line for 2 free throws.   FT 1/2: MISS   FT 2/2: GOOD Elite_3PT_Shooter makes 1/2 from the line.
+Score: 102-99
+
+[00:46] Away possession (Score: 102-99)
+Sharpshooter attempts a Midrange. Heavily contested by Perimeter_Defender (1.7 feet, ZONE)! Sharpshooter misses. Rebound secured by Rim_Finisher.
+
+[00:35] Home possession (Score: 102-99)
+Rim_Protector intentionally fouls Elite_3PT_Shooter! [BONUS: 7 team fouls] (Rim_Protector: 3 personal fouls) Elite_3PT_Shooter to the line for 2 free throws.   FT 1/2: GOOD   FT 2/2: GOOD Elite_3PT_Shooter makes 2/2 from the line.
+Score: 104-99
+
+[00:20] Away possession (Score: 104-99)
+Floor_General attempts a 3Pt. Wide open! Playmaker is 8.3 feet away. [MAN] FLOOR_GENERAL MAKES IT! Assist: Lockdown_Defender
+Score: 104-102
+
+[00:07] Home possession (Score: 104-102)
+Sharpshooter intentionally fouls Elite_3PT_Shooter! [BONUS: 8 team fouls] (Sharpshooter: 4 personal fouls) Elite_3PT_Shooter to the line for 2 free throws.   FT 1/2: MISS   FT 2/2: GOOD Elite_3PT_Shooter makes 1/2 from the line.
+Score: 105-102
+
+================================================================================
+                              4TH QUARTER COMPLETE                              
+================================================================================
+
+4TH QUARTER SCORE: Home 30, Away 29
+
+BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Elite_3PT_Shooter      48   19    0    0   0   8/11   72.7     0/0   0.0
+Perimeter_Defender     48    7    1    3   0   3/4    75.0     0/0   0.0
+Playmaker              48    4    0    2   0   2/3    66.7     0/0   0.0
+Rim_Finisher           48    0    3    0   0   0/1     0.0     0/0   0.0
+Shot_Blocker           48    0    1    0   0   0/2     0.0     0/0   0.0
+
+TEAM: FG: 13/21 (61.9%), 3PT: 3/8 (37.5%), REB: 6 (1 off, 5 def), AST: 5, TO: 3
+TEAM FOULS: 8 [Away in BONUS]
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Floor_General          48   14    0    0   0   5/6    83.3     0/0   0.0
+Rim_Protector          48    6    4    0   0   3/4    75.0     0/0   0.0
+Sharpshooter           48    6    0    1   0   2/4    50.0     0/0   0.0
+Slasher                48    3    3    0   0   1/2    50.0     0/0   0.0
+Lockdown_Defender      48    0    4    5   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 11/16 (68.8%), 3PT: 6/6 (100.0%), REB: 10 (2 off, 8 def), AST: 6, TO: 7
+TEAM FOULS: 8 [Home in BONUS]
+
+================================================================================
+
+================================================================================
+                               FULL GAME COMPLETE                               
+================================================================================
+
+FINAL SCORE: Home 105, Away 102
+
+SCORING BY QUARTER:
+--------------------------------------------------------------------------------
+Team                     Q1     Q2     Q3     Q4    FINAL
+--------------------------------------------------------------------------------
+Home                     26     29     20     30      105
+Away                     21     27     25     29      102
+--------------------------------------------------------------------------------
+
+FULL GAME BOX SCORE:
+================================================================================
+
+Home
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Elite_3PT_Shooter      48   43    0    2   3  14/21   66.7   8/15   53.3   7/10    0   0
+Rim_Finisher           48    7   21    1   2   3/8    37.5   0/1     0.0   1/1     0   0
+Playmaker              48   25    0   10   4  10/18   55.6   2/10   20.0   3/3     3   0
+Shot_Blocker           48   16   11    1   0   7/13   53.8   0/1     0.0   2/3     3   1
+Perimeter_Defender     48   14    7    8   3   5/14   35.7   0/5     0.0   4/4     5   3
+
+TEAM: FG: 42/74 (56.8%), 3PT: 12/32 (37.5%), REB: 42 (11 off, 31 def), AST: 22, TO: 12
+
+
+Away
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Sharpshooter           48   31    0    4   2  10/22   45.5  10/20   50.0   1/1     0   0
+Slasher                48   15   19    0   3   6/14   42.9   0/1     0.0   3/4     0   0
+Floor_General          48   27    0    6   6  10/19   52.6   6/13   46.2   3/5     2   0
+Rim_Protector          48   24   19    2   1   9/10   90.0   0/0     0.0   6/6     1   2
+Lockdown_Defender      48    5   10   10   3   1/6    16.7   1/4    25.0   2/2     3   0
+
+TEAM: FG: 38/70 (54.3%), 3PT: 17/38 (44.7%), REB: 45 (15 off, 30 def), AST: 22, TO: 15
+
+================================================================================

@@ -1,0 +1,466 @@
+{
+  "test_config": {
+    "n_shots_per_bucket": 500,
+    "seed": 42,
+    "defender_composite": 50,
+    "sigmoid_k": 0.025,
+    "base_rate_3pt": 0.33
+  },
+  "results": [
+    {
+      "sigma": 0.0,
+      "correlation": 0.992954788453192,
+      "spread": 29.400000000000002,
+      "min_make_rate": 19.2,
+      "max_make_rate": 48.6,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 19.2,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 23.799999999999997,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 26.6,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 33.2,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 36.8,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 37.8,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 43.0,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 48.6,
+          "avg_contest_distance": 5.0,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 0.0,
+        "open_4_6": 100.0,
+        "tight_2_4": 0.0,
+        "very_tight": 0.0,
+        "distribution_error": 130.0
+      },
+      "combined_score": 1.3694321826797877
+    },
+    {
+      "sigma": 0.5,
+      "correlation": 0.9845477470991567,
+      "spread": 25.599999999999998,
+      "min_make_rate": 19.400000000000002,
+      "max_make_rate": 45.0,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 19.400000000000002,
+          "avg_contest_distance": 5.017450742785409,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 22.400000000000002,
+          "avg_contest_distance": 5.00694736784131,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 27.6,
+          "avg_contest_distance": 5.041902298979385,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 30.599999999999998,
+          "avg_contest_distance": 5.02207517276098,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 36.0,
+          "avg_contest_distance": 5.026965453800211,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 42.199999999999996,
+          "avg_contest_distance": 4.976097748070637,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 45.0,
+          "avg_contest_distance": 5.012755432153267,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 44.4,
+          "avg_contest_distance": 5.035391447956014,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 1.975,
+        "open_4_6": 95.8,
+        "tight_2_4": 2.225,
+        "very_tight": 0.0,
+        "distribution_error": 121.6
+      },
+      "combined_score": 1.390421620648735
+    },
+    {
+      "sigma": 0.9,
+      "correlation": 0.9873227486177719,
+      "spread": 24.2,
+      "min_make_rate": 21.8,
+      "max_make_rate": 46.0,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 21.8,
+          "avg_contest_distance": 5.031411337013736,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 23.400000000000002,
+          "avg_contest_distance": 5.012505262114358,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 27.800000000000004,
+          "avg_contest_distance": 5.0754241381628935,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 31.2,
+          "avg_contest_distance": 5.039735310969764,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 36.6,
+          "avg_contest_distance": 5.048537816840381,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 42.8,
+          "avg_contest_distance": 4.956975946527146,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 45.2,
+          "avg_contest_distance": 5.022959777875881,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 46.0,
+          "avg_contest_distance": 5.063704606320825,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 13.325000000000001,
+        "open_4_6": 74.85000000000001,
+        "tight_2_4": 11.799999999999999,
+        "very_tight": 0.025,
+        "distribution_error": 79.7
+      },
+      "combined_score": 1.5621841229266578
+    },
+    {
+      "sigma": 1.2,
+      "correlation": 0.9865267276793707,
+      "spread": 23.8,
+      "min_make_rate": 22.400000000000002,
+      "max_make_rate": 46.2,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 22.400000000000002,
+          "avg_contest_distance": 5.041881782684982,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 23.799999999999997,
+          "avg_contest_distance": 5.016673682819144,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 27.800000000000004,
+          "avg_contest_distance": 5.100565517550525,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 31.6,
+          "avg_contest_distance": 5.052980414626353,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 37.2,
+          "avg_contest_distance": 5.064717089120507,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 43.0,
+          "avg_contest_distance": 4.942634595369529,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 45.4,
+          "avg_contest_distance": 5.030613037167841,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 46.2,
+          "avg_contest_distance": 5.0849394750944334,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 21.45,
+        "open_4_6": 60.0,
+        "tight_2_4": 17.849999999999998,
+        "very_tight": 0.7000000000000001,
+        "distribution_error": 50.0
+      },
+      "combined_score": 1.6797900915190558
+    },
+    {
+      "sigma": 1.5,
+      "correlation": 0.9891939504113936,
+      "spread": 24.4,
+      "min_make_rate": 22.6,
+      "max_make_rate": 47.0,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 22.6,
+          "avg_contest_distance": 5.0535717923321775,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 23.799999999999997,
+          "avg_contest_distance": 5.02084210352393,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 28.599999999999998,
+          "avg_contest_distance": 5.125706896938155,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 32.4,
+          "avg_contest_distance": 5.067531888123526,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 37.4,
+          "avg_contest_distance": 5.080896361400635,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 43.4,
+          "avg_contest_distance": 4.928656024796234,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 45.2,
+          "avg_contest_distance": 5.038396506834756,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 47.0,
+          "avg_contest_distance": 5.106174343868042,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 26.525,
+        "open_4_6": 49.95,
+        "tight_2_4": 21.3,
+        "very_tight": 2.225,
+        "distribution_error": 29.900000000000006
+      },
+      "combined_score": 1.7641909256170902
+    },
+    {
+      "sigma": 1.9,
+      "correlation": 0.9868208418022868,
+      "spread": 23.999999999999993,
+      "min_make_rate": 23.200000000000003,
+      "max_make_rate": 47.199999999999996,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 23.200000000000003,
+          "avg_contest_distance": 5.069275699780324,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 24.2,
+          "avg_contest_distance": 5.028882097190199,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 28.999999999999996,
+          "avg_contest_distance": 5.160609846066724,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 32.6,
+          "avg_contest_distance": 5.089207406963224,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 37.0,
+          "avg_contest_distance": 5.106238988012495,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 44.0,
+          "avg_contest_distance": 4.915801212053945,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 46.0,
+          "avg_contest_distance": 5.05425768659064,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 47.199999999999996,
+          "avg_contest_distance": 5.135882419299556,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 31.324999999999996,
+        "open_4_6": 40.45,
+        "tight_2_4": 23.225,
+        "very_tight": 5.0,
+        "distribution_error": 13.549999999999997
+      },
+      "combined_score": 1.82603126270343
+    },
+    {
+      "sigma": 2.5,
+      "correlation": 0.987062899487053,
+      "spread": 24.399999999999995,
+      "min_make_rate": 22.8,
+      "max_make_rate": 47.199999999999996,
+      "bucket_results": [
+        {
+          "composite": 42.5,
+          "make_rate": 22.8,
+          "avg_contest_distance": 5.101058170930258,
+          "n_shots": 500
+        },
+        {
+          "composite": 47.5,
+          "make_rate": 23.599999999999998,
+          "avg_contest_distance": 5.045318683733729,
+          "n_shots": 500
+        },
+        {
+          "composite": 52.5,
+          "make_rate": 30.0,
+          "avg_contest_distance": 5.216356123701892,
+          "n_shots": 500
+        },
+        {
+          "composite": 57.5,
+          "make_rate": 33.2,
+          "avg_contest_distance": 5.124480833533937,
+          "n_shots": 500
+        },
+        {
+          "composite": 62.5,
+          "make_rate": 37.8,
+          "avg_contest_distance": 5.147379216288394,
+          "n_shots": 500
+        },
+        {
+          "composite": 67.5,
+          "make_rate": 44.0,
+          "avg_contest_distance": 4.909184456126511,
+          "n_shots": 500
+        },
+        {
+          "composite": 72.5,
+          "make_rate": 45.6,
+          "avg_contest_distance": 5.082326875274529,
+          "n_shots": 500
+        },
+        {
+          "composite": 77.5,
+          "make_rate": 47.199999999999996,
+          "avg_contest_distance": 5.193062982577428,
+          "n_shots": 500
+        }
+      ],
+      "contest_distribution": {
+        "wide_open": 35.925000000000004,
+        "open_4_6": 30.825000000000003,
+        "tight_2_4": 23.075000000000003,
+        "very_tight": 10.174999999999999,
+        "distribution_error": 12.199999999999998
+      },
+      "combined_score": 1.8317943492305793
+    }
+  ]
+}

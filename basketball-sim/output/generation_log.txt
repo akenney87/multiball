@@ -1,0 +1,148 @@
+================================================================================
+GENERATING M3 FINAL VALIDATION GAMES
+================================================================================
+
+Creating 5 complete games with 10-player rosters...
+Each game will demonstrate:
+  - Timeouts at correct moments
+  - Substitutions during dead balls
+  - Mid-quarter rotation (6-10 min stretches for starters)
+
+
+================================================================================
+GAME 1/5: Warriors vs Lakers
+Scenario: Close game (evenly matched)
+================================================================================
+Simulating...
+
+Simulating Quarter 1...
+Quarter 1 complete: Warriors 24, Lakers 33
+
+Simulating Quarter 2...
+Quarter 2 complete: Warriors 58, Lakers 67
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Warriors 81, Lakers 92
+
+Simulating Quarter 4...
+Quarter 4 complete: Warriors 96, Lakers 121
+Complete! Final score: 96-121
+Timeouts: 1
+Substitutions: 189
+Saved to: output/FINAL_VALIDATION_GAME_1.txt
+
+================================================================================
+GAME 2/5: Celtics vs Heat
+Scenario: Moderate blowout (strong home team)
+================================================================================
+Simulating...
+
+Simulating Quarter 1...
+Quarter 1 complete: Celtics 37, Heat 30
+
+Simulating Quarter 2...
+Quarter 2 complete: Celtics 65, Heat 45
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Celtics 84, Heat 75
+
+Simulating Quarter 4...
+Quarter 4 complete: Celtics 113, Heat 102
+Complete! Final score: 113-102
+Timeouts: 3
+Substitutions: 191
+Saved to: output/FINAL_VALIDATION_GAME_2.txt
+
+================================================================================
+GAME 3/5: Rockets vs Spurs
+Scenario: Comeback scenario (weak home team)
+================================================================================
+Simulating...
+
+Simulating Quarter 1...
+Quarter 1 complete: Rockets 17, Spurs 32
+
+Simulating Quarter 2...
+Quarter 2 complete: Rockets 41, Spurs 59
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Rockets 60, Spurs 86
+
+Simulating Quarter 4...
+Quarter 4 complete: Rockets 86, Spurs 116
+Complete! Final score: 86-116
+Timeouts: 3
+Substitutions: 200
+Saved to: output/FINAL_VALIDATION_GAME_3.txt
+
+================================================================================
+GAME 4/5: Nets vs 76ers
+Scenario: High-scoring battle
+================================================================================
+Simulating...
+
+Simulating Quarter 1...
+Quarter 1 complete: Nets 27, 76ers 20
+
+Simulating Quarter 2...
+Quarter 2 complete: Nets 58, 76ers 51
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Nets 90, 76ers 72
+
+Simulating Quarter 4...
+Quarter 4 complete: Nets 127, 76ers 101
+Complete! Final score: 127-101
+Timeouts: 2
+Substitutions: 190
+Saved to: output/FINAL_VALIDATION_GAME_4.txt
+
+================================================================================
+GAME 5/5: Bulls vs Knicks
+Scenario: Defensive grinder
+================================================================================
+Simulating...
+
+Simulating Quarter 1...
+Quarter 1 complete: Bulls 25, Knicks 27
+
+Simulating Quarter 2...
+Quarter 2 complete: Bulls 43, Knicks 58
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Bulls 74, Knicks 85
+
+Simulating Quarter 4...
+Quarter 4 complete: Bulls 100, Knicks 106
+Complete! Final score: 100-106
+Timeouts: 1
+Substitutions: 201
+Saved to: output/FINAL_VALIDATION_GAME_5.txt
+
+================================================================================
+ALL 5 VALIDATION GAMES GENERATED SUCCESSFULLY
+================================================================================
+
+Files saved:
+  - output/FINAL_VALIDATION_GAME_1.txt
+  - output/FINAL_VALIDATION_GAME_2.txt
+  - output/FINAL_VALIDATION_GAME_3.txt
+  - output/FINAL_VALIDATION_GAME_4.txt
+  - output/FINAL_VALIDATION_GAME_5.txt
+
+Please review these games to verify:
+  1. Timeouts occur BEFORE possessions (not after turnovers)
+  2. Substitutions occur during dead balls only
+  3. Substitutions at quarter starts happen BEFORE first possession
+  4. Players play realistic stretches (6-10 min for starters)
+

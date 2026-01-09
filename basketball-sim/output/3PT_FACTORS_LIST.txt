@@ -1,0 +1,26 @@
+FACTORS AFFECTING 3PT SHOT SUCCESS:
+
+SHOOTER-SIDE:
+1. Shooter composite (8 attributes: form_technique 25%, throw_accuracy 20%, finesse 15%, hand_eye_coord 12%, balance 10%, composure 8%, consistency 6%, agility 4%)
+2. Shooter stamina degradation (if <80 stamina)
+
+DEFENDER-SIDE:
+3. Defender composite (8 attributes: agility 25%, reactions 20%, awareness 15%, top_speed 12%, hand_eye_coord 10%, determination 8%, jumping 6%, stamina 4%)
+4. Defender stamina degradation (if <80 stamina)
+5. Contest distance: base = 10 - (defender_comp/10) + gauss(0, 1.9)
+6. Contest tier penalty: 0% (wide 6+ft), -8% (contested 2-6ft), -15% (heavy <2ft)
+7. Defender modifier: (defender_comp - 50) × 0.001 = ±5% additional penalty
+8. Zone defense: reduces defender modifier by 15%
+9. Help defense rotations (if primary beaten)
+
+SYSTEM:
+10. Base rate: 33%
+11. Sigmoid k: 0.025
+12. Attribute differential: shooter_comp - defender_comp (capped ±40)
+13. Transition bonus: +8%
+14. Random dice roll (final make/miss)
+
+KEY OBSERVATION:
+- Defender quality affects outcome in 3 ways: contest distance, defender modifier, help defense
+- Contest distance has high variance (σ=1.9 feet)
+- Most shots are contested tier (~65%) with -8% penalty + defender modifier

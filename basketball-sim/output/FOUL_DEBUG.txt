@@ -1,0 +1,5 @@
+Q4 59s: diff=2, leading=True, result=True
+Q4 46s: diff=-3, leading=False, result=False
+Q4 35s: diff=3, leading=True, result=True
+Q4 20s: diff=-5, leading=False, result=False
+Q4 7s: diff=2, leading=True, result=True

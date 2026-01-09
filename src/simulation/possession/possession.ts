@@ -16,6 +16,7 @@
 
 import type { Player, TacticalSettings } from '../../data/types';
 import { calculateComposite, weightedRandomChoice, rollSuccess, sigmoid } from '../core/probability';
+import { playerToSimulationPlayer } from '../core/types';
 import {
   USAGE_SCORING_OPTION_1,
   USAGE_SCORING_OPTION_2,
@@ -42,6 +43,91 @@ import * as endGameModes from '../systems/endGameModes';
 import type { FoulSystem } from '../systems/fouls';
 
 // =============================================================================
+// SHOT ATTEMPT WRAPPER
+// =============================================================================
+
+/**
+ * Wrapper for attemptShot that handles the full context needed at possession level.
+ *
+ * The core attemptShot function (shooting.ts) accepts 6 parameters and returns [made, debugInfo].
+ * At the possession orchestration level, we need additional context (fouls, tactical settings)
+ * and a unified return format with pointsScored calculated.
+ *
+ * This wrapper:
+ * 1. Calls the validated core attemptShot with the 6 parameters it needs
+ * 2. Calculates pointsScored from made/miss and shotType
+ * 3. Returns unified result object for possession logic
+ */
+function attemptShotWithContext(
+  shooter: Record<string, number>,
+  shooterDefender: Record<string, number>,
+  shotType: string,
+  contestDistance: number,
+  defenseType: string,
+  possessionContext: PossessionContext,
+  tacticalSettingsOffense: any,
+  tacticalSettingsDefense: any,
+  foulSystem: FoulSystem,
+  quarter: number,
+  gameTime: string,
+  defendingTeamName: string
+): {
+  made: boolean;
+  pointsScored: number;
+  shotDetail: string;
+  foulEvent: any | null;
+  [key: string]: any;
+} {
+  // Call the validated core attemptShot function (6 parameters)
+  const [made, debugInfo] = shooting.attemptShot(
+    shooter,
+    shooterDefender,
+    shotType,
+    contestDistance,
+    possessionContext,
+    defenseType
+  );
+
+  // Calculate points scored based on shot type and result
+  let pointsScored = made ? (shotType === '3pt' ? 3 : 2) : 0;
+
+  // Check for shooting foul
+  let foulEvent = null;
+  if (foulSystem) {
+    foulEvent = foulSystem.checkShootingFoul(
+      shooter,
+      shooterDefender,
+      contestDistance,
+      shotType,
+      made,
+      defendingTeamName,
+      quarter,
+      gameTime
+    );
+
+    // If foul on made shot, it's an and-1 (already scored + 1 FT)
+    // If foul on missed shot, award FTs but no points yet (FTs handled separately)
+    if (foulEvent) {
+      // Mark as and-1 if shot was made
+      if (made) {
+        foulEvent.and_one = true;
+      }
+    }
+  }
+
+  // Return unified result with pointsScored calculated
+  return {
+    made,
+    pointsScored,
+    shotDetail: debugInfo.shotDetail || shotType,
+    foulEvent,
+    contestDistance,
+    defenseType,
+    ...debugInfo  // Spread all debug info for compatibility
+  };
+}
+
+// =============================================================================
 // TYPES
 // =============================================================================
 
@@ -64,6 +150,7 @@ export interface PossessionResult {
   foulEvent: any | null;
   freeThrowResult: any | null;
   offensiveTeam: 'home' | 'away';
+  isAndOne?: boolean;
   elapsedTimeSeconds?: number;
   debug: Record<string, any>;
 }
@@ -141,27 +228,32 @@ export function buildUsageDistribution(
   const optionsAssigned = new Set<string>();
   let allocatedUsage = 0.0;
 
+  // Extract scoring options from array (TacticalSettings uses scoringOptions array)
+  const scoringOption1 = tacticalSettings.scoringOptions?.[0];
+  const scoringOption2 = tacticalSettings.scoringOptions?.[1];
+  const scoringOption3 = tacticalSettings.scoringOptions?.[2];
+
   // Option 1: 30%
-  if (tacticalSettings.scoring_option_1 && usage[tacticalSettings.scoring_option_1] !== undefined) {
-    usage[tacticalSettings.scoring_option_1] = USAGE_SCORING_OPTION_1;
-    optionsAssigned.add(tacticalSettings.scoring_option_1);
+  if (scoringOption1 && usage[scoringOption1] !== undefined) {
+    usage[scoringOption1] = USAGE_SCORING_OPTION_1;
+    optionsAssigned.add(scoringOption1);
     allocatedUsage += USAGE_SCORING_OPTION_1;
   }
 
   // Option 2: 20%
-  if (tacticalSettings.scoring_option_2 && usage[tacticalSettings.scoring_option_2] !== undefined) {
-    if (!optionsAssigned.has(tacticalSettings.scoring_option_2)) {
-      usage[tacticalSettings.scoring_option_2] = USAGE_SCORING_OPTION_2;
-      optionsAssigned.add(tacticalSettings.scoring_option_2);
+  if (scoringOption2 && usage[scoringOption2] !== undefined) {
+    if (!optionsAssigned.has(scoringOption2)) {
+      usage[scoringOption2] = USAGE_SCORING_OPTION_2;
+      optionsAssigned.add(scoringOption2);
       allocatedUsage += USAGE_SCORING_OPTION_2;
     }
   }
 
   // Option 3: 15%
-  if (tacticalSettings.scoring_option_3 && usage[tacticalSettings.scoring_option_3] !== undefined) {
-    if (!optionsAssigned.has(tacticalSettings.scoring_option_3)) {
-      usage[tacticalSettings.scoring_option_3] = USAGE_SCORING_OPTION_3;
-      optionsAssigned.add(tacticalSettings.scoring_option_3);
+  if (scoringOption3 && usage[scoringOption3] !== undefined) {
+    if (!optionsAssigned.has(scoringOption3)) {
+      usage[scoringOption3] = USAGE_SCORING_OPTION_3;
+      optionsAssigned.add(scoringOption3);
       allocatedUsage += USAGE_SCORING_OPTION_3;
     }
   }
@@ -567,24 +659,25 @@ export function simulatePossession(
 
       events.push({
         type: 'intentional_foul',
-        foulingPlayer: foulEvent.foulingPlayer,
-        fouledPlayer: foulEvent.fouledPlayer,
+        foulingPlayer: foulEvent.fouling_player,
+        fouledPlayer: foulEvent.fouled_player,
         foulType: 'intentional',
-        freeThrows: foulEvent.freeThrowsAwarded,
+        freeThrows: foulEvent.free_throws_awarded,
         andOne: false,
-        fouledOut: foulEvent.fouledOut,
+        fouledOut: foulEvent.fouled_out,
       });
 
       // If FTs awarded, simulate them
-      if (foulEvent.freeThrowsAwarded > 0) {
-        const ftShooterOriginal = getOriginalPlayer(
-          offensiveTeam.find(p => p.name === foulTarget)!,
-          true
-        );
+      if (foulEvent.free_throws_awarded > 0) {
+        const ftShooter = offensiveTeam.find(p => p.name === foulTarget);
+
+        if (!ftShooter) {
+          throw new Error(`Cannot find foul target ${foulTarget} in offensive team`);
+        }
 
         const ftResult = freeThrows.simulateFreeThrowSequence(
-          ftShooterOriginal,
-          foulEvent.freeThrowsAwarded,
+          ftShooter as unknown as import('../core/types').SimulationPlayer,
+          foulEvent.free_throws_awarded,
           false,
           quarter,
           possessionContext.gameTimeRemaining,
@@ -600,9 +693,36 @@ export function simulatePossession(
         });
 
         debug.freeThrowsMade = ftResult.made;
-        debug.freeThrowsAttempted = foulEvent.freeThrowsAwarded;
+        debug.freeThrowsAttempted = foulEvent.free_throws_awarded;
 
-        // Simplified: assume all FTs made for now
+        // Check if last FT was missed and simulate rebound
+        const lastFTMissed = ftResult.results && ftResult.results.length > 0
+          ? !ftResult.results[ftResult.results.length - 1]
+          : ftResult.made < ftResult.attempts;
+
+        if (lastFTMissed) {
+          const reboundResult = rebounding.simulateRebound(
+            offensiveTeam,
+            defensiveTeam,
+            tacticalSettingsOffense.reboundingStrategy,
+            tacticalSettingsDefense.reboundingStrategy,
+            'rim',
+            false,
+            foulSystem,
+            quarter,
+            gameTime,
+            defendingTeamName
+          );
+
+          if (reboundResult.rebounder_name) {
+            events.push({
+              type: 'rebound',
+              rebounder: reboundResult.rebounder_name,
+              isOffensive: reboundResult.offensive_rebound,
+            });
+          }
+        }
+
         return {
           playByPlayText: generatePlayByPlay(events, 'intentional_foul'),
           possessionOutcome: 'made_shot',
@@ -650,12 +770,12 @@ export function simulatePossession(
       type: 'turnover',
       ballHandler: ballHandler.name,
       turnoverType,
-      stealCreditedTo: turnoverDebug.stealCreditedTo,
+      stealCreditedTo: turnoverDebug.steal_credited_to,
       defender: ballHandlerDefender.name,
     });
 
-    if (turnoverDebug.stealCreditedTo) {
-      debug.stealPlayer = turnoverDebug.stealCreditedTo;
+    if (turnoverDebug.steal_credited_to) {
+      debug.stealPlayer = turnoverDebug.steal_credited_to;
     }
     debug.turnoverType = turnoverType;
 
@@ -692,7 +812,8 @@ export function simulatePossession(
     possessionContext,
     defenseType
   );
-  debug.shotTypeSelection = { shot_type: shotType };
+  debug.shotType = shotType;  // Store at flat path for easy access
+  debug.shotTypeSelection = { shotType: shotType };  // Keep nested path for compatibility
 
   // Calculate contest distance
   const contestResult = defense.calculateContestDistance(
@@ -704,8 +825,8 @@ export function simulatePossession(
   );
   debug.contest = contestResult;
 
-  // Attempt shot
-  const shotAttemptResult = shooting.attemptShot(
+  // Attempt shot (using wrapper to handle context and calculate pointsScored)
+  const shotAttemptResult = attemptShotWithContext(
     shooter,
     shooterDefender,
     shotType,
@@ -734,6 +855,21 @@ export function simulatePossession(
     made: shotAttemptResult.made,
   });
 
+  // Handle shooting foul if it occurred
+  if (shotAttemptResult.foulEvent) {
+    events.push({
+      type: 'foul',
+      foulType: 'shooting',
+      fouledPlayer: shooter.name,
+      foulingPlayer: shooterDefender.name,
+      foulingTeam: defendingTeamName,
+      teamFouls: shotAttemptResult.foulEvent.team_fouls_after,
+      personalFouls: shotAttemptResult.foulEvent.personal_fouls_after,
+      andOne: shotAttemptResult.foulEvent.and_one || false,
+      freeThrows: shotAttemptResult.foulEvent.free_throws_awarded || 0,
+    });
+  }
+
   if (shotAttemptResult.made) {
     // Made shot
     events[events.length - 1].made = true;
@@ -747,25 +883,138 @@ export function simulatePossession(
       debug.assist = assistResult.debug;
     }
 
+    // Handle free throws if and-1 situation
+    let freeThrowResult = null;
+    let ftReboundResult = null;
+    if (shotAttemptResult.foulEvent && shotAttemptResult.foulEvent.and_one) {
+      freeThrowResult = freeThrows.simulateFreeThrowSequence(
+        shooter as unknown as import('../core/types').SimulationPlayer,
+        1,
+        shotType
+      );
+
+      if (freeThrowResult) {
+        events.push({
+          type: 'free_throw',
+          shooter: shooter.name,
+          made: freeThrowResult.made,
+          attempts: freeThrowResult.attempts,
+          results: freeThrowResult.results,
+        });
+
+        // If the free throw was missed, simulate rebound
+        if (freeThrowResult.made === 0) {
+          ftReboundResult = rebounding.simulateRebound(
+            offensiveTeam,
+            defensiveTeam,
+            tacticalSettingsOffense.reboundingStrategy,
+            tacticalSettingsDefense.reboundingStrategy,
+            shotType,
+            false,
+            foulSystem,
+            quarter,
+            gameTime,
+            defendingTeamName
+          );
+
+          if (ftReboundResult.rebounder_name) {
+            events.push({
+              type: 'rebound',
+              rebounder: ftReboundResult.rebounder_name,
+              isOffensive: ftReboundResult.offensive_rebound,
+            });
+            debug.rebound = ftReboundResult;
+          }
+        }
+      }
+    }
+
+    const totalPoints = shotAttemptResult.pointsScored + (freeThrowResult?.points_scored || 0);
+
     return {
       playByPlayText: generatePlayByPlay(events, 'made_shot'),
       possessionOutcome: 'made_shot',
-      pointsScored: shotAttemptResult.pointsScored,
+      pointsScored: totalPoints,
       scoringPlayer: shooter.name,
       assistPlayer: assistResult.assisterName,
-      reboundPlayer: null,
+      reboundPlayer: ftReboundResult?.rebounder_name || null,
       foulEvent: shotAttemptResult.foulEvent,
-      freeThrowResult: null,
+      freeThrowResult,
       offensiveTeam: offensiveTeamNormalized,
+      isAndOne: shotAttemptResult.foulEvent?.and_one || false,
       debug
     };
   } else {
+    // Missed shot - check if there was a shooting foul (free throws without rebound)
+    if (shotAttemptResult.foulEvent) {
+      const numFreeThrows = shotAttemptResult.foulEvent.free_throws_awarded || (shotType === '3pt' ? 3 : 2);
+
+      const freeThrowResult = freeThrows.simulateFreeThrowSequence(
+        shooter as unknown as import('../core/types').SimulationPlayer,
+        numFreeThrows,
+        shotType
+      );
+
+      let ftReboundResult = null;
+      if (freeThrowResult) {
+        events.push({
+          type: 'free_throw',
+          shooter: shooter.name,
+          made: freeThrowResult.points_scored,
+          attempts: numFreeThrows,
+          results: freeThrowResult.results,
+        });
+
+        // If the last free throw was missed, simulate rebound
+        const lastFTMissed = freeThrowResult.results && freeThrowResult.results.length > 0
+          ? !freeThrowResult.results[freeThrowResult.results.length - 1]
+          : freeThrowResult.made < freeThrowResult.attempts;
+
+        if (lastFTMissed) {
+          ftReboundResult = rebounding.simulateRebound(
+            offensiveTeam,
+            defensiveTeam,
+            tacticalSettingsOffense.reboundingStrategy,
+            tacticalSettingsDefense.reboundingStrategy,
+            shotType,
+            false,
+            foulSystem,
+            quarter,
+            gameTime,
+            defendingTeamName
+          );
+
+          if (ftReboundResult.rebounder_name) {
+            events.push({
+              type: 'rebound',
+              rebounder: ftReboundResult.rebounder_name,
+              isOffensive: ftReboundResult.offensive_rebound,
+            });
+            debug.rebound = ftReboundResult;
+          }
+        }
+      }
+
+      return {
+        playByPlayText: generatePlayByPlay(events, 'foul'),
+        possessionOutcome: 'foul',
+        pointsScored: freeThrowResult?.points_scored || 0,
+        scoringPlayer: freeThrowResult && freeThrowResult.points_scored > 0 ? shooter.name : null,
+        assistPlayer: null,
+        reboundPlayer: ftReboundResult?.rebounder_name || null,
+        foulEvent: shotAttemptResult.foulEvent,
+        freeThrowResult,
+        offensiveTeam: offensiveTeamNormalized,
+        debug
+      };
+    }
+
     // Missed shot - simulate rebound
     const reboundResult = rebounding.simulateRebound(
       offensiveTeam,
       defensiveTeam,
-      tacticalSettingsOffense.rebounding_strategy,
-      tacticalSettingsDefense.rebounding_strategy,
+      tacticalSettingsOffense.reboundingStrategy,
+      tacticalSettingsDefense.reboundingStrategy,
       shotType,
       false,
       foulSystem,
@@ -778,37 +1027,148 @@ export function simulatePossession(
 
     events.push({
       type: 'rebound',
-      rebounder: reboundResult.rebounderName,
-      isOffensive: reboundResult.offensiveRebound,
+      rebounder: reboundResult.rebounder_name,
+      isOffensive: reboundResult.offensive_rebound,
     });
 
-    if (reboundResult.offensiveRebound) {
-      // Offensive rebound
-      if (reboundResult.putbackAttempted) {
-        events[events.length - 1].putbackAttempted = true;
-        events[events.length - 1].putbackMade = reboundResult.putbackMade;
+    // Handle foul after rebound if it occurred
+    if (reboundResult.foul_occurred && reboundResult.loose_ball_foul) {
+      const foul = reboundResult.loose_ball_foul;
+      events.push({
+        type: 'foul',
+        foulType: 'non-shooting',  // After a rebound is secured, it's no longer a loose ball
+        fouledPlayer: foul.fouled_player || reboundResult.rebounder_name,
+        foulingPlayer: foul.fouling_player,
+        foulingTeam: foul.fouling_team,
+        teamFouls: foul.team_fouls_after,
+        personalFouls: foul.personal_fouls_after,
+        freeThrows: foul.free_throws_awarded || 0,
+        andOne: false,
+      });
 
-        if (reboundResult.putbackMade) {
+      // If foul results in free throws
+      if (foul.free_throws_awarded && foul.free_throws_awarded > 0) {
+        const fouledPlayer = offensiveTeam.find(p => p.name === (foul.fouled_player || reboundResult.rebounder_name));
+        if (fouledPlayer) {
+          const ftResult = freeThrows.simulateFreeThrowSequence(fouledPlayer, foul.free_throws_awarded, shotType);
+          if (ftResult) {
+            events.push({
+              type: 'free_throw',
+              shooter: fouledPlayer.name,
+              made: ftResult.points_scored,
+              attempts: foul.free_throws_awarded,
+            });
+
+            // Check if last FT was missed and simulate rebound
+            const lastFTMissed = ftResult.results && ftResult.results.length > 0
+              ? !ftResult.results[ftResult.results.length - 1]
+              : ftResult.made < ftResult.attempts;
+
+            if (lastFTMissed) {
+              const ftReboundResult = rebounding.simulateRebound(
+                offensiveTeam,
+                defensiveTeam,
+                tacticalSettingsOffense.reboundingStrategy,
+                tacticalSettingsDefense.reboundingStrategy,
+                'rim',
+                false,
+                foulSystem,
+                quarter,
+                gameTime,
+                defendingTeamName
+              );
+
+              if (ftReboundResult.rebounder_name) {
+                events.push({
+                  type: 'rebound',
+                  rebounder: ftReboundResult.rebounder_name,
+                  isOffensive: ftReboundResult.offensive_rebound,
+                });
+              }
+            }
+
+            return {
+              playByPlayText: generatePlayByPlay(events, 'foul'),
+              possessionOutcome: 'foul',
+              pointsScored: ftResult.points_scored,
+              scoringPlayer: ftResult.points_scored > 0 ? fouledPlayer.name : null,
+              assistPlayer: null,
+              reboundPlayer: reboundResult.rebounder_name,
+              foulEvent: foul,
+              freeThrowResult: ftResult,
+              offensiveTeam: offensiveTeamNormalized,
+              debug
+            };
+          }
+        }
+      }
+
+      // No free throws, side out
+      return {
+        playByPlayText: generatePlayByPlay(events, 'foul'),
+        possessionOutcome: 'foul',
+        pointsScored: 0,
+        scoringPlayer: null,
+        assistPlayer: null,
+        reboundPlayer: reboundResult.rebounder_name,
+        foulEvent: foul,
+        freeThrowResult: null,
+        offensiveTeam: offensiveTeamNormalized,
+        debug
+      };
+    }
+
+    if (reboundResult.offensive_rebound) {
+      // Offensive rebound
+      if (reboundResult.putback_attempted) {
+        events[events.length - 1].putbackAttempted = true;
+        events[events.length - 1].putbackMade = reboundResult.putback_made;
+
+        if (reboundResult.putback_made) {
           return {
             playByPlayText: generatePlayByPlay(events, 'made_shot'),
             possessionOutcome: 'made_shot',
             pointsScored: 2,
-            scoringPlayer: reboundResult.rebounderName,
+            scoringPlayer: reboundResult.rebounder_name,
             assistPlayer: null,
-            reboundPlayer: reboundResult.rebounderName,
+            reboundPlayer: reboundResult.rebounder_name,
             foulEvent: null,
             freeThrowResult: null,
             offensiveTeam: offensiveTeamNormalized,
-            debug
+            debug: {
+              ...debug,
+              shotType: 'rim'  // Putbacks are always at the rim, not the original shot type
+            }
           };
         } else {
+          // Missed putback - simulate rebound after the missed putback attempt
+          const putbackReboundResult = rebounding.simulateRebound(
+            offensiveTeam,
+            defensiveTeam,
+            tacticalSettingsOffense.reboundingStrategy,
+            tacticalSettingsDefense.reboundingStrategy,
+            'rim',  // Putbacks are always at the rim
+            false,
+            foulSystem,
+            quarter,
+            gameTime,
+            defendingTeamName
+          );
+
+          // Add rebound event
+          events.push({
+            type: 'rebound',
+            rebounder: putbackReboundResult.rebounder_name,
+            isOffensive: putbackReboundResult.offensive_rebound,
+          });
+
           return {
             playByPlayText: generatePlayByPlay(events, 'missed_shot'),
-            possessionOutcome: 'missed_shot',
+            possessionOutcome: putbackReboundResult.offensive_rebound ? 'offensive_rebound' : 'missed_shot',
             pointsScored: 0,
             scoringPlayer: null,
             assistPlayer: null,
-            reboundPlayer: reboundResult.rebounderName,
+            reboundPlayer: putbackReboundResult.rebounder_name,
             foulEvent: null,
             freeThrowResult: null,
             offensiveTeam: offensiveTeamNormalized,
@@ -822,7 +1182,7 @@ export function simulatePossession(
           pointsScored: 0,
           scoringPlayer: null,
           assistPlayer: null,
-          reboundPlayer: reboundResult.rebounderName,
+          reboundPlayer: reboundResult.rebounder_name,
           foulEvent: null,
           freeThrowResult: null,
           offensiveTeam: offensiveTeamNormalized,
@@ -837,7 +1197,7 @@ export function simulatePossession(
         pointsScored: 0,
         scoringPlayer: null,
         assistPlayer: null,
-        reboundPlayer: reboundResult.rebounderName,
+        reboundPlayer: reboundResult.rebounder_name,
         foulEvent: null,
         freeThrowResult: null,
         offensiveTeam: offensiveTeamNormalized,
@@ -874,61 +1234,107 @@ function generatePlayByPlay(
       lines.push(turnoverDesc);
     } else if (eventType === 'shot_attempt') {
       const shooter = event.shooter;
-      const displayType = event.shotDetail || event.shotType;
-      const shotTypeDisplay = displayType.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());
+      const shotDetail = event.shotDetail || event.shotType;
 
-      lines.push(`${shooter} attempts a ${shotTypeDisplay}.`);
+      // Generate ESPN-style shot description with distance
+      const getShotDescription = (detail: string, isBlocked: boolean = false): { action: string; distance: number } => {
+        // Estimate distance based on shot type (with small random variance)
+        let distance: number;
+        let action: string;
 
-      const defender = event.defender;
-      const distance = event.contestDistance ?? 0;
-      const defType = event.defenseType?.toUpperCase() || 'MAN';
-
-      if (distance >= 6.0) {
-        lines.push(`Wide open! ${defender} is ${distance.toFixed(1)} feet away. [${defType}]`);
-      } else if (distance >= 2.0) {
-        lines.push(`Contested by ${defender} (${distance.toFixed(1)} feet, ${defType}).`);
-      } else if (distance > 0) {
-        lines.push(`Heavily contested by ${defender} (${distance.toFixed(1)} feet, ${defType})!`);
-      }
-
-      if (event.made) {
-        lines.push(`${shooter.toUpperCase()} MAKES IT!`);
-        if (event.assistBy) {
-          lines.push(`Assist: ${event.assistBy}`);
+        switch (detail) {
+          case '3pt':
+            distance = Math.floor(22 + Math.random() * 6); // 22-27 feet
+            const threeTypes = ['three point jumper', 'three point shot', 'three pointer'];
+            action = threeTypes[Math.floor(Math.random() * threeTypes.length)] || 'three pointer';
+            break;
+          case 'midrange_long':
+          case 'midrange':
+            distance = Math.floor(15 + Math.random() * 5); // 15-19 feet
+            const longMidTypes = ['pull-up jumper', 'fadeaway jumper', 'jump shot'];
+            action = longMidTypes[Math.floor(Math.random() * longMidTypes.length)] || 'jump shot';
+            break;
+          case 'midrange_short':
+            distance = Math.floor(8 + Math.random() * 6); // 8-13 feet
+            const shortMidTypes = ['floater', 'runner', 'short jumper', 'turnaround jumper'];
+            action = shortMidTypes[Math.floor(Math.random() * shortMidTypes.length)] || 'floater';
+            break;
+          case 'layup':
+            distance = Math.floor(2 + Math.random() * 4); // 2-5 feet
+            const layupTypes = ['driving layup', 'layup', 'finger roll', 'reverse layup'];
+            action = layupTypes[Math.floor(Math.random() * layupTypes.length)] || 'layup';
+            break;
+          case 'dunk':
+            distance = 0; // At the rim
+            const dunkTypes = ['dunk', 'slam dunk', 'one-handed dunk', 'two-handed dunk'];
+            action = dunkTypes[Math.floor(Math.random() * dunkTypes.length)] || 'dunk';
+            break;
+          default:
+            distance = 10;
+            action = 'shot';
         }
+        return { action, distance };
+      };
+
+      const { action, distance: shotDistance } = getShotDescription(shotDetail);
+      const distanceText = shotDistance > 0 ? `${shotDistance}-foot ` : '';
+
+      // Build the result line (ESPN style: "Player makes/misses X-foot shot type")
+      if (event.made) {
+        let resultLine = `${shooter} makes ${distanceText}${action}`;
+        if (event.assistBy) {
+          resultLine += ` (${event.assistBy} assists)`;
+        }
+        lines.push(resultLine);
       } else {
-        lines.push(`${shooter} misses.`);
+        // Check if blocked
+        if (event.blocked && event.blockingPlayer) {
+          lines.push(`${shooter}'s ${distanceText}${action} blocked by ${event.blockingPlayer}`);
+        } else {
+          lines.push(`${shooter} misses ${distanceText}${action}`);
+        }
       }
     } else if (eventType === 'rebound') {
       const rebounder = event.rebounder;
       const isOffensive = event.isOffensive;
 
       if (isOffensive) {
-        lines.push(`Offensive rebound by ${rebounder}!`);
+        lines.push(`${rebounder} offensive rebound`);
         if (event.putbackAttempted) {
           if (event.putbackMade) {
-            lines.push(`${rebounder} puts it back in!`);
+            lines.push(`${rebounder} makes putback layup`);
           } else {
-            lines.push(`${rebounder}'s putback is no good.`);
+            lines.push(`${rebounder} misses putback attempt`);
           }
-        } else {
-          lines.push(`${rebounder} kicks it out.`);
         }
       } else {
-        lines.push(`Rebound secured by ${rebounder}.`);
+        lines.push(`${rebounder} defensive rebound`);
       }
     } else if (eventType === 'foul') {
-      lines.push(`FOUL! ${event.foulType} on ${event.foulingPlayer}.`);
-      if (event.freeThrows > 0) {
-        lines.push(`${event.fouledPlayer} to the line for ${event.freeThrows}.`);
-      }
-    } else if (eventType === 'free_throws') {
+      // ESPN-style foul description
+      const foulType = event.foulType || 'personal';
+      lines.push(`${event.foulingPlayer} ${foulType} foul`);
+    } else if (eventType === 'free_throw' || eventType === 'free_throws') {
       const shooter = event.shooter;
-      const made = event.made;
       const attempts = event.attempts;
-      lines.push(`${shooter} shoots ${attempts} free throw${attempts > 1 ? 's' : ''}: ${made}/${attempts}`);
+
+      // ESPN-style: "Player makes/misses free throw 1 of 2"
+      if (event.results && Array.isArray(event.results) && event.results.length > 0) {
+        event.results.forEach((ftMade: boolean, index: number) => {
+          const ftNumber = index + 1;
+          if (ftMade) {
+            lines.push(`${shooter} makes free throw ${ftNumber} of ${attempts}`);
+          } else {
+            lines.push(`${shooter} misses free throw ${ftNumber} of ${attempts}`);
+          }
+        });
+      } else {
+        // Fallback to summary format
+        const made = event.made;
+        lines.push(`${shooter} ${made}/${attempts} from the line`);
+      }
     } else if (eventType === 'intentional_foul') {
-      lines.push(`INTENTIONAL FOUL! ${event.foulingPlayer} fouls ${event.fouledPlayer}.`);
+      lines.push(`${event.foulingPlayer} intentional foul on ${event.fouledPlayer}`);
     }
   }
 

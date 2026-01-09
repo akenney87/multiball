@@ -1,0 +1,212 @@
+================================================================================
+PHASE 2 REVERSION: GRIP_STRENGTH AS COMPOSITE MODIFIER ONLY
+================================================================================
+
+OBJECTIVE:
+Remove standalone grip_strength mechanics (rip-aways, strips) and integrate
+grip_strength only as composite modifiers in existing high-frequency mechanics.
+
+================================================================================
+CHANGES MADE
+================================================================================
+
+1. REMOVED Phase 2 Standalone Mechanics:
+   ✓ Removed rip-away mechanic from rebounding (8% base rate, contested rebounds)
+   ✓ Removed strip attempt mechanic from drives (4% base rate)
+   ✓ Removed Phase 2 weight tables:
+     - WEIGHTS_SECURE_REBOUND
+     - WEIGHTS_STRIP_ATTEMPT
+     - WEIGHTS_BALL_SECURITY
+     - WEIGHTS_STEAL_DEFENSE
+     - WEIGHTS_BALL_HANDLER_SECURITY
+   ✓ Removed Phase 2 base rates:
+     - BASE_STRIP_RATE_ON_DRIVES
+     - BASE_STEAL_RATE_PERIMETER
+     - BASE_RIPAWAY_RATE_CONTESTED_REBOUND
+   ✓ Reverted turnovers.py to use WEIGHTS_CONTEST instead of WEIGHTS_STEAL_DEFENSE
+   ✓ Removed unused imports from possession.py and rebounding.py
+
+2. ADDED Grip Strength as Composite Modifier:
+
+   WEIGHTS_REBOUND (rebounding.py):
+     - height: 0.22 (was 0.25, -12%)
+     - jumping: 0.18 (was 0.20, -10%)
+     - core_strength: 0.14 (was 0.15, -7%)
+     - awareness: 0.18 (was 0.20, -10%)
+     - grip_strength: 0.10 [NEW] - helps secure rebounds
+     - reactions: 0.09 (was 0.10, -10%)
+     - determination: 0.09 (was 0.10, -10%)
+     Total: 1.00
+
+   WEIGHTS_TURNOVER_PREVENTION (turnovers.py):
+     - awareness: 0.38 (was 0.40, -5%)
+     - composure: 0.28 (was 0.30, -7%)
+     - consistency: 0.19 (was 0.20, -5%)
+     - hand_eye_coordination: 0.10 (unchanged)
+     - grip_strength: 0.05 [NEW] - very slight ball security impact
+     Total: 1.00
+
+================================================================================
+VALIDATION RESULTS
+================================================================================
+
+Configuration:
+  - Teams: 100 teams, seed 88888 (teams_phase1)
+  - Games: 100 games, seed 99999
+  - Output: validation_phase1_restored
+
+Box Score Statistics (NBA-realistic):
+  - Points/Game: 102.2
+  - FG%: 48.3%
+  - 3P%: 40.9%
+  - FT%: 73.1%
+  - Turnovers/Game: 15.2 ✓ (vs Phase 2: 16.3)
+  - Steals/Game: 5.2
+  - Rebounds/Game: 43.9
+  - OREB%: 27.8%
+  - Assists/Game: 19.9
+
+Game Distributions:
+  - Blowouts (20+): 33
+  - Close games (≤5): 24
+  - High scoring (120+): 20
+  - Low scoring (≤80): 11
+
+CORRELATION ANALYSIS:
+  - Pearson correlation: 0.139
+  - Mean attribute gap: -0.13
+  - Mean margin: 16.21
+  - Games analyzed: 100
+
+================================================================================
+COMPARISON TO PREVIOUS PHASES
+================================================================================
+
+Phase 1 (acceleration + top_speed, composite modifiers):
+  - Correlation: 0.339
+  - Improvement: +24% from M4.1 baseline (0.274)
+
+Phase 2 Aggressive (standalone rip-aways + strips, 8%/4% base rates):
+  - Correlation: 0.237
+  - Regression: -31% from Phase 1
+
+Phase 2 Corrected (multiplicative sigmoid formula, proper base rates):
+  - Correlation: 0.233
+  - Regression: -31% from Phase 1
+  - Box scores: NBA-realistic (16.3 TOV/game)
+
+**Phase 2 Revised (grip_strength as composite modifier only):**
+  - Correlation: 0.139
+  - Regression: -59% from Phase 1
+  - Regression: -40% from Phase 2 standalone approach
+  - Box scores: NBA-realistic (15.2 TOV/game)
+
+================================================================================
+ANALYSIS & FINDINGS
+================================================================================
+
+UNEXPECTED RESULT:
+Adding grip_strength as a composite modifier (10% in rebounding, 5% in turnover
+prevention) produced WORSE correlation (0.139) than Phase 2's standalone
+mechanics (0.233), and far worse than Phase 1's baseline (0.339).
+
+POSSIBLE EXPLANATIONS:
+
+1. Random Variance:
+   - Different game seed (99999) may produce different correlation values
+   - Small sample size (100 games) can show significant variance
+
+2. Dilution of Predictive Attributes:
+   - Reducing weights of predictive attributes (jumping, height, awareness) by
+     ~10% to make room for grip_strength may have diluted their signal
+   - Grip_strength may be less predictive than the attributes it replaced
+
+3. Attribute Distribution Issues:
+   - If grip_strength has low variance across teams, it adds noise without
+     differentiation
+   - Need to check team generation: does grip_strength vary meaningfully?
+
+4. Composite Interaction Effects:
+   - Rebounding is a high-frequency event (~44 rebounds/game)
+   - Even 10% weight on a non-predictive attribute creates systematic noise
+   - Turnover prevention also affected (15.2 TOV/game, ~30 events with prevention)
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+1. OPTION A: Full Revert to Phase 1 Baseline
+   - Remove grip_strength from WEIGHTS_REBOUND and WEIGHTS_TURNOVER_PREVENTION
+   - Restore original Phase 1 weights exactly
+   - Re-validate to confirm 0.339 correlation is reproducible
+   - Conclusion: grip_strength cannot be integrated without harming correlation
+
+2. OPTION B: Reduce Grip Strength Weights
+   - Reduce grip_strength to 3-5% in WEIGHTS_REBOUND (instead of 10%)
+   - Reduce grip_strength to 2% in WEIGHTS_TURNOVER_PREVENTION (instead of 5%)
+   - Re-validate to see if smaller weights preserve correlation
+   - Trade-off: less attribute impact, but potentially less noise
+
+3. OPTION C: Different Integration Approach
+   - Use grip_strength in different mechanics (e.g., loose ball situations)
+   - Look for lower-frequency but higher-impact events
+   - Requires user consultation per directive
+
+4. OPTION D: Investigate Random Variance
+   - Run multiple validation runs with different seeds
+   - Calculate correlation variance to understand baseline noise
+   - Determine if 0.139 is statistically significant vs 0.339
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+AWAITING USER DIRECTION:
+1. Should grip_strength be removed entirely (Option A)?
+2. Should we try smaller weights (Option B)?
+3. Should we investigate variance with multiple validation runs (Option D)?
+4. Should we proceed to Phase 3 and leave grip_strength unintegrated?
+
+USER DIRECTIVE (from previous session):
+"Make it happen, and please come to me for any future attribute integrations."
+
+✓ All standalone mechanics removed
+✓ Grip strength integrated as composite modifiers per user spec
+⚠ Correlation result worse than expected - awaiting guidance
+
+================================================================================
+FILES MODIFIED
+================================================================================
+
+src/constants.py:
+  - Modified WEIGHTS_REBOUND (added grip_strength: 0.10)
+  - Modified WEIGHTS_TURNOVER_PREVENTION (added grip_strength: 0.05)
+  - Removed Phase 2 weight tables (5 tables)
+  - Removed Phase 2 base rates (3 constants)
+
+src/systems/rebounding.py:
+  - Removed rip-away logic (lines 495-527)
+  - Removed WEIGHTS_SECURE_REBOUND import
+  - Removed BASE_RIPAWAY_RATE_CONTESTED_REBOUND import
+
+src/systems/possession.py:
+  - Removed strip attempt logic (lines 220-248)
+  - Removed WEIGHTS_STRIP_ATTEMPT import
+  - Removed WEIGHTS_BALL_SECURITY import
+  - Removed BASE_STRIP_RATE_ON_DRIVES import
+
+src/systems/turnovers.py:
+  - Reverted from WEIGHTS_STEAL_DEFENSE to WEIGHTS_CONTEST
+
+src/utils/probability.py:
+  - Retained (multiplicative sigmoid utility for future use)
+
+================================================================================
+VALIDATION OUTPUTS
+================================================================================
+
+Teams: teams_phase1/
+Validation: validation_phase1_restored/
+Summary: validation_phase1_restored/VALIDATION_SUMMARY.json
+Log: output/PHASE1_RESTORED_LOG.txt
+Analysis: output/PHASE2_REVERT_ANALYSIS.txt (this file)

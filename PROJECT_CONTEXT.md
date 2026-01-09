@@ -1,7 +1,7 @@
 # Multiball - Living Project Context
 
-**Last Updated:** 2025-12-05
-**Status:** Phase 5 COMPLETE ✅ | Youth Academy Redesign COMPLETE ✅
+**Last Updated:** 2026-01-05
+**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅
 
 ---
 
@@ -23,16 +23,15 @@
 - **Cross-Platform Saves:** Not required for MVP, but architecture must support future implementation
 
 ### Simulation Engine
-- **Current State:** Basketball simulation exists in Python (basketball-sim directory)
-- **MVP Requirement:** Translate basketball-sim from Python to TypeScript
-- **Translation Strategy:** Module-by-module translation with parallel testing (Python vs TypeScript outputs must match exactly using same seeds)
-- **Future:** Baseball and soccer simulators (separate sessions)
+- **Basketball:** COMPLETE - Full TypeScript simulation with weighted sigmoid probability
+- **Baseball:** FEATURE COMPLETE ✅ - Full 9+ inning simulation with at-bat engine, pitching fatigue, stolen bases, double plays, wild pitches, intentional walks, walk-offs, box score generation (B2-B6 complete, integrated in GameContext.tsx)
+- **Soccer:** FEATURE COMPLETE ✅ - Minute-by-minute event-driven simulation with team-based chance creation, tactical modifiers, GK save system, substitutions, footwork integration, set piece logic (corners/free kicks → shots with height advantage), possession-based fatigue
 
-### Critical Translation Requirements
-- Must maintain 100% identical simulation logic and outputs
-- Preserve weighted sigmoid probability formula
-- Maintain all 25 attribute weights and constants
-- Comprehensive test coverage to avoid "days of debugging"
+### Multi-Sport Architecture
+- All sports use the same 26 universal attributes with sport-specific weight tables
+- Shared probability engine (`src/simulation/core/probability.ts`)
+- Sport-aware tactical settings (`SportTacticalSettings` union type)
+- Player `sportMetadata` for sport-specific data (handedness, preferred positions)
 
 ---
 
@@ -64,11 +63,12 @@
 ## Player/Athlete System
 
 ### Starting Roster
-- **Initial Athletes:** 50 athletes
+- **Initial Athletes:** 25 athletes (user and AI teams)
 - **Starting Attributes:** All attributes between 1-25 (they're bad athletes)
-- **Roster Limits:** No hard cap - only limited by salary budget
+- **Pro Roster Cap:** 50 players maximum
+- **Academy Roster Cap:** 15 prospects maximum
 
-### Attributes (25 Total)
+### Attributes (26 Total)
 All attributes rated 1-100 scale.
 
 **Physical (12):**
@@ -85,7 +85,7 @@ All attributes rated 1-100 scale.
 - height (normalized)
 - durability
 
-**Mental (7):**
+**Mental (8):**
 - awareness
 - creativity
 - determination
@@ -93,6 +93,7 @@ All attributes rated 1-100 scale.
 - consistency
 - composure
 - patience
+- teamwork *(moved from Technical - 2025-12-06)*
 
 **Technical (6):**
 - hand_eye_coordination
@@ -100,9 +101,25 @@ All attributes rated 1-100 scale.
 - form_technique
 - finesse
 - deception
-- teamwork
+- footwork *(new - 2025-12-06)*
 
-**Visibility:** All 25 attributes visible to user EXCEPT potential (hidden)
+**Visibility:** All 26 attributes visible to user EXCEPT potential (hidden)
+
+### Attribute Variance System (2025-12-06)
+Players now have "spiky" attribute profiles with distinct strengths and weaknesses:
+
+**Variance Levels (33% each):**
+- **Low:** Consistent, attributes within ±12 of base
+- **Moderate:** 2-3 spikes (+18-25), 2-3 valleys (-18-25)
+- **High:** 3-4 spikes (+25-40), 3-4 valleys (-20-35)
+
+**Body Type Correlations:**
+- Heavy (BMI > 26): +strength attrs, -speed/agility (15% exception chance)
+- Light (BMI < 22): +agility/stamina, -strength (15% exception chance)
+- Tall (> 6'4"): -speed/balance (12% exception chance)
+- Short (< 5'10"): +agility (10% exception chance)
+
+**Result:** Even low OVR players can have 1-4 attributes rated 75+, making each player unique and interesting.
 
 ### Attribute Weights Across Sports
 - **Action-Specific Weights:** Different actions in each sport use different attribute weight tables
@@ -185,6 +202,134 @@ All attributes rated 1-100 scale.
 - **Categories:** Technical, Mental, Physical
 - **Playing Time Bonus:** Athletes who play in matches earn bonus XP toward their training goals
 - **Youth Academy:** Default academy training (quality based on budget) + optional per-prospect customization
+
+### Match Fitness System (COMPLETE - 2025-12-13, UPDATED 2025-12-19)
+- **Concept:** Persistent fatigue tracking between matches (separate from in-match stamina)
+- **Key Fields:**
+  - `matchFitness` (0-100%): Current fitness level, depletes after games, recovers over days
+  - `attributes.stamina` (1-100): Affects drain/recovery RATES (not the value itself)
+- **Drain by Sport:**
+  - Basketball: ~40% for 48 min (uniform across positions)
+  - Soccer: ~20% for 90 min (position-dependent: GK 0.5x, CM 1.25x) - **ONLY starters who played** (fixed 2025-12-19)
+  - Baseball: Per-inning (P 8.0x = 80%/9 innings, 1B 0.5x = 5%/9 innings)
+- **Recovery:** 4.3%/day × rest days (7 - games played this week, minimum 2), modified by stamina attribute (±30%) and medical budget (+0-20%) - **Updated 2025-12-19** to account for games played
+- **Performance Impact:** Linear degradation of physical attributes (50% fitness = 75% physical attrs)
+- **Injury Risk:** Low fitness increases injury probability (50% fitness = 1.5x injury rate)
+- **UI Warnings:** Green (≥75%), Yellow (50-74%), Red (<50%)
+- **Strategic Importance:** Players cannot play every game - rotation management is critical
+
+### Soccer Simulation System (IN PROGRESS - 2025-12-22)
+Event-driven minute-by-minute simulation with team-based chance creation, tactical influence, and rich narratives.
+
+**Architecture:** Minute-by-Minute Event Generation (NOT possession-based)
+- Loops through each minute (1-90)
+- Each minute: determine possession, roll for event (38% chance), determine event type
+- Event types: Shot (25%), Foul (30%), Offside (10%), Corner (15%), Injury (3%), Nothing (17%)
+- Fast simulation suitable for "Quick Sim" with real-time streaming for "Watch Sim"
+
+**Key Files:**
+- `src/simulation/soccer/engine/matchEngine.ts` - Core simulation logic (main file)
+- `src/simulation/soccer/constants.ts` - All configuration constants
+- `src/simulation/soccer/systems/substitutionSystem.ts` - Substitution logic
+- `src/simulation/soccer/types.ts` - Type definitions
+
+**Team-Based Chance Creation (2025-12-22):**
+Soccer is a team game - chances are rarely created solo. The system now involves multiple players:
+- **Players Involved Roll:** 10% solo, 45% shooter+1, 45% shooter+2
+- **Teammate Selection:** Weighted by position (ST/CAM 2.5, LW/RW 2.2, CB 0.2, GK 0.05)
+- **Contribution Weights:** Random splits (e.g., 40/40/20 or 60/40 or 50/30/20)
+- **Final Shot Quality:** Weighted average of all involved players' `getShotQualityRating()`
+
+**Key Composites (2025-12-22):**
+- `getShotQualityRating`: core(5) + agility(5) + accel(5) + reactions(5) + balance(5) + awareness(10) + creativity(20) + composure(10) + form_tech(5) + finesse(10) + deception(10) + teamwork(10)
+- `getShootingAccuracy`: form_technique(30) + finesse(30) + composure(25) + balance(15)
+- `getPlaymakingRating`: creativity(30) + awareness(25) + finesse(20) + composure(15) + teamwork(10)
+- `getAttackingThreat`: (skillBase + creativity×0.3 + top_speed×0.2) × positionWeight / 2
+
+**Shot Quality Thresholds:**
+- `fullChanceThreshold` = 15 + (shotQuality / 5) → Range: 15-35%
+- `halfChanceThreshold` = 50 + (shotQuality / 4) → Range: 50-75%
+- Remaining % = long range shot
+
+**Goalkeeper Save System:**
+- Base save rate: 65% (modified by GK rating)
+- GK rating impact: 0.5% per rating point above/below 50
+- Shot quality modifiers: Full chance 0.70x (harder), Half chance 1.15x, Long range 1.25x (easier)
+- Shooter skill reduces save chance: -(shooterAccuracy - 50) / 200
+
+**Tactical System:**
+- **Style** (possession/direct/counter):
+  - Possession: 0.95x xG, +8% possession
+  - Direct: 1.10x xG, -3% possession
+  - Counter: 1.02x xG, -8% possession
+- **Pressing** (high/balanced/low):
+  - High: 0.95x xG conceded, +5% possession, 1.15x fatigue
+  - Balanced: Base rates
+  - Low: 1.05x xG conceded, -5% possession, 0.85x fatigue
+- **Width** (wide/balanced/tight):
+  - Wide: 1.20x crossing bonus, 0.85x central bonus
+  - Balanced: Base rates
+  - Tight: 0.80x crossing bonus, 1.15x central bonus
+- Home Advantage: +8% xG modifier
+
+**Card System:**
+- Yellow card rate: ~18-30% of fouls (modified by aggression)
+- Straight red: ~3% when card given
+- Second yellow → automatic red
+- Position weights: CDM 1.4x, CB 1.3x, GK 0.05x
+- Player aggression: bravery×0.3 + determination×0.25 - composure×0.25 - patience×0.2 + 50
+
+**Player Selection Weights (GOAL_POSITION_WEIGHTS):**
+ST: 3.0, CF: 2.8, LW/RW: 2.0, CAM: 1.8, LM/RM: 1.2, CM: 1.0, CDM: 0.5, LWB/RWB: 0.4, LB/RB: 0.3, CB: 0.2, GK: 0.01
+
+**Offside Selection:**
+- Filters to attacking positions (ST, CF, LW, RW, CAM)
+- Weighted by: positionWeight × (top_speed + acceleration) / 2 / 50
+
+### Soccer Simulation: COMPLETED UPDATES (2025-12-28)
+
+**✅ `footwork` Attribute Fully Integrated**
+The `footwork` attribute is now used in all relevant soccer composites:
+- Shot quality rating: 10% weight
+- Shooting accuracy: 15% weight
+- Position overalls: 6-8% weight (all positions in `calculateSoccerPositionOverall()`)
+
+**✅ Set Piece Logic Implemented**
+Corners and free kicks now lead to shot opportunities:
+
+*Corners (22% lead to shots):*
+- Height advantage: Taller players weighted more heavily for headers
+- Target selection: CB/ST get highest weights (jumping, bravery, core_strength matter)
+- 70% of set piece shots are headers
+
+*Free Kicks in Attacking Half (15% lead to shots):*
+- Same height/aerial mechanics as corners
+- Taker gets assist credit
+
+**✅ Fatigue & Possession Advantage**
+- Out-of-possession fatigue: Teams without the ball tire 30% faster
+- Tired defenders more vulnerable: Blocking, saving, and accuracy all reduced by fatigue
+- Fatigue multiplier: 0.8x when in possession, 1.3x when chasing
+
+**✅ Improved Blocking Logic**
+- Blocker selected FIRST, then block chance calculated from their defensive ability
+- Block chance = baseRate × (defenderAbility / 50) × fatigueMultiplier
+- Tired defenders block less effectively
+
+**✅ Shot Quality Affects Accuracy**
+- fullChance: 100% accuracy expression
+- halfChance: 85% accuracy expression
+- longRange: 70% accuracy expression
+
+**✅ Tactical Modifiers Simplified**
+- Removed `foulRate` from attacking style modifiers (was unrealistic)
+- Removed `foulRate` from defensive line modifiers (was unrealistic)
+
+**Remaining Soccer Work:**
+- No possession-by-possession flow (turnovers, build-up phases)
+- No counter-attack logic after turnovers
+- No dribbling/ball control system
+- `throw_accuracy` and `hand_eye_coordination` correctly excluded from non-GK composites
 
 ### Contract System
 - **Style:** Football Manager-lite (streamlined for mobile)
@@ -319,8 +464,8 @@ All attributes rated 1-100 scale.
 
 ### Current Status
 - **MVP Requirement:** All 3 sports fully simulated
-- **Current Implementation:** Basketball only
-- **Future Sessions:** Baseball and soccer simulators
+- **Current Implementation:** Basketball COMPLETE ✅, Soccer FEATURE COMPLETE ✅, Baseball FEATURE COMPLETE ✅
+- **All 3 sports simulated:** MVP requirement achieved!
 
 ### Season Integration
 - **All Sports Simultaneously:** Basketball, baseball, and soccer matches occur throughout the same season
@@ -329,7 +474,7 @@ All attributes rated 1-100 scale.
 - **Strategy:** User can specialize athletes per sport (expensive) or use multi-sport athletes (budget-friendly, higher stamina/injury risk)
 
 ### Attribute Mapping
-- **Same 25 Attributes:** All sports use the same attribute system
+- **Same 26 Attributes:** All sports use the same attribute system (footwork added 2025-12-06)
 - **Action-Specific Weights:** Each action in each sport has different attribute weight tables
 - **Overall Sport Ratings:** Calculated per sport (e.g., Basketball: 72, Baseball: 48, Soccer: 65)
 - **Realistic Specialization:** A player with high jumping excels at basketball dunks, baseball outfield catches, and soccer headers, but might struggle with baseball pitching
@@ -358,21 +503,543 @@ All attributes rated 1-100 scale.
 - **Goal:** Build React Native UI
 - **Active Agents:** Mobile UI/UX Designer, Testing & QA Specialist
 
-### Phase 5: Multi-Sport Expansion (Future Sessions)
+### Phase 5: Multi-Sport Expansion (COMPLETE - 2025-12-31)
 - **Goal:** Add baseball and soccer simulators
-- **Active Agents:** Multi-Sport Attribute Mapper, Translation Specialist, Simulation Validator
+- **Soccer Status:** FEATURE COMPLETE ✅ - Minute-by-minute simulation with team-based chance creation, tactical modifiers, GK saves, substitutions, footwork integration, set piece logic, possession-based fatigue
+- **Baseball Status:** FEATURE COMPLETE ✅ - Full at-bat engine (batting/pitching/fielding/baserunning systems), half-inning simulation with stolen bases/wild pitches/intentional walks, 9+ inning games with walk-offs, pitcher fatigue with dynamic "rope" substitution system, comprehensive box score generation
+- **Active Agents:** None (complete)
 
 ---
 
 ## Project Status
 
-**Current Phase:** UI Integration Complete - Youth Academy Redesigned
+**Current Phase:** Phase 5 COMPLETE - All sports simulated
 **Active Agents:** None
 **Overall Completion:** Phase 1: 100% ✅ | Phase 2: 100% ✅ | Phase 3: 100% ✅ | Phase 4: 100% ✅ | Phase 5: 100% ✅
-**Current Task:** Youth Academy Redesign COMPLETE
-**Next Step:** Test Youth Academy UI, integrate with GameContext for persistence
+**Current Task:** None - MVP simulation complete
+**Next Priority:** Polish, bug fixes, and additional features
 
 ### Recent Milestones
+
+**2025-12-31:**
+- **⚾ BASEBALL SIMULATION CONFIRMED COMPLETE** ✅
+  - **Discovery:** Full baseball simulation was already implemented but PROJECT_CONTEXT was outdated
+  - **Components verified:**
+    - batting.ts (~500 lines) - Contact, power, discipline, platoon advantage
+    - pitching.ts (~426 lines) - Velocity, control, movement, fatigue system
+    - fielding.ts (~503 lines) - Position-specific composites, errors, double plays
+    - baserunning.ts (~609 lines) - Stolen bases, base advancement, tag-ups
+    - atBat.ts (~523 lines) - Full at-bat orchestration
+    - halfInning.ts (~765 lines) - IBB, WP, PB, steals, pitcher changes
+    - gameSimulation.ts (~421 lines) - Full 9+ inning games with walk-offs
+    - pitcherManager.ts (~326 lines) - Dynamic "rope" substitution system
+    - boxScore.ts (~697 lines) - Comprehensive box score generation
+    - baseballSimulation.test.ts (~859 lines) - Full test coverage
+  - **Integration status:**
+    - GameContext.tsx uses real simulation for user matches ✅
+    - matchRunner.ts updated to use real simulation for AI-vs-AI matches ✅
+  - **All baseball paths now use full simulation engine**
+
+**2025-12-30:**
+- **🏀 BASKETBALL PREGAME TACTICS UI** ✅
+  - Made basketball tactics tappable/toggleable in Match Preview (like soccer/baseball)
+  - **Row 1:** Pace (Balanced/Fast Break/Half-Court), Defense (Mixed/Man-to-Man/Zone), Boards (Balanced/Crash Glass/Get Back)
+  - **Row 2:** Scoring Option #1, #2, #3 (cycles through starting lineup players or "None")
+  - Each scoring option only shows players not selected in another slot
+  - Files modified: `ConnectedMatchPreviewScreen.tsx`
+
+- **🏀 BASKETBALL TACTICS NOW ACTUALLY AFFECT SIMULATION** ✅
+  - **BUG FIXED:** Basketball strategy was never being passed to simulation - only baseball/soccer were
+  - **BUG FIXED:** Scoring options stored player IDs but simulation expected player names
+  - Added `basketballStrategy` parameter to `simulateMatch` (types.ts, GameContext.tsx, useMatch.ts)
+  - GameContext now converts player IDs to names for scoring options
+  - Defense type converted to `manDefensePct` (man=90, mixed=50, zone=10)
+  - **How tactics affect simulation:**
+    - Pace: Affects possession duration, shot selection, turnover rates
+    - Defense: Controls man-to-man vs zone probability (affects shot difficulty)
+    - Rebounding: Affects offensive rebound attempts and transition defense
+    - Scoring Options: Players get 30%/20%/15% usage rates for options 1/2/3
+
+- **⚾ BASEBALL LINEUP EDITOR SWAP BUG FIX** ✅
+  - Fixed bug where swapping RF with bench player assigned bench player to DH instead of RF
+  - Updated 5 swap locations to preserve displaced player's position
+
+- **🎓 YOUTH ACADEMY BUDGET BUG FIX** ✅
+  - Fixed bug where signing prospect ($100k) didn't deduct from available budget
+  - Added `signProspectToAcademy` function to GameContext
+  - Updated reducer to deduct `signingCost` from `availableBudget`
+
+- **🏀 BASKETBALL LINEUP EDITOR UI FIXES** ✅
+  - Removed color-changing bar for basketball minutes slider (kept for soccer)
+  - Changed basketball presets from [0, 45, 90] to [0, 10, 20, 30, 40]
+  - Made preset buttons look like actual buttons with borders/backgrounds
+  - Fixed layout issue where starting lineup minutes controls were pushed off screen
+
+**2025-12-28 (Session 2):**
+- **📊 ROSTER SIZE CHANGES** ✅
+  - Starting roster reduced from 50 to 25 players (user and AI teams)
+  - Added pro roster cap: 50 players maximum (`MAX_ROSTER_SIZE`)
+  - Added academy roster cap: 15 prospects maximum (`MAX_ACADEMY_ROSTER_SIZE`)
+  - Constants defined in `src/data/constants.ts`
+
+- **🤝 FREE AGENT SIGNING UI IMPROVEMENT** ✅
+  - Free agents now show "Expected Salary" instead of "Transfer Fee"
+  - Modal shows "Sign Free Agent" / "Offer Contract" for free agents
+  - Modal shows "Make Transfer Offer" / "Make Offer" for players on other teams
+  - Added `isFreeAgent` flag to `TransferTarget` interface
+  - Files modified: `TransferMarketScreen.tsx`, `ConnectedTransferMarketScreen.tsx`
+
+- **🎛️ SOCCER PRE-MATCH UI IMPROVEMENTS** ✅
+  - **Minutes Slider Rewrite (ConnectedLineupEditorScreen.tsx):**
+    - Completely replaced glitchy PanResponder slider with button-based control
+    - Added +/- buttons for precise 5-minute increment/decrement
+    - Added quick-set buttons (0, 45, 90 minutes) for common allocations
+    - Uses visual progress bar instead of complex dragging
+  - **Minutes Allocation Fix (useLineup.ts):**
+    - Simplified `applyOptimalSoccerLineup` to give all 11 starters 90 minutes
+    - Removed complex sub-time calculation that was causing confusion
+    - Bench players now get 0 minutes by default (total = 990)
+  - **Soccer Tactics Overhaul:**
+    - Renamed "Defense" setting to "Pressing" with clearer options
+    - Added "Width" tactical setting (was missing)
+    - **New Tactical Settings:**
+      - Style: possession, direct, counter (unchanged)
+      - Pressing: high (more possession, faster fatigue), balanced, low (less possession, conserves energy)
+      - Width: wide (more crosses), balanced, tight (more central play)
+    - All three settings now tappable in Match Preview screen
+  - **Files Modified:**
+    - `src/ui/screens/ConnectedLineupEditorScreen.tsx` - MinutesSlider rewrite
+    - `src/ui/screens/ConnectedMatchPreviewScreen.tsx` - Three tactical settings UI
+    - `src/ui/hooks/useLineup.ts` - Simplified optimal allocation
+    - `src/ui/hooks/useMatch.ts` - Updated strategy type
+    - `src/ui/context/GameContext.tsx` - Updated buildSoccerTeamState
+    - `src/ui/context/types.ts` - Updated simulateMatch signature
+    - `src/simulation/soccer/types.ts` - Updated SoccerTeamState tactics type
+    - `src/simulation/soccer/constants.ts` - Added PRESSING_MODIFIERS, WIDTH_MODIFIERS
+    - `src/simulation/soccer/engine/matchEngine.ts` - Uses pressing modifiers
+    - `src/simulation/soccer/game/matchSimulation.ts` - Uses pressing in xG calculation
+    - `src/simulation/soccer/game/boxScore.ts` - Uses pressing for possession
+
+**2025-12-22:**
+- **⚽ SOCCER SIMULATION IMPROVEMENTS** ✅
+  - **Watch Match Integration:**
+    - Fixed "Watch Match" button not working in match preview
+    - Rewrote `MatchSimulationScreen.tsx` to use real soccer simulation (was mock basketball data)
+    - Added `saveMatchResult` to GameContext to save pre-computed results without re-simulating
+    - Fixed double-simulation bug (Watch Sim and Match Result now show same events/score)
+    - Fixed team names showing IDs instead of actual names
+    - Fixed opponent roster using fake players - now uses actual AI team rosters
+  - **Team-Based Chance Creation System:**
+    - Soccer chances now involve multiple players (10% solo, 45% two players, 45% three players)
+    - Teammates selected via weighted random by position (attackers favored)
+    - Contribution weights randomly assigned (e.g., 40/40/20)
+    - Final shot quality = weighted average of all involved players' ratings
+  - **New/Updated Composites:**
+    - `getShotQualityRating`: New composite for determining full/half/long range shots
+    - `getPlaymakingRating`: Renamed from `getCreativity`, used for assist selection
+    - `getShootingAccuracy`: Removed hand_eye_coord, now uses balance instead
+    - Removed `throw_accuracy` and `hand_eye_coordination` from all non-GK composites
+  - **Offside Selection Fix:**
+    - Changed from `top_speed - awareness` to `(top_speed + acceleration) / 2`
+  - **Files Modified:**
+    - `src/simulation/soccer/engine/matchEngine.ts` - Major updates
+    - `src/ui/screens/MatchSimulationScreen.tsx` - Complete rewrite
+    - `src/ui/context/GameContext.tsx` - Added saveMatchResult
+    - `src/ui/context/types.ts` - Added saveMatchResult interface
+    - `src/ui/navigation/TabNavigator.tsx` - Wired up Watch Match modal
+
+- **⚽ PENDING WORK IDENTIFIED:**
+  - **COMPLETED (2025-12-28):** `footwork` attribute fully integrated into all soccer composites
+  - **COMPLETED (2025-12-28):** Set piece logic implemented (corners/free kicks lead to shots with height advantage)
+  - **COMPLETED (2025-12-28):** Possession-based fatigue system (out-of-possession = more fatigue)
+  - **COMPLETED (2025-12-28):** Tired defenders more vulnerable (affects blocking, saves, accuracy)
+  - Previous set piece plan (now implemented):
+    - Corners: Crossed in (85%) with CB-favorable weights for headers, Short (15%) triggers open play
+    - Free kicks: Long (35+ yards) crossed in, Short (18-30 yards) direct shot with wall mechanics
+
+**2025-12-20 (Session 2):**
+- **⚽ SOCCER SIMULATION REALISM COMPLETE** ✅
+  - **Phase 1 - Tactical Integration:**
+    - Added attacking style modifiers (possession/direct/counter) affecting xG, possession, foul rate
+    - Added defensive line modifiers (high/medium/low) affecting xG conceded, possession, foul rate
+    - Added home advantage modifier (+8% xG)
+    - Possession calculation now uses midfield strength + tactical modifiers
+  - **Phase 2 - Card System (`src/simulation/soccer/systems/cardSystem.ts`):**
+    - Realistic foul generation based on tactics and player attributes
+    - Yellow/red card distribution by position (defenders foul more)
+    - Player aggression score (bravery + determination vs composure + patience)
+    - Second yellow → red card logic
+    - Trailing teams foul more late in games
+  - **Phase 3 - Goalkeeper Save System (`src/simulation/soccer/systems/goalkeeperSystem.ts`):**
+    - Two-stage goal process: xG → shot opportunities → GK save roll
+    - Save probability based on GK rating (50 rating = 65% base, 90 rating = 85%)
+    - Shot quality modifiers (full chance = harder to save, long range = easier)
+    - Elite GK concedes ~40% fewer goals than poor GK
+  - **Phase 4 - Player Attribution Enhancement:**
+    - Form/consistency system with hot/cold streaks (8%/1.35x hot, 5%/0.7x cold)
+    - Player skill now matters more (60% skill + 40% position weight)
+    - Creativity bonus for assists
+  - **Phase 5 - Play-by-Play Enrichment (`src/simulation/soccer/playByPlay/soccerPlayByPlay.ts`):**
+    - Template system for goals, saves, misses, cards with variety
+    - Quality-specific goal narratives (fullChance, halfChance, longRange)
+    - Assist phrases with multiple variations
+  - **Validation Results (100 simulations each):**
+    - Even teams (50 rating): ~1 goal/team, 37%H/33%A/30%D
+    - Strong (80) vs Weak (30): Strong wins 87%, 2.49 avg goals vs 0.25
+    - GK Impact: Elite GK team wins 54% vs Poor GK team's 15%
+    - Tactical: Direct gets 4.3 yellows vs Possession's 2.2
+  - **Files Created:**
+    - `src/simulation/soccer/systems/cardSystem.ts`
+    - `src/simulation/soccer/systems/goalkeeperSystem.ts`
+    - `src/simulation/soccer/playByPlay/soccerPlayByPlay.ts`
+  - **Files Modified:**
+    - `src/simulation/soccer/constants.ts` - Added tactical, card, GK, form constants
+    - `src/simulation/soccer/types.ts` - Added shot_saved, shot_missed event types
+    - `src/simulation/soccer/game/matchSimulation.ts` - Integrated all systems
+    - `src/simulation/soccer/game/boxScore.ts` - Tactical possession, GK saves stat
+    - `src/simulation/soccer/index.ts` - Export new modules
+    - `src/ui/context/GameContext.tsx` - Fixed position type conversion for soccer lineups
+
+**2025-12-20 (Session 1):**
+- **🏀 BASKETBALL TEAM TOGGLE FOR BOX SCORE** ✅
+  - Added team toggle in basketball match result (like baseball already had)
+  - Users can now view opponent's box score stats
+  - Modified `ConnectedMatchResultScreen.tsx` to add selectedTeam state and toggle buttons
+
+- **⚽ SOCCER SIMULATION BUG FIXES** ✅
+  - **Basketball Fatigue Fix:**
+    - Basketball simulation keys `minutesPlayed` by `player.name`
+    - Fatigue lookup was using `player.id` - fixed in GameContext.tsx line 1488
+  - **Soccer Simulation Crash Fix:**
+    - Soccer simulation was crashing with `TypeError: position.toUpperCase is not a function`
+    - Added position assignment loop in `buildSoccerTeamState` to ensure all players have positions
+    - Added defensive null check in `getSoccerPositionType` for undefined positions
+    - Soccer fatigue now works correctly (22 fatigue updates applied per match)
+  - **Files Modified:**
+    - `src/ui/context/GameContext.tsx`: Basketball fatigue lookup fix, soccer position assignment
+    - `src/ui/integration/gameInitializer.ts`: Defensive check in `getSoccerPositionType`
+
+- **⚽ SOCCER MATCH RESULT UI ALIGNMENT FIX** ✅
+  - Fixed half-time and match stats sections being misaligned
+  - Added soccer-specific styles: `soccerStatsRow`, `soccerStatValue`, `soccerStatLabel`, `soccerHalfTimeRow`, etc.
+  - Removed "Full Chances" and "Half Chances" from UI (internal concepts not user-facing)
+  - **File Modified:** `src/ui/screens/ConnectedMatchResultScreen.tsx`
+
+- **🧹 REMOVED UNUSED SOCCER WEIGHT CONSTANTS** ✅
+  - Verified `WEIGHTS_SOCCER_ATTACK`, `WEIGHTS_SOCCER_MIDFIELD`, `WEIGHTS_SOCCER_DEFENSE`, `WEIGHTS_SOCCER_GOALKEEPING` were dead code
+  - Soccer simulation uses `calculateSoccerPositionOverall` (from `factories.ts`) which has user's detailed position-specific weights
+  - Removed constants from `src/simulation/soccer/constants.ts` and exports from `src/simulation/soccer/index.ts`
+
+- **📚 SOCCER SIMULATION ARCHITECTURE DOCUMENTED:**
+  - **Approach:** "Outcome first, attributes later" - determines final score via xG, then attributes decide WHO scores/assists
+  - **Team Composites:** Attack, Defense, Midfield, Goalkeeper ratings calculated from player position-specific overalls
+  - **Formation Modifiers:** Affect team strength (4-3-3 = +10% attack, -5% defense)
+  - **xG System:** Base 1.4 goals/team, modified by attack/defense differential and randomness
+  - **Player Selection:** Goal/assist position weights (ST 3.0x goals, CAM 2.5x assists) + player rating within position group
+
+**2025-12-19:**
+- **🎯 LINEUP EDITOR - MINUTES ALLOCATION FIXES** 🚧
+  - **Soccer Minutes Allocation Cap Fix:**
+    - Fixed `setSoccerTargetMinutes` to properly calculate max allowed minutes
+    - Previously: Used `minutesAllocation[playerId] ?? 0` which didn't account for default 90-minute values
+    - Now: Uses `soccerPlayers.find(p => p.id === playerId)?.targetMinutes` for accurate current value
+    - Same fix applied to `setBasketballTargetMinutes`
+  - **Slider Max Value Enforcement:**
+    - Added `maxAllowed` prop to `MinutesSlider` component
+    - Added `getMaxAllowedMinutes(playerId)` function to useLineup hook for both sports
+    - Slider now physically cannot exceed the calculated maximum for each player
+    - Prevents users from allocating more than 990 total minutes (soccer) or 240 (basketball)
+  - **Match Fitness Recovery Fix:**
+    - Previously: Always applied 7 days of recovery (30%) regardless of games played
+    - Now: Calculates rest days as `7 - gamesPlayedThisWeek` (minimum 2 days)
+    - With 1 game/week: 6 rest days × 4.3% = 25.8% recovery (more realistic)
+  - **Soccer Fatigue Fix:**
+    - Previously: Set `minutesOrInnings = 90` for ALL players on both rosters
+    - Now: Checks `boxScore.homePlayerStats[playerId].minutesPlayed` or `awayPlayerStats`
+    - Only players in the starting 11 (who have stats entries) get fatigue drain
+  - **Starting Lineup Passed to Simulation:**
+    - Added `homeStartingLineup` and `awayStartingLineup` parameters to `GameSimulator`
+    - Modified `GameSimulator.simulateGame()` to pass user's starting lineup for Q1 and Q3
+    - Updated `GameContext.tsx` to convert `basketballStarters` IDs to Player objects
+    - Fixed: User's selected starters now actually start the game
+  - **Files Modified:**
+    - `src/ui/hooks/useLineup.ts`: Added `getMaxAllowedMinutes` functions, fixed target minutes setters
+    - `src/ui/screens/ConnectedLineupEditorScreen.tsx`: Added `maxAllowed` prop to all MinutesSlider instances
+    - `src/ui/context/GameContext.tsx`: Fixed recovery calculation, soccer fatigue, starting lineup passing
+    - `src/simulation/game/gameSimulation.ts`: Added starting lineup parameters
+
+- **🧪 MINUTES ALLOCATION TEST RESULTS:**
+  - **Test File Created:** `src/simulation/__tests__/minutesAllocation.test.ts`
+  - **Results:** 3/10 tests passed, 7 failed
+  - **What's Working:**
+    - ✅ Players allocated 0 minutes correctly don't play
+    - ✅ User-specified starting lineups are respected in Q1 and Q3
+    - ✅ Basic player inclusion/exclusion works
+  - **Critical Issues Found:**
+    - ❌ Minutes allocation inaccurate (±4 minute tolerance frequently exceeded)
+    - ❌ Players can exceed 48 minutes in a 48-minute game (observed: 48.5 min)
+    - ❌ Team totals exceed 240 minutes (observed: 242.8 min)
+    - ❌ Quarterly tracking has cumulative errors
+  - **Root Cause:** Quarterly rotation system divides allocation by 4 for per-quarter targets but doesn't dynamically adjust based on actual minutes played in previous quarters
+  - **Recommended Fixes:**
+    - HIGH: Add hard cap `Math.min(minutesPlayed, 48)` to prevent impossible overruns
+    - HIGH: Add team total validation to prevent exceeding 240 minutes
+    - MEDIUM: Modify quarterly rotation to track cumulative error and adjust subsequent quarters
+    - LOW: Refactor to dynamic minute-based substitutions instead of rigid quarterly rotations
+  - **Test Results File:** `MINUTES_ALLOCATION_TEST_RESULTS.md`
+
+**2025-12-13:**
+- **✅ MATCH FITNESS SYSTEM - IMPLEMENTATION COMPLETE**
+  - Created `src/systems/matchFitnessSystem.ts` with all formulas
+  - Added `matchFitness`, `lastMatchDate`, `lastMatchSport` to Player interface
+  - Integrated fatigue drain in `simulateMatch()` after each match
+  - Integrated recovery in `advanceWeek()` (7 days/week worth)
+  - UI: Fitness badges in PlayerCard (FTG/EXH), progress bar in PlayerDetail
+  - UI: Fitness % displayed next to each player in MatchPreview lineup
+  - Added fitness multiplier to injury system (`checkMatchInjury`, `checkTrainingInjury`)
+  - Save migration for legacy saves (defaults to 100% fitness)
+
+**2025-12-12:**
+- **📋 STAMINA MANAGEMENT SYSTEM - PLAN COMPLETE**
+  - **3 Rounds of Agent Discussion:** Architecture Agent + Simulation Agent debated design
+  - **Key Design Decisions:**
+    - Use `matchFitness` (not `currentStamina`) to avoid naming conflict with in-match tracking
+    - Keep existing `StaminaTracker` (in-match) completely unchanged
+    - All players (user + AI) in shared `state.players` - no separate AI handling needed
+  - **Core Concept:**
+    - `matchFitness` (NEW): 0-100%, tracks between-match fatigue, depletes after games, recovers over days
+    - `attributes.stamina` (EXISTING): 1-100 rating, affects drain/recovery RATES
+    - In-match stamina (EXISTING): `StaminaTracker` handles within-game fatigue, unchanged
+  - **Drain Rates by Sport:**
+    - Basketball: 40% for full 48 min (uniform across positions)
+    - Soccer: 20% for 90 min, position-dependent (GK 0.5x, CM 1.25x highest)
+    - Baseball: Per-inning with position mods (P 8.0x = 80% for 9 innings, 1B 0.5x = 5%)
+  - **Recovery:**
+    - Base: 4.3%/day (~30%/week)
+    - Stamina attr modifier: ±30% at extremes (attr 90 = 1.3x recovery)
+    - Medical budget bonus: +0-20% based on allocation
+  - **Performance Impact:**
+    - Physical attributes only (12 attrs), linear scaling
+    - At 50% fitness = 75% physical attributes
+    - Formula: `attrMultiplier = 0.5 + (matchFitness / 200)`
+  - **UI Warning Thresholds:**
+    - 75%+: Green (no warning)
+    - 50-74%: Yellow warning ("Fatigued")
+    - Below 50%: Red warning ("Exhausted")
+  - **Injury Risk:** `injuryMod = 1.0 + ((100 - matchFitness) / 100)` (50% fitness = 1.5x injury rate)
+  - **Files to Create/Modify:**
+    - CREATE: `src/systems/matchFitnessSystem.ts`
+    - MODIFY: `src/data/types.ts`, `src/data/factories.ts`, `src/ui/context/types.ts`
+    - MODIFY: `src/ui/context/gameReducer.ts`, `src/ui/context/GameContext.tsx`
+    - MODIFY: `src/ui/persistence/gameStorage.ts` (save migration)
+    - MODIFY: `src/ui/components/roster/PlayerCard.tsx` (fitness badge)
+    - MODIFY: `src/ui/screens/ConnectedMatchPreviewScreen.tsx` (fitness display)
+    - MODIFY: `src/ui/screens/ConnectedPlayerDetailScreen.tsx` (Match Fitness section)
+    - MODIFY: `src/systems/injurySystem.ts` (fitness injury multiplier)
+  - **Implementation Order:**
+    1. Data model changes (types.ts, factories.ts, storage migration)
+    2. Create `matchFitnessSystem.ts` with all formulas
+    3. Add reducer actions and handlers
+    4. Integrate into `simulateMatch()` (drain) and `advanceWeek()` (recovery)
+    5. UI components (PlayerCard badge, MatchPreview display, PlayerDetail section)
+    6. Injury system integration
+    7. Testing and validation
+  - **Plan File:** `C:\Users\alexa\.claude\plans\partitioned-wibbling-nygaard.md`
+
+**2025-12-08:**
+- **🏫 YOUTH ACADEMY GAMECONTEXT INTEGRATION** ✅
+  - **Height Attribute Bug Fix:**
+    - Fixed height attribute collision between physical height and attribute rating
+    - Added `height` to PHYSICAL_ATTRIBUTES in youthAcademySystem.ts
+    - Created `calculateHeightRating()` function to derive rating from physical height
+    - Unified formula across codebase: `((heightInches - 66) * 98 / 22) + 1`
+    - Fixed bug where height attribute was clamped to difficulty-based attribute range (30-60)
+    - Now correctly clamped to 1-99 regardless of other attribute ranges
+  - **GameContext State Structure:**
+    - Added `YouthAcademyState` interface to `src/ui/context/types.ts`
+    - Fields: `scoutingReports`, `academyProspects`, `lastReportWeek`, `initialized`
+    - Added `youthAcademy: YouthAcademyState` to `GameState` interface
+    - Added `DEFAULT_YOUTH_ACADEMY_STATE` constant
+  - **Player Type Enhancement:**
+    - Added optional `seasonStartAttributes?: PlayerAttributes` to Player interface
+    - Enables progress tracking (showing attribute deltas like "Speed: 45 (+8)")
+    - Populated when promoting youth prospects to main roster
+  - **GameReducer Actions (8 new):**
+    - `SET_YOUTH_ACADEMY_STATE` - Replace entire youth academy state
+    - `ADD_YOUTH_SCOUTING_REPORT` - Add new scouting report
+    - `UPDATE_YOUTH_SCOUTING_REPORT` - Update existing report
+    - `REMOVE_YOUTH_SCOUTING_REPORT` - Remove report
+    - `SIGN_PROSPECT_TO_ACADEMY` - Sign prospect from report
+    - `UPDATE_ACADEMY_PROSPECT` - Update prospect data
+    - `REMOVE_ACADEMY_PROSPECT` - Remove prospect
+    - `SET_LAST_REPORT_WEEK` - Update scouting cycle tracking
+  - **ConnectedYouthAcademyScreen Migration:**
+    - Migrated from module-level cache to GameContext state
+    - State now persists via GameContext auto-save (survives app restarts)
+    - Local reducer for batched updates to prevent excessive re-renders
+    - Syncs with GameContext on state changes
+  - **Files Modified:**
+    - `src/systems/youthAcademySystem.ts`: Added height to attributes, calculateHeightRating()
+    - `src/data/types.ts`: Added seasonStartAttributes to Player
+    - `src/data/factories.ts`: Fixed height clamping bug (1-99 not min-max)
+    - `src/ui/context/types.ts`: Added YouthAcademyState, actions, default state
+    - `src/ui/context/gameReducer.ts`: Added youth academy initial state and action handlers
+    - `src/ui/screens/ConnectedYouthAcademyScreen.tsx`: Complete rewrite using GameContext
+  - **Test Status:** 294/295 simulation tests passing (1 pre-existing failure unrelated)
+
+- **🎯 SPORT-SPECIFIC SCOUT FOCUS** ✅
+  - **Scout Focus System:**
+    - Added `ScoutSportFocus` type: `'basketball' | 'baseball' | 'soccer' | 'balanced'`
+    - Sport-specific weight tables for prospect scoring (SCOUT_WEIGHTS_BASKETBALL, SCOUT_WEIGHTS_BASEBALL, SCOUT_WEIGHTS_SOCCER)
+    - `calculateProspectSportScore()` function weights prospects against sport-specific attributes
+    - `generateScoutingReports()` now uses weighted selection: generates 2x prospects, scores against weights, returns top N
+  - **UI:**
+    - Added sport selector buttons (All/Basketball/Baseball/Soccer) to Youth Academy screen
+    - Selector appears below "Scouting Reports" header
+    - Hint text changes based on selection
+    - Focus persists in GameContext state
+  - **Files Modified:**
+    - `src/systems/youthAcademySystem.ts`: Added weight tables and scoring function
+    - `src/ui/context/types.ts`: Added `scoutSportFocus` to YouthAcademyState, SET_SCOUT_SPORT_FOCUS action
+    - `src/ui/context/gameReducer.ts`: Added SET_SCOUT_SPORT_FOCUS handler
+    - `src/ui/screens/YouthAcademyScreen.tsx`: Added sport selector UI
+    - `src/ui/screens/ConnectedYouthAcademyScreen.tsx`: Wired up sport focus to generateScoutingReports
+
+- **📈 ATTRIBUTE PROGRESS TRACKING** ✅
+  - **Delta Display in PlayerDetailScreen:**
+    - Shows attribute change since season start (e.g., "75 (+3)" in green, "68 (-2)" in red)
+    - Only shows for players with `seasonStartAttributes` baseline
+    - Zero deltas are hidden
+  - **Season Snapshot:**
+    - `SNAPSHOT_SEASON_ATTRIBUTES` action copies current attributes for all roster players
+    - Automatically triggered during `INITIALIZE_GAME` (new games start with baseline)
+    - Youth prospects get snapshot when promoted
+  - **Files Modified:**
+    - `src/ui/screens/ConnectedPlayerDetailScreen.tsx`: Added delta display with color coding
+    - `src/ui/context/types.ts`: Added SNAPSHOT_SEASON_ATTRIBUTES action
+    - `src/ui/context/gameReducer.ts`: Added handler + integrated into INITIALIZE_GAME
+
+- **🏋️ TRAINING & PROGRESSION SYSTEM INTEGRATION** ✅
+  - **Discovery:** Existing training/regression systems (`trainingSystem.ts`, `playerProgressionSystem.ts`) were never connected to game flow
+  - **New Orchestrator:**
+    - Created `src/systems/weeklyProgressionProcessor.ts`
+    - Calls existing `applyWeeklyRegression()` first (age-based decline)
+    - Then calls `applyWeeklyTraining()` (XP accumulation and gains)
+    - Protects height attribute from ever changing
+  - **Integration:**
+    - Added `APPLY_WEEKLY_PROGRESSION` action to types and reducer
+    - Called during `advanceWeek()` in GameContext before ADVANCE_WEEK dispatch
+    - Training budget affects progression speed (0.5x at 0% to 2.0x at 100%)
+  - **Training Factors:**
+    - Age multipliers: Young (<23) = 1.5x, Prime (23-27) = 1.0x, Veteran (28-31) = 0.7x, Aging (32+) = 0.5x
+    - XP system with soft caps at potential ceiling
+    - Regression kicks in 4 years after peak age (Physical: 30+, Technical: 32+, Mental: 34+)
+    - Injured players skip training
+  - **Files Created:**
+    - `src/systems/weeklyProgressionProcessor.ts`
+  - **Files Modified:**
+    - `src/ui/context/types.ts`: Added APPLY_WEEKLY_PROGRESSION action, PlayerProgressionResult import
+    - `src/ui/context/gameReducer.ts`: Added APPLY_WEEKLY_PROGRESSION handler
+    - `src/ui/context/GameContext.tsx`: Added processWeeklyProgression call in advanceWeek()
+  - **Training Speed Tuning:**
+    - XP cost formula reduced from `currentValue × 10` to `currentValue × 1`
+    - BASE_XP_PER_WEEK increased from 10 to 15
+    - Result: Young players gain ~12-18 attribute points per 40-week season (visible progression)
+
+- **🎓 ACADEMY PROSPECT TRAINING** ✅
+  - **Problem:** Academy prospects (signed but not promoted) weren't training - only main squad players were processed
+  - **Solution:** Added separate training pipeline for academy prospects
+  - **AcademyProspect Interface Extended:**
+    - Added `weeklyXP: { physical, mental, technical }` for XP accumulation
+    - Added `seasonStartAttributes: Record<string, number>` for progress tracking
+  - **Academy Training Features:**
+    - `processAcademyTraining()` function processes all active academy prospects
+    - 1.5x training bonus (academy focuses on development)
+    - No regression for youth prospects (still growing)
+    - Uses `youthDevelopment` budget percentage for quality multiplier
+  - **Delta Display:**
+    - Academy prospect detail modal now shows attribute deltas ("+1", "+2" in green)
+    - Compares current attributes to when prospect was signed
+  - **Files Modified:**
+    - `src/systems/youthAcademySystem.ts`: Extended AcademyProspect interface, updated signProspectToAcademy
+    - `src/systems/weeklyProgressionProcessor.ts`: Added processAcademyTraining, AcademyProgressionResult
+    - `src/ui/context/types.ts`: Added APPLY_ACADEMY_TRAINING action
+    - `src/ui/context/gameReducer.ts`: Added APPLY_ACADEMY_TRAINING handler
+    - `src/ui/context/GameContext.tsx`: Added academy training call in advanceWeek()
+    - `src/ui/screens/YouthAcademyScreen.tsx`: Added delta display in ProspectDetailModal
+
+**2025-12-08:**
+- **⚾ BASEBALL SIMULATOR FOUNDATION COMPLETE** ✅
+  - **Plan Created:** `BASEBALL_SIMULATOR_PLAN.md` with comprehensive design
+  - **Agent Reviews:**
+    - Plan Agent (Simulation Design): B+
+    - General-Purpose Agent (Integration): B-
+    - Project Overseer (Blocker Validation): A
+    - Technical Validator (Code Correctness): A
+  - **Blockers Fixed:**
+    - Fixed attribute constant alignment (`teamwork` in Mental, `footwork` in Technical)
+    - Updated `ATTRIBUTE_COUNT` from 25 to 26
+    - Added `sportMetadata` to Player interface (handedness for baseball)
+    - Implemented full `BaseballCareerStats` (25 stat fields)
+    - Added `BaseballTacticalSettings` interface (lineup, defensive positions, bullpen strategy)
+    - Added `BASEBALL_POSITIONS` and `BASEBALL_POSITION_WEIGHTS` constants
+    - Added `SoccerTacticalSettings` interface (for future)
+    - Added `SportTacticalSettings` union type
+  - **Directory Structure Created:**
+    - `src/simulation/baseball/` with index.ts, types.ts, constants.ts
+    - `src/simulation/baseball/core/`, `systems/`, `atBat/`, `game/`, `playByPlay/`
+    - `src/ai/baseball/` for AI decision modules
+  - **Baseball Types Defined:**
+    - `BaseState`, `AtBatOutcome`, `HitLocation`
+    - `AtBatResult`, `HalfInningResult`
+    - `BaseballBattingLine`, `BaseballPitchingLine`, `BaseballBoxScore`
+    - `BaseballGameResult`
+  - **Baseball Constants Defined (13 weight tables, 20+ base rates):**
+    - Batting: `WEIGHTS_BATTING_CONTACT`, `WEIGHTS_BATTING_POWER`, `WEIGHTS_PLATE_DISCIPLINE`
+    - Pitching: `WEIGHTS_PITCHING_VELOCITY`, `WEIGHTS_PITCHING_CONTROL`, `WEIGHTS_PITCHING_MOVEMENT`, `WEIGHTS_PITCHER_STAMINA`
+    - Fielding: `WEIGHTS_FIELDING_INFIELD`, `WEIGHTS_FIELDING_OUTFIELD`, `WEIGHTS_FIELDING_FIRST`, `WEIGHTS_FIELDING_CATCHER`
+    - Baserunning: `WEIGHTS_STEALING`, `WEIGHTS_BASERUNNING_AGGRESSION`
+    - Base rates for strikeouts (0.22), walks (0.08), hit distribution, out types, fielding errors, etc.
+    - `SIGMOID_K = 0.02` (slightly lower than basketball's 0.025 for more variance)
+  - **Implementation Phases (ALL COMPLETE):**
+    - B1: Foundation ✅ - Types, constants, weight tables
+    - B2: Core Systems ✅ - batting.ts (~500 lines), pitching.ts (~426 lines), fielding.ts (~503 lines), baserunning.ts (~609 lines)
+    - B3: At-Bat Engine ✅ - atBat.ts (~523 lines) orchestrating all systems
+    - B4: Game Flow ✅ - halfInning.ts (~765 lines), gameSimulation.ts (~421 lines), pitcherManager.ts (~326 lines), boxScore.ts (~697 lines)
+    - B5: AI & Play-by-Play ✅ - Intentional walk logic, steal attempt decisions, play-by-play text generation
+    - B6: Integration & Testing ✅ - baseballSimulation.test.ts (~859 lines), integrated in GameContext.tsx
+
+**2025-12-06:**
+- **🎲 ATTRIBUTE SYSTEM REFACTORING COMPLETE** ✅
+  - **Category Reorganization:**
+    - Moved 'teamwork' from Technical to Mental category
+    - Added 'footwork' as new Technical attribute
+    - Total attributes: 26 (was 25)
+  - **New Attribute: Footwork**
+    - JSDoc: "Proper foot positioning, pivot moves, defensive sliding"
+    - Added to 6 simulation weight tables:
+      - WEIGHTS_LAYUP: 0.08 (pivot moves, drop steps)
+      - WEIGHTS_DRIVE_LAYUP: 0.08 (euro-step, gather step)
+      - WEIGHTS_DUNK: 0.05 (gather step, approach angle)
+      - WEIGHTS_CONTEST: 0.08 (defensive sliding, positioning)
+      - WEIGHTS_HELP_DEFENSE_ROTATION: 0.06 (defensive sliding)
+      - WEIGHTS_REBOUND: 0.08 (positioning and boxing out)
+  - **Attribute Variance System:**
+    - New `generateAttributesWithVariance()` function in factories.ts
+    - Three variance levels (33% each): Low, Moderate, High
+    - Spike/Valley system creates "spiky" profiles
+    - Body type correlations with exception chances
+    - OVR targeting: Iteratively adjusts to hit target ±2
+    - Result: Even low OVR players can have 75+ attributes in 1-4 areas
+  - **Files Modified:**
+    - `src/data/types.ts`: Updated attribute interfaces (Mental 8, Technical 6)
+    - `src/data/factories.ts`: Added variance system (~250 lines), updated player factories
+    - `src/ai/evaluation.ts`: Added footwork weight (0.040), rebalanced others
+    - `src/simulation/constants.ts`: Added footwork to 6 weight tables, ATTRIBUTE_COUNT = 26
+    - `src/systems/youthAcademySystem.ts`: Updated attribute arrays
+    - `src/ui/screens/ConnectedYouthAcademyScreen.tsx`: Added footwork to prospect conversion
+    - Multiple test files: Updated to include footwork attribute
+  - **Plan File:** `C:\Users\alexa\.claude\plans\parsed-crafting-parnas.md`
 
 **2025-12-04:**
 - **🐛 BUG FIX: Contract Extension Modal Not Opening** ✅
@@ -414,7 +1081,7 @@ All attributes rated 1-100 scale.
   - **Prospect Data:**
     - Height (170-215 cm), Weight (65-120 kg)
     - Nationality (30 countries)
-    - All 25 attributes (15-45 range for youth)
+    - All 26 attributes (15-45 range for youth)
     - Hidden potentials (60-95 range)
     - Age 15-18, must promote/release at 19
   - **Files Modified:**
@@ -453,8 +1120,10 @@ All attributes rated 1-100 scale.
     - **Report age display**: Shows "Fresh report", "1 week old", "2 weeks old", etc.
     - **Rival signing alert**: Alert popup when a rival signs your scouted prospect
   - **Still TODO:**
-    - Full GameContext persistence (currently session-only via module cache)
-    - Connect budget allocation fully (multipliers exist but need GameContext integration)
+    - ~~Full GameContext persistence~~ ✅ DONE (2025-12-08)
+    - Sport-specific scout instructions (e.g., "scout basketball prospects")
+    - Progress indicators on PlayerDetailScreen (attribute deltas since season start)
+    - Connect budget allocation fully (multipliers exist but need validation)
 
 - **🎨 CONTRACT NEGOTIATION UI IMPROVEMENTS** ✅
   - **Input Changes:**
@@ -1595,6 +2264,32 @@ All attributes rated 1-100 scale.
   - **Architecture:** Clean, consistent, production-ready
   - **Next Phase:** Phase 3 - Integration & UI Layer
 
+**2025-12-08:**
+- **Test Infrastructure Stabilization**
+  - Fixed 139 failing tests (202 → 63, 69% reduction)
+  - Added AsyncStorage Jest mock for React Native UI tests
+  - Added missing `footwork` attribute to simulation test mocks
+  - Added `calculatePlayerValuation` backwards compatibility export
+  - Skipped obsolete youthAcademySystem tests (old API replaced by scouting flow)
+
+- **Baseball & Soccer Stub Simulators COMPLETE**
+  - Created `src/simulation/sportSimulators.ts`
+  - Baseball simulator: Attribute-driven batting, pitching, fielding
+    - Heavy players (high strength, low speed) penalized on bases
+    - Strong arm players pitch faster, throw harder
+    - High hand-eye coordination = better contact hitting
+  - Soccer simulator: Attribute-driven attack, defense, goalkeeping
+    - Agile players better at dribbling
+    - Tall players better at heading and goalkeeping
+    - High awareness = better defensive positioning
+  - Updated `matchRunner.ts` to use sport-specific simulators
+  - Matches now simulate correctly based on `match.sport` field
+
+- **Priority Order Established:**
+  1. Youth Academy improvements (scout instructions, progress indicators, persistence)
+  2. Baseball/Soccer simulator enhancement (full attribute-driven simulation)
+  3. Match Preview/Lineup control (deferred until sports complete)
+
 **2025-11-18:**
 - **Phase 2: Core Systems Translation COMPLETE** (Agent 1)
   - 6 modules translated: shooting, defense, rebounding, turnovers, fouls, freeThrows
@@ -1653,13 +2348,57 @@ All attributes rated 1-100 scale.
 
 ### Current Tasks
 
-**PENDING USER BUGS/FEATURES:**
-1. ✅ COMPLETE: Add height, weight, nationality to player data with realistic correlations
-2. ✅ COMPLETE: Roster screen - add attribute sorting
-3. ✅ COMPLETE: Contract extension modal bug fix + UI improvements (TextInput fields, checkbox release clause, updated clauses)
-4. ✅ COMPLETE: Youth Academy - Complete redesign with scouting flow (needs GameContext integration for persistence)
-5. ⏭️ PENDING: Match result - box score + player taps
-6. ⏭️ PENDING: Market screen - fix offer button
+**ACTIVE WORK:**
+
+**Phase C: Soccer Simulator Enhancements** ✅ COMPLETE (2025-12-28)
+1. ✅ COMPLETE: `footwork` attribute integration into all soccer composites
+2. ✅ COMPLETE: Set piece logic (corners/free kicks leading to shots with height advantage)
+3. ✅ COMPLETE: Free kick logic (attacking half free kicks lead to shots)
+4. ✅ COMPLETE: Refactored `calculateSoccerPositionOverall()` to include footwork (6-8% per position)
+5. ✅ COMPLETE: Possession-based fatigue (out-of-possession = 1.3x fatigue, in-possession = 0.8x)
+6. ✅ COMPLETE: Tired defenders more vulnerable (affects blocking, saves, shooting accuracy)
+7. ✅ COMPLETE: Shot quality affects shooter accuracy (fullChance=100%, halfChance=85%, longRange=70%)
+8. ✅ COMPLETE: Removed unrealistic foulRate from tactical modifiers
+
+**Phase X: Minutes Allocation Bug Fixes** (PRIORITY 2 - MEDIUM)
+1. 🚧 IN PROGRESS: Fix minutes allocation not being respected in basketball simulation
+2. ⏭️ PENDING: Add hard cap to prevent players exceeding 48 minutes
+3. ⏭️ PENDING: Add team total validation to prevent exceeding 240 minutes
+4. ⏭️ PENDING: Modify quarterly rotation to track cumulative error
+5. ⏭️ PENDING: Re-run tests to validate fixes
+
+**Phase B: Baseball Simulator** (COMPLETE ✅)
+- ✅ DONE: Full at-bat engine with batting/pitching/fielding/baserunning
+- ✅ DONE: Half-inning simulation with stolen bases, wild pitches, intentional walks
+- ✅ DONE: 9+ inning games with extra innings and walk-offs
+- ✅ DONE: Pitcher fatigue with dynamic "rope" substitution system
+- ✅ DONE: Comprehensive box score generation
+- ✅ DONE: Integration in GameContext.tsx (user matches use full simulation)
+- ✅ DONE: Integration in matchRunner.ts (AI-vs-AI matches now use full simulation)
+
+**Phase D: Match Preview/Lineup Control** (PARTIALLY COMPLETE)
+- ✅ DONE: Lineup editor for basketball and soccer
+- ✅ DONE: Minutes allocation slider UI
+- 🚧 IN PROGRESS: Minutes allocation simulation integration
+- ✅ DONE: Baseball lineup editor (implemented in GameContext)
+
+**Phase A: Youth Academy Improvements** (MOSTLY COMPLETE)
+1. ✅ DONE: Sport-specific scout focus (basketball/baseball/soccer weighting)
+2. ✅ DONE: Progress indicators (attribute deltas since season start)
+3. ✅ DONE: GameContext persistence integration
+4. ⏭️ PENDING: Add sport-specific scout instructions UI (archetypes)
+
+**COMPLETED:**
+- ✅ Height, weight, nationality with realistic correlations
+- ✅ Roster screen attribute sorting
+- ✅ Contract extension modal + UI improvements
+- ✅ Youth Academy redesign (scouting flow, range narrowing)
+- ✅ All 10 management systems
+- ✅ AI & Season flow (Phase 3)
+- ✅ Mobile UI (Phase 4)
+- ✅ Match Fitness System (drain/recovery)
+- ✅ Lineup Editor UI (basketball/soccer)
+- ✅ Minutes Allocation Slider UI
 
 **Phase 1-5: COMPLETE** ✅
 
@@ -1674,11 +2413,15 @@ All basketball simulation components translated, validated, and working:
 
 ### Blockers
 
-**None**
+**Minutes Allocation Accuracy (MEDIUM PRIORITY)**
+- Basketball simulation's quarterly rotation system doesn't dynamically adjust based on actual minutes played
+- Players can exceed 48 minutes (impossible in real basketball)
+- Team totals can exceed 240 minutes
+- User-set minutes allocation not honored within acceptable tolerance (±4 min)
+- **Impact:** User experience issue - lineup customization feels broken
+- **Fix Status:** Root cause identified, fixes designed, implementation pending
 
-### Next Up: Phase 2 - Management Systems
-
-Based on MVP_GAMEPLAN.md, Phase 2 will implement all 10 franchise management systems:
+### Reference: Management Systems (ALL COMPLETE)
 
 1. **Budget Allocation System**
    - Percentage-based budget distribution
@@ -1741,15 +2484,17 @@ Based on MVP_GAMEPLAN.md, Phase 2 will implement all 10 franchise management sys
 
 ## Open Questions & Future Decisions
 
-### TBD Items
-1. **Navigation Structure:** Specific navigation pattern (bottom nav, tabs, hamburger) - needs design proposals
-2. **Exact Revenue Formula:** How record + division translates to dollars
-3. **Exact Injury Probability Formula:** Durability → injury chance calculation
-4. **Youth Academy Capacity Formula:** Budget → number of prospects calculation
-5. **Scouting Range Formulas:** How depth/breadth slider affects attribute range widths
-6. **AI Personality Traits:** Specific list of personality types and their behavioral impacts
-7. **Baseball Action-Specific Weights:** Attribute weights for pitching, hitting, fielding, etc.
-8. **Soccer Action-Specific Weights:** Attribute weights for shooting, passing, dribbling, tackling, goalkeeping, etc.
+### TBD Items (Updated 2025-12-22)
+1. ✅ RESOLVED: Navigation Structure - Bottom tabs implemented (Home, Roster, Season, Market, Settings)
+2. ✅ RESOLVED: Revenue Formula - Implemented in src/systems/revenueSystem.ts
+3. ✅ RESOLVED: Injury Probability Formula - Implemented in src/systems/injurySystem.ts
+4. ✅ RESOLVED: Youth Academy Capacity Formula - Implemented in src/systems/youthAcademySystem.ts
+5. ✅ RESOLVED: Scouting Range Formulas - Implemented in src/systems/scoutingSystem.ts
+6. ✅ RESOLVED: AI Personality Traits - 3 types (Conservative, Balanced, Aggressive) in src/ai/personality.ts
+7. ✅ RESOLVED: Scout Sport Focus - Basketball/Baseball/Soccer/Balanced weighting in youthAcademySystem.ts
+8. ✅ COMPLETE: **Baseball Action-Specific Weights** - 13 weight tables defined and implemented (batting contact/power/discipline, pitching velocity/control/movement/stamina, fielding infield/outfield/first/catcher, baserunning stealing/aggression)
+9. ✅ COMPLETE: **Soccer Composite Refactoring** - `footwork` integrated into all composites; set piece logic implemented (2025-12-28)
+10. 🚧 IN PROGRESS: **Minutes Allocation Accuracy** - Quarterly rotation system needs cumulative error tracking
 
 ---
 
@@ -1766,20 +2511,23 @@ Based on MVP_GAMEPLAN.md, Phase 2 will implement all 10 franchise management sys
 - Offline functionality
 
 ### MVP Excludes
-- Baseball simulator (future session)
-- Soccer simulator (future session)
 - Cloud saves (architecture supports, but not implemented)
 - Cross-platform saves (architecture supports, but not implemented)
 - Multiplayer (future consideration)
 - Team morale system (mentioned but deprioritized)
+
+### Recently Completed (No Longer Excluded)
+- Baseball simulator COMPLETE (2025-12-31) - Full at-bat engine, 9+ inning games, box scores
+- Soccer simulator footwork integration and set pieces (COMPLETE 2025-12-28)
 - Physical facilities/upgrades (budget allocation only)
 - Detailed business management (ticket prices, sponsorship negotiations, etc.)
+- Baseball lineup editor (COMPLETE - integrated in GameContext)
 
 ---
 
 ## Key Design Principles
 
-1. **Attribute-Driven:** Everything is driven by the 25 attributes
+1. **Attribute-Driven:** Everything is driven by the 26 universal attributes
 2. **Realistic Simulation:** Weighted sigmoid probabilities, no arbitrary randomness
 3. **Simple Defaults, Optional Depth:** Users can play casually or dive deep
 4. **Mobile-First:** Large buttons, intuitive navigation, touch-friendly
@@ -1810,3 +2558,247 @@ Based on MVP_GAMEPLAN.md, Phase 2 will implement all 10 franchise management sys
 - Update "Last Updated" date at top of file
 - Document status changes
 - Track decision evolution in relevant sections
+
+---
+
+## Pending Implementation: Body-Type Attribute Correlation System
+
+**Status:** IMPLEMENTING
+**Date:** 2025-12-13
+**Reviewed:** 3 rounds of agent critique completed
+
+### Problem Statement
+
+Current player generation creates physically unrealistic athletes:
+- Example: 5'6" 119 lb player with core_strength=32, arm_strength=35
+- A 6'3" 185 lb player only has core_strength=52, arm_strength=37
+- There's insufficient disparity - small players can have similar or higher strength than larger players
+
+### Root Causes
+
+1. **Weight generation allows unrealistic extremes** - 119 lbs at 5'6" is BMI 19.2 (underweight, not a pro athlete)
+2. **Body type correlations are additive, not constraining** - Small penalties/bonuses applied to random base values
+3. **Strength ranges overlap** - A small player's max can exceed a large player's min
+4. **Height generation allows unrealistic extremes** - 5'0" is too short for multi-sport pro athletes
+
+### Solution: Physical Attribute Correlation System
+
+#### Part 1: Height Minimum
+
+**Minimum height: 5'6" (66 inches)** for all pro athletes.
+- Real-world shortest multi-sport pros: Muggsy Bogues 5'3", José Altuve 5'6", Messi 5'7"
+- 5'6" is a reasonable floor for basketball/baseball/soccer simulation
+
+#### Part 2: BMI-Enforced Weight Generation
+
+**Pro Athletes (age 19+):** BMI 20-30
+**Youth Prospects (age 15-18):** BMI 19-28 (still developing)
+
+```
+minWeight = (minBMI * height² / 703)
+maxWeight = (maxBMI * height² / 703)
+```
+
+| Height | Pro Min (BMI 20) | Pro Max (BMI 30) | Youth Min (BMI 19) |
+|--------|------------------|------------------|---------------------|
+| 5'6" (66") | 124 lbs | 186 lbs | 118 lbs |
+| 5'10" (70") | 139 lbs | 209 lbs | 132 lbs |
+| 6'0" (72") | 149 lbs | 221 lbs | 142 lbs |
+| 6'3" (75") | 160 lbs | 240 lbs | 152 lbs |
+| 6'6" (78") | 172 lbs | 259 lbs | 164 lbs |
+
+#### Part 3: Non-Overlapping Strength Ranges (5-8 pt buffer)
+
+Strength attributes use weight-based ranges with minimal overlap:
+
+```
+strengthMin = (weight - 110) * 0.45
+strengthMax = (weight - 110) * 0.65
+```
+
+| Weight | Strength Range | Notes |
+|--------|----------------|-------|
+| 124 lbs | 6-9 | Smallest pro (5'6" BMI 20) |
+| 140 lbs | 14-20 | Small/lean build |
+| 160 lbs | 23-33 | Light build |
+| 180 lbs | 32-46 | Average build |
+| 200 lbs | 41-59 | Athletic build |
+| 220 lbs | 50-72 | Large build |
+| 240 lbs | 59-85 | Very large |
+| 260 lbs | 68-98 | Massive |
+
+#### Part 4: Differentiated Strength Correlations
+
+Not all strength types correlate equally with body mass:
+
+| Attribute | Correlation | Rationale |
+|-----------|-------------|-----------|
+| core_strength | 100% | Directly tied to torso mass |
+| grip_strength | 70% | Hand/forearm size + technique |
+| arm_strength | 50% | Biomechanics + fast-twitch, not just mass |
+
+#### Part 5: Soft Caps with Diminishing Returns
+
+Training CAN exceed weight-based caps, but slower:
+- Below cap: Normal XP gain
+- 1-10 points above: 50% XP gain
+- 11-20 points above: 25% XP gain
+- 20+ points above: 10% XP gain
+
+#### Part 6: No Artificial Agility Ceiling
+
+Natural trade-offs handle agility (stamina penalty, acceleration physics, power-to-weight for jumping).
+
+### Files to Modify
+
+1. **`src/data/factories.ts`**
+   - Update height generation minimum to 66" (5'6")
+   - Update `generateWeightFromHeight()` - BMI 20-30 for pros
+   - Add `getStrengthRange(weight)` function
+   - Update `applyBodyTypeCorrelations()` - differentiated strength multipliers
+
+2. **`src/ui/integration/gameInitializer.ts`**
+   - Update `generateHeight()` minimum to 66" (5'6")
+   - Update `generateWeight()` - BMI 20-30 enforcement
+
+### Expected Outcomes
+
+**Before (broken):**
+- 5'6" 119 lb player: core_strength = 32, arm_strength = 35
+- 6'3" 185 lb player: core_strength = 52, arm_strength = 37
+
+**After (fixed):**
+- 5'6" 124 lb player (minimum): core_strength = 6-9, arm_strength = 8-12
+- 6'3" 185 lb player: core_strength = 34-49, arm_strength = 38-48
+
+**Disparity achieved:** Larger player is 4-6x stronger in core strength.
+
+---
+
+## Recent Changes (2026-01-05)
+
+### UI Overhaul: NEON PITCH Theme
+**Status:** COMPLETE ✅
+
+Consolidated navigation from 6 bottom tabs to 2 tabs + gear icon:
+
+**Before:**
+- Dashboard | Roster | Season | Stats | Market | Settings (6 tabs)
+
+**After:**
+- **PLAY** (cyan) | **MANAGE** (magenta) + ⚙️ gear icon for Settings
+
+**Play Tab Contents:**
+- Dashboard (home screen with smart cards)
+- Quick actions: Sim Match, Advance Week
+- Season progress, upcoming matches, standings preview
+
+**Manage Tab Segments:**
+- **Squad**: Roster, Lineup Editor, Youth Academy
+- **Season**: Schedule, Standings, Stats
+- **Business**: Transfer Market, Scouting, Budget
+
+**New Components Created:**
+- `SegmentControl.tsx` - Reusable segmented control with NEON PITCH styling
+- `HeaderGear.tsx` - Settings gear icon for header
+- `PlayTabScreen.tsx` - Play tab container with Dashboard
+- `ManageTabScreen.tsx` - Manage tab with 3 segments
+
+**Files Modified:**
+- `TabNavigator.tsx` - Consolidated to 2 tabs
+- `navigation/types.ts` - Updated TabParamList
+- `ConnectedDashboardScreen.tsx` - Integrated into Play tab
+
+### Multi-Sport Stats System
+**Status:** COMPLETE ✅
+
+Stats page now supports all three sports with sport-specific statistics:
+
+**Features:**
+- Sport selector with emoji icons (🏀 ⚾ ⚽)
+- Sub-tabs for baseball (Batting/Pitching) and soccer (Outfield/Keepers)
+- Sport-specific sort options and stat columns
+- Dynamic aggregation based on selected sport
+
+**Sort Options by Sport:**
+- **Basketball**: PTS, REB, AST, STL, BLK, FG%, 3P%, MIN
+- **Baseball Batting**: AVG, H, HR, RBI, R, SB, BB, K
+- **Baseball Pitching**: W, ERA, IP, SO, BB, SV, WHIP
+- **Soccer Outfield**: G, A, SH, SOT, MIN, YC, RC
+- **Soccer Goalkeeper**: SV, CS, GA, SV%, MIN
+
+**Files Modified:**
+- `ConnectedStatsScreen.tsx` - Sport state, sport-specific aggregation
+- `StatsScreen.tsx` - Sport selector UI, dynamic sort options
+- `statsAggregator.ts` - Added 6 new aggregation functions for baseball/soccer
+- `PlayerStatsRow.tsx` - Sport-aware stat display
+- `TeamStatsRow.tsx` - Sport-aware team stat display
+
+**Bug Fix:** Baseball stats weren't populating because aggregation functions were using player names as keys, but baseball box scores use player IDs. Fixed by updating `aggregateBaseballBattingStats()` and `aggregateBaseballPitchingStats()` to use player IDs directly.
+
+---
+
+## Proposed Next Steps
+
+### High Priority
+
+1. **Player Detail Screen Enhancement**
+   - Show sport-specific career stats (basketball/baseball/soccer tabs)
+   - Display attribute contribution breakdown per sport
+   - Add training focus suggestions based on sport performance
+
+2. **Match Simulation UX**
+   - Add "Watch Match" mode with play-by-play animation
+   - Implement in-game tactical adjustments
+   - Show live box score during simulation
+
+3. **Schedule/Calendar Improvements**
+   - Visual calendar view showing all three sports
+   - Color-coded by sport type
+   - Conflict detection for player fatigue across sports
+
+### Medium Priority
+
+4. **Transfer Market Polish**
+   - Player comparison view during negotiations
+   - AI team bidding war mechanics
+   - Contract counter-offer system
+
+5. **Youth Academy Scouting Flow**
+   - Visual scouting report cards
+   - Rival team interest indicators
+   - Scout assignment management
+
+6. **Season End Flow**
+   - Promotion/relegation celebration screens
+   - Season summary statistics
+   - Award ceremonies (MVP, scoring leader, etc.)
+
+### Lower Priority (Future Consideration)
+
+7. **Performance Optimization**
+   - Lazy load screens not in current tab
+   - Memoize expensive stat calculations
+   - Profile and optimize simulation speed
+
+8. **Accessibility**
+   - Screen reader support
+   - High contrast mode option
+   - Adjustable font sizes
+
+9. **Cloud Save Architecture**
+   - Design sync protocol
+   - Conflict resolution strategy
+   - Account linking UI
+
+### Technical Debt
+
+10. **Test Coverage**
+    - Fix pre-existing TypeScript errors in test files
+    - Add integration tests for multi-sport stats
+    - Add UI component tests for new screens
+
+11. **Type Safety**
+    - Replace `any` types in stat row components with proper unions
+    - Add type guards for sport-specific stat access
+    - Consolidate stat type definitions

@@ -71,6 +71,527 @@ interface TacticalSettings {
   scoringOption3?: string;
 }
 
+/**
+ * Player with calculated minutes target
+ */
+interface PlayerWithMinutes extends Player {
+  minutesTarget: number;
+  quarterTarget: number;
+}
+
+// =============================================================================
+// MINUTES ALLOCATION CALCULATOR
+// =============================================================================
+
+/**
+ * Calculate basketball overall rating (weighted average of all 25 attributes).
+ *
+ * Weights emphasize attributes most critical for basketball:
+ * - Physical (40%): Height, jumping, agility, acceleration prioritized
+ * - Technical (35%): Throw accuracy, hand-eye, form technique prioritized
+ * - Mental (25%): Awareness, composure, consistency prioritized
+ *
+ * @param player - Player object with attributes
+ * @returns Overall rating (0-100)
+ */
+function calculateBasketballOverall(player: any): number {
+  // Handle both nested attributes (real data) and flat attributes (test data)
+  const attrs = ('attributes' in player && player.attributes) ? player.attributes : player;
+
+  // Weighted attribute system for basketball (totals 100%)
+  const weights = {
+    // Physical: 40% total
+    grip_strength: 0.025,
+    arm_strength: 0.020,
+    core_strength: 0.030,
+    agility: 0.045,
+    acceleration: 0.040,
+    top_speed: 0.030,
+    jumping: 0.045,
+    reactions: 0.040,
+    stamina: 0.040,
+    balance: 0.025,
+    height: 0.045,
+    durability: 0.015,
+    // Mental: 25% total
+    awareness: 0.050,
+    creativity: 0.035,
+    determination: 0.030,
+    bravery: 0.025,
+    consistency: 0.040,
+    composure: 0.045,
+    patience: 0.025,
+    // Technical: 35% total
+    hand_eye_coordination: 0.070,
+    throw_accuracy: 0.080,
+    form_technique: 0.070,
+    finesse: 0.040,
+    deception: 0.045,
+    teamwork: 0.045,
+  };
+
+  // Calculate weighted sum
+  let totalScore = 0;
+  totalScore += attrs.grip_strength * weights.grip_strength;
+  totalScore += attrs.arm_strength * weights.arm_strength;
+  totalScore += attrs.core_strength * weights.core_strength;
+  totalScore += attrs.agility * weights.agility;
+  totalScore += attrs.acceleration * weights.acceleration;
+  totalScore += attrs.top_speed * weights.top_speed;
+  totalScore += attrs.jumping * weights.jumping;
+  totalScore += attrs.reactions * weights.reactions;
+  totalScore += attrs.stamina * weights.stamina;
+  totalScore += attrs.balance * weights.balance;
+  totalScore += attrs.height * weights.height;
+  totalScore += attrs.durability * weights.durability;
+  totalScore += attrs.awareness * weights.awareness;
+  totalScore += attrs.creativity * weights.creativity;
+  totalScore += attrs.determination * weights.determination;
+  totalScore += attrs.bravery * weights.bravery;
+  totalScore += attrs.consistency * weights.consistency;
+  totalScore += attrs.composure * weights.composure;
+  totalScore += attrs.patience * weights.patience;
+  totalScore += attrs.hand_eye_coordination * weights.hand_eye_coordination;
+  totalScore += attrs.throw_accuracy * weights.throw_accuracy;
+  totalScore += attrs.form_technique * weights.form_technique;
+  totalScore += attrs.finesse * weights.finesse;
+  totalScore += attrs.deception * weights.deception;
+  totalScore += attrs.teamwork * weights.teamwork;
+
+  return totalScore;
+}
+
+/**
+ * Apply user-provided minutes allocation to roster.
+ *
+ * Takes user's explicit minutes targets and converts to PlayerWithMinutes format.
+ * Used when user has configured custom minutes in the lineup editor.
+ *
+ * @param roster - Team roster
+ * @param userMinutesAllocation - User-provided minutes (player ID or name -> target minutes)
+ * @returns Array of players with minutesTarget and quarterTarget fields
+ */
+export function applyUserMinutesAllocation(
+  roster: Player[],
+  userMinutesAllocation: Record<string, number>
+): PlayerWithMinutes[] {
+  return roster.map(player => {
+    // Try to find allocation by player ID first, then by name
+    const minutesTarget = userMinutesAllocation[player.id] ?? userMinutesAllocation[player.name] ?? 0;
+
+    return {
+      ...player,
+      minutesTarget: Math.round(minutesTarget * 10) / 10,
+      quarterTarget: Math.round((minutesTarget / 4) * 10) / 10
+    } as PlayerWithMinutes;
+  });
+}
+
+/**
+ * Calculate minutes targets for all players using weighted formula.
+ *
+ * Algorithm:
+ * 1. Calculate weight_i = (overall_i - minOverall + 1) ^ 1.6
+ * 2. Calculate minutes_i = (weight_i / sum(weights)) * 240
+ * 3. Apply ceiling of 42 minutes
+ * 4. Redistribute excess proportionally
+ *
+ * @param roster - Team roster (10+ players)
+ * @returns Array of players with minutesTarget and quarterTarget fields
+ */
+export function calculateMinutesTargets(roster: Player[]): PlayerWithMinutes[] {
+  const EXPONENT = 1.0;
+  const MAX_MINUTES = 40;
+  const TOTAL_MINUTES = 240;
+
+  // Calculate overall ratings
+  const playersWithOverall = roster.map(p => ({
+    player: p,
+    overall: calculateBasketballOverall(p)
+  }));
+
+  // Find minimum overall
+  const minOverall = Math.min(...playersWithOverall.map(p => p.overall));
+
+  // Calculate weights
+  const playersWithWeights = playersWithOverall.map(p => ({
+    ...p,
+    weight: Math.pow(p.overall - minOverall + 1, EXPONENT)
+  }));
+
+  // Calculate total weight
+  const totalWeight = playersWithWeights.reduce((sum, p) => sum + p.weight, 0);
+
+  // Calculate initial minutes
+  let playersWithMinutes = playersWithWeights.map(p => ({
+    ...p,
+    minutesTarget: (p.weight / totalWeight) * TOTAL_MINUTES
+  }));
+
+  // Iteratively redistribute until no player exceeds MAX_MINUTES
+  let hasExcess = true;
+  let iterations = 0;
+  const MAX_ITERATIONS = 20; // Safety limit to prevent infinite loops
+
+  while (hasExcess && iterations < MAX_ITERATIONS) {
+    iterations++;
+
+    // Apply 42-minute ceiling and calculate excess
+    let excess = 0;
+    playersWithMinutes = playersWithMinutes.map(p => {
+      if (p.minutesTarget > MAX_MINUTES) {
+        excess += p.minutesTarget - MAX_MINUTES;
+        return { ...p, minutesTarget: MAX_MINUTES };
+      }
+      return p;
+    });
+
+    // If there's excess, redistribute to eligible players
+    if (excess > 0) {
+      const eligible = playersWithMinutes.filter(p => p.minutesTarget < MAX_MINUTES);
+
+      if (eligible.length === 0) {
+        // No eligible players to receive excess, we're done (all at 42 minutes)
+        hasExcess = false;
+      } else {
+        const eligibleWeight = eligible.reduce((sum, p) => sum + p.weight, 0);
+
+        playersWithMinutes = playersWithMinutes.map(p => {
+          if (p.minutesTarget < MAX_MINUTES) {
+            const additionalMinutes = excess * (p.weight / eligibleWeight);
+            return { ...p, minutesTarget: p.minutesTarget + additionalMinutes };
+          }
+          return p;
+        });
+
+        // Check if any player now exceeds MAX_MINUTES (need another iteration)
+        hasExcess = playersWithMinutes.some(p => p.minutesTarget > MAX_MINUTES);
+      }
+    } else {
+      // No excess, we're done
+      hasExcess = false;
+    }
+  }
+
+  // Calculate quarter targets and create final result
+  return playersWithMinutes.map(p => ({
+    ...p.player,
+    minutesTarget: Math.round(p.minutesTarget * 10) / 10,  // Round to 0.1
+    quarterTarget: Math.round((p.minutesTarget / 4) * 10) / 10
+  } as PlayerWithMinutes));
+}
+
+// =============================================================================
+// QUARTERLY ROTATION SYSTEM
+// =============================================================================
+
+/**
+ * Rotation plan for a player in a specific quarter
+ */
+export interface QuarterlyRotationPlan {
+  /** Player name */
+  playerName: string;
+  /** Should start the quarter */
+  startsQuarter: boolean;
+  /** Time remaining when player should sub out (null if plays full quarter) */
+  subOutAt: number | null;
+  /** Time remaining when player should sub in (null if doesn't sub in) */
+  subInAt: number | null;
+  /** Minutes needed this quarter */
+  minutesNeeded: number;
+}
+
+/**
+ * Calculate quarterly rotation plans for all players.
+ *
+ * Q1-Q3: Use quarter targets
+ * Q4: Use remaining minutes needed
+ *
+ * @param roster - Team roster with minutes targets
+ * @param quarter - Current quarter (1-4)
+ * @param actualMinutes - Map of player name -> actual minutes played so far
+ * @returns Array of rotation plans for this quarter
+ */
+export function calculateQuarterlyRotations(
+  roster: PlayerWithMinutes[],
+  quarter: number,
+  actualMinutes: Record<string, number>,
+  starterNames?: Set<string>
+): QuarterlyRotationPlan[] {
+  // Use provided starter names (from rating-based selection) if available,
+  // otherwise fall back to top 5 by minutesTarget.
+  // This ensures starters with low minutes (e.g., resting due to condition) are still
+  // treated as starters for rotation purposes (play start of Q1/Q3, end of Q2/Q4).
+  let starters: Set<string>;
+  if (starterNames && starterNames.size === 5) {
+    starters = starterNames;
+  } else {
+    const sorted = [...roster].sort((a, b) => b.minutesTarget - a.minutesTarget);
+    starters = new Set(sorted.slice(0, 5).map(p => p.name));
+  }
+
+  // Calculate remaining minutes needed for each player based on actual minutes played
+  // This accounts for cumulative error from previous quarters
+  const remainingMinutes = (quarter - 1) * 12; // Minutes that should have been played so far
+  const adjustedRoster = roster.map(p => {
+    const actual = actualMinutes[p.name] || 0;
+    const expectedSoFar = (p.minutesTarget / 4) * (quarter - 1);
+    const error = actual - expectedSoFar; // Positive if played too much, negative if played too little
+
+    // Adjust this quarter's target to compensate for error
+    // If player played 2 min too much, reduce this quarter's target by 2 min
+    const adjustedQuarterTarget = Math.max(0, p.quarterTarget - error);
+
+    // Also cap so player doesn't exceed their total game target
+    const remainingForGame = Math.max(0, p.minutesTarget - actual);
+    const cappedTarget = Math.min(adjustedQuarterTarget, remainingForGame, 12); // Can't play more than 12 min in a quarter
+
+    return {
+      ...p,
+      quarterTarget: cappedTarget,
+      originalQuarterTarget: p.quarterTarget
+    };
+  });
+
+  // Use adjusted roster for all calculations below
+  const rosterToUse = adjustedRoster;
+
+  if (quarter === 1) {
+    // Q1: SIMPLE PRIORITY SYSTEM
+    // - All 5 starters begin the quarter
+    // - Each starter plays until they reach their quarterTarget
+    // - When a starter hits their target, they sub out for the highest-minutes bench player
+    // - Priority: Starters' minutes are SACRED
+
+    const starterPlayers = rosterToUse.filter(p => starters.has(p.name));
+    // Filter out bench players with 0 target - they should not enter the game
+    const benchPlayers = rosterToUse.filter(p => !starters.has(p.name) && p.quarterTarget > 0);
+
+    // Sort starters by quarterTarget (lowest minutes first - they sub out first)
+    const startersSorted = [...starterPlayers].sort((a, b) => a.quarterTarget - b.quarterTarget);
+
+    // Sort bench by quarterTarget (highest minutes first - they sub in first)
+    const benchSorted = [...benchPlayers].sort((a, b) => b.quarterTarget - a.quarterTarget);
+
+    // Create starter plans: they sub out when they've played their quarterTarget
+    const starterPlans = startersSorted.map(p => {
+      // Starter subs out at: 12.0 - quarterTarget remaining
+      // E.g., if needs 7.6 min, subs out at 12 - 7.6 = 4.4 min remaining
+      const subOutAt = 12.0 - p.quarterTarget;
+
+      return {
+        playerName: p.name,
+        startsQuarter: true,
+        subOutAt: subOutAt > 0 ? subOutAt : null,  // null if plays full quarter
+        subInAt: null,
+        minutesNeeded: p.quarterTarget
+      };
+    });
+
+    // Create bench plans: they sub in when a starter comes out, play to end of quarter
+    const benchPlans = benchSorted.map(p => {
+      return {
+        playerName: p.name,
+        startsQuarter: false,
+        subOutAt: null,  // Play to end of quarter
+        subInAt: null,   // Will be determined dynamically when starter comes out
+        minutesNeeded: p.quarterTarget
+      };
+    });
+
+    // FIX: Create plans for bench players with 0 quarterTarget who might still be on court
+    // These players have exceeded their allocation and should be subbed out immediately
+    const exceededBenchPlayers = rosterToUse.filter(p => !starters.has(p.name) && p.quarterTarget <= 0);
+    const exceededPlans = exceededBenchPlayers.map(p => {
+      return {
+        playerName: p.name,
+        startsQuarter: true,  // Mark as starting so they can be subbed out
+        subOutAt: 12.0,       // Sub out immediately (at quarter start)
+        subInAt: null,
+        minutesNeeded: 0      // They don't need any more minutes
+      };
+    });
+
+    const allPlans = [...starterPlans, ...benchPlans, ...exceededPlans];
+
+    // DEBUG: Log Q1 rotation plans
+    console.log(`\n[Q1 SIMPLE ROTATION PLANS]`);
+    console.log('  Starters (sub out order):');
+    for (const plan of starterPlans.filter(p => p.subOutAt !== null)) {
+      console.log(`    ${plan.playerName}: plays ${plan.minutesNeeded.toFixed(1)} min, subs out at ${plan.subOutAt.toFixed(1)} remaining`);
+    }
+    console.log('  Bench (sub in order):');
+    for (const plan of benchPlans) {
+      console.log(`    ${plan.playerName}: ${plan.minutesNeeded.toFixed(1)} min target`);
+    }
+
+    return allPlans;
+  } else if (quarter === 2 || quarter === 4) {
+    // Q2 & Q4: SIMPLE PRIORITY SYSTEM (bench starts, starters sub in)
+    // - Bench continues from previous quarter
+    // - Each starter subs IN after 12 - quarterTarget minutes to play their target
+    // - When a starter needs to come IN, the bench player with LOWEST minutes subs OUT
+    // - Priority: Starters' minutes are SACRED
+
+    const starterPlayers = rosterToUse.filter(p => starters.has(p.name));
+    // Filter out bench players with 0 target - they should not enter the game
+    const benchPlayers = rosterToUse.filter(p => !starters.has(p.name) && p.quarterTarget > 0);
+
+    // Sort starters by quarterTarget (highest minutes first - they sub in first)
+    const startersSorted = [...starterPlayers].sort((a, b) => b.quarterTarget - a.quarterTarget);
+
+    // Sort bench by quarterTarget (lowest minutes first - they sub out first)
+    const benchSorted = [...benchPlayers].sort((a, b) => a.quarterTarget - b.quarterTarget);
+
+    // Bench players start the quarter (continuing from Q1/Q3)
+    // They don't have fixed sub-out times - they sub out when a starter needs to come in
+    const benchPlans = benchSorted.map(p => {
+      return {
+        playerName: p.name,
+        startsQuarter: true,  // Continues from previous quarter
+        subOutAt: null,  // No fixed time - subs out when replaced by starter
+        subInAt: null,
+        minutesNeeded: p.quarterTarget
+      };
+    });
+
+    // Starters sub in when bench players come out
+    const starterPlans = startersSorted.map(p => {
+      // Starter subs in at: quarterTarget remaining
+      // E.g., LeBron needs 10 min, so he subs in at 10:00 remaining, plays until 0:00 = 10 min total
+      const subInAt = p.quarterTarget;
+
+      return {
+        playerName: p.name,
+        startsQuarter: false,
+        subOutAt: null,  // Play to end of quarter
+        subInAt: subInAt > 0 && subInAt < 12.0 ? subInAt : null,  // Only if they don't play full quarter
+        minutesNeeded: p.quarterTarget
+      };
+    });
+
+    // FIX: Create plans for bench players with 0 quarterTarget who might still be on court
+    // These players have exceeded their allocation and should be subbed out immediately
+    const exceededBenchPlayers = rosterToUse.filter(p => !starters.has(p.name) && p.quarterTarget <= 0);
+    const exceededPlans = exceededBenchPlayers.map(p => {
+      return {
+        playerName: p.name,
+        startsQuarter: true,  // Mark as starting so they can be subbed out
+        subOutAt: 12.0,       // Sub out immediately (at quarter start)
+        subInAt: null,
+        minutesNeeded: 0      // They don't need any more minutes
+      };
+    });
+
+    const allPlans = [...benchPlans, ...starterPlans, ...exceededPlans];
+
+    // DEBUG: Log Q2/Q4 rotation plans
+    console.log(`\n[Q${quarter} SIMPLE ROTATION PLANS]`);
+    console.log('  Bench (continue from previous quarter, lowest minutes sub out first):');
+    for (const plan of benchPlans) {
+      console.log(`    ${plan.playerName}: ${plan.minutesNeeded.toFixed(1)} min target`);
+    }
+    console.log('  Starters (sub in order by highest minutes first):');
+    for (const plan of starterPlans.filter(p => p.subInAt !== null)) {
+      console.log(`    ${plan.playerName}: ${plan.minutesNeeded.toFixed(1)} min target, subs in at ${plan.subInAt.toFixed(1)} remaining`);
+    }
+
+    return allPlans;
+  } else if (quarter === 3) {
+    // Q3: Same as Q1 - starters begin, sub out in priority order
+    const starterPlayers = rosterToUse.filter(p => starters.has(p.name));
+    // Filter out bench players with 0 target - they should not enter the game
+    const benchPlayers = rosterToUse.filter(p => !starters.has(p.name) && p.quarterTarget > 0);
+
+    // Sort starters by quarterTarget (lowest minutes first - they sub out first)
+    const startersSorted = [...starterPlayers].sort((a, b) => a.quarterTarget - b.quarterTarget);
+
+    // Sort bench by quarterTarget (highest minutes first - they sub in first)
+    const benchSorted = [...benchPlayers].sort((a, b) => b.quarterTarget - a.quarterTarget);
+
+    // Create starter plans: they sub out when they've played their quarterTarget
+    const starterPlans = startersSorted.map(p => {
+      const subOutAt = 12.0 - p.quarterTarget;
+
+      return {
+        playerName: p.name,
+        startsQuarter: true,
+        subOutAt: subOutAt > 0 ? subOutAt : null,
+        subInAt: null,
+        minutesNeeded: p.quarterTarget
+      };
+    });
+
+    // Create bench plans: they sub in when a starter comes out, play to end of quarter
+    const benchPlans = benchSorted.map(p => {
+      return {
+        playerName: p.name,
+        startsQuarter: false,
+        subOutAt: null,
+        subInAt: null,  // Will be determined dynamically when starter comes out
+        minutesNeeded: p.quarterTarget
+      };
+    });
+
+    // FIX: Create plans for bench players with 0 quarterTarget who might still be on court
+    // These players have exceeded their allocation and should be subbed out immediately
+    const exceededBenchPlayers = rosterToUse.filter(p => !starters.has(p.name) && p.quarterTarget <= 0);
+    const exceededPlans = exceededBenchPlayers.map(p => {
+      return {
+        playerName: p.name,
+        startsQuarter: true,  // Mark as starting so they can be subbed out
+        subOutAt: 12.0,       // Sub out immediately (at quarter start)
+        subInAt: null,
+        minutesNeeded: 0      // They don't need any more minutes
+      };
+    });
+
+    const allPlans = [...starterPlans, ...benchPlans, ...exceededPlans];
+
+    // DEBUG: Log Q3 rotation plans
+    console.log(`\n[Q3 SIMPLE ROTATION PLANS]`);
+    console.log('  Starters (sub out order):');
+    for (const plan of starterPlans.filter(p => p.subOutAt !== null)) {
+      console.log(`    ${plan.playerName}: plays ${plan.minutesNeeded.toFixed(1)} min, subs out at ${plan.subOutAt.toFixed(1)} remaining`);
+    }
+    console.log('  Bench (sub in order):');
+    for (const plan of benchPlans) {
+      console.log(`    ${plan.playerName}: ${plan.minutesNeeded.toFixed(1)} min target`);
+    }
+
+    return allPlans;
+  } else {
+    // Fallback: Use adjusted targets for any quarter not explicitly handled
+    // This uses the cumulative error-adjusted targets calculated above
+    return rosterToUse.map(p => {
+      const actual = actualMinutes[p.name] || 0;
+      const remaining = Math.max(0, p.minutesTarget - actual);
+      const isPlayerStarter = starters.has(p.name);
+
+      if (remaining > 0 && p.quarterTarget > 0) {
+        // Sub in at appropriate time (capped at 12 minutes and at adjusted target)
+        const minutesToPlay = Math.min(p.quarterTarget, remaining, 12.0);
+        return {
+          playerName: p.name,
+          startsQuarter: !isPlayerStarter,  // Bench continues, starters sub in
+          subOutAt: isPlayerStarter ? null : minutesToPlay,  // Bench subs out when starters return
+          subInAt: isPlayerStarter ? minutesToPlay : null,  // Starters sub in
+          minutesNeeded: minutesToPlay
+        };
+      } else {
+        // Don't play this quarter (target already met)
+        return {
+          playerName: p.name,
+          startsQuarter: false,
+          subOutAt: null,
+          subInAt: null,
+          minutesNeeded: 0
+        };
+      }
+    });
+  }
+}
+
 // =============================================================================
 // SUBSTITUTION LOGIC
 // =============================================================================
@@ -343,10 +864,10 @@ export function selectSubstitute(
 /**
  * Check if two positions are interchangeable.
  *
- * Rules:
+ * Position compatibility rules:
  *   PG ↔ SG (guards)
  *   SF ↔ PF (wings)
- *   C ↔ C (centers only)
+ *   C ↔ C only (centers)
  *
  * @param positionOut - Position of player exiting
  * @param positionIn - Position of candidate substitute
@@ -365,7 +886,7 @@ export function isPositionCompatible(positionOut: string, positionIn: string): b
     return true;
   }
 
-  // Centers only match centers
+  // Centers only match with centers
   if (positionOut === 'C' && positionIn === 'C') {
     return true;
   }
@@ -507,120 +1028,223 @@ export class LineupManager {
 export class SubstitutionManager {
   private homeRoster: Player[];
   private awayRoster: Player[];
-  private minutesAllocationHome: Record<string, number>;
-  private minutesAllocationAway: Record<string, number>;
+  private homeRosterWithMinutes: PlayerWithMinutes[];
+  private awayRosterWithMinutes: PlayerWithMinutes[];
+  private homeRotationPlans: QuarterlyRotationPlan[];
+  private awayRotationPlans: QuarterlyRotationPlan[];
+  private currentQuarter: number;
+  private actualMinutesHome: Record<string, number>;
+  private actualMinutesAway: Record<string, number>;
   private tacticalHome: TacticalSettings | null;
   private tacticalAway: TacticalSettings | null;
-  private paceHome: string;
-  private paceAway: string;
-  private scoringOptionsHome: string[];
-  private scoringOptionsAway: string[];
   private homeLineupManager: LineupManager;
   private awayLineupManager: LineupManager;
   private substitutionEvents: SubstitutionEvent[];
   private lastSubTime: Record<string, number>;
-  private substitutionCooldownMinutes: number;
   private timeOnCourt: Record<string, number>;
   private homeStarters: Set<string>;
   private awayStarters: Set<string>;
   private starterReplacementMap: Record<string, string>;
+  private q4StartProcessed: boolean;
   private q4DecisionsHome: Record<string, Q4Decision>;
   private q4DecisionsAway: Record<string, Q4Decision>;
-  private q4StartProcessed: boolean;
+  private minutesAllocationHome: Record<string, number>;
+  private minutesAllocationAway: Record<string, number>;
+  private paceHome: string;
+  private paceAway: string;
+  private scoringOptionsHome: string[];
+  private scoringOptionsAway: string[];
 
   /**
-   * Initialize substitution manager.
+   * Initialize substitution manager with new quarterly rotation system.
    *
-   * @param homeRoster - Full home team roster (10-13 players)
-   * @param awayRoster - Full away team roster (10-13 players)
-   * @param minutesAllocationHome - Map of player name → minutes (for quarter)
-   * @param minutesAllocationAway - Map of player name → minutes (for quarter)
+   * @param homeRoster - Full home team roster (10+ players)
+   * @param awayRoster - Full away team roster (10+ players)
    * @param homeStartingLineup - Optional starting 5 for home team
    * @param awayStartingLineup - Optional starting 5 for away team
-   * @param tacticalHome - TacticalSettings for home team
-   * @param tacticalAway - TacticalSettings for away team
+   * @param tacticalHome - TacticalSettings for home team (optional)
+   * @param tacticalAway - TacticalSettings for away team (optional)
+   * @param homeMinutesAllocation - User-provided minutes allocation for home team (optional)
+   * @param awayMinutesAllocation - User-provided minutes allocation for away team (optional)
    */
   constructor(
     homeRoster: Player[],
     awayRoster: Player[],
-    minutesAllocationHome: Record<string, number>,
-    minutesAllocationAway: Record<string, number>,
     homeStartingLineup?: Player[],
     awayStartingLineup?: Player[],
     tacticalHome?: TacticalSettings | null,
-    tacticalAway?: TacticalSettings | null
+    tacticalAway?: TacticalSettings | null,
+    homeMinutesAllocation?: Record<string, number> | null,
+    awayMinutesAllocation?: Record<string, number> | null
   ) {
     this.homeRoster = homeRoster;
     this.awayRoster = awayRoster;
-    this.minutesAllocationHome = minutesAllocationHome;
-    this.minutesAllocationAway = minutesAllocationAway;
-
-    // Store tactical settings for Q4 closer calculations
     this.tacticalHome = tacticalHome ?? null;
     this.tacticalAway = tacticalAway ?? null;
 
-    // Extract pace and scoring options (with safe defaults)
-    this.paceHome = tacticalHome?.pace ?? 'standard';
-    this.paceAway = tacticalAway?.pace ?? 'standard';
+    // Use user-provided minutes allocation if available, otherwise calculate automatically
+    const hasValidHomeAllocation = homeMinutesAllocation && Object.keys(homeMinutesAllocation).length > 0;
+    const hasValidAwayAllocation = awayMinutesAllocation && Object.keys(awayMinutesAllocation).length > 0;
 
-    this.scoringOptionsHome = [];
-    if (tacticalHome) {
-      if (tacticalHome.scoringOption1) this.scoringOptionsHome.push(tacticalHome.scoringOption1);
-      if (tacticalHome.scoringOption2) this.scoringOptionsHome.push(tacticalHome.scoringOption2);
-      if (tacticalHome.scoringOption3) this.scoringOptionsHome.push(tacticalHome.scoringOption3);
+    this.homeRosterWithMinutes = hasValidHomeAllocation
+      ? applyUserMinutesAllocation(homeRoster, homeMinutesAllocation)
+      : calculateMinutesTargets(homeRoster);
+    this.awayRosterWithMinutes = hasValidAwayAllocation
+      ? applyUserMinutesAllocation(awayRoster, awayMinutesAllocation)
+      : calculateMinutesTargets(awayRoster);
+
+    // Initialize rotation plans (will be updated at start of each quarter)
+    this.homeRotationPlans = [];
+    this.awayRotationPlans = [];
+    this.currentQuarter = 1;
+
+    // Track actual minutes played
+    this.actualMinutesHome = {};
+    this.actualMinutesAway = {};
+    for (const player of homeRoster) {
+      this.actualMinutesHome[player.name] = 0;
+    }
+    for (const player of awayRoster) {
+      this.actualMinutesAway[player.name] = 0;
     }
 
-    this.scoringOptionsAway = [];
-    if (tacticalAway) {
-      if (tacticalAway.scoringOption1) this.scoringOptionsAway.push(tacticalAway.scoringOption1);
-      if (tacticalAway.scoringOption2) this.scoringOptionsAway.push(tacticalAway.scoringOption2);
-      if (tacticalAway.scoringOption3) this.scoringOptionsAway.push(tacticalAway.scoringOption3);
-    }
+    // Determine starting lineups from minutes targets if not provided
+    const homeStarters = homeStartingLineup ||
+      [...this.homeRosterWithMinutes]
+        .sort((a, b) => b.minutesTarget - a.minutesTarget)
+        .slice(0, 5);
 
-    // Initialize lineup managers with starting lineups
-    this.homeLineupManager = new LineupManager(homeRoster, homeStartingLineup);
-    this.awayLineupManager = new LineupManager(awayRoster, awayStartingLineup);
+    const awayStarters = awayStartingLineup ||
+      [...this.awayRosterWithMinutes]
+        .sort((a, b) => b.minutesTarget - a.minutesTarget)
+        .slice(0, 5);
+
+    // Initialize lineup managers
+    this.homeLineupManager = new LineupManager(homeRoster, homeStarters);
+    this.awayLineupManager = new LineupManager(awayRoster, awayStarters);
+
+    // Initialize starter sets for isStarter() method
+    // Starters are determined by who starts Q1 (rating-based or explicitly selected)
+    // NOT by minutes allocation. A starter with low minutes (e.g., 20 min due to condition)
+    // should still be treated as a starter for rotation purposes (play start of Q1/Q3, end of Q2/Q4).
+    this.homeStarters = new Set(homeStarters.map(p => p.name));
+    this.awayStarters = new Set(awayStarters.map(p => p.name));
 
     // Track substitution events
     this.substitutionEvents = [];
 
-    // M3 FIX: Track last substitution time per player to prevent excessive churn
+    // Track last substitution time per player
     this.lastSubTime = {};
     for (const player of [...homeRoster, ...awayRoster]) {
-      this.lastSubTime[player.name] = -999.0; // Never subbed yet
+      this.lastSubTime[player.name] = -999.0;
     }
-    this.substitutionCooldownMinutes = 2.0;
 
-    // NEW: Track continuous time on court for each player
+    // Track continuous time on court for each player
     this.timeOnCourt = {};
     for (const player of [...homeRoster, ...awayRoster]) {
       this.timeOnCourt[player.name] = 0.0;
     }
 
-    // Identify starters (players with highest minutes allocation)
-    this.homeStarters = new Set();
-    const sortedHome = [...homeRoster].sort((a, b) =>
-      (minutesAllocationHome[b.name] ?? 0) - (minutesAllocationHome[a.name] ?? 0)
-    );
-    for (let i = 0; i < Math.min(5, sortedHome.length); i++) {
-      this.homeStarters.add(sortedHome[i].name);
-    }
-
-    this.awayStarters = new Set();
-    const sortedAway = [...awayRoster].sort((a, b) =>
-      (minutesAllocationAway[b.name] ?? 0) - (minutesAllocationAway[a.name] ?? 0)
-    );
-    for (let i = 0; i < Math.min(5, sortedAway.length); i++) {
-      this.awayStarters.add(sortedAway[i].name);
-    }
-
-    // BUG FIX: Track which backup replaced which starter
+    // Track which backup replaced which starter
     this.starterReplacementMap = {};
 
-    // Q4 Closer System: Track Q4 rotation decisions
+    // Q4 closer system
+    this.q4StartProcessed = false;
     this.q4DecisionsHome = {};
     this.q4DecisionsAway = {};
-    this.q4StartProcessed = false;
+
+    // Initialize minutes allocation (quarter targets)
+    this.minutesAllocationHome = {};
+    this.minutesAllocationAway = {};
+    for (const player of this.homeRosterWithMinutes) {
+      this.minutesAllocationHome[player.name] = player.quarterTarget;
+    }
+    for (const player of this.awayRosterWithMinutes) {
+      this.minutesAllocationAway[player.name] = player.quarterTarget;
+    }
+
+    // Extract pace and scoring options from tactical settings
+    this.paceHome = (tacticalHome as any)?.pace || 'standard';
+    this.paceAway = (tacticalAway as any)?.pace || 'standard';
+    this.scoringOptionsHome = [
+      (tacticalHome as any)?.scoring_option_1,
+      (tacticalHome as any)?.scoring_option_2,
+      (tacticalHome as any)?.scoring_option_3
+    ].filter((opt): opt is string => opt !== null && opt !== undefined);
+    this.scoringOptionsAway = [
+      (tacticalAway as any)?.scoring_option_1,
+      (tacticalAway as any)?.scoring_option_2,
+      (tacticalAway as any)?.scoring_option_3
+    ].filter((opt): opt is string => opt !== null && opt !== undefined);
+  }
+
+  /**
+   * Start a new quarter - calculate rotation plans based on quarterly rotation system.
+   *
+   * @param quarter - Quarter number (1-4)
+   */
+  startQuarter(quarter: number): void {
+    this.currentQuarter = quarter;
+
+    // Calculate rotation plans for this quarter
+    // Pass actual starter names so rotation plans know who the real starters are
+    // (rating-based, not minutes-based)
+    this.homeRotationPlans = calculateQuarterlyRotations(
+      this.homeRosterWithMinutes,
+      quarter,
+      this.actualMinutesHome,
+      this.homeStarters
+    );
+
+    this.awayRotationPlans = calculateQuarterlyRotations(
+      this.awayRosterWithMinutes,
+      quarter,
+      this.actualMinutesAway,
+      this.awayStarters
+    );
+
+    // DEBUG: Log rotation plans for key players
+    const debugPlayers = ['LeBron James', 'Jaxson Hayes', 'Anthony Davis'];
+    console.log(`\n[ROTATION PLANS] Q${quarter} Start`);
+
+    const homePlansToLog = this.homeRotationPlans.filter(p => debugPlayers.includes(p.playerName));
+    if (homePlansToLog.length > 0) {
+      console.log('  Home Team:');
+      for (const plan of homePlansToLog) {
+        const actualMin = this.actualMinutesHome[plan.playerName] || 0;
+        console.log(`    ${plan.playerName}: starts=${plan.startsQuarter}, ` +
+          `subOut=${plan.subOutAt !== null ? plan.subOutAt.toFixed(1) : 'null'}, ` +
+          `subIn=${plan.subInAt !== null ? plan.subInAt.toFixed(1) : 'null'}, ` +
+          `need=${plan.minutesNeeded.toFixed(1)}, actual=${actualMin.toFixed(1)}`);
+      }
+    }
+
+    const awayPlansToLog = this.awayRotationPlans.filter(p => debugPlayers.includes(p.playerName));
+    if (awayPlansToLog.length > 0) {
+      console.log('  Away Team:');
+      for (const plan of awayPlansToLog) {
+        const actualMin = this.actualMinutesAway[plan.playerName] || 0;
+        console.log(`    ${plan.playerName}: starts=${plan.startsQuarter}, ` +
+          `subOut=${plan.subOutAt !== null ? plan.subOutAt.toFixed(1) : 'null'}, ` +
+          `subIn=${plan.subInAt !== null ? plan.subInAt.toFixed(1) : 'null'}, ` +
+          `need=${plan.minutesNeeded.toFixed(1)}, actual=${actualMin.toFixed(1)}`);
+      }
+    }
+  }
+
+  /**
+   * Update actual minutes played for a player.
+   *
+   * @param playerName - Player name
+   * @param minutesPlayed - Minutes to add
+   * @param team - 'home' or 'away'
+   */
+  addMinutesPlayed(playerName: string, minutesPlayed: number, team: 'home' | 'away'): void {
+    if (team === 'home') {
+      this.actualMinutesHome[playerName] = (this.actualMinutesHome[playerName] || 0) + minutesPlayed;
+    } else {
+      this.actualMinutesAway[playerName] = (this.actualMinutesAway[playerName] || 0) + minutesPlayed;
+    }
   }
 
   /**
@@ -633,9 +1257,10 @@ export class SubstitutionManager {
    * @param gameTimeStr - Current game time string
    * @param timeRemainingInQuarter - Seconds remaining in quarter
    * @param quarterNumber - Current quarter (1-4)
-   * @param debug - If true, print debug information
    * @param homeScore - Current home team score
    * @param awayScore - Current away team score
+   * @param foulSystem - FoulSystem instance to check for fouled-out players
+   * @param debug - If true, print debug information
    * @returns List of substitution events that occurred
    */
   checkAndExecuteSubstitutions(
@@ -643,9 +1268,10 @@ export class SubstitutionManager {
     gameTimeStr: string,
     timeRemainingInQuarter: number = 0,
     quarterNumber: number = 1,
-    debug: boolean = false,
     homeScore: number = 0,
-    awayScore: number = 0
+    awayScore: number = 0,
+    foulSystem: any = null,
+    debug: boolean = false
   ): SubstitutionEvent[] {
     const events: SubstitutionEvent[] = [];
 
@@ -686,37 +1312,263 @@ export class SubstitutionManager {
       }
     }
 
-    // Check home team (score_differential positive if home winning)
-    const homeEvents = this.checkTeamSubstitutions(
+    // PRIORITY 1: Check rotation-based substitutions FIRST
+    const homeRotationEvents = this.checkRotationPlanSubstitutions(
       this.homeLineupManager,
-      this.minutesAllocationHome,
+      this.homeRotationPlans,
       staminaTracker,
       gameTimeStr,
       timeRemainingInQuarter,
-      quarterNumber,
-      homeScore - awayScore,
-      'home'
+      'home',
+      foulSystem
     );
-    events.push(...homeEvents);
+    events.push(...homeRotationEvents);
 
-    // Check away team (score_differential positive if away winning)
-    const awayEvents = this.checkTeamSubstitutions(
+    const awayRotationEvents = this.checkRotationPlanSubstitutions(
       this.awayLineupManager,
-      this.minutesAllocationAway,
+      this.awayRotationPlans,
       staminaTracker,
       gameTimeStr,
       timeRemainingInQuarter,
-      quarterNumber,
-      awayScore - homeScore,
-      'away'
+      'away',
+      foulSystem
     );
-    events.push(...awayEvents);
+    events.push(...awayRotationEvents);
+
+    // PRIORITY 2: DISABLED - Old substitution system conflicts with rotation plans
+    // The rotation plan system now handles all substitutions
+    // const homeEvents = this.checkTeamSubstitutions(
+    //   this.homeLineupManager,
+    //   this.minutesAllocationHome,
+    //   staminaTracker,
+    //   gameTimeStr,
+    //   timeRemainingInQuarter,
+    //   quarterNumber,
+    //   homeScore - awayScore,
+    //   'home',
+    //   foulSystem
+    // );
+    // events.push(...homeEvents);
+
+    // const awayEvents = this.checkTeamSubstitutions(
+    //   this.awayLineupManager,
+    //   this.minutesAllocationAway,
+    //   staminaTracker,
+    //   gameTimeStr,
+    //   timeRemainingInQuarter,
+    //   quarterNumber,
+    //   awayScore - homeScore,
+    //   'away',
+    //   foulSystem
+    // );
+    // events.push(...awayEvents);
 
     // Store events
     this.substitutionEvents.push(...events);
 
     if (debug && events.length > 0) {
       console.log(`[DEBUG SUB CHECK] ${gameTimeStr}: ${events.length} substitutions executed`);
+    }
+
+    return events;
+  }
+
+  /**
+   * Check and execute rotation-based substitutions for one team.
+   * Uses the quarterly rotation plans calculated at the start of each quarter.
+   *
+   * @param lineupManager - LineupManager for this team
+   * @param rotationPlans - Quarterly rotation plans for this team
+   * @param staminaTracker - StaminaTracker instance
+   * @param gameTimeStr - Current game time string
+   * @param timeRemainingInQuarter - Seconds remaining in quarter
+   * @param team - 'home' or 'away'
+   * @param foulSystem - FoulSystem instance to check for fouled-out players
+   * @returns List of substitution events
+   */
+  private checkRotationPlanSubstitutions(
+    lineupManager: LineupManager,
+    rotationPlans: QuarterlyRotationPlan[],
+    staminaTracker: StaminaTracker,
+    gameTimeStr: string,
+    timeRemainingInQuarter: number,
+    team: 'home' | 'away',
+    foulSystem: any = null
+  ): SubstitutionEvent[] {
+    const events: SubstitutionEvent[] = [];
+    const timeRemainingMin = timeRemainingInQuarter / 60.0;
+    const staminaValues = staminaTracker.getAllStaminaValues();
+    const activePlayers = lineupManager.getActivePlayers();
+    const benchPlayers = lineupManager.getBenchPlayers();
+    const activeNames = new Set(activePlayers.map(p => p.name));
+
+    // DEBUG: Log rotation check state for key players
+    const debugPlayers = ['LeBron James', 'Jaxson Hayes', 'Anthony Davis'];
+    const shouldDebug = rotationPlans.some(p => debugPlayers.includes(p.playerName));
+    if (shouldDebug) {
+      console.log(`\n[ROTATION DEBUG] Q${this.currentQuarter} @ ${gameTimeStr} (${timeRemainingMin.toFixed(2)} min remaining)`);
+      console.log(`  Active: ${activePlayers.map(p => p.name).join(', ')}`);
+      console.log(`  Bench: ${benchPlayers.map(p => p.name).join(', ')}`);
+    }
+
+    // Execute the appropriate substitution pattern based on quarter
+    if (this.currentQuarter === 1 || this.currentQuarter === 3) {
+      // Q1/Q3 PATTERN: Starters sub OUT, bench players (highest minutes) sub IN
+
+      // Find starters who need to sub OUT
+      const startersToSubOut: Array<{player: Player, plan: QuarterlyRotationPlan}> = [];
+      for (const plan of rotationPlans) {
+        if (plan.startsQuarter && plan.subOutAt !== null && activeNames.has(plan.playerName)) {
+          const shouldSubOut = timeRemainingMin <= plan.subOutAt;
+
+          if (debugPlayers.includes(plan.playerName)) {
+            console.log(`  [${plan.playerName}] SUB OUT: planSubOut=${plan.subOutAt.toFixed(2)}, timeRemaining=${timeRemainingMin.toFixed(2)}, shouldSub=${shouldSubOut}`);
+          }
+
+          if (shouldSubOut) {
+            const player = activePlayers.find(p => p.name === plan.playerName);
+            if (player) {
+              startersToSubOut.push({player, plan});
+            }
+          }
+        }
+      }
+
+      // Get bench players sorted by minutes (highest first), excluding those already playing
+      // IMPORTANT: Exclude starters who already played their target minutes this quarter
+      const starterNames = new Set(rotationPlans.filter(p => p.startsQuarter).map(p => p.playerName));
+
+      // Get roster with minutes targets to filter out 0-allocation players
+      const rosterWithMinutes = team === 'home' ? this.homeRosterWithMinutes : this.awayRosterWithMinutes;
+      const gameMinutesTargetByName: Record<string, number> = {};
+      for (const p of rosterWithMinutes) {
+        gameMinutesTargetByName[p.name] = p.minutesTarget;
+      }
+
+      const availableBench = benchPlayers
+        .filter(p => {
+          if (foulSystem && foulSystem.isFouledOut(p.name)) return false;
+          // Don't allow starters who already played their target to sub back in
+          if (starterNames.has(p.name)) return false;
+          // CRITICAL: Don't allow DNP players (0 game minutes allocation) to enter
+          const gameTarget = gameMinutesTargetByName[p.name] ?? 0;
+          if (gameTarget <= 0) return false;
+          return true;
+        })
+        .map(p => {
+          const plan = rotationPlans.find(rp => rp.playerName === p.name);
+          return {player: p, minutesTarget: plan?.minutesNeeded ?? 0};
+        })
+        .sort((a, b) => b.minutesTarget - a.minutesTarget);
+
+      // Sort starters to sub out by GAME minutes target (ascending)
+      // Starters with LOWEST targets should sub out first
+      // This way, if there aren't enough bench players, the starters who should play MORE stay on court
+      startersToSubOut.sort((a, b) => {
+        const aGameTarget = gameMinutesTargetByName[a.player.name] ?? 0;
+        const bGameTarget = gameMinutesTargetByName[b.player.name] ?? 0;
+        return aGameTarget - bGameTarget;
+      });
+
+      // Match each starter subbing out with next available bench player
+      // Only attempt as many substitutions as we have bench players available
+      let benchIndex = 0;
+      for (const {player: starterOut, plan} of startersToSubOut) {
+        if (benchIndex >= availableBench.length) break;
+
+        const benchIn = availableBench[benchIndex];
+        if (!benchIn) break;
+
+        const success = lineupManager.substitute(starterOut, benchIn.player);
+
+        if (success) {
+          console.log(`  → SUB: ${starterOut.name} OUT (played ${plan.minutesNeeded.toFixed(1)} min), ${benchIn.player.name} IN`);
+          events.push({
+            quarterTime: gameTimeStr,
+            playerOut: starterOut.name,
+            playerIn: benchIn.player.name,
+            reason: 'minutes',
+            staminaOut: staminaValues[starterOut.name] ?? 0,
+            staminaIn: staminaValues[benchIn.player.name] ?? 0,
+            team
+          });
+          benchIndex++;
+        }
+      }
+    } else if (this.currentQuarter === 2 || this.currentQuarter === 4) {
+      // Q2/Q4 PATTERN: Starters sub IN, bench players (lowest minutes) sub OUT
+
+      // Get roster with minutes targets for sorting
+      const rosterWithMinutes = team === 'home' ? this.homeRosterWithMinutes : this.awayRosterWithMinutes;
+      const gameMinutesTargetByName: Record<string, number> = {};
+      for (const p of rosterWithMinutes) {
+        gameMinutesTargetByName[p.name] = p.minutesTarget;
+      }
+
+      // Find starters who need to sub IN
+      const startersToSubIn: Array<{player: Player, plan: QuarterlyRotationPlan}> = [];
+      for (const plan of rotationPlans) {
+        if (!plan.startsQuarter && plan.subInAt !== null && !activeNames.has(plan.playerName)) {
+          const shouldSubIn = timeRemainingMin <= plan.subInAt;
+
+          if (debugPlayers.includes(plan.playerName)) {
+            console.log(`  [${plan.playerName}] SUB IN: planSubIn=${plan.subInAt.toFixed(2)}, timeRemaining=${timeRemainingMin.toFixed(2)}, shouldSub=${shouldSubIn}`);
+          }
+
+          if (shouldSubIn) {
+            const player = benchPlayers.find(p => p.name === plan.playerName);
+            if (player && (!foulSystem || !foulSystem.isFouledOut(player.name))) {
+              startersToSubIn.push({player, plan});
+            }
+          }
+        }
+      }
+
+      // Sort starters to sub in by GAME minutes target (descending)
+      // Starters with HIGHEST targets should sub in first
+      // This way, if there aren't enough bench players to replace, the starters who should play MOST get back on court
+      startersToSubIn.sort((a, b) => {
+        const aGameTarget = gameMinutesTargetByName[a.player.name] ?? 0;
+        const bGameTarget = gameMinutesTargetByName[b.player.name] ?? 0;
+        return bGameTarget - aGameTarget;
+      });
+
+      // Get active bench players sorted by minutes (lowest first - they sub out first)
+      const activeBenchToSubOut = activePlayers
+        .filter(p => {
+          const plan = rotationPlans.find(rp => rp.playerName === p.name);
+          return plan && plan.startsQuarter;  // Is a bench player (started this quarter)
+        })
+        .map(p => {
+          const plan = rotationPlans.find(rp => rp.playerName === p.name);
+          return {player: p, minutesTarget: plan?.minutesNeeded ?? 0};
+        })
+        .sort((a, b) => a.minutesTarget - b.minutesTarget);  // Lowest minutes first
+
+      // Match each starter subbing in with next available bench player (lowest minutes)
+      let benchOutIndex = 0;
+      for (const {player: starterIn} of startersToSubIn) {
+        if (benchOutIndex >= activeBenchToSubOut.length) break;
+
+        const benchOut = activeBenchToSubOut[benchOutIndex];
+        if (!benchOut) break;
+
+        const success = lineupManager.substitute(benchOut.player, starterIn);
+
+        if (success) {
+          console.log(`  → SUB: ${benchOut.player.name} OUT (played ${benchOut.minutesTarget.toFixed(1)} min), ${starterIn.name} IN`);
+          events.push({
+            quarterTime: gameTimeStr,
+            playerOut: benchOut.player.name,
+            playerIn: starterIn.name,
+            reason: 'minutes',
+            staminaOut: staminaValues[benchOut.player.name] ?? 0,
+            staminaIn: staminaValues[starterIn.name] ?? 0,
+            team
+          });
+          benchOutIndex++;
+        }
+      }
     }
 
     return events;
@@ -752,7 +1604,8 @@ export class SubstitutionManager {
     timeRemainingInQuarter: number = 0,
     quarterNumber: number = 1,
     scoreDifferential: number = 0,
-    team: 'home' | 'away'
+    team: 'home' | 'away',
+    foulSystem: any = null
   ): SubstitutionEvent[] {
     const events: SubstitutionEvent[] = [];
     let activePlayers = lineupManager.getActivePlayers();
@@ -772,9 +1625,10 @@ export class SubstitutionManager {
       const currentStamina = staminaTracker.getCurrentStamina(playerName);
       const isStarter = this.isStarter(playerName);
 
-      // Rule #2: Starter with <70 stamina must be subbed out (unless crunch time)
-      // Rule #3: In crunch time, only sub out if stamina < 50 (play exhausted stars)
-      let staminaThreshold = isCrunchTime ? 50.0 : 70.0;
+      // EMERGENCY ONLY: Now that rotation plans handle substitutions, this only triggers
+      // for critically low stamina (players who missed their rotation substitution)
+      // Normal: 40 stamina, Crunch time: 30 stamina
+      let staminaThreshold = isCrunchTime ? 30.0 : 40.0;
 
       // Q4 CLOSER FIX: Check if this starter should finish Q4 (close game)
       let q4CloserActive = false;
@@ -796,7 +1650,8 @@ export class SubstitutionManager {
           player.position,
           staminaValues,
           true,
-          90.0
+          90.0,
+          team
         );
 
         if (substitute) {
@@ -806,7 +1661,7 @@ export class SubstitutionManager {
               quarterTime: gameTimeStr,
               playerOut: playerName,
               playerIn: substitute.name,
-              reason: 'stamina_rule2',
+              reason: 'stamina',
               staminaOut: currentStamina,
               staminaIn: staminaTracker.getCurrentStamina(substitute.name),
               team,
@@ -828,8 +1683,12 @@ export class SubstitutionManager {
       }
     }
 
-    // RULE #1: Check for starters on bench who are ready to return
-    for (const benchPlayer of [...benchPlayers]) {
+    // RULE #1: DISABLED - Now handled by rotation plans
+    // Only Q4 closer logic remains active here
+    // Skip Rule #1 for Q1-Q3, only run for Q4 close games
+    if (quarterNumber === 4 && Math.abs(scoreDifferential) <= 10) {
+      // Q4 closer logic still active
+      for (const benchPlayer of [...benchPlayers]) {
       const benchPlayerName = benchPlayer.name;
       const isStarter = this.isStarter(benchPlayerName);
       const benchStamina = staminaValues[benchPlayerName] ?? 0;
@@ -848,6 +1707,11 @@ export class SubstitutionManager {
       // Rule #1: Starter with 90+ stamina is ready to return
       // Q4 CLOSER FIX: OR starter has Q4 insert plan in close game (bypass 90 requirement)
       if (isStarter && (benchStamina >= 90.0 || hasQ4InsertPlan)) {
+        // CRITICAL: Check if starter has fouled out - do NOT sub them back in
+        if (foulSystem && foulSystem.isFouledOut(benchPlayerName)) {
+          continue; // Skip this player, they fouled out
+        }
+
         // Q4 CLOSER SYSTEM: Check if we should wait to insert this starter
         let q4InsertOverride = false;
         if (quarterNumber === 4 && Math.abs(scoreDifferential) <= 10) {
@@ -953,6 +1817,7 @@ export class SubstitutionManager {
         }
       }
     }
+    } // End Q4 closer check (if quarterNumber === 4 && Math.abs(scoreDifferential) <= 10)
 
     return events;
   }
@@ -1225,8 +2090,17 @@ export class SubstitutionManager {
     const homeActive = this.homeLineupManager.getActivePlayers();
     const awayActive = this.awayLineupManager.getActivePlayers();
 
+    // Track time on court for stamina-based substitutions
     for (const player of [...homeActive, ...awayActive]) {
       this.timeOnCourt[player.name] = (this.timeOnCourt[player.name] ?? 0) + durationMinutes;
+    }
+
+    // Track actual minutes for rotation plan adjustments (critical for Q3 to rotate different starters)
+    for (const player of homeActive) {
+      this.addMinutesPlayed(player.name, durationMinutes, 'home');
+    }
+    for (const player of awayActive) {
+      this.addMinutesPlayed(player.name, durationMinutes, 'away');
     }
   }
 
@@ -1298,14 +2172,28 @@ export class SubstitutionManager {
     positionOut: string,
     staminaValues: Record<string, number>,
     isReplacingStarter: boolean,
-    minimumStamina: number = 90.0
+    minimumStamina: number = 90.0,
+    team: 'home' | 'away' = 'home'
   ): Player | null {
     if (benchPlayers.length === 0) {
       return null;
     }
 
+    // Get the roster with minutes targets to filter out 0-allocation players
+    const rosterWithMinutes = team === 'home' ? this.homeRosterWithMinutes : this.awayRosterWithMinutes;
+    const minutesTargetByName: Record<string, number> = {};
+    for (const p of rosterWithMinutes) {
+      minutesTargetByName[p.name] = p.minutesTarget;
+    }
+
     // BUG FIX: Filter out starters whose tracked replacement is still on court
+    // AND filter out players with 0 minutes allocation (DNP)
     const eligibleBench = benchPlayers.filter(p => {
+      // CRITICAL: Exclude players with 0 minutes allocation (DNP)
+      const minutesTarget = minutesTargetByName[p.name] ?? 0;
+      if (minutesTarget <= 0) {
+        return false;
+      }
       // Check if this player is a starter with a tracked replacement
       if (this.starterReplacementMap[p.name]) {
         // This starter has a tracked backup - check if backup is still on court
@@ -1408,19 +2296,22 @@ export function validateMinutesAllocation(
   allocations: Record<string, number>,
   teamSize: number
 ): [boolean, string] {
-  const total = Object.values(allocations).reduce((sum, val) => sum + val, 0);
+  // Check for negative values first (clearly invalid)
+  for (const [playerName, minutes] of Object.entries(allocations)) {
+    if (minutes < 0) {
+      return [false, `Player ${playerName} has negative minutes: ${minutes}`];
+    }
+  }
 
   // Check total
+  const total = Object.values(allocations).reduce((sum, val) => sum + val, 0);
   if (Math.abs(total - 240) > 0.1) {
     // Allow tiny floating point error
     return [false, `Total minutes must be 240, got ${total}`];
   }
 
-  // Check individual allocations
+  // Check for excessive values (> 48 minutes)
   for (const [playerName, minutes] of Object.entries(allocations)) {
-    if (minutes < 0) {
-      return [false, `Player ${playerName} has negative minutes: ${minutes}`];
-    }
     if (minutes > 48) {
       return [false, `Player ${playerName} exceeds 48 minutes: ${minutes}`];
     }

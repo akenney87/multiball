@@ -1,0 +1,254 @@
+================================================================================
+PHASE 3 RESULTS - UNEXPECTED OUTCOME
+================================================================================
+
+IMPLEMENTATION:
+  - Added calculate_offensive_versatility() function (continuous scale 0-3)
+  - Modified build_usage_distribution() to weight non-options by versatility
+  - Tested with 20 games
+
+EXPECTED OUTCOME:
+  - Rim attempts: 44.9% -> 40-42% (reduction of 3-5%)
+  - Rationale: One-dimensional rim-only players get less usage
+
+ACTUAL OUTCOME:
+  - Rim attempts: 44.9% -> 46.8% (+1.9%) INCREASED!
+  - Midrange: 13.6% -> 11.0% (-2.6%) DECREASED!
+  - 3PT: 41.5% -> 42.1% (+0.6%) Slight increase
+
+VERDICT: Phase 3 made things WORSE, not better.
+
+================================================================================
+ROOT CAUSE ANALYSIS
+================================================================================
+
+HYPOTHESIS 1: Versatility scores too similar
+--------------------------------------------------------------------------------
+Team Alpha non-option versatility scores:
+  - Hassan Swatter (rim-only C): 1.95
+  - Dennis Boardman (PF): 2.05
+  - Tony Lockdown (defensive PG): 1.98
+  - Jerry Midrange (versatile SG): 2.49
+  - Vince Skywalker (dunker SF): 2.22
+  - Karl Post-Up (PF): 2.27
+  - Dikembe Wall (rim-only C): 2.02
+
+Range: 1.95 to 2.49 (only 0.54 difference, ~28% spread)
+
+OLD SYSTEM (flat):
+  Everyone gets equal share: 17.5% (if 2 non-options)
+
+NEW SYSTEM (versatility-weighted):
+  Hassan (1.95): Gets ~16% usage (slightly less)
+  Jerry (2.49): Gets ~20% usage (slightly more)
+
+PROBLEM: The spread is too narrow to create significant differentiation.
+Even Hassan (rim-only, lowest versatility) only loses ~1.5% usage.
+
+
+HYPOTHESIS 2: Versatile players ALSO attack the rim
+--------------------------------------------------------------------------------
+The players who gained usage under the new system:
+  - Jerry Midrange (2.49): Rim composite 72.5 (good finisher!)
+  - Karl Post-Up (2.27): Rim composite 75.0 (post moves at rim!)
+  - Vince Skywalker (2.22): Rim composite 81.5 (ELITE dunker!)
+
+The players who lost usage:
+  - Hassan Swatter (1.95): Rim composite 77.7 (elite rim finisher)
+  - Tony Lockdown (1.98): Rim composite 65.0 (moderate rim tendency)
+
+NET EFFECT:
+  We reduced Hassan's usage from 17.5% -> ~16% (saves 1.0% rim attempts)
+  But INCREASED Jerry/Karl/Vince usage (adds 1.5-2.0% rim attempts)
+
+Because Jerry, Karl, and Vince are ALSO good rim finishers (just more versatile),
+the net effect was MORE rim attempts, not fewer.
+
+
+HYPOTHESIS 3: Versatility doesn't capture shot preference
+--------------------------------------------------------------------------------
+VERSATILITY measures: "Can you score from multiple locations?"
+  - Jerry (2.49): Elite at 3PT (88.8), mid (88.9), good at rim (72.5)
+  - Vince (2.22): Good at 3PT (69.9), mid (70.2), ELITE at rim (81.5)
+
+SHOT PREFERENCE measures: "Where do you PREFER to score?"
+  - Jerry: Despite versatility, may still prefer midrange/3PT
+  - Vince: Despite versatility, PREFERS rim (elite dunker)
+
+ISSUE: Versatility alone doesn't capture shot distribution preferences.
+Vince is versatile (2.22) but rim-heavy in actual shot selection.
+
+By giving Vince more usage, we gave more shots to a rim-heavy player.
+
+
+HYPOTHESIS 4: "One-dimensional" players aren't that one-dimensional
+--------------------------------------------------------------------------------
+Hassan Swatter (labeled "rim-only"):
+  - 3PT composite: 58.7 (below average but not terrible)
+  - Midrange: 59.0 (below average)
+  - Rim: 77.7 (elite)
+  - Versatility: 1.95
+
+He's not truly "one-dimensional" - his versatility of 1.95 means he CAN score
+from all three levels, he's just BEST at the rim. The continuous scale worked
+as designed, but the differences aren't dramatic enough.
+
+NBA Rudy Gobert (truly one-dimensional):
+  - 3PT composite: ~10-15 (almost never shoots)
+  - Midrange: ~20-30 (rarely shoots)
+  - Rim: ~95 (elite dunks only)
+  - Versatility: ~0.4-0.6
+
+Our "rim-only" players are much more versatile than true NBA rim-only players.
+
+================================================================================
+WHY MIDRANGE DECREASED
+================================================================================
+
+Phase 2 -> Phase 3: Midrange dropped from 13.6% -> 11.0% (-2.6%)
+
+THEORY:
+Players who gained usage tend to have higher 3PT/rim preferences:
+  - Jerry Midrange: Despite name, has 88.8 3PT, 88.9 mid, 72.5 rim
+    His shot distribution likely favors 3PT and rim over midrange
+  - Vince Skywalker: 81.5 rim composite -> heavy rim tendency
+
+Players who lost usage may have had more balanced midrange tendencies:
+  - Tony Lockdown: More balanced shot distribution
+
+By shifting usage toward Jerry and Vince, we shifted away from players who
+might have taken more midrange shots.
+
+This suggests the real issue is SHOT DISTRIBUTION MODIFIERS, not usage.
+
+================================================================================
+ARCHITECTURAL INSIGHT
+================================================================================
+
+The user's original intuition was correct: "We need to reduce the amount of
+shots he takes...period."
+
+But the IMPLEMENTATION had a flaw: Versatility doesn't equal "should get more
+shots." It should be: "Efficiency matters more than versatility."
+
+NBA REALITY:
+  - Luka Doncic: 36% usage (elite efficiency across all three levels)
+  - Rudy Gobert: 14% usage (elite efficiency at rim ONLY, but high efficiency)
+  - Westbrook: 28% usage (versatile but declining efficiency)
+
+The key is EFFICIENCY, not versatility.
+
+A player who is elite at rim (Gobert, Hassan) but terrible elsewhere should
+get LOW usage because:
+  1. Defenses can sag off and dare them to shoot
+  2. They clog the lane for other players
+  3. Their scoring is easy to scheme against
+
+A player who is elite everywhere (Luka, KD) should get HIGH usage because:
+  1. Defense has no weaknesses to exploit
+  2. They create mismatches
+  3. Can score in any situation
+
+CORRECT FORMULA:
+  Usage should be weighted by:
+  1. BEST composite (peak ability)
+  2. VERSATILITY (ability to adapt)
+  3. EFFICIENCY balance (can't be exploited)
+
+Not just versatility alone.
+
+================================================================================
+REVISED PROPOSAL: PHASE 3b
+================================================================================
+
+OPTION 1: Penalize Low-Composite Locations
+  Versatility = (3pt/100) + (mid/100) + (rim/100)
+  But: Apply penalty for composites < 50
+
+  New formula:
+    If composite >= 50: contribution = composite / 100
+    If composite < 50: contribution = (composite / 100) ^ 2 (squared penalty)
+
+  Example:
+    Hassan (58.7, 59.0, 77.7):
+      3pt: 0.587
+      mid: 0.590
+      rim: 0.777
+      Total: 1.95 (unchanged)
+
+    Rudy Gobert-style (20, 30, 95):
+      3pt: 0.20^2 = 0.04
+      mid: 0.30^2 = 0.09
+      rim: 0.95
+      Total: 1.08 (much lower!)
+
+  This would penalize truly one-dimensional players more aggressively.
+
+
+OPTION 2: Weight by Efficiency, Not Versatility
+  Usage = Average of top 2 composites (ignore worst)
+
+  Hassan (58.7, 59.0, 77.7):
+    Top 2: 77.7, 59.0
+    Average: 68.4 / 100 = 0.684 weight
+
+  Jerry (88.8, 88.9, 72.5):
+    Top 2: 88.9, 88.8
+    Average: 88.9 / 100 = 0.889 weight
+
+  This rewards peak ability and secondary skill, ignoring weaknesses.
+
+
+OPTION 3: Combine Versatility AND Best Composite
+  Usage weight = (versatility / 3) * 0.5 + (max_composite / 100) * 0.5
+
+  Hassan:
+    Versatility: 1.95 / 3 = 0.65
+    Best: 77.7 / 100 = 0.777
+    Weight: 0.65 * 0.5 + 0.777 * 0.5 = 0.714
+
+  Jerry:
+    Versatility: 2.48 / 3 = 0.827
+    Best: 88.9 / 100 = 0.889
+    Weight: 0.827 * 0.5 + 0.889 * 0.5 = 0.858
+
+  More balanced approach.
+
+
+OPTION 4: Abandon Versatility Approach Entirely
+  Revert Phase 3, go back to original Phase 3 plan:
+    Reduce player composite bonuses from 0.008 -> 0.005
+
+  This was the original proposal before the user suggested usage distribution.
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+OPTION A: Revert Phase 3, Implement Original Phase 3 (Composite Reduction)
+  - Revert possession.py changes
+  - Implement shooting.py changes (0.008 -> 0.005)
+  - Expected: Rim 44.9% -> 40-42%
+  - Rationale: Addresses the actual problem (shot selection, not usage)
+
+OPTION B: Fix Phase 3 with Efficiency-Based Weighting (Option 2 above)
+  - Keep versatility function but change to "top 2 average" approach
+  - Test with 20 games
+  - If still not working, revert to Option A
+
+OPTION C: Combine Approaches
+  - Implement BOTH versatility (refined) AND composite reduction
+  - More complex, but may be most effective
+
+MY RECOMMENDATION: Option A (revert Phase 3, do original plan)
+
+RATIONALE:
+  - The root cause is SHOT DISTRIBUTION (how players select shots), not USAGE
+  - Hassan taking 67% of his shots at rim is fine IF he only gets 12% usage
+  - The real problem is the COMPOSITE BONUSES making ALL players attack rim too much
+  - Versatility-based usage is architecturally sound but needs more refinement
+  - Original Phase 3 (composite reduction) directly targets the problem
+
+================================================================================
+
+AWAITING USER FEEDBACK ON PHASE 3 FAILURE AND NEXT STEPS

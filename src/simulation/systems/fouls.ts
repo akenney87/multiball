@@ -84,15 +84,19 @@ export interface FoulEvent {
 
 /**
  * Shooting foul base rates
- * M4.5 PHASE 3: Tuned to achieve PF ~19-20, FTA ~22-24
- * 2.5x produced: PF 19.1 (good), FTA 30.6 (too high, ratio 1.60)
- * Reducing shooting fouls to 2.0x, increasing non-shooting to rebalance
- * REALISM FIX: Reduced by 12% (×0.88) to hit NBA target of 19.5 fouls/team (was 22.1)
+ * MAJOR REALISM FIX: Previous rates (21-35%) were way too high, causing
+ * 5+ players to foul out per game. Real NBA: ~0 foul outs per game on average.
+ *
+ * NBA targets: ~20 personal fouls per team, ~22 FTA per team
+ * With ~100 possessions and ~1.5 shot attempts per possession, we need:
+ * - Heavily contested (rim): ~10-12% foul rate on layups/dunks
+ * - Contested: ~6-8% foul rate
+ * - Wide open: ~1% (mostly jumpshots)
  */
 export const SHOOTING_FOUL_BASE_RATES: Record<string, number> = {
-  contested: 0.21, // 21% for contested (2-6 ft) [Was 0.24]
-  heavily_contested: 0.35, // 35% for heavily contested (<2 ft) [Was 0.40]
-  wide_open: 0.035, // 3.5% for wide open (6+ ft, rare) [Was 0.04]
+  contested: 0.07, // 7% for contested (2-6 ft)
+  heavily_contested: 0.12, // 12% for heavily contested (<2 ft, rim attacks)
+  wide_open: 0.01, // 1% for wide open (6+ ft, rare reach-in)
 };
 
 /**
@@ -100,29 +104,28 @@ export const SHOOTING_FOUL_BASE_RATES: Record<string, number> = {
  * 3PT fouls should be RARE (1-2 per game max), rim fouls more common
  */
 export const SHOT_TYPE_FOUL_MULTIPLIERS: Record<string, number> = {
-  '3pt': 0.15, // 85% reduction for 3PT fouls (extremely rare)
-  midrange: 0.4, // 60% reduction for midrange fouls
+  '3pt': 0.1, // 90% reduction for 3PT fouls (extremely rare)
+  midrange: 0.3, // 70% reduction for midrange fouls
   layup: 1.0, // Baseline (no change)
-  dunk: 1.2, // 20% increase for dunks (more contact at rim)
+  dunk: 1.1, // 10% increase for dunks (more contact at rim)
 };
 
 /**
  * Non-shooting foul base rates
- * M4.5 PHASE 3: Increased by 3.0x to rebalance PF/FTA ratio
- * REALISM FIX: Reduced by 12% (×0.88) to hit NBA target of 19.5 fouls/team (was 22.1)
+ * MAJOR REALISM FIX: Reduced significantly to prevent excessive foul outs.
+ * Target: ~8-10 non-shooting fouls per team per game
  */
-export const NON_SHOOTING_FOUL_BASE_RATE = 0.066; // 6.6% per possession (generic) [Was 0.075]
+export const NON_SHOOTING_FOUL_BASE_RATE = 0.025; // 2.5% per possession (generic)
 
 /**
  * Action-specific rates (used for different non-shooting foul contexts)
- * M4.5 PHASE 3: Increased by 3.0x to maintain PF ~19-20 with lower FTA
- * REALISM FIX: Reduced by 12% (×0.88) to hit NBA target of 19.5 fouls/team (was 22.1)
+ * MAJOR REALISM FIX: Reduced to realistic NBA levels
  */
 export const ACTION_FOUL_RATES: Record<string, number> = {
-  drive: 0.066, // 6.6% during drives (reach-in fouls) [Was 0.075]
-  post_up: 0.055, // 5.5% during post-ups (holding) [Was 0.063]
-  rebound: 0.032, // 3.2% during rebounds (loose ball fouls) [Was 0.036]
-  off_ball: 0.018, // 1.8% during off-ball movement (hand-checking/holding) [Was 0.021]
+  drive: 0.025, // 2.5% during drives (reach-in fouls)
+  post_up: 0.02, // 2% during post-ups (holding)
+  rebound: 0.012, // 1.2% during rebounds (loose ball fouls)
+  off_ball: 0.006, // 0.6% during off-ball movement (hand-checking/holding)
 };
 
 /**

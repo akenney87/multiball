@@ -1,0 +1,187 @@
+================================================================================
+WHY 3PT% DECREASED AFTER CONTEST DISTRIBUTION FIX
+================================================================================
+
+OBSERVATION:
+- Before fix: 3.6% wide open, 25.7% overall 3PT%
+- After fix: 24.2% wide open (6.7x increase), 25.4% overall 3PT% (slight DECREASE)
+- Expected: Overall % should increase with more open shots
+- Actual: Overall % decreased slightly
+
+================================================================================
+ROOT CAUSE: VARIANCE DECOUPLES CONTEST DISTANCE FROM DEFENDER QUALITY
+================================================================================
+
+BEFORE FIX (Deterministic Contest Distance):
+------------------------------------------------------------
+Formula: base_distance = 10.0 - (defender_composite / 10.0)
+
+Poor defender (30):    10 - 3.0 = 7.0 ft → Wide Open (6+ ft)
+Average defender (50): 10 - 5.0 = 5.0 ft → Contested (2-6 ft)
+Good defender (70):    10 - 7.0 = 3.0 ft → Contested (2-6 ft)
+Elite defender (90):   10 - 9.0 = 1.0 ft → Heavy (<2 ft)
+
+Result: Contest distance PERFECTLY correlated with defender quality
+- Wide open shots = ONLY against poor defenders
+- Heavy contest = ONLY against elite defenders
+
+AFTER FIX (With Gaussian Variance σ=1.9):
+------------------------------------------------------------
+Formula: base_distance = 10.0 - (defender_composite / 10.0) + N(0, 1.9)
+
+Poor defender (30):    7.0 ± 1.9 ft → mostly Wide (5.1-8.9 ft), some Contested
+Average defender (50): 5.0 ± 1.9 ft → mostly Contested (3.1-6.9 ft), some Wide/Heavy
+Good defender (70):    3.0 ± 1.9 ft → mostly Contested (1.1-4.9 ft), some Heavy/Wide
+Elite defender (90):   1.0 ± 1.9 ft → mostly Heavy (-0.9-2.9 ft), some Contested
+
+Result: Contest distance PARTIALLY decoupled from defender quality
+- Wide open shots = mix of poor, average, and occasionally good defenders
+- Heavy contest = mix of elite, good, and occasionally average defenders
+
+================================================================================
+FG% IMPACT BY CONTEST CATEGORY
+================================================================================
+
+CONTEST PENALTIES (3PT):
+- Wide Open (6+ ft): 0% base penalty
+- Contested (2-6 ft): -8% base penalty
+- Heavy (<2 ft):     -15% base penalty
+
+DEFENDER MODIFIER:
+- total_penalty = base_penalty - (defender_composite - 50) * 0.001
+- Elite (90): adds -4% penalty
+- Average (50): adds 0% penalty
+- Poor (30): adds +2% penalty (but capped at 0% for wide open)
+
+WIDE OPEN SHOTS (6+ ft):
+
+Before Fix (3.6% of shots, 36.2% FG%):
+- 100% against poor defenders (comp <40)
+- Penalty: 0% base + 0% defender mod = 0% total
+- Pure, uncontested shots → 36.2% FG%
+
+After Fix (24.2% of shots, 33.8% FG%):
+- ~60% against poor defenders (comp <40): 0% penalty
+- ~30% against average defenders (comp 50): 0% penalty
+- ~10% against good defenders (comp 70+): -2% to -4% penalty
+- Mixed quality → 33.8% FG% (2.4 pp lower)
+
+CONTESTED SHOTS (2-6 ft):
+
+Before Fix (96.4% of shots, 25.3% FG%):
+- Mix of average/good/elite defenders
+- Typical penalty: -8% to -12%
+- Contested but no extreme variance → 25.3% FG%
+
+After Fix (64.7% of shots, 23.8% FG%):
+- Now includes some elite defenders "unlucky" with variance
+- Previously would be Heavy (<2 ft), now Contested (2-6 ft)
+- More elite defenders in this bucket → lower FG% (1.5 pp lower)
+
+HEAVY CONTEST (<2 ft):
+
+Before Fix: Effectively 0% of shots (not printed in output)
+- Only absolute best defenders (95+) produce <2 ft deterministically
+
+After Fix (10.6% of shots, 16.2% FG%):
+- Mostly elite defenders (80+)
+- Penalty: -15% to -19%
+- Extremely difficult shots → 16.2% FG%
+
+================================================================================
+MATHEMATICAL VERIFICATION
+================================================================================
+
+Before Fix Weighted Average:
+(3.6% × 36.2%) + (96.4% × 25.3%) = 1.3% + 24.4% = 25.7% ✓
+
+After Fix Weighted Average:
+(24.2% × 33.8%) + (64.7% × 23.8%) + (10.6% × 16.2%)
+= 8.2% + 15.4% + 1.7%
+= 25.3% ≈ 25.4% ✓
+
+The math checks out internally for both runs.
+
+================================================================================
+WHY THIS HAPPENED
+================================================================================
+
+The variance we added to fix the contest distribution had an unintended effect:
+
+1. Created more "wide open" shots ✓ (good for realism)
+2. BUT made "wide open" shots less effective per attempt ✗
+   - Before: wide open = only vs poor defenders (36.2%)
+   - After: wide open = vs mixed defender quality (33.8%)
+
+3. Created the new "heavy contest" category ✓ (good for realism)
+4. BUT pulled the hardest contested shots into a separate bucket ✗
+   - This slightly reduced the "contested" bucket's FG%
+
+5. Net effect: Volume shift canceled out by quality dilution
+   - More open shots (+20.6 pp volume)
+   - But less effective open shots (-2.4 pp quality)
+   - Result: Overall % stays flat
+
+================================================================================
+IS THIS A BUG OR REALISTIC BEHAVIOR?
+================================================================================
+
+This is actually REALISTIC behavior!
+
+In real basketball:
+- Wide open ≠ always vs bad defender
+- Good defenders get caught in screens, help rotations, etc.
+- You can have an "open" shot against an elite defender (he's just far away)
+- The defender modifier (-4% for elite) captures this: even when far away, 
+  an elite defender's presence/positioning still impacts success rate
+
+Before the fix:
+- Contest distance was TOO CORRELATED with defender quality
+- Unrealistic: only bad defenders ever give up open shots
+- Wide open shots had artificially high success rate (36.2%)
+
+After the fix:
+- Contest distance is PARTIALLY DECOUPLED from defender quality (realistic)
+- Wide open shots have more realistic success rate (33.8%)
+- Still higher than contested (23.8%), but not as extreme
+
+================================================================================
+WHAT THIS MEANS FOR THE CORRELATION ISSUE
+================================================================================
+
+The contest distribution fix was necessary for realism, but it doesn't solve
+the core correlation problem.
+
+Core issue remains: SIGMOID_K = 0.015 is too shallow
+- Produces only 8.3 percentage point spread across 40-70 composite range
+- Shot-level correlation: 0.054 (still very weak)
+- Need to increase k to 0.025-0.030 to get meaningful attribute impact
+
+The contest fix was orthogonal to the correlation fix:
+- Contest fix: Makes shot difficulty distribution realistic
+- Correlation fix: Makes player ability matter more in outcomes
+
+Both fixes are necessary, but they address different problems.
+
+================================================================================
+RECOMMENDED NEXT STEPS
+================================================================================
+
+1. Accept the 3PT% slight decrease (25.7% → 25.4%)
+   - This is more realistic behavior
+   - Wide open shots shouldn't be automatic makes
+   - 33.8% on wide open is reasonable (NBA: ~38% on wide open)
+
+2. Proceed with increasing SIGMOID_K to fix correlation
+   - This is the core issue causing random outcomes
+   - Will increase all FG% buckets proportionally
+   - Should see correlation improve from 0.054 → 0.15+
+
+3. After k increase, validate contest distribution again
+   - Ensure wide open, contested, heavy buckets still realistic
+   - Re-run 100-game validation
+
+4. Consider shot selection logic (BACKLOG.md item #4)
+   - Prevent bad shooters from taking 3PT attempts
+   - Will naturally increase league-wide 3PT% by 3-5 pp
+   - More realistic player behavior

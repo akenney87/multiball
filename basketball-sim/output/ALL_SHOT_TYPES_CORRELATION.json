@@ -1,0 +1,39 @@
+{
+  "3pt": {
+    "correlation": 0.6100259859982717,
+    "qualified_players": 59,
+    "total_attempts": 1478,
+    "total_makes": 463,
+    "overall_pct": 0.31326116373477675,
+    "status": "EXCELLENT - System working correctly"
+  },
+  "midrange_short": {
+    "correlation": 0.0,
+    "qualified_players": 0,
+    "total_attempts": 0,
+    "overall_pct": 0.0,
+    "status": "INSUFFICIENT_SAMPLE"
+  },
+  "midrange_long": {
+    "correlation": 0.0,
+    "qualified_players": 0,
+    "total_attempts": 0,
+    "overall_pct": 0.0,
+    "status": "INSUFFICIENT_SAMPLE"
+  },
+  "layup": {
+    "correlation": 0.25969177292538664,
+    "qualified_players": 10,
+    "total_attempts": 234,
+    "total_makes": 142,
+    "overall_pct": 0.6068376068376068,
+    "status": "MODERATE - Defensive factors may be too strong"
+  },
+  "dunk": {
+    "correlation": 0.0,
+    "qualified_players": 2,
+    "total_attempts": 0,
+    "overall_pct": 0.0,
+    "status": "INSUFFICIENT_SAMPLE"
+  }
+}

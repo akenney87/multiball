@@ -1,0 +1,81 @@
+20+ Clarifying Questions
+
+  Technical & Platform Questions
+
+  1. Mobile Framework: What mobile development framework are you planning to use? (React Native, Flutter, native iOS/Android, or something else?) - I don't have a plan for this
+  2. Backend/Data Persistence: How do you want to handle data persistence? Local storage only, or do you need a backend server for cloud saves/syncing
+  between devices? - local storage for the MVP, but we need to leave the door open for cloud saves/syncing
+  3. Basketball-Sim Integration: The basketball-sim is in Python. How do you envision integrating it with the mobile app? (Rewrite in JavaScript/Dart,
+  use Python backend API, or another approach?) - I'm not sure, what makes the most sense?  I feel like if we rewrite in another language we will need to spend days debugging new issues
+  4. Offline Functionality: Should the game work completely offline after purchase, or will it require internet connectivity? - completely offline after purchase, for now.  Eventually we want the users to be able to play with their friends
+  5. Cross-Platform Save: Should saves work across both iOS and Android if a user switches devices?  Eventually, not necessary for MVP
+
+  Game Initialization & Starting State
+
+  6. Initial Roster Size: How many athletes does the user start with in their "stable"? (5? 10? 15?) - 50
+  7. Starting Budget: What's the starting budget range, and what currency/scale are we using? ($1M? $10M? Abstract points?) - Users start with $1M, minus current costs (contracts, coaches etc)
+  8. Initial Sport: Does the user start with just basketball unlocked, or are all sports available from the beginning? - we will have 3 sports available at the beginning
+  9. Youth Academy Start: Does the user start with a youth academy already, or is it something they need to "build/unlock"? - let's give them the youth academy at the very start
+  10. Initial Schedule: How many games in the first season? Is this configurable or fixed? - make it fixed.  I'm thinking 20 teams, each team plays every other team once in each sport so 57 matches.
+
+  Core Game Systems - Details
+
+  11. Training System Specificity: When allocating time to technical/mental/physical, does the user allocate per athlete individually, or is there a
+  team-wide training allocation that affects everyone? - team-wide, but the user can also allocate per athlete if he wants to
+  12. Attribute Improvement: How do attributes improve? Linear growth? Diminishing returns? Do younger players improve faster? What's the relationship
+  between training allocation and actual attribute gains? - whichever method is the most true-to-life realistic
+  13. Budget Allocation Granularity: For coaching/injury/youth academy/scouting - is this a percentage-based allocation (e.g., 20% to coaching, 30% to
+  scouting), or fixed amounts? Can it be adjusted mid-season or only between seasons? - I think percentage based is simpler, but we should also have it labeled so users know the dollar amount.  I'm thinking we use a sort of sliding scale radar chart for this.  Can only be changed between seasons.
+  14. Contract System Details: Do contracts have fixed lengths (1-5 years)? Salary increases? Release clauses? Performance bonuses? What happens when
+  contracts expire? - All of the above = yes.  The contract system should be almost exactly like Football Manager...If you need more clarity on that ask me again.
+  15. Transfer System Economics: How does revenue from selling athletes work? Do transfer fees go directly to the budget? Are there transfer windows
+  (specific times to buy/sell)? - Revenue earned from player sales are added directly to the budget (if midseason, allocated to some sort of 'available funds' bucket).  Transfer window is open from July 1 to new years' day.
+  16. Scouting Results: How often does scouting produce results? After each game? Weekly? Monthly? Do scouts discover new generated athletes or find
+  existing ones from other teams? - scouts can be directly to look for free agents or players on existing teams, along with many other filters for the user's convenience.  Results weekly.
+  17. Injury Impact: When an athlete is injured, what happens? They miss games for X weeks? Attributes temporarily reduced? Do they still consume
+  salary/resources while injured? - Injuries can happen both in mid-game or during training.  After the incident the user receives a report from team doctor, detailing the injury and the recovery window. Yes, the athlete is still paid while injured.  No, an athlete cannot be forced to play while recovering from injury.
+  18. Youth Academy Graduates: How often do youth prospects "graduate" and join the main roster? Once per season? When they reach a certain age? Can the
+   user reject prospects if roster is full? - youth prospects must be promoted to the main squad before reaching the age of 19.  Yes, they can be called up sooner.  Yes, the user can simply reject prospects at any time.  Only a certain amount of youth players can be in the academy simultaneously, and that is based on how much money is allocated towards the youth academy.  I'm not quite sure how the math should go, but I'm thinking $100k budget cost for a bare minimum program, with a bare minimum amount of players.  Every $50k added on to that increases the likelihood of high-potential prospects, the number of players at the academy, and the coaching/facilities (which should increase the players' progression rate)
+  19. Free Agent Pool: Is there a global pool of free agents that all users (in single-player, just the AI teams?) draw from? How often does it refresh? - Yes.  Any time a player is cut or a players' contract expires the pool refreshes to include those players.
+  20. Multi-Sport Participation: Can one athlete play basketball AND baseball in the same season? Are there stamina/injury implications for playing
+  multiple sports? Or is it season-based (basketball season, then baseball season)? - this is the whole crux of the idea.  The user can, if they'd like, have sport-specific players, but that will be very expensive and not viable in the early-game.  The Multiball Season will include all sports; in other words they are all grouped into the same season.  We want the user to have to use some or all athletes in various sports.  This will/should create stamina implications, but that is part of the strategy.
+
+  Progression & Win Conditions
+
+  21. Victory Conditions: What makes a franchise "successful"? Championships won? Revenue generated? Some combination score? Is there an end state, or
+  does it continue indefinitely? - The game continues indefinitely.  We can create a combination score and maybe a leaderboard for users but that's not the most important short-term goal.
+  22. Difficulty Scaling: Do AI opponents get better over time, or does the challenge come from managing your declining veterans and integrating new
+  talent? - To start, each user is placed in a low-tier division.  Performing well during the season earns promotion to a higher division, which naturally creates tougher competition.
+  23. Revenue Model Progression: You mentioned buying the "full game" unlocks infinite seasons. What does the free version include? (X number of seasons
+   as a demo?) - free version is just one season
+
+  AI & Simulation
+
+  24. AI Teams: Are there AI-controlled teams the user competes against? How many teams in a league? Do AI teams also trade, sign free agents, and
+  develop players? - Yes and yes, 20 teams per division
+  25. Simulation Speed: Can users simulate games quickly (just see results), or do they watch/follow play-by-play? Is this a user choice? - Yes, user choice
+  26. Season Simulation: Can users simulate to the next important decision point (next game, end of week, end of season), or is it game-by-game only? Yes, user choice
+
+  UI/UX Details
+
+  27. Navigation Structure: What's the main navigation structure you envision? (Dashboard → Training/Scouting/Roster/Schedule tabs? Bottom navigation?
+  Hamburger menu?) - I would have to see design proposals before making a determination
+  28. Dashboard Overview: What key information should the user see on the main dashboard? (Next game, budget, team morale, injuries, pending decisions?) - that all sounds good, I'm not worried about the team-morale system for now though.
+  29. Notifications/Alerts: Should the game alert users to important events? (Contract expiring, injury occurred, youth prospect ready, scout found
+  target athlete?) - yes, via emails in the users' virtual inbox
+  30. Complexity Toggle: You mentioned users can keep it simple OR go deep. How do you envision this? (Beginner/Advanced mode toggle? Auto-manage
+  buttons? Progressive feature unlocking?) - I just meant, for instance, the user can set training up at a team-wide level (simple), or they can go through each and every player and create customized training for them every single week.  The user can just allocate funds to the scouting budget and, by default, a general population of players will be scouted, or the user can search by attribute or height etc and pick through different divisions and find players they are interested in and select those specific players to be scouted.  That's the kind of stuff I meant.  That's the spirit of the game.
+
+  Additional Systems
+
+  31. Morale/Happiness System: Is there an athlete morale/happiness system that affects performance? (Playing time, salary satisfaction, team success,
+  etc.) - let's ignore this for now
+  32. Staff/Facilities: Beyond budget allocation for coaching/medical/etc., are there physical facilities to build/upgrade? (Training facility, medical
+  center, stadium?) - no upgrades, just the financial allocations
+  33. Sponsorships/Revenue Streams: Beyond the user's purchase, does the in-game franchise generate revenue? (Ticket sales, merchandise, sponsorships?)
+  Does this feed back into the budget?  Yes.  Franchises also get paid based on where they finish in their division/league each season.
+  34. Historical Records: Should the game track historical records? (Best season, all-time leading scorer, championship history?) - Yes
+  35. Attributes Visibility: Can users see all 25 attributes for each athlete, or should some be hidden/aggregated into simpler ratings? - users can see all attributes, but POTENTIAL will remain hiddenwe 
+
+  Please answer these questions in whatever format is easiest for you - numbered responses, paragraphs, bullet points, etc. Once I understand your
+  vision more clearly, I'll be able to recommend the right agents and create a solid gameplan!

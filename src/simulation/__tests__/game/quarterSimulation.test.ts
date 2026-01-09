@@ -40,6 +40,7 @@ const mockPlayer = (name: string, position: string = 'PG', overrides: Partial<Pl
   finesse: 50,
   deception: 50,
   teamwork: 50,
+  footwork: 50,
   ...overrides,
 });
 

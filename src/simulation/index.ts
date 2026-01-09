@@ -12,20 +12,17 @@ export * from './core/probability';
 export * from './core/types';
 export * from './constants';
 
-// TODO: Export systems modules as they are translated
-// export * from './systems/shooting';
-// export * from './systems/defense';
-// export * from './systems/rebounding';
-// export * from './systems/turnovers';
-// export * from './systems/fouls';
-// export * from './systems/freeThrows';
-// export * from './systems/gameClock';
-// export * from './systems/staminaManager';
-// export * from './systems/substitutions';
-// export * from './systems/possession';
-// export * from './systems/quarterSimulation';
-// export * from './systems/gameSimulation';
-// export * from './systems/playByPlay';
-// export * from './systems/endGameModes';
-// export * from './systems/timeoutManager';
-// export * from './tactical/tacticalModifiers';
+// Game Simulation (main entry point for UI)
+export { GameSimulator, type GameResult } from './game/gameSimulation';
+export { QuarterSimulator, type QuarterResult } from './game/quarterSimulation';
+
+// Systems (lower-level, used internally)
+export { FoulSystem } from './systems/fouls';
+export { TimeoutManager } from './systems/timeoutManager';
+export { SubstitutionManager } from './systems/substitutions';
+
+// Stamina
+export { StaminaManager, recoverStamina } from './stamina/staminaManager';
+
+// Play-by-play
+export { PlayByPlayLog } from './playByPlay/playByPlay';

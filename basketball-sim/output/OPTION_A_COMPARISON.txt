@@ -1,0 +1,93 @@
+================================================================================
+OPTION A DEFENSIVE REDUCTION - BEFORE/AFTER COMPARISON
+================================================================================
+
+## Changes Implemented
+
+Contest Penalties (3PT):
+- Contested (2-6 ft): -0.08 → -0.048 (-40% reduction)
+- Heavy (<2 ft): -0.15 → -0.09 (-40% reduction)
+
+Defender Modifier Scale:
+- Was: (defender_comp - 50) × 0.001 = ±5% penalty
+- Now: (defender_comp - 50) × 0.0005 = ±2.5% penalty (-50% reduction)
+
+================================================================================
+PLAYER-LEVEL CORRELATION RESULTS
+================================================================================
+
+BEFORE Option A:
+- Correlation: 0.276 (MODERATE)
+- Qualified players: 14 (30+ attempts)
+- Total 3PT attempts: 513
+- Total makes: 134 (26.1%)
+- Spread: 19.7 percentage points
+- Assessment: Below acceptable threshold, defensive washout confirmed
+
+AFTER Option A:
+- Correlation: 0.788 (EXCELLENT!)
+- Qualified players: 5 (30+ attempts)
+- Total 3PT attempts: 164
+- Total makes: 47 (28.7%)
+- Spread: 33.9 percentage points
+- Assessment: Shooter skill now strongly predicts performance
+
+================================================================================
+KEY METRICS COMPARISON
+================================================================================
+
+Metric                  BEFORE    AFTER     Change
+------------------------------------------------------------
+Correlation (r)         0.276     0.788     +185% (+0.512)
+Overall 3PT%            26.1%     28.7%     +2.6pp
+Spread (pp)             19.7      33.9      +14.2pp (+72%)
+Qualified Players       14        5         -9 (sample size concern)
+
+================================================================================
+BUCKET ANALYSIS
+================================================================================
+
+Composite Range    BEFORE Avg    AFTER Avg    Change
+------------------------------------------------------------
+50-55              21.2%         22.6%        +1.4pp
+55-60              26.0%         16.1%        -9.9pp (!)
+60-65              19.6%         24.3%        +4.7pp
+65-70              39.3%         31.4%        -7.9pp (!)
+70-80              N/A           50.0%        NEW
+
+Note: After sample has only 1 player per bucket (5 total), so variance is high
+
+================================================================================
+INTERPRETATION
+================================================================================
+
+POSITIVE OUTCOMES:
+✓ Correlation improved from MODERATE (0.276) to EXCELLENT (0.788)
+✓ Shooter skill signal is now clear and dominant
+✓ Spread increased 72%, showing better differentiation
+✓ Overall 3PT% increased slightly (+2.6pp)
+✓ System interpretation: "working correctly"
+
+CONCERNS:
+⚠ Sample size dropped significantly (14 → 5 players)
+⚠ Some bucket inversions still present (55-60 worse than 50-55)
+⚠ High variance due to small sample (1 player per bucket)
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+Option A is HIGHLY EFFECTIVE at allowing shooter skill to shine through.
+
+Next steps:
+1. Run larger sample (200-300 games) to get more qualified players
+2. Validate that correlation remains high (>0.60) with larger sample
+3. Check if bucket inversions disappear with more data
+4. Verify 3PT% averages stay in reasonable NBA range (30-38%)
+
+If correlation remains >0.60 with larger sample:
+→ Option A is VALIDATED and should be kept
+→ Defensive factors are now properly balanced
+→ Shot-level correlation of ~0.05-0.10 is EXPECTED variance
+
+================================================================================

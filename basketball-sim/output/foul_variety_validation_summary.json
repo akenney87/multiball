@@ -1,0 +1,241 @@
+{
+  "num_games": 20,
+  "aggregate_stats": {
+    "total_fouls": 562,
+    "shooting_fouls": 394,
+    "non_shooting_fouls": 125,
+    "reach_in_fouls": 47,
+    "loose_ball_fouls": 38,
+    "holding_fouls": 40,
+    "offensive_fouls": 43,
+    "and_ones": 229,
+    "bonus_situations": 34
+  },
+  "game_stats": [
+    {
+      "total_fouls": 24,
+      "shooting_fouls": 15,
+      "non_shooting_fouls": 6,
+      "reach_in_fouls": 3,
+      "loose_ball_fouls": 2,
+      "holding_fouls": 1,
+      "offensive_fouls": 3,
+      "and_ones": 7,
+      "bonus_situations": 0
+    },
+    {
+      "total_fouls": 30,
+      "shooting_fouls": 23,
+      "non_shooting_fouls": 4,
+      "reach_in_fouls": 2,
+      "loose_ball_fouls": 2,
+      "holding_fouls": 0,
+      "offensive_fouls": 3,
+      "and_ones": 13,
+      "bonus_situations": 0
+    },
+    {
+      "total_fouls": 35,
+      "shooting_fouls": 22,
+      "non_shooting_fouls": 11,
+      "reach_in_fouls": 3,
+      "loose_ball_fouls": 3,
+      "holding_fouls": 5,
+      "offensive_fouls": 2,
+      "and_ones": 9,
+      "bonus_situations": 6
+    },
+    {
+      "total_fouls": 32,
+      "shooting_fouls": 24,
+      "non_shooting_fouls": 6,
+      "reach_in_fouls": 1,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 4,
+      "offensive_fouls": 2,
+      "and_ones": 10,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 36,
+      "shooting_fouls": 29,
+      "non_shooting_fouls": 5,
+      "reach_in_fouls": 1,
+      "loose_ball_fouls": 3,
+      "holding_fouls": 1,
+      "offensive_fouls": 2,
+      "and_ones": 10,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 22,
+      "shooting_fouls": 17,
+      "non_shooting_fouls": 5,
+      "reach_in_fouls": 3,
+      "loose_ball_fouls": 2,
+      "holding_fouls": 0,
+      "offensive_fouls": 0,
+      "and_ones": 13,
+      "bonus_situations": 2
+    },
+    {
+      "total_fouls": 37,
+      "shooting_fouls": 24,
+      "non_shooting_fouls": 11,
+      "reach_in_fouls": 6,
+      "loose_ball_fouls": 4,
+      "holding_fouls": 1,
+      "offensive_fouls": 2,
+      "and_ones": 9,
+      "bonus_situations": 4
+    },
+    {
+      "total_fouls": 26,
+      "shooting_fouls": 18,
+      "non_shooting_fouls": 6,
+      "reach_in_fouls": 0,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 5,
+      "offensive_fouls": 2,
+      "and_ones": 8,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 31,
+      "shooting_fouls": 22,
+      "non_shooting_fouls": 5,
+      "reach_in_fouls": 4,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 0,
+      "offensive_fouls": 4,
+      "and_ones": 11,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 25,
+      "shooting_fouls": 18,
+      "non_shooting_fouls": 4,
+      "reach_in_fouls": 2,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 1,
+      "offensive_fouls": 3,
+      "and_ones": 14,
+      "bonus_situations": 2
+    },
+    {
+      "total_fouls": 21,
+      "shooting_fouls": 12,
+      "non_shooting_fouls": 6,
+      "reach_in_fouls": 2,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 3,
+      "offensive_fouls": 3,
+      "and_ones": 15,
+      "bonus_situations": 3
+    },
+    {
+      "total_fouls": 25,
+      "shooting_fouls": 13,
+      "non_shooting_fouls": 11,
+      "reach_in_fouls": 6,
+      "loose_ball_fouls": 2,
+      "holding_fouls": 3,
+      "offensive_fouls": 1,
+      "and_ones": 9,
+      "bonus_situations": 2
+    },
+    {
+      "total_fouls": 27,
+      "shooting_fouls": 15,
+      "non_shooting_fouls": 10,
+      "reach_in_fouls": 2,
+      "loose_ball_fouls": 6,
+      "holding_fouls": 2,
+      "offensive_fouls": 2,
+      "and_ones": 13,
+      "bonus_situations": 0
+    },
+    {
+      "total_fouls": 29,
+      "shooting_fouls": 21,
+      "non_shooting_fouls": 8,
+      "reach_in_fouls": 3,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 4,
+      "offensive_fouls": 0,
+      "and_ones": 13,
+      "bonus_situations": 3
+    },
+    {
+      "total_fouls": 20,
+      "shooting_fouls": 12,
+      "non_shooting_fouls": 7,
+      "reach_in_fouls": 0,
+      "loose_ball_fouls": 3,
+      "holding_fouls": 4,
+      "offensive_fouls": 1,
+      "and_ones": 11,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 26,
+      "shooting_fouls": 22,
+      "non_shooting_fouls": 3,
+      "reach_in_fouls": 0,
+      "loose_ball_fouls": 2,
+      "holding_fouls": 1,
+      "offensive_fouls": 1,
+      "and_ones": 13,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 25,
+      "shooting_fouls": 20,
+      "non_shooting_fouls": 3,
+      "reach_in_fouls": 1,
+      "loose_ball_fouls": 2,
+      "holding_fouls": 0,
+      "offensive_fouls": 2,
+      "and_ones": 14,
+      "bonus_situations": 2
+    },
+    {
+      "total_fouls": 26,
+      "shooting_fouls": 19,
+      "non_shooting_fouls": 5,
+      "reach_in_fouls": 3,
+      "loose_ball_fouls": 0,
+      "holding_fouls": 2,
+      "offensive_fouls": 2,
+      "and_ones": 9,
+      "bonus_situations": 0
+    },
+    {
+      "total_fouls": 35,
+      "shooting_fouls": 25,
+      "non_shooting_fouls": 5,
+      "reach_in_fouls": 2,
+      "loose_ball_fouls": 1,
+      "holding_fouls": 2,
+      "offensive_fouls": 5,
+      "and_ones": 15,
+      "bonus_situations": 1
+    },
+    {
+      "total_fouls": 30,
+      "shooting_fouls": 23,
+      "non_shooting_fouls": 4,
+      "reach_in_fouls": 3,
+      "loose_ball_fouls": 0,
+      "holding_fouls": 1,
+      "offensive_fouls": 3,
+      "and_ones": 13,
+      "bonus_situations": 3
+    }
+  ],
+  "percentages": {
+    "shooting": 70.1067615658363,
+    "non_shooting": 22.24199288256228,
+    "offensive": 7.6512455516014235
+  }
+}

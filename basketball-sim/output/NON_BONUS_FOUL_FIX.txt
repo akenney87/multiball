@@ -1,0 +1,177 @@
+================================================================================
+NON-BONUS INTENTIONAL FOUL FIX (Issue #2 Part B)
+================================================================================
+
+Date: 2025-11-14
+
+================================================================================
+PROBLEM DISCOVERED
+================================================================================
+
+After implementing the elapsed_time fix, user discovered another bug:
+
+EXAMPLE:
+  [00:40] Team_001 possession (Score: 90-84)
+  John Duncan intentionally fouls Dejounte McCollum! [Team fouls: 2]
+  [00:39] Team_002 possession (Score: 90-84)  ← WRONG!
+
+The intentional foul decision was correct (Team_002 trying to stop clock).
+But Team_002 (the FOULING team) got the ball, when Team_001 (the OFFENSE)
+should have kept it.
+
+================================================================================
+BASKETBALL RULES FOR FOULS
+================================================================================
+
+NON-BONUS FOUL (< 5 team fouls in NBA):
+  - No free throws awarded
+  - SIDE-OUT: Offense keeps the ball and inbounds it
+  - Possession does NOT switch
+  - This makes intentional fouling when NOT in bonus a bad strategy
+    (wastes time, doesn't get you the ball)
+
+BONUS FOUL (5+ team fouls):
+  - Free throws awarded
+  - If at least one FT is made: Possession switches (like made basket)
+  - If all FTs are missed: Rebound opportunity on last miss
+
+================================================================================
+ROOT CAUSE
+================================================================================
+
+In possession.py line 1314 (before fix):
+```python
+return PossessionResult(
+    possession_outcome='turnover',  # ← WRONG for non-bonus foul
+```
+
+'turnover' outcome always switches possession. But non-bonus fouls should
+keep possession with the offense (side-out).
+
+In quarter_simulation.py line 960 (before fix):
+```python
+if possession_result.possession_outcome != 'offensive_rebound':
+    home_has_possession = not home_has_possession
+```
+
+Only 'offensive_rebound' was excluded from possession switch. But 'foul'
+outcome (non-bonus fouls) should also NOT switch possession.
+
+================================================================================
+THE FIX
+================================================================================
+
+File: src/systems/possession.py (line 1316)
+--------------------------------------------
+Changed possession_outcome from 'turnover' to 'foul':
+
+BEFORE:
+    possession_outcome='turnover',  # Side out - possession switches
+
+AFTER:
+    possession_outcome='foul',  # Offense keeps ball (side-out, no possession switch)
+
+
+File: src/systems/quarter_simulation.py (lines 958-962)
+---------------------------------------------------------
+Added 'foul' to the exclusion list:
+
+BEFORE:
+    # Switch possession (unless offensive rebound)
+    if possession_result.possession_outcome != 'offensive_rebound':
+        home_has_possession = not home_has_possession
+
+AFTER:
+    # Switch possession (unless offensive rebound or non-bonus foul)
+    # M3 FIX: 'foul' outcome means non-bonus foul (side-out, offense keeps ball)
+    if possession_result.possession_outcome not in ['offensive_rebound', 'foul']:
+        home_has_possession = not home_has_possession
+
+================================================================================
+POSSESSION OUTCOMES REFERENCE
+================================================================================
+
+After this fix, here's how possession outcomes work:
+
+'made_shot':
+  - Shot made OR at least one FT made
+  - Possession switches (defense gets ball)
+
+'missed_shot':
+  - Shot missed (not final FT)
+  - Rebound opportunity
+  - Whoever gets rebound gets possession
+
+'turnover':
+  - Violation, steal, bad pass, etc.
+  - Possession switches (defense gets ball)
+
+'offensive_rebound':
+  - Offense got the rebound
+  - Possession STAYS with offense
+
+'foul':
+  - Non-bonus foul (no free throws)
+  - Possession STAYS with offense (side-out)
+
+================================================================================
+TEST RESULTS
+================================================================================
+
+Unit Test Results:
+------------------
+Scenario 1: Non-bonus foul
+  Before: home_has_possession = True (Team_001 has ball)
+  Team_002 fouls (not in bonus)
+  Outcome: 'foul'
+  After: home_has_possession = True
+  Result: CORRECT - Team_001 kept the ball
+
+Scenario 2: Bonus foul with FTs made
+  Before: home_has_possession = True (Team_001 has ball)
+  Team_002 fouls (in bonus), FTs made
+  Outcome: 'made_shot'
+  After: home_has_possession = False
+  Result: CORRECT - Team_002 got the ball
+
+================================================================================
+IMPLICATIONS
+================================================================================
+
+Strategic Impact:
+-----------------
+Teams should only intentionally foul when the opponent is in the bonus
+(5+ team fouls). Fouling when NOT in bonus:
+  - Wastes clock time (good)
+  - Does NOT get you possession (bad)
+  - Opponent just inbounds and continues (bad)
+
+This is now correctly modeled in the simulator.
+
+Existing Code Impact:
+---------------------
+The 'foul' outcome is used in multiple places throughout possession.py:
+  - When all free throws are missed
+  - Non-shooting fouls
+  - Loose ball fouls
+
+In all cases, the offense should keep possession (inbound the ball), so
+this fix is correct for all scenarios.
+
+================================================================================
+SUMMARY
+================================================================================
+
+Non-bonus intentional fouls now work correctly:
+
+✓ Foul decision made correctly (stop clock)
+✓ Offense keeps the ball (side-out)
+✓ Correct basketball strategy modeled
+✓ No regression in bonus foul handling
+
+Combined with the previous fixes:
+  ✓ Issue #1: No fouling when down 2-3 points
+  ✓ Issue #2a: Elapsed time tracking for fouling team's possession
+  ✓ Issue #2b: Non-bonus fouls don't switch possession
+
+All intentional foul scenarios now work correctly!

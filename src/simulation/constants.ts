@@ -85,7 +85,8 @@ export const WEIGHTS_DUNK: Record<string, number> = {
   jumping: 0.4,
   height: 0.3,
   arm_strength: 0.2,
-  agility: 0.1,
+  agility: 0.05,
+  footwork: 0.05, // gather step, approach angle
 };
 
 /**
@@ -93,12 +94,13 @@ export const WEIGHTS_DUNK: Record<string, number> = {
  * PHASE 2: Added core_strength (finishing through contact) and throw_accuracy (touch)
  */
 export const WEIGHTS_LAYUP: Record<string, number> = {
-  finesse: 0.3, // -0.05 - touch and body control
-  hand_eye_coordination: 0.25, // -0.05 - coordination and timing
-  balance: 0.17, // -0.03 - staying upright on contact
-  jumping: 0.13, // -0.02 - elevating over defenders
-  core_strength: 0.1, // NEW - finishing through contact at rim
-  throw_accuracy: 0.05, // NEW - soft touch for floaters, finger rolls
+  finesse: 0.3, // touch and body control
+  hand_eye_coordination: 0.22, // coordination and timing
+  balance: 0.12, // staying upright on contact
+  jumping: 0.13, // elevating over defenders
+  core_strength: 0.1, // finishing through contact at rim
+  throw_accuracy: 0.05, // soft touch for floaters, finger rolls
+  footwork: 0.08, // pivot moves, drop steps at rim
 };
 
 /**
@@ -106,14 +108,15 @@ export const WEIGHTS_LAYUP: Record<string, number> = {
  * PHASE 2: Added grip_strength (securing ball) and arm_strength (ripping/boxing out)
  */
 export const WEIGHTS_REBOUND: Record<string, number> = {
-  height: 0.2, // -0.02 - reach advantage
-  jumping: 0.16, // -0.02 - elevating for ball
-  core_strength: 0.13, // -0.01 - balance and positioning
-  awareness: 0.17, // -0.01 - anticipating trajectory
-  grip_strength: 0.1, // UNCHANGED - securing the ball
-  arm_strength: 0.09, // NEW - ripping ball away, boxing out
-  reactions: 0.08, // -0.01 - quick response to miss
-  determination: 0.07, // -0.02 - hustle and effort
+  height: 0.2, // reach advantage
+  jumping: 0.16, // elevating for ball
+  core_strength: 0.08, // balance and positioning
+  awareness: 0.17, // anticipating trajectory
+  grip_strength: 0.1, // securing the ball
+  arm_strength: 0.09, // ripping ball away, boxing out
+  reactions: 0.05, // quick response to miss
+  determination: 0.07, // hustle and effort
+  footwork: 0.08, // positioning and boxing out
 };
 
 /**
@@ -121,11 +124,12 @@ export const WEIGHTS_REBOUND: Record<string, number> = {
  * PHASE 2: Expanded from 3 to 5 attributes - added balance and determination
  */
 export const WEIGHTS_CONTEST: Record<string, number> = {
-  height: 0.25, // -0.0833 - reach and size advantage
-  reactions: 0.25, // -0.0833 - quick closeout timing
-  agility: 0.25, // -0.0834 - lateral movement
-  balance: 0.15, // NEW - staying in front, defensive stance
-  determination: 0.1, // NEW - hustle, effort to contest
+  height: 0.25, // reach and size advantage
+  reactions: 0.25, // quick closeout timing
+  agility: 0.22, // lateral movement
+  balance: 0.10, // staying in front, defensive stance
+  determination: 0.1, // hustle, effort to contest
+  footwork: 0.08, // defensive sliding, positioning
 };
 
 /**
@@ -185,13 +189,14 @@ export const WEIGHTS_DRIVE_DUNK: Record<string, number> = {
  * PHASE 2: Added core_strength (absorbing contact) and throw_accuracy (touch)
  */
 export const WEIGHTS_DRIVE_LAYUP: Record<string, number> = {
-  finesse: 0.22, // -0.03 - touch and body control
-  hand_eye_coordination: 0.26, // -0.04 - coordination while driving
-  balance: 0.17, // -0.03 - staying upright through contact
-  jumping: 0.13, // -0.02 - elevating in traffic
-  acceleration: 0.1, // UNCHANGED - first-step burst critical
-  core_strength: 0.1, // NEW - absorbing contact on drives
-  throw_accuracy: 0.02, // NEW - touch on difficult finishes
+  finesse: 0.22, // touch and body control
+  hand_eye_coordination: 0.22, // coordination while driving
+  balance: 0.13, // staying upright through contact
+  jumping: 0.13, // elevating in traffic
+  acceleration: 0.1, // first-step burst critical
+  core_strength: 0.1, // absorbing contact on drives
+  throw_accuracy: 0.02, // touch on difficult finishes
+  footwork: 0.08, // euro-step, gather step
 };
 
 /**
@@ -291,8 +296,9 @@ export const WEIGHTS_HELP_DEFENSE_ROTATION: Record<string, number> = {
   teamwork: 0.3, // Team-first mindset
   awareness: 0.3, // Reading help situations
   reactions: 0.2, // Quick rotation
-  agility: 0.12, // Lateral movement
+  agility: 0.06, // Lateral movement
   determination: 0.08, // Effort and hustle
+  footwork: 0.06, // Defensive sliding during rotation
 };
 
 /**
@@ -713,7 +719,7 @@ export const ALL_ATTRIBUTES = [
   'height',
   'durability',
 
-  // Mental (7)
+  // Mental (8)
   'awareness',
   'creativity',
   'determination',
@@ -721,6 +727,7 @@ export const ALL_ATTRIBUTES = [
   'consistency',
   'composure',
   'patience',
+  'teamwork',
 
   // Technical (6)
   'hand_eye_coordination',
@@ -728,10 +735,10 @@ export const ALL_ATTRIBUTES = [
   'form_technique',
   'finesse',
   'deception',
-  'teamwork',
+  'footwork',
 ];
 
-export const ATTRIBUTE_COUNT = 25;
+export const ATTRIBUTE_COUNT = 26;
 
 // =============================================================================
 // VALIDATION CONSTANTS

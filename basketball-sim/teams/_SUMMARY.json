@@ -1,0 +1,511 @@
+{
+  "total_teams": 100,
+  "quality_distribution": {
+    "elite_82_85": 0,
+    "above_avg_78_81": 0,
+    "average_74_77": 0,
+    "below_avg_70_73": 100
+  },
+  "teams": [
+    {
+      "name": "Team_001",
+      "target_rating": 61,
+      "actual_rating": 62.0
+    },
+    {
+      "name": "Team_002",
+      "target_rating": 61,
+      "actual_rating": 57.7
+    },
+    {
+      "name": "Team_003",
+      "target_rating": 65,
+      "actual_rating": 61.4
+    },
+    {
+      "name": "Team_004",
+      "target_rating": 61,
+      "actual_rating": 58.6
+    },
+    {
+      "name": "Team_005",
+      "target_rating": 62,
+      "actual_rating": 59.9
+    },
+    {
+      "name": "Team_006",
+      "target_rating": 62,
+      "actual_rating": 60.1
+    },
+    {
+      "name": "Team_007",
+      "target_rating": 63,
+      "actual_rating": 60.8
+    },
+    {
+      "name": "Team_008",
+      "target_rating": 62,
+      "actual_rating": 58.1
+    },
+    {
+      "name": "Team_009",
+      "target_rating": 60,
+      "actual_rating": 54.4
+    },
+    {
+      "name": "Team_010",
+      "target_rating": 60,
+      "actual_rating": 61.1
+    },
+    {
+      "name": "Team_011",
+      "target_rating": 61,
+      "actual_rating": 60.8
+    },
+    {
+      "name": "Team_012",
+      "target_rating": 61,
+      "actual_rating": 59.2
+    },
+    {
+      "name": "Team_013",
+      "target_rating": 61,
+      "actual_rating": 57.5
+    },
+    {
+      "name": "Team_014",
+      "target_rating": 58,
+      "actual_rating": 55.9
+    },
+    {
+      "name": "Team_015",
+      "target_rating": 63,
+      "actual_rating": 59.7
+    },
+    {
+      "name": "Team_016",
+      "target_rating": 62,
+      "actual_rating": 61.0
+    },
+    {
+      "name": "Team_017",
+      "target_rating": 63,
+      "actual_rating": 61.1
+    },
+    {
+      "name": "Team_018",
+      "target_rating": 63,
+      "actual_rating": 61.3
+    },
+    {
+      "name": "Team_019",
+      "target_rating": 60,
+      "actual_rating": 56.7
+    },
+    {
+      "name": "Team_020",
+      "target_rating": 64,
+      "actual_rating": 61.0
+    },
+    {
+      "name": "Team_021",
+      "target_rating": 59,
+      "actual_rating": 56.4
+    },
+    {
+      "name": "Team_022",
+      "target_rating": 62,
+      "actual_rating": 60.0
+    },
+    {
+      "name": "Team_023",
+      "target_rating": 64,
+      "actual_rating": 62.1
+    },
+    {
+      "name": "Team_024",
+      "target_rating": 64,
+      "actual_rating": 61.3
+    },
+    {
+      "name": "Team_025",
+      "target_rating": 62,
+      "actual_rating": 61.1
+    },
+    {
+      "name": "Team_026",
+      "target_rating": 58,
+      "actual_rating": 54.1
+    },
+    {
+      "name": "Team_027",
+      "target_rating": 60,
+      "actual_rating": 58.7
+    },
+    {
+      "name": "Team_028",
+      "target_rating": 61,
+      "actual_rating": 58.3
+    },
+    {
+      "name": "Team_029",
+      "target_rating": 63,
+      "actual_rating": 61.9
+    },
+    {
+      "name": "Team_030",
+      "target_rating": 62,
+      "actual_rating": 62.1
+    },
+    {
+      "name": "Team_031",
+      "target_rating": 62,
+      "actual_rating": 61.2
+    },
+    {
+      "name": "Team_032",
+      "target_rating": 59,
+      "actual_rating": 57.8
+    },
+    {
+      "name": "Team_033",
+      "target_rating": 63,
+      "actual_rating": 61.3
+    },
+    {
+      "name": "Team_034",
+      "target_rating": 60,
+      "actual_rating": 58.9
+    },
+    {
+      "name": "Team_035",
+      "target_rating": 63,
+      "actual_rating": 62.2
+    },
+    {
+      "name": "Team_036",
+      "target_rating": 60,
+      "actual_rating": 59.2
+    },
+    {
+      "name": "Team_037",
+      "target_rating": 62,
+      "actual_rating": 60.0
+    },
+    {
+      "name": "Team_038",
+      "target_rating": 63,
+      "actual_rating": 61.4
+    },
+    {
+      "name": "Team_039",
+      "target_rating": 62,
+      "actual_rating": 59.2
+    },
+    {
+      "name": "Team_040",
+      "target_rating": 59,
+      "actual_rating": 57.2
+    },
+    {
+      "name": "Team_041",
+      "target_rating": 59,
+      "actual_rating": 58.2
+    },
+    {
+      "name": "Team_042",
+      "target_rating": 64,
+      "actual_rating": 61.2
+    },
+    {
+      "name": "Team_043",
+      "target_rating": 61,
+      "actual_rating": 59.6
+    },
+    {
+      "name": "Team_044",
+      "target_rating": 62,
+      "actual_rating": 59.3
+    },
+    {
+      "name": "Team_045",
+      "target_rating": 64,
+      "actual_rating": 62.5
+    },
+    {
+      "name": "Team_046",
+      "target_rating": 63,
+      "actual_rating": 61.6
+    },
+    {
+      "name": "Team_047",
+      "target_rating": 60,
+      "actual_rating": 58.1
+    },
+    {
+      "name": "Team_048",
+      "target_rating": 64,
+      "actual_rating": 62.7
+    },
+    {
+      "name": "Team_049",
+      "target_rating": 62,
+      "actual_rating": 60.3
+    },
+    {
+      "name": "Team_050",
+      "target_rating": 61,
+      "actual_rating": 58.9
+    },
+    {
+      "name": "Team_051",
+      "target_rating": 60,
+      "actual_rating": 58.1
+    },
+    {
+      "name": "Team_052",
+      "target_rating": 64,
+      "actual_rating": 61.8
+    },
+    {
+      "name": "Team_053",
+      "target_rating": 61,
+      "actual_rating": 58.3
+    },
+    {
+      "name": "Team_054",
+      "target_rating": 62,
+      "actual_rating": 61.0
+    },
+    {
+      "name": "Team_055",
+      "target_rating": 60,
+      "actual_rating": 58.1
+    },
+    {
+      "name": "Team_056",
+      "target_rating": 60,
+      "actual_rating": 58.0
+    },
+    {
+      "name": "Team_057",
+      "target_rating": 61,
+      "actual_rating": 57.7
+    },
+    {
+      "name": "Team_058",
+      "target_rating": 61,
+      "actual_rating": 59.3
+    },
+    {
+      "name": "Team_059",
+      "target_rating": 59,
+      "actual_rating": 56.6
+    },
+    {
+      "name": "Team_060",
+      "target_rating": 61,
+      "actual_rating": 58.2
+    },
+    {
+      "name": "Team_061",
+      "target_rating": 64,
+      "actual_rating": 59.7
+    },
+    {
+      "name": "Team_062",
+      "target_rating": 58,
+      "actual_rating": 54.3
+    },
+    {
+      "name": "Team_063",
+      "target_rating": 63,
+      "actual_rating": 60.0
+    },
+    {
+      "name": "Team_064",
+      "target_rating": 57,
+      "actual_rating": 56.0
+    },
+    {
+      "name": "Team_065",
+      "target_rating": 62,
+      "actual_rating": 59.9
+    },
+    {
+      "name": "Team_066",
+      "target_rating": 57,
+      "actual_rating": 54.3
+    },
+    {
+      "name": "Team_067",
+      "target_rating": 63,
+      "actual_rating": 61.8
+    },
+    {
+      "name": "Team_068",
+      "target_rating": 64,
+      "actual_rating": 62.1
+    },
+    {
+      "name": "Team_069",
+      "target_rating": 60,
+      "actual_rating": 59.3
+    },
+    {
+      "name": "Team_070",
+      "target_rating": 63,
+      "actual_rating": 59.3
+    },
+    {
+      "name": "Team_071",
+      "target_rating": 61,
+      "actual_rating": 59.9
+    },
+    {
+      "name": "Team_072",
+      "target_rating": 63,
+      "actual_rating": 60.2
+    },
+    {
+      "name": "Team_073",
+      "target_rating": 64,
+      "actual_rating": 63.2
+    },
+    {
+      "name": "Team_074",
+      "target_rating": 61,
+      "actual_rating": 60.3
+    },
+    {
+      "name": "Team_075",
+      "target_rating": 58,
+      "actual_rating": 55.6
+    },
+    {
+      "name": "Team_076",
+      "target_rating": 61,
+      "actual_rating": 58.7
+    },
+    {
+      "name": "Team_077",
+      "target_rating": 62,
+      "actual_rating": 60.1
+    },
+    {
+      "name": "Team_078",
+      "target_rating": 60,
+      "actual_rating": 58.4
+    },
+    {
+      "name": "Team_079",
+      "target_rating": 62,
+      "actual_rating": 59.3
+    },
+    {
+      "name": "Team_080",
+      "target_rating": 63,
+      "actual_rating": 62.1
+    },
+    {
+      "name": "Team_081",
+      "target_rating": 60,
+      "actual_rating": 58.7
+    },
+    {
+      "name": "Team_082",
+      "target_rating": 59,
+      "actual_rating": 57.8
+    },
+    {
+      "name": "Team_083",
+      "target_rating": 64,
+      "actual_rating": 62.0
+    },
+    {
+      "name": "Team_084",
+      "target_rating": 60,
+      "actual_rating": 58.3
+    },
+    {
+      "name": "Team_085",
+      "target_rating": 63,
+      "actual_rating": 62.6
+    },
+    {
+      "name": "Team_086",
+      "target_rating": 61,
+      "actual_rating": 59.6
+    },
+    {
+      "name": "Team_087",
+      "target_rating": 60,
+      "actual_rating": 56.7
+    },
+    {
+      "name": "Team_088",
+      "target_rating": 58,
+      "actual_rating": 56.3
+    },
+    {
+      "name": "Team_089",
+      "target_rating": 62,
+      "actual_rating": 59.7
+    },
+    {
+      "name": "Team_090",
+      "target_rating": 62,
+      "actual_rating": 60.4
+    },
+    {
+      "name": "Team_091",
+      "target_rating": 65,
+      "actual_rating": 59.6
+    },
+    {
+      "name": "Team_092",
+      "target_rating": 61,
+      "actual_rating": 58.2
+    },
+    {
+      "name": "Team_093",
+      "target_rating": 60,
+      "actual_rating": 58.4
+    },
+    {
+      "name": "Team_094",
+      "target_rating": 59,
+      "actual_rating": 56.8
+    },
+    {
+      "name": "Team_095",
+      "target_rating": 62,
+      "actual_rating": 59.6
+    },
+    {
+      "name": "Team_096",
+      "target_rating": 61,
+      "actual_rating": 58.3
+    },
+    {
+      "name": "Team_097",
+      "target_rating": 63,
+      "actual_rating": 60.3
+    },
+    {
+      "name": "Team_098",
+      "target_rating": 64,
+      "actual_rating": 61.9
+    },
+    {
+      "name": "Team_099",
+      "target_rating": 64,
+      "actual_rating": 61.1
+    },
+    {
+      "name": "Team_100",
+      "target_rating": 57,
+      "actual_rating": 55.3
+    }
+  ]
+}

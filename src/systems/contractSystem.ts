@@ -795,3 +795,15 @@ export function formatSalary(amount: number): string {
   }
   return `$${(amount / 1000).toFixed(0)}K`;
 }
+
+// Backwards compatibility wrapper - returns object like old API expected
+export function calculatePlayerValuation(
+  overallRating: number,
+  age: number,
+  averagePotential: number,
+  sportsAbove50: number
+): { marketValue: number; annualSalary: number } {
+  const marketValue = calculateMarketValue(overallRating, age, averagePotential, sportsAbove50);
+  const annualSalary = calculateAnnualSalary(marketValue);
+  return { marketValue, annualSalary };
+}

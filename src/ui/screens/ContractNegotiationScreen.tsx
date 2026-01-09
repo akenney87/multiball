@@ -9,14 +9,13 @@
  * - Visual feedback on player satisfaction
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../theme';
 import type {
@@ -79,6 +78,148 @@ const AVAILABLE_CLAUSES: ContractClauseType[] = [
   'highest_paid',
   'relegation_termination',
 ];
+
+// Step values for different monetary fields (smaller, more granular)
+const SALARY_STEPS = [1000, 5000, 10000, 50000, 100000]; // $1K, $5K, $10K, $50K, $100K
+const BONUS_STEPS = [1000, 5000, 10000, 25000, 50000]; // $1K, $5K, $10K, $25K, $50K
+const RELEASE_CLAUSE_STEPS = [10000, 50000, 100000, 500000, 1000000]; // $10K, $50K, $100K, $500K, $1M
+
+// Get step size based on current value (scales with value magnitude)
+function getStepSize(value: number, steps: number[]): number {
+  for (let i = steps.length - 1; i >= 0; i--) {
+    if (value >= steps[i] * 10) return steps[i];
+  }
+  return steps[0];
+}
+
+// =============================================================================
+// AMOUNT SELECTOR COMPONENT
+// =============================================================================
+
+interface AmountSelectorProps {
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  steps: number[];
+  label?: string;
+  showPerYear?: boolean;
+}
+
+function AmountSelector({
+  value,
+  onChange,
+  min = 0,
+  max = 100000000,
+  steps,
+  showPerYear,
+}: AmountSelectorProps) {
+  const colors = useColors();
+  const step = getStepSize(value, steps);
+
+  const handleDecrease = useCallback(() => {
+    onChange(Math.max(min, value - step));
+  }, [value, step, min, onChange]);
+
+  const handleIncrease = useCallback(() => {
+    onChange(Math.min(max, value + step));
+  }, [value, step, max, onChange]);
+
+  return (
+    <View style={amountStyles.container}>
+      <View style={amountStyles.mainRow}>
+        {/* Decrease buttons */}
+        <TouchableOpacity
+          style={[amountStyles.stepButton, amountStyles.decreaseButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={() => onChange(Math.max(min, value - step * 5))}
+          disabled={value <= min}
+        >
+          <Text style={[amountStyles.stepButtonText, { color: value <= min ? colors.textMuted : colors.text }]}>−−</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[amountStyles.stepButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={handleDecrease}
+          disabled={value <= min}
+        >
+          <Text style={[amountStyles.stepButtonText, { color: value <= min ? colors.textMuted : colors.text }]}>−</Text>
+        </TouchableOpacity>
+
+        {/* Value display */}
+        <View style={[amountStyles.valueContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[amountStyles.valueText, { color: colors.text }]}>
+            {formatSalary(value)}{showPerYear ? '/yr' : ''}
+          </Text>
+          <Text style={[amountStyles.stepHint, { color: colors.textMuted }]}>
+            ±{formatSalary(step)}
+          </Text>
+        </View>
+
+        {/* Increase buttons */}
+        <TouchableOpacity
+          style={[amountStyles.stepButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={handleIncrease}
+          disabled={value >= max}
+        >
+          <Text style={[amountStyles.stepButtonText, { color: value >= max ? colors.textMuted : colors.text }]}>+</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[amountStyles.stepButton, amountStyles.increaseButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={() => onChange(Math.min(max, value + step * 5))}
+          disabled={value >= max}
+        >
+          <Text style={[amountStyles.stepButtonText, { color: value >= max ? colors.textMuted : colors.text }]}>++</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const amountStyles = StyleSheet.create({
+  container: {
+    gap: spacing.sm,
+  },
+  mainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  stepButton: {
+    width: 44,
+    height: 44,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  decreaseButton: {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  increaseButton: {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+  stepButtonText: {
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  valueContainer: {
+    flex: 1,
+    height: 44,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  valueText: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  stepHint: {
+    fontSize: 10,
+    marginTop: -2,
+  },
+});
 
 // =============================================================================
 // COMPONENT
@@ -284,21 +425,14 @@ export function ContractNegotiationScreen({
                   {salary >= demands.idealSalary ? ' ✓' : salary >= demands.minSalary ? ' ~' : ' ✗'}
                 </Text>
               </Text>
-              <View style={[styles.textInputWrapper, { borderColor: colors.border, backgroundColor: colors.surface }]}>
-                <Text style={[styles.currencyPrefix, { color: colors.textMuted }]}>$</Text>
-                <TextInput
-                  style={[styles.textInput, { color: colors.text }]}
-                  value={salary > 0 ? salary.toString() : ''}
-                  onChangeText={(text) => {
-                    const num = parseInt(text.replace(/[^0-9]/g, ''), 10);
-                    setSalary(isNaN(num) ? 10000 : Math.max(10000, num));
-                  }}
-                  keyboardType="numeric"
-                  placeholder="10000"
-                  placeholderTextColor={colors.textMuted}
-                />
-                <Text style={[styles.salaryHint, { color: colors.textMuted }]}>/year</Text>
-              </View>
+              <AmountSelector
+                value={salary}
+                onChange={setSalary}
+                min={50000}
+                max={50000000}
+                steps={SALARY_STEPS}
+                showPerYear
+              />
             </View>
 
             {/* Contract Length */}
@@ -314,7 +448,7 @@ export function ContractNegotiationScreen({
                     ]}
                     onPress={() => setContractLength(years)}
                   >
-                    <Text style={[styles.optionText, { color: contractLength === years ? '#FFF' : colors.text }]}>
+                    <Text style={[styles.optionText, { color: contractLength === years ? '#000' : colors.text }]}>
                       {years}y
                     </Text>
                   </TouchableOpacity>
@@ -340,7 +474,7 @@ export function ContractNegotiationScreen({
                     onPress={() => setSquadRole(role)}
                   >
                     <Text
-                      style={[styles.roleText, { color: squadRole === role ? '#FFF' : colors.text }]}
+                      style={[styles.roleText, { color: squadRole === role ? '#000' : colors.text }]}
                       numberOfLines={1}
                     >
                       {getSquadRoleDisplayName(role)}
@@ -353,39 +487,25 @@ export function ContractNegotiationScreen({
             {/* Signing Bonus */}
             <View style={styles.inputGroup}>
               <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Signing Bonus</Text>
-              <View style={[styles.textInputWrapper, { borderColor: colors.border, backgroundColor: colors.surface }]}>
-                <Text style={[styles.currencyPrefix, { color: colors.textMuted }]}>$</Text>
-                <TextInput
-                  style={[styles.textInput, { color: colors.text }]}
-                  value={signingBonus > 0 ? signingBonus.toString() : ''}
-                  onChangeText={(text) => {
-                    const num = parseInt(text.replace(/[^0-9]/g, ''), 10);
-                    setSigningBonus(isNaN(num) ? 0 : num);
-                  }}
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor={colors.textMuted}
-                />
-              </View>
+              <AmountSelector
+                value={signingBonus}
+                onChange={setSigningBonus}
+                min={0}
+                max={10000000}
+                steps={BONUS_STEPS}
+              />
             </View>
 
             {/* Agent Fee */}
             <View style={styles.inputGroup}>
               <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Agent Fee</Text>
-              <View style={[styles.textInputWrapper, { borderColor: colors.border, backgroundColor: colors.surface }]}>
-                <Text style={[styles.currencyPrefix, { color: colors.textMuted }]}>$</Text>
-                <TextInput
-                  style={[styles.textInput, { color: colors.text }]}
-                  value={agentFee > 0 ? agentFee.toString() : ''}
-                  onChangeText={(text) => {
-                    const num = parseInt(text.replace(/[^0-9]/g, ''), 10);
-                    setAgentFee(isNaN(num) ? 0 : num);
-                  }}
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor={colors.textMuted}
-                />
-              </View>
+              <AmountSelector
+                value={agentFee}
+                onChange={setAgentFee}
+                min={0}
+                max={5000000}
+                steps={BONUS_STEPS}
+              />
             </View>
 
             {/* Release Clause (Optional) */}
@@ -399,7 +519,13 @@ export function ContractNegotiationScreen({
                       backgroundColor: hasReleaseClause ? colors.primary : 'transparent',
                     },
                   ]}
-                  onPress={() => setHasReleaseClause(!hasReleaseClause)}
+                  onPress={() => {
+                    if (!hasReleaseClause) {
+                      // Set a reasonable default based on salary
+                      setReleaseClause(roundToNiceValue(salary * 5, RELEASE_CLAUSE_STEPS));
+                    }
+                    setHasReleaseClause(!hasReleaseClause);
+                  }}
                 >
                   {hasReleaseClause && <Text style={styles.checkmark}>✓</Text>}
                 </TouchableOpacity>
@@ -408,18 +534,13 @@ export function ContractNegotiationScreen({
                 </Text>
               </View>
               {hasReleaseClause && (
-                <View style={[styles.textInputWrapper, { borderColor: colors.border, backgroundColor: colors.surface, marginTop: spacing.sm }]}>
-                  <Text style={[styles.currencyPrefix, { color: colors.textMuted }]}>$</Text>
-                  <TextInput
-                    style={[styles.textInput, { color: colors.text }]}
-                    value={releaseClause > 0 ? releaseClause.toString() : ''}
-                    onChangeText={(text) => {
-                      const num = parseInt(text.replace(/[^0-9]/g, ''), 10);
-                      setReleaseClause(isNaN(num) ? 0 : num);
-                    }}
-                    keyboardType="numeric"
-                    placeholder="Enter amount"
-                    placeholderTextColor={colors.textMuted}
+                <View style={{ marginTop: spacing.sm }}>
+                  <AmountSelector
+                    value={releaseClause}
+                    onChange={setReleaseClause}
+                    min={100000}
+                    max={100000000}
+                    steps={RELEASE_CLAUSE_STEPS}
                   />
                 </View>
               )}
@@ -438,7 +559,7 @@ export function ContractNegotiationScreen({
                     ]}
                     onPress={() => setYearlyWageRise(pct)}
                   >
-                    <Text style={[styles.optionText, { color: yearlyWageRise === pct ? '#FFF' : colors.text }]}>
+                    <Text style={[styles.optionText, { color: yearlyWageRise === pct ? '#000' : colors.text }]}>
                       {pct}%
                     </Text>
                   </TouchableOpacity>
@@ -560,7 +681,7 @@ export function ContractNegotiationScreen({
               onPress={handleSubmitOffer}
               disabled={!canAfford}
             >
-              <Text style={[styles.buttonText, { color: canAfford ? '#FFF' : colors.textMuted }]}>
+              <Text style={[styles.buttonText, { color: canAfford ? '#000' : colors.textMuted }]}>
                 {hasCounter ? 'Counter Offer' : 'Submit Offer'}
               </Text>
             </TouchableOpacity>
@@ -620,7 +741,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
   },
   statusText: {
-    color: '#FFF',
+    color: '#000',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -750,7 +871,7 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   checkmark: {
-    color: '#FFF',
+    color: '#000',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -809,7 +930,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFF',
+    color: '#000',
     fontSize: 16,
     fontWeight: '700',
   },

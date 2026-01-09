@@ -1,0 +1,64 @@
+{
+  "games": [
+    {
+      "game": 1,
+      "filename": "output/M3_USER_REVIEW_GAME_1.txt",
+      "violations": {
+        "timeout_after_own_score": [],
+        "illegal_subs": [],
+        "bonus_issues": []
+      },
+      "has_violations": false,
+      "ft_made": 23,
+      "ft_total": 25,
+      "ft_pct": 92.0,
+      "fouls": 16,
+      "home_score": 118,
+      "away_score": 100,
+      "margin": 18,
+      "total_points": 218
+    },
+    {
+      "game": 2,
+      "filename": "output/M3_USER_REVIEW_GAME_2.txt",
+      "violations": {
+        "timeout_after_own_score": [],
+        "illegal_subs": [],
+        "bonus_issues": []
+      },
+      "has_violations": false,
+      "ft_made": 17,
+      "ft_total": 20,
+      "ft_pct": 85.0,
+      "fouls": 16,
+      "home_score": 122,
+      "away_score": 94,
+      "margin": 28,
+      "total_points": 216
+    },
+    {
+      "game": 3,
+      "filename": "output/M3_USER_REVIEW_GAME_3.txt",
+      "violations": {
+        "timeout_after_own_score": [],
+        "illegal_subs": [],
+        "bonus_issues": []
+      },
+      "has_violations": false,
+      "ft_made": 29,
+      "ft_total": 31,
+      "ft_pct": 93.54838709677419,
+      "fouls": 16,
+      "home_score": 94,
+      "away_score": 92,
+      "margin": 2,
+      "total_points": 186
+    }
+  ],
+  "summary": {
+    "total_violations": 0,
+    "avg_score": 206.66666666666666,
+    "avg_ft_pct": 90.18279569892474,
+    "avg_fouls": 16.0
+  }
+}

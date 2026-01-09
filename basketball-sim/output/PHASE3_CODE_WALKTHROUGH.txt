@@ -1,0 +1,232 @@
+================================================================================
+PHASE 3 CODE WALKTHROUGH: HOW COMPOSITE BONUSES AFFECT SHOT ATTEMPTS
+================================================================================
+
+USER QUESTION: "Those bonuses impact efficiency, not attempts. How exactly would
+reducing the efficiency bonus reduce attempts?"
+
+ANSWER: The composite bonuses affect SHOT DISTRIBUTION (attempts), not success
+rate. Let me trace through the code to prove this.
+
+================================================================================
+CODE FLOW: select_shot_type() function
+================================================================================
+
+Location: src/systems/shooting.py, lines 96-246
+
+STEP 1: Start with baseline distribution (line 123)
+------------------------------------------------------
+distribution = SHOT_DISTRIBUTION_BASELINE.copy()
+
+Result: {'3pt': 0.42, 'midrange': 0.28, 'rim': 0.30}
+
+This represents: 42% of shots will be 3PT, 28% midrange, 30% rim
+
+
+STEP 2: Apply position modifiers (lines 131-140)
+------------------------------------------------------
+Example: Hassan Swatter (Center)
+
+distribution['3pt'] -= 0.25    # 0.42 - 0.25 = 0.17
+distribution['rim'] += 0.15    # 0.30 + 0.15 = 0.45
+distribution['midrange'] += 0.10  # 0.28 + 0.10 = 0.38
+
+Result: {'3pt': 0.17, 'midrange': 0.38, 'rim': 0.45}
+
+
+STEP 3: Apply player composite bonuses (lines 184-200)
+------------------------------------------------------
+Calculate Hassan's rim composite: 77.7
+
+composite_diff_rim = 77.7 - 50 = 27.7
+rim_bonus = 27.7 * 0.008 = +0.222 (22.2% bonus)
+
+distribution['rim'] += 0.222           # 0.45 + 0.222 = 0.672
+distribution['3pt'] -= 0.222 * 0.5     # 0.17 - 0.111 = 0.059
+distribution['midrange'] -= 0.222 * 0.5  # 0.38 - 0.111 = 0.269
+
+Result: {'3pt': 0.059, 'midrange': 0.269, 'rim': 0.672}
+
+
+STEP 4: Apply tactical/situational modifiers (lines 202-232)
+------------------------------------------------------
+Example: Standard pace, man defense, not transition
+
+No additional modifiers applied.
+
+Result: {'3pt': 0.059, 'midrange': 0.269, 'rim': 0.672}
+
+
+STEP 5: Normalize to 100% (line 240)
+------------------------------------------------------
+distribution = normalize_probabilities(distribution)
+
+Sum = 0.059 + 0.269 + 0.672 = 1.00 (already normalized)
+
+Result: {'3pt': 0.059, 'midrange': 0.269, 'rim': 0.672}
+
+
+STEP 6: Weighted random selection (lines 242-246)
+------------------------------------------------------
+shot_types = ['3pt', 'midrange', 'rim']
+weights = [0.059, 0.269, 0.672]
+
+return weighted_random_choice(shot_types, weights)
+
+INTERPRETATION:
+  - 5.9% chance of selecting 3PT shot
+  - 26.9% chance of selecting midrange shot
+  - 67.2% chance of selecting rim shot
+
+This is SHOT SELECTION (attempts), not success rate!
+
+================================================================================
+CONTRAST: How Shot SUCCESS is Calculated
+================================================================================
+
+Location: src/systems/shooting.py, function calculate_shot_success()
+
+COMPLETELY DIFFERENT SYSTEM:
+
+1. Calculate shooter composite for the shot type (e.g., WEIGHTS_3PT)
+2. Calculate defender composite (contest ability)
+3. Calculate attribute difference: shooter_composite - defender_composite
+4. Apply SIGMOID formula: BaseRate + adjustment based on attribute diff
+5. Apply contest penalty (based on defender distance)
+6. Apply stamina penalty
+7. Return final success probability (0.0 to 1.0)
+
+Example for Hassan Swatter's rim shot:
+  - BaseRate (layup): 62%
+  - Attribute advantage: +8% (good finishing skills)
+  - Contest penalty: -15% (contested)
+  - Final probability: 55% chance of making the shot
+
+THIS is efficiency. The composite bonuses in select_shot_type() affect
+ATTEMPTS, not efficiency.
+
+================================================================================
+PHASE 3 IMPACT: Walkthrough with Reduced Bonus
+================================================================================
+
+CURRENT (0.008 multiplier):
+------------------------------------------------------
+Hassan Swatter's shot distribution:
+
+Step 1 (Baseline): 3pt=42%, mid=28%, rim=30%
+Step 2 (Position): 3pt=17%, mid=38%, rim=45%
+Step 3 (Composite): rim_bonus = 27.7 * 0.008 = +22.2%
+  Final: 3pt=5.9%, mid=26.9%, rim=67.2%
+
+Hassan takes 67.2% of his shots at the rim.
+
+
+PHASE 3 (0.005 multiplier):
+------------------------------------------------------
+Hassan Swatter's shot distribution:
+
+Step 1 (Baseline): 3pt=42%, mid=28%, rim=30%
+Step 2 (Position): 3pt=17%, mid=38%, rim=45%
+Step 3 (Composite): rim_bonus = 27.7 * 0.005 = +13.9%
+  Rim: 0.45 + 0.139 = 0.589
+  3pt: 0.17 - 0.0695 = 0.1005
+  Mid: 0.38 - 0.0695 = 0.3105
+  Final (normalized): 3pt=10.1%, mid=31.1%, rim=58.9%
+
+Hassan takes 58.9% of his shots at the rim.
+
+CHANGE: 67.2% -> 58.9% = -8.3% rim attempts for Hassan Swatter
+
+
+TEAM-WIDE IMPACT:
+------------------------------------------------------
+Not all players are elite finishers like Hassan. Team has mix:
+  - Elite finishers (Hassan, Marcus, Vince): -8 to -10% rim each
+  - Good finishers (Ray, Chris): -4 to -6% rim each
+  - Average finishers: -3 to -5% rim each
+
+Weighted average across all players and all possessions:
+  Team rim attempts: 44.9% -> ~38-39% (reduction of ~6-7%)
+
+================================================================================
+PROOF: Distribution is Used for Shot SELECTION
+================================================================================
+
+Code evidence:
+
+Line 123: distribution = SHOT_DISTRIBUTION_BASELINE.copy()
+  -> Creates dict with 3pt/mid/rim percentages
+
+Lines 131-232: Apply modifiers to distribution
+  -> distribution['rim'] += X
+  -> distribution['3pt'] -= X
+  -> etc.
+
+Line 240: distribution = normalize_probabilities(distribution)
+  -> Ensures sum = 100%
+
+Line 246: return weighted_random_choice(shot_types, weights)
+  -> Uses distribution to SELECT which shot type
+  -> This is SHOT ATTEMPTS, not success rate
+
+Success rate is calculated LATER in calculate_shot_success() using
+COMPLETELY different logic (sigmoid, BaseRates, attribute diffs).
+
+================================================================================
+WHY THIS MATTERS
+================================================================================
+
+The composite bonus system has TWO separate effects:
+
+1. SHOT SELECTION (select_shot_type):
+   - High rim composite -> More rim attempts
+   - Controlled by rim_bonus = composite_diff * 0.008
+   - THIS IS WHAT PHASE 3 TARGETS
+
+2. SHOT SUCCESS (calculate_shot_success):
+   - High rim composite -> Higher FG% at rim
+   - Controlled by sigmoid formula with WEIGHTS_DUNK and WEIGHTS_LAYUP
+   - This is NOT changed by Phase 3
+
+Phase 3 reduces HOW OFTEN elite finishers attack the rim, not HOW WELL they
+finish at the rim. Hassan will still be elite at finishing rim shots (high FG%),
+he'll just ATTEMPT fewer of them.
+
+This is exactly what we want: reduce rim attempt rate from 44.9% to ~38-39%
+while preserving the realism that elite finishers are still efficient at the rim.
+
+================================================================================
+REAL-WORLD NBA ANALOGY
+================================================================================
+
+CURRENT SYSTEM (0.008):
+  "Giannis Antetokounmpo with elite finishing ability (composite 85) takes
+   75% of his shots at the rim because he's so dominant there."
+
+  Reality: Giannis takes ~55% of shots at rim (not 75%)
+  Problem: Composite bonus is TOO aggressive
+
+PHASE 3 (0.005):
+  "Giannis with elite finishing ability takes 60% of his shots at the rim,
+   which is high but realistic for his playstyle."
+
+  This better matches NBA reality while still preserving his specialization.
+
+================================================================================
+CONCLUSION
+================================================================================
+
+The composite bonuses in select_shot_type() affect SHOT DISTRIBUTION (attempts),
+not efficiency. The code clearly shows:
+
+1. distribution dict tracks 3pt/mid/rim percentages (attempts)
+2. rim_bonus modifies distribution['rim'] (increases rim attempts)
+3. weighted_random_choice uses distribution to SELECT shot type
+4. This is BEFORE shot success calculation
+
+Phase 3 reduces rim_bonus from +32% to +20% for elite finishers, which reduces
+their rim attempt rate while preserving their high FG% at the rim.
+
+Expected impact: Team rim attempts 44.9% -> 38-39%
+
+================================================================================

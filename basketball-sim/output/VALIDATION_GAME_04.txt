@@ -1,0 +1,998 @@
+================================================================================
+                        FULL GAME - Team_001 vs Team_002                        
+================================================================================
+
+================================================================================
+                       1ST QUARTER - Team_001 vs Team_002                       
+================================================================================
+
+[12:00] Team_001 possession (Score: 0-0)
+Dirk Young attempts a 3Pt. Contested by CJ Barrett (4.1 feet, MAN). Dirk Young misses. Rebound secured by Tyler Porzingis.
+
+[11:44] Team_002 possession (Score: 0-0)
+FOUL! Reach-in foul on Dejounte McCollum during the drive. [Team fouls: 1] No free throws, side out. (Dejounte McCollum: 1 personal fouls)
+
+[11:32] Team_001 possession (Score: 0-0)
+Miles Griffin attempts a Midrange. Contested by Tyler Porzingis (4.3 feet, MAN). Miles Griffin misses. Rebound secured by CJ Barrett.
+
+[11:18] Team_002 possession (Score: 0-0)
+Miles Bane attempts a 3Pt. Contested by Klay Harden (4.8 feet, MAN). MILES BANE MAKES IT! Assist: Carmelo Lowry
+Score: 0-3
+
+[11:06] Team_001 possession (Score: 0-3)
+Dirk Young attempts a 3Pt. Contested by CJ Barrett (4.3 feet, MAN). Dirk Young misses. Rebound secured by Tyler Porzingis.
+
+[10:55] Team_002 possession (Score: 0-3)
+CJ Barrett attempts a 3Pt. Contested by Cole Ball (3.0 feet, ZONE). CJ Barrett misses. Rebound secured by Dejounte McCollum.
+
+[10:40] Team_001 possession (Score: 0-3)
+Miles Griffin drives and kicks out. Dejounte McCollum attempts a Midrange. Contested by Carmelo Lowry (5.8 feet, MAN). Dejounte McCollum misses. Rebound secured by Tyler Porzingis.
+
+[10:31] Team_002 possession (Score: 0-3)
+Tyler Porzingis drives and kicks out. Miles Bane attempts a Midrange. Contested by Klay Harden (5.0 feet, MAN). Miles Bane misses. Rebound secured by Cole Ball.
+
+[10:15] Team_001 possession (Score: 0-3)
+Cole Ball commits an offensive foul! Jordan Green drew the charge! TURNOVER! (dead ball)
+
+[09:59] Team_002 possession (Score: 0-3)
+CJ Barrett attempts a 3Pt. Contested by Cole Ball (3.2 feet, ZONE). CJ Barrett misses. Rebound secured by Dejounte McCollum.
+
+[09:46] Team_001 possession (Score: 0-3)
+Dejounte McCollum attempts a Midrange. Wide open! Carmelo Lowry is 6.0 feet away. [MAN] DEJOUNTE MCCOLLUM MAKES IT!
+Score: 2-3
+
+[09:27] Team_002 possession (Score: 2-3)
+Miles Bane drives, Klay Harden stays with him. Miles Bane attempts a Layup. Contested by Klay Harden (5.3 feet, MAN). MILES BANE MAKES IT! Assist: CJ Barrett
+Score: 2-5
+
+[09:12] Team_001 possession (Score: 2-5)
+FOUL! Shooting foul on Miles Bane. Klay Harden to the line for 2 free throws. [Team fouls: 2] (Miles Bane: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Klay Harden makes 2/2 from the line.
+Score: 4-5
+
+[09:01] Team_002 possession (Score: 4-5)
+Tyler Porzingis drives to the basket... Tyler Porzingis throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[09:01] Substitution (Team_001): Klay Harden OUT → Rudy George IN (stamina_rule2)
+
+[09:01] Substitution (Team_001): Dirk Young OUT → Ja Dosunmu IN (stamina_rule2)
+
+[09:01] Substitution (Team_001): Cole Ball OUT → Larry Trent IN (stamina_rule2)
+
+[09:01] Substitution (Team_001): Miles Griffin OUT → Kristaps Ming IN (stamina_rule2)
+
+[09:01] Substitution (Team_002): Miles Bane OUT → John Duncan IN (stamina_rule2)
+
+[09:01] Substitution (Team_002): CJ Barrett OUT → Dirk Middleton IN (stamina_rule2)
+
+[09:01] Substitution (Team_002): Jordan Green OUT → Anfernee Sexton IN (stamina_rule2)
+
+[09:01] Substitution (Team_002): Carmelo Lowry OUT → Julius Curry IN (stamina_rule2)
+
+[09:01] Substitution (Team_002): Tyler Porzingis OUT → Lamelo O'Neal IN (stamina_rule2)
+
+[08:47] Team_001 possession (Score: 4-5)
+Dejounte McCollum drives, picks up Julius Curry. Help arrives from John Duncan! Dejounte McCollum attempts a Dunk. Contested by John Duncan (5.6 feet, MAN). Dejounte McCollum misses. Offensive rebound by Rudy George! Rudy George kicks it out.
+
+[08:31] Team_001 possession (Score: 4-5)
+Larry Trent commits an offensive foul! Anfernee Sexton drew the charge! TURNOVER! (dead ball)
+
+[08:18] Team_002 possession (Score: 4-5)
+Dirk Middleton attempts a 3Pt. Contested by Rudy George (5.1 feet, ZONE). Dirk Middleton misses. Rebound secured by Rudy George.
+
+[08:05] Team_001 possession (Score: 4-5)
+FOUL! Shooting foul on Lamelo O'Neal. Kristaps Ming to the line for 2 free throws. [Team fouls: 3] (Lamelo O'Neal: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Kristaps Ming makes 2/2 from the line.
+Score: 6-5
+
+[07:50] Team_002 possession (Score: 6-5)
+Julius Curry drives, picks up Dejounte McCollum. Help arrives from Rudy George! Julius Curry attempts a Layup. Contested by Rudy George (4.2 feet, ZONE). Julius Curry misses. Rebound secured by Dejounte McCollum.
+
+[07:40] Team_001 possession (Score: 6-5)
+Rudy George attempts a 3Pt. Contested by Anfernee Sexton (4.7 feet, ZONE). RUDY GEORGE MAKES IT! Assist: Dejounte McCollum
+Score: 9-5
+
+[07:23] Team_002 possession (Score: 9-5)
+Lamelo O'Neal attempts a Layup. Contested by Dejounte McCollum (4.3 feet, ZONE). LAMELO O'NEAL MAKES IT! Assist: Julius Curry
+Score: 9-7
+
+[07:08] Team_001 possession (Score: 9-7)
+Dejounte McCollum drives and kicks out. Kristaps Ming attempts a Midrange. Contested by Julius Curry (5.8 feet, ZONE). KRISTAPS MING MAKES IT! Assist: Ja Dosunmu
+Score: 11-7
+
+[06:50] Team_002 possession (Score: 11-7)
+Dirk Middleton attempts a 3Pt. Contested by Ja Dosunmu (4.8 feet, ZONE). DIRK MIDDLETON MAKES IT! Assist: Lamelo O'Neal
+Score: 11-10
+
+[06:32] Team_001 possession (Score: 11-10)
+Larry Trent attempts a 3Pt. Contested by Anfernee Sexton (4.9 feet, MAN). LARRY TRENT MAKES IT!
+Score: 14-10
+
+[06:18] Team_002 possession (Score: 14-10)
+Lamelo O'Neal drives to the basket... Lamelo O'Neal throws a bad pass! Stolen by Kristaps Ming! TURNOVER! (live ball)
+
+[06:05] Team_001 possession (Score: 14-10)
+Dejounte McCollum attempts a Midrange. Contested by Julius Curry (5.9 feet, MAN). DEJOUNTE MCCOLLUM MAKES IT!
+Score: 16-10
+
+[05:50] Team_002 possession (Score: 16-10)
+Julius Curry drives, picks up Dejounte McCollum. Help arrives from Rudy George! Julius Curry attempts a Layup. Contested by Rudy George (4.4 feet, MAN). JULIUS CURRY MAKES IT!
+Score: 16-12
+
+[05:37] Team_001 possession (Score: 16-12)
+Larry Trent attempts a Midrange. Contested by Julius Curry (6.0 feet, ZONE). Larry Trent misses. Rebound secured by Anfernee Sexton.
+
+[05:20] Team_002 possession (Score: 16-12)
+Dirk Middleton attempts a 3Pt. Contested by Rudy George (5.5 feet, MAN). Dirk Middleton misses. Rebound secured by Dejounte McCollum.
+
+[05:07] Team_001 possession (Score: 16-12)
+Rudy George attempts a 3Pt. Wide open! Julius Curry is 6.0 feet away. [ZONE] Rudy George misses. Rebound secured by John Duncan.
+
+[04:56] Team_002 possession (Score: 16-12)
+Anfernee Sexton attempts a Layup. Contested by Larry Trent (4.9 feet, MAN). Anfernee Sexton misses. Rebound secured by Rudy George.
+
+[04:38] Team_001 possession (Score: 16-12)
+Larry Trent attempts a 3Pt. Wide open! Julius Curry is 6.1 feet away. [ZONE] Larry Trent misses. Rebound secured by Julius Curry.
+
+[04:25] Team_002 possession (Score: 16-12)
+Anfernee Sexton attempts a 3Pt. Contested by Larry Trent (4.9 feet, MAN). ANFERNEE SEXTON MAKES IT! Assist: Lamelo O'Neal
+Score: 16-15
+
+[04:11] Team_001 possession (Score: 16-15)
+Kristaps Ming attempts a Midrange. Wide open! Lamelo O'Neal is 6.0 feet away. [MAN] Kristaps Ming misses. Rebound secured by Julius Curry.
+
+[03:58] Team_002 possession (Score: 16-15)
+Julius Curry attempts a Layup. Contested by Dejounte McCollum (4.7 feet, ZONE). JULIUS CURRY MAKES IT! Assist: Anfernee Sexton
+Score: 16-17
+
+[03:39] Team_001 possession (Score: 16-17)
+Rudy George loses the ball! Stripped by Dirk Middleton! TURNOVER! (live ball)
+
+[03:25] Team_002 possession (Score: 16-17)
+Dirk Middleton attempts a 3Pt. Contested by Rudy George (5.8 feet, MAN). Dirk Middleton misses. Rebound secured by Larry Trent.
+
+[03:11] Team_001 possession (Score: 16-17)
+Rudy George attempts a 3Pt. Wide open! Julius Curry is 6.3 feet away. [ZONE] Rudy George misses. Rebound secured by Julius Curry.
+
+[02:56] Team_002 possession (Score: 16-17)
+Dirk Middleton attempts a Midrange. Contested by Dejounte McCollum (4.8 feet, ZONE). Dirk Middleton misses. Rebound secured by Dejounte McCollum.
+
+[02:43] Team_001 possession (Score: 16-17)
+Dejounte McCollum attempts a 3Pt. Wide open! Julius Curry is 6.3 feet away. [ZONE] Dejounte McCollum misses. Rebound secured by John Duncan.
+
+[02:31] Team_002 possession (Score: 16-17)
+John Duncan attempts a 3Pt. Contested by Ja Dosunmu (5.7 feet, MAN). John Duncan misses. Rebound secured by Dejounte McCollum.
+
+[02:15] Team_001 possession (Score: 16-17)
+Kristaps Ming attempts a 3Pt. Wide open! Julius Curry is 6.4 feet away. [ZONE] Kristaps Ming misses. Rebound secured by Anfernee Sexton.
+
+[01:59] Team_002 possession (Score: 16-17)
+FOUL! Holding foul on Larry Trent. [Team fouls: 4] No free throws, side out. (Larry Trent: 1 personal fouls)
+
+[01:43] Team_001 possession (Score: 16-17)
+Ja Dosunmu attempts a Layup. Wide open! Julius Curry is 6.5 feet away. [ZONE] JA DOSUNMU MAKES IT!
+Score: 18-17
+
+[01:29] Team_002 possession (Score: 18-17)
+John Duncan attempts a 3Pt. Wide open! Rudy George is 6.0 feet away. [ZONE] John Duncan misses. Rebound secured by Rudy George.
+
+[01:10] Team_001 possession (Score: 18-17)
+Rudy George attempts a 3Pt. Wide open! Julius Curry is 6.5 feet away. [ZONE] RUDY GEORGE MAKES IT! Assist: Larry Trent
+Score: 21-17
+
+[00:59] Team_002 possession (Score: 21-17)
+Dirk Middleton attempts a 3Pt. Wide open! Rudy George is 6.1 feet away. [MAN] DIRK MIDDLETON MAKES IT! Assist: John Duncan
+Score: 21-20
+
+[00:41] Team_001 possession (Score: 21-20)
+Kristaps Ming drives to the basket... Kristaps Ming throws a bad pass! Stolen by Lamelo O'Neal! TURNOVER! (live ball)
+
+[00:24] Team_002 possession (Score: 21-20)
+Lamelo O'Neal drives, picks up Kristaps Ming. Help arrives from Rudy George! Lamelo O'Neal attempts a Dunk. Wide open! Rudy George is 7.4 feet away. [MAN] LAMELO O'NEAL MAKES IT!
+Score: 21-22
+
+[00:11] Team_001 possession (Score: 21-22)
+Rudy George attempts a 3Pt. Wide open! Dirk Middleton is 7.2 feet away. [MAN] Rudy George misses. Offensive rebound by Rudy George! Rudy George kicks it out.
+
+================================================================================
+                              1ST QUARTER COMPLETE                              
+================================================================================
+
+1ST QUARTER SCORE: Team_001 21, Team_002 22
+
+BOX SCORE:
+================================================================================
+
+Team_001
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Rudy George             9    6    5    0   0   2/4    50.0     0/0   0.0
+Dejounte McCollum      12    4    6    1   0   2/3    66.7     0/0   0.0
+Kristaps Ming           9    4    0    0   0   1/3    33.3     0/0   0.0
+Larry Trent             9    3    1    1   0   1/3    33.3     0/0   0.0
+Klay Harden             3    2    0    0   0   0/0     0.0     0/0   0.0
+Ja Dosunmu              9    2    0    1   0   1/1   100.0     0/0   0.0
+Dirk Young              3    0    0    0   0   0/2     0.0     0/0   0.0
+Miles Griffin           3    0    0    0   0   0/2     0.0     0/0   0.0
+Cole Ball               3    0    1    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 7/18 (38.9%), 3PT: 3/10 (30.0%), REB: 13 (2 off, 11 def), AST: 3, TO: 4
+TEAM FOULS: 0
+
+
+Team_002
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Dirk Middleton          9    6    0    0   0   2/6    33.3     0/0   0.0
+Miles Bane              3    5    0    0   0   2/2   100.0     0/0   0.0
+Julius Curry            9    4    3    1   0   2/3    66.7     0/0   0.0
+Lamelo O'Neal           9    4    0    2   0   2/2   100.0     0/0   0.0
+Anfernee Sexton         9    3    2    1   0   1/2    50.0     0/0   0.0
+Tyler Porzingis         3    0    3    0   0   0/1     0.0     0/0   0.0
+CJ Barrett              3    0    1    1   0   0/2     0.0     0/0   0.0
+Carmelo Lowry           3    0    0    1   0   0/0     0.0     0/0   0.0
+John Duncan             9    0    2    1   0   0/2     0.0     0/0   0.0
+
+TEAM: FG: 9/20 (45.0%), 3PT: 4/11 (36.4%), REB: 11 (0 off, 11 def), AST: 7, TO: 2
+TEAM FOULS: 4
+
+================================================================================
+
+================================================================================
+                       2ND QUARTER - Team_001 vs Team_002                       
+================================================================================
+
+[12:00] Team_001 possession (Score: 21-22)
+Cole Ball attempts a 3Pt. Contested by Jordan Green (3.8 feet, MAN). COLE BALL MAKES IT! Assist: Klay Harden
+Score: 24-22
+
+[11:46] Team_002 possession (Score: 24-22)
+CJ Barrett attempts a 3Pt. Contested by Dirk Young (3.8 feet, MAN). CJ BARRETT MAKES IT!
+Score: 24-25
+
+[11:31] Team_001 possession (Score: 24-25)
+Dejounte McCollum attempts a Layup. Contested by Tyler Porzingis (3.1 feet, ZONE). DEJOUNTE MCCOLLUM MAKES IT! Assist: Dirk Young
+Score: 26-25
+
+[11:17] Team_002 possession (Score: 26-25)
+CJ Barrett attempts a 3Pt. Contested by Dirk Young (3.8 feet, MAN). CJ BARRETT MAKES IT! Assist: Miles Bane
+Score: 26-28
+
+[11:03] Team_001 possession (Score: 26-28)
+FOUL! Reach-in foul on Jordan Green during the drive. [Team fouls: 1] No free throws, side out. (Jordan Green: 1 personal fouls)
+
+[10:45] Team_002 possession (Score: 26-28)
+CJ Barrett drives to the basket... CJ Barrett loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[10:45] Substitution (Team_001): Klay Harden OUT → Rudy George IN (stamina_rule2)
+
+[10:45] Substitution (Team_001): Dejounte McCollum OUT → Franz Bryant IN (stamina_rule2)
+
+[10:45] Substitution (Team_002): Carmelo Lowry OUT → Anfernee Sexton IN (stamina_rule2)
+
+[10:32] Team_001 possession (Score: 26-28)
+Miles Griffin attempts a Layup. Contested by Tyler Porzingis (3.3 feet, MAN). MILES GRIFFIN MAKES IT!
+Score: 28-28
+
+[10:19] Team_002 possession (Score: 28-28)
+Tyler Porzingis attempts a 3Pt. Contested by Miles Griffin (4.0 feet, MAN). Tyler Porzingis misses. Rebound secured by Dirk Young.
+
+[10:01] Team_001 possession (Score: 28-28)
+Franz Bryant attempts a 3Pt. Contested by Tyler Porzingis (3.3 feet, MAN). Franz Bryant misses. Rebound secured by CJ Barrett.
+
+[09:50] Team_002 possession (Score: 28-28)
+CJ Barrett attempts a 3Pt. Contested by Cole Ball (2.8 feet, ZONE). CJ Barrett misses. Offensive rebound by Miles Bane! Miles Bane kicks it out.
+
+[09:40] Team_002 possession (Score: 28-28)
+Anfernee Sexton makes the Layup and draws the foul on Cole Ball! And-1! Anfernee Sexton to the line for 1. [Team fouls: 2] (Cole Ball: 1 personal fouls)   FT 1/1: GOOD Anfernee Sexton makes 1/1 from the line.
+Score: 28-31
+
+[09:27] Team_001 possession (Score: 28-31)
+Franz Bryant attempts a Midrange. Contested by Tyler Porzingis (3.4 feet, MAN). Franz Bryant misses. Rebound secured by CJ Barrett.
+
+[09:16] Team_002 possession (Score: 28-31)
+CJ Barrett makes the Layup and draws the foul on Dirk Young! And-1! CJ Barrett to the line for 1. [Team fouls: 3] (Dirk Young: 1 personal fouls)   FT 1/1: GOOD CJ Barrett makes 1/1 from the line.
+Score: 28-34
+
+[09:03] Team_001 possession (Score: 28-34)
+FOUL! Shooting foul on Tyler Porzingis. Franz Bryant to the line for 2 free throws. [Team fouls: 4] (Tyler Porzingis: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Franz Bryant makes 2/2 from the line.
+Score: 30-34
+
+[08:50] Team_002 possession (Score: 30-34)
+FOUL! Reach-in foul on Cole Ball during the drive. [IN THE BONUS! 5 team fouls] Anfernee Sexton to the line for 2 free throws. (Cole Ball: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Anfernee Sexton makes 1/2 from the line. Rebound secured by Miles Griffin.
+Score: 30-35
+
+[08:40] Team_001 possession (Score: 30-35)
+Cole Ball drives and kicks out. Franz Bryant attempts a Midrange. Contested by Tyler Porzingis (3.6 feet, MAN). Franz Bryant misses. Rebound secured by Tyler Porzingis.
+
+[08:27] Team_002 possession (Score: 30-35)
+FOUL! Holding foul on Cole Ball. [IN THE BONUS! 6 team fouls] Jordan Green to the line for 2 free throws. (Cole Ball: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Jordan Green makes 2/2 from the line.
+Score: 30-37
+
+[08:12] Team_001 possession (Score: 30-37)
+Miles Griffin attempts a Layup. Contested by Tyler Porzingis (3.6 feet, MAN). MILES GRIFFIN MAKES IT! Assist: Franz Bryant
+Score: 32-37
+
+[07:55] Team_002 possession (Score: 32-37)
+Miles Bane attempts a Midrange. Contested by Cole Ball (3.0 feet, ZONE). Miles Bane misses. Rebound secured by Dirk Young.
+
+[07:39] Team_001 possession (Score: 32-37)
+Dirk Young attempts a Midrange. Contested by CJ Barrett (4.1 feet, MAN). Dirk Young misses. Offensive rebound by Miles Griffin! Miles Griffin kicks it out.
+
+[07:27] Team_001 possession (Score: 32-37)
+Miles Griffin commits an offensive foul! Tyler Porzingis drew the charge! TURNOVER! (dead ball)
+
+[07:09] Team_002 possession (Score: 32-37)
+FOUL! Shooting foul on Dirk Young. Miles Bane to the line for 2 free throws. [BONUS: 7 team fouls] (Dirk Young: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Miles Bane makes 2/2 from the line.
+Score: 32-39
+
+[06:54] Team_001 possession (Score: 32-39)
+Miles Griffin drives and kicks out. Franz Bryant attempts a Midrange. Contested by Tyler Porzingis (3.8 feet, MAN). Franz Bryant misses. Offensive rebound by Miles Griffin! Miles Griffin kicks it out.
+
+[06:44] Team_001 possession (Score: 32-39)
+Franz Bryant drives to the basket... Franz Bryant loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[06:44] Substitution (Team_001): Dirk Young OUT → Klay Harden IN (stamina_rule2)
+
+[06:44] Substitution (Team_001): Miles Griffin OUT → Kristaps Ming IN (stamina_rule2)
+
+[06:44] Substitution (Team_002): Miles Bane OUT → John Duncan IN (stamina_rule2)
+
+[06:44] Substitution (Team_002): CJ Barrett OUT → Dirk Middleton IN (stamina_rule2)
+
+[06:44] Substitution (Team_002): Jordan Green OUT → Carmelo Lowry IN (stamina_rule2)
+
+[06:44] Substitution (Team_002): Tyler Porzingis OUT → Lamelo O'Neal IN (stamina_rule2)
+
+[06:25] Team_002 possession (Score: 32-39)
+John Duncan attempts a Midrange. Contested by Franz Bryant (4.1 feet, ZONE). John Duncan misses. Rebound secured by Kristaps Ming.
+
+[06:10] Team_001 possession (Score: 32-39)
+Klay Harden attempts a Midrange. Contested by Anfernee Sexton (5.7 feet, ZONE). KLAY HARDEN MAKES IT!
+Score: 34-39
+
+[05:56] Team_002 possession (Score: 34-39)
+Anfernee Sexton makes the Layup and draws the foul on Cole Ball! And-1! Anfernee Sexton to the line for 1. [BONUS: 8 team fouls] (Cole Ball: 4 personal fouls)   FT 1/1: GOOD Anfernee Sexton makes 1/1 from the line.
+Score: 34-42
+
+[05:44] Team_001 possession (Score: 34-42)
+Franz Bryant attempts a 3Pt. Contested by Carmelo Lowry (3.8 feet, ZONE). FRANZ BRYANT MAKES IT! Assist: Cole Ball
+Score: 37-42
+
+[05:31] Team_002 possession (Score: 37-42)
+FOUL! Reach-in foul on Franz Bryant during the drive. [IN THE BONUS! 9 team fouls] Dirk Middleton to the line for 2 free throws. (Franz Bryant: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Dirk Middleton makes 2/2 from the line.
+Score: 37-44
+
+[05:14] Team_001 possession (Score: 37-44)
+Cole Ball drives and kicks out. Kristaps Ming attempts a 3Pt. Contested by Lamelo O'Neal (4.7 feet, MAN). KRISTAPS MING MAKES IT! Assist: Klay Harden
+Score: 40-44
+
+[04:58] Team_002 possession (Score: 40-44)
+FOUL! Shooting foul on Franz Bryant. Carmelo Lowry to the line for 2 free throws. [BONUS: 10 team fouls] (Franz Bryant: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Carmelo Lowry makes 1/2 from the line. Rebound secured by Cole Ball.
+Score: 40-45
+
+[04:42] Team_001 possession (Score: 40-45)
+Klay Harden attempts a Layup. Contested by John Duncan (5.9 feet, MAN). Klay Harden misses. Rebound secured by Lamelo O'Neal.
+
+[04:32] Team_002 possession (Score: 40-45)
+Carmelo Lowry drives, Franz Bryant stays with him. Carmelo Lowry attempts a Layup. Contested by Franz Bryant (4.4 feet, MAN). Carmelo Lowry misses. Rebound secured by Kristaps Ming.
+
+[04:21] Team_001 possession (Score: 40-45)
+Klay Harden attempts a 3Pt. Contested by Carmelo Lowry (4.0 feet, ZONE). Klay Harden misses. Rebound secured by Lamelo O'Neal.
+
+[04:11] Team_002 possession (Score: 40-45)
+John Duncan drives, Klay Harden stays with him. John Duncan attempts a Dunk. Contested by Klay Harden (3.7 feet, MAN). John Duncan misses. Rebound secured by Klay Harden.
+
+[03:53] Team_001 possession (Score: 40-45)
+Klay Harden attempts a 3Pt. Contested by John Duncan (6.0 feet, MAN). Klay Harden misses. Rebound secured by Carmelo Lowry.
+
+[03:36] Team_002 possession (Score: 40-45)
+Carmelo Lowry attempts a 3Pt. Contested by Franz Bryant (4.5 feet, MAN). CARMELO LOWRY MAKES IT! Assist: Anfernee Sexton
+Score: 40-48
+
+[03:24] Team_001 possession (Score: 40-48)
+Klay Harden attempts a Midrange. Wide open! John Duncan is 6.0 feet away. [MAN] KLAY HARDEN MAKES IT!
+Score: 42-48
+
+[03:09] Team_002 possession (Score: 42-48)
+FOUL! Reach-in foul on Franz Bryant during the drive. [IN THE BONUS! 11 team fouls] Carmelo Lowry to the line for 2 free throws. (Franz Bryant: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Carmelo Lowry makes 2/2 from the line.
+Score: 42-50
+
+[02:52] Team_001 possession (Score: 42-50)
+Rudy George makes the Midrange and draws the foul on Dirk Middleton! And-1! Rudy George to the line for 1. [BONUS: 12 team fouls] (Dirk Middleton: 1 personal fouls)   FT 1/1: GOOD Rudy George makes 1/1 from the line.
+Score: 45-50
+
+[02:37] Team_002 possession (Score: 45-50)
+Anfernee Sexton drives, Cole Ball stays with him. Anfernee Sexton attempts a Layup. Contested by Cole Ball (3.8 feet, MAN). Anfernee Sexton misses. FOUL! Loose ball foul on Franz Bryant during the rebound battle. [IN THE BONUS! 13 team fouls] Carmelo Lowry to the line for 2 free throws. (Franz Bryant: 4 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Carmelo Lowry makes 2/2 from the line.
+Score: 45-52
+
+[02:20] Team_001 possession (Score: 45-52)
+Klay Harden loses the ball! Stripped by John Duncan! TURNOVER! (live ball)
+
+[02:02] Team_002 possession (Score: 45-52)
+Anfernee Sexton attempts a 3Pt. Contested by Klay Harden (4.0 feet, ZONE). Anfernee Sexton misses. Rebound secured by Klay Harden.
+
+[01:45] Team_001 possession (Score: 45-52)
+Cole Ball attempts a 3Pt. Wide open! Anfernee Sexton is 6.4 feet away. [MAN] Cole Ball misses. Rebound secured by Carmelo Lowry.
+
+[01:31] Team_002 possession (Score: 45-52)
+John Duncan attempts a 3Pt. Contested by Klay Harden (4.1 feet, MAN). JOHN DUNCAN MAKES IT!
+Score: 45-55
+
+[01:15] Team_001 possession (Score: 45-55)
+FOUL! Shooting foul on Carmelo Lowry. Franz Bryant to the line for 2 free throws. [BONUS: 14 team fouls] (Carmelo Lowry: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Franz Bryant makes 2/2 from the line.
+Score: 47-55
+
+[01:03] Team_002 possession (Score: 47-55)
+Carmelo Lowry makes the Layup and draws the foul on Franz Bryant! And-1! Carmelo Lowry to the line for 1. [BONUS: 15 team fouls] (Franz Bryant: 5 personal fouls)   FT 1/1: GOOD Carmelo Lowry makes 1/1 from the line.
+Score: 47-58
+
+[00:46] Team_001 possession (Score: 47-58)
+Franz Bryant attempts a Layup. Contested by Carmelo Lowry (4.6 feet, MAN). Franz Bryant misses. Rebound secured by Lamelo O'Neal.
+
+[00:32] Team_002 possession (Score: 47-58)
+Anfernee Sexton loses the ball! Stripped by Cole Ball! TURNOVER! (live ball)
+
+[00:18] Team_001 possession (Score: 47-58)
+Rudy George attempts a 3Pt. Contested by Carmelo Lowry (4.7 feet, ZONE). Rudy George misses. Offensive rebound by Cole Ball! Cole Ball kicks it out.
+
+================================================================================
+                              2ND QUARTER COMPLETE                              
+================================================================================
+
+2ND QUARTER SCORE: Team_001 26, Team_002 36
+
+BOX SCORE:
+================================================================================
+
+Team_001
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Franz Bryant           11    7    0    1   0   1/4    25.0     0/0   0.0
+Klay Harden            11    4    2    2   0   2/5    40.0     0/0   0.0
+Miles Griffin           9    4    3    0   0   2/2   100.0     0/0   0.0
+Cole Ball              15    3    2    1   0   1/3    33.3     0/0   0.0
+Kristaps Ming          15    3    2    0   0   1/1   100.0     0/0   0.0
+Rudy George            19    3    0    0   0   1/1   100.0     0/0   0.0
+Dejounte McCollum      14    2    0    0   0   1/1   100.0     0/0   0.0
+Dirk Young              9    0    2    1   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 9/17 (52.9%), 3PT: 2/6 (33.3%), REB: 11 (3 off, 8 def), AST: 5, TO: 3
+TEAM FOULS: 0
+
+
+Team_002
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Carmelo Lowry          11   10    2    0   0   2/4    50.0     0/0   0.0
+CJ Barrett              9    9    2    0   0   3/3   100.0     0/0   0.0
+Anfernee Sexton        19    6    0    1   0   2/4    50.0     0/0   0.0
+John Duncan            15    3    0    0   0   1/3    33.3     0/0   0.0
+Miles Bane              9    2    1    1   0   0/1     0.0     0/0   0.0
+Jordan Green            9    2    0    0   0   0/0     0.0     0/0   0.0
+Dirk Middleton         15    2    0    0   0   0/0     0.0     0/0   0.0
+Tyler Porzingis         9    0    1    0   0   0/1     0.0     0/0   0.0
+Lamelo O'Neal          15    0    3    0   0   0/0     0.0     0/0   0.0
+
+TEAM: FG: 8/16 (50.0%), 3PT: 4/6 (66.7%), REB: 9 (1 off, 8 def), AST: 2, TO: 2
+TEAM FOULS: 15 [Team_001 in BONUS]
+
+================================================================================
+
+================================================================================
+                       3RD QUARTER - Team_001 vs Team_002                       
+================================================================================
+
+[12:00] Team_001 possession (Score: 47-58)
+Dejounte McCollum drives, picks up Carmelo Lowry. Help arrives from CJ Barrett! Dejounte McCollum attempts a Dunk. Contested by CJ Barrett (3.6 feet, MAN). Dejounte McCollum misses. Rebound secured by Carmelo Lowry.
+
+[11:44] Team_002 possession (Score: 47-58)
+CJ Barrett makes the Midrange and draws the foul on Dirk Young! And-1! CJ Barrett to the line for 1. [Team fouls: 1] (Dirk Young: 1 personal fouls)   FT 1/1: GOOD CJ Barrett makes 1/1 from the line.
+Score: 47-61
+
+[11:29] Team_001 possession (Score: 47-61)
+Klay Harden makes the Midrange and draws the foul on Miles Bane! And-1! Klay Harden to the line for 1. [Team fouls: 2] (Miles Bane: 1 personal fouls)   FT 1/1: GOOD Klay Harden makes 1/1 from the line.
+Score: 50-61
+
+[11:19] Team_002 possession (Score: 50-61)
+FOUL! Shooting foul on Dirk Young. CJ Barrett to the line for 2 free throws. [Team fouls: 3] (Dirk Young: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS CJ Barrett makes 1/2 from the line. Rebound secured by Miles Griffin.
+Score: 50-62
+
+[11:05] Team_001 possession (Score: 50-62)
+Dejounte McCollum attempts a 3Pt. Contested by CJ Barrett (3.8 feet, ZONE). Dejounte McCollum misses. Offensive rebound by Miles Griffin! Miles Griffin kicks it out.
+
+[10:51] Team_001 possession (Score: 50-62)
+FOUL! Shooting foul on Tyler Porzingis. Dirk Young to the line for 2 free throws. [Team fouls: 4] (Tyler Porzingis: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Dirk Young makes 2/2 from the line.
+Score: 52-62
+
+[10:41] Team_002 possession (Score: 52-62)
+CJ Barrett attempts a 3Pt. Contested by Dirk Young (3.8 feet, MAN). CJ BARRETT MAKES IT! Assist: Tyler Porzingis
+Score: 52-65
+
+[10:24] Team_001 possession (Score: 52-65)
+FOUL! Reach-in foul on Miles Bane during the drive. [IN THE BONUS! 5 team fouls] Klay Harden to the line for 2 free throws. (Miles Bane: 2 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Klay Harden makes 1/2 from the line.
+Score: 53-65
+
+[10:09] Team_002 possession (Score: 53-65)
+FOUL! Shooting foul on Dirk Young. CJ Barrett to the line for 2 free throws. [BONUS: 6 team fouls] (Dirk Young: 3 personal fouls)   FT 1/2: MISS   FT 2/2: MISS CJ Barrett makes 0/2 from the line. Rebound secured by Dejounte McCollum.
+
+[09:56] Team_001 possession (Score: 53-65)
+Cole Ball drives, picks up Tyler Porzingis. Help arrives from CJ Barrett! Cole Ball attempts a Dunk. Contested by CJ Barrett (3.0 feet, ZONE). Cole Ball misses. Rebound secured by Carmelo Lowry.
+
+[09:36] Team_002 possession (Score: 53-65)
+CJ Barrett attempts a Layup. Contested by Dirk Young (3.8 feet, MAN). CJ BARRETT MAKES IT! Assist: Miles Bane
+Score: 53-67
+
+[09:24] Team_001 possession (Score: 53-67)
+Miles Griffin attempts a Layup. Contested by Tyler Porzingis (3.0 feet, MAN). Miles Griffin misses. Offensive rebound by Miles Griffin! Miles Griffin kicks it out.
+
+[09:09] Team_001 possession (Score: 53-67)
+Klay Harden commits an offensive foul! Miles Bane drew the charge! TURNOVER! (dead ball)
+
+[08:56] Team_002 possession (Score: 53-67)
+FOUL! Reach-in foul on Miles Griffin during the drive. [IN THE BONUS! 7 team fouls] Miles Bane to the line for 2 free throws. (Miles Griffin: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Miles Bane makes 1/2 from the line.
+Score: 53-68
+
+[08:39] Team_001 possession (Score: 53-68)
+Klay Harden throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[08:26] Team_002 possession (Score: 53-68)
+CJ Barrett attempts a Layup. BLOCKED BY DIRK YOUNG! Ball goes out of bounds. Turnover!
+
+[08:13] Team_001 possession (Score: 53-68)
+Klay Harden drives and kicks out. Klay Harden attempts a 3Pt. Contested by CJ Barrett (3.8 feet, ZONE). Klay Harden misses. Rebound secured by Tyler Porzingis.
+
+[07:59] Team_002 possession (Score: 53-68)
+FOUL! Reach-in foul on Miles Griffin during the drive. [IN THE BONUS! 8 team fouls] Tyler Porzingis to the line for 2 free throws. (Miles Griffin: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Tyler Porzingis makes 2/2 from the line.
+Score: 53-70
+
+[07:46] Team_001 possession (Score: 53-70)
+FOUL! Holding foul on Miles Bane. [IN THE BONUS! 9 team fouls] Klay Harden to the line for 2 free throws. (Miles Bane: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Klay Harden makes 2/2 from the line.
+Score: 55-70
+
+[07:31] Team_002 possession (Score: 55-70)
+Carmelo Lowry drives to the basket... Carmelo Lowry loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[07:20] Team_001 possession (Score: 55-70)
+Dejounte McCollum drives to the basket... Dejounte McCollum loses the ball! Stripped by Carmelo Lowry! TURNOVER! (live ball)
+
+[07:02] Team_002 possession (Score: 55-70)
+FOUL! Holding foul on Klay Harden. [IN THE BONUS! 10 team fouls] Miles Bane to the line for 2 free throws. (Klay Harden: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Miles Bane makes 2/2 from the line.
+Score: 55-72
+
+[06:46] Team_001 possession (Score: 55-72)
+Klay Harden drives, Miles Bane stays with him. Klay Harden attempts a Layup. Contested by Miles Bane (4.5 feet, MAN). KLAY HARDEN MAKES IT!
+Score: 57-72
+
+[06:30] Team_002 possession (Score: 57-72)
+Miles Bane attempts a 3Pt. Contested by Klay Harden (3.3 feet, MAN). Miles Bane misses. Rebound secured by Dejounte McCollum.
+
+[06:11] Team_001 possession (Score: 57-72)
+Dejounte McCollum attempts a 3Pt. Contested by Carmelo Lowry (3.6 feet, MAN). DEJOUNTE MCCOLLUM MAKES IT! Assist: Cole Ball
+Score: 60-72
+
+[05:59] Team_002 possession (Score: 60-72)
+Carmelo Lowry attempts a 3Pt. Contested by Dejounte McCollum (3.8 feet, MAN). Carmelo Lowry misses. Offensive rebound by Tyler Porzingis! Tyler Porzingis's putback is no good. Rebound secured by Dejounte McCollum.
+
+[05:49] Team_001 possession (Score: 60-72)
+Dejounte McCollum drives, picks up Carmelo Lowry. Help arrives from CJ Barrett! Dejounte McCollum attempts a Layup. Contested by CJ Barrett (3.6 feet, MAN). DEJOUNTE MCCOLLUM MAKES IT! Assist: Dirk Young
+Score: 62-72
+
+[05:36] Team_002 possession (Score: 62-72)
+Tyler Porzingis makes the Midrange and draws the foul on Miles Griffin! And-1! Tyler Porzingis to the line for 1. [BONUS: 11 team fouls] (Miles Griffin: 3 personal fouls)   FT 1/1: GOOD Tyler Porzingis makes 1/1 from the line.
+Score: 62-75
+
+[05:20] Team_001 possession (Score: 62-75)
+Cole Ball drives to the basket... Cole Ball commits a violation (traveling/carry)! TURNOVER! (dead ball)
+
+[05:04] Team_002 possession (Score: 62-75)
+Miles Bane attempts a Midrange. Contested by Klay Harden (3.5 feet, MAN). MILES BANE MAKES IT! Assist: CJ Barrett
+Score: 62-77
+
+[04:54] Team_001 possession (Score: 62-77)
+Dirk Young attempts a 3Pt. Contested by CJ Barrett (3.9 feet, MAN). Dirk Young misses. Rebound secured by Miles Bane.
+
+[04:40] Team_002 possession (Score: 62-77)
+Tyler Porzingis attempts a 3Pt. Contested by Cole Ball (2.9 feet, ZONE). Tyler Porzingis misses. FOUL! Loose ball foul on Dejounte McCollum during the rebound battle. [IN THE BONUS! 12 team fouls] Carmelo Lowry to the line for 2 free throws. (Dejounte McCollum: 1 personal fouls)   FT 1/2: MISS   FT 2/2: GOOD Carmelo Lowry makes 1/2 from the line.
+Score: 62-78
+
+[04:26] Team_001 possession (Score: 62-78)
+Miles Griffin drives and kicks out. Miles Griffin attempts a 3Pt. BLOCKED BY TYLER PORZINGIS! Ball goes out of bounds. Turnover!
+
+[04:09] Team_002 possession (Score: 62-78)
+Miles Bane attempts a 3Pt. Contested by Klay Harden (3.6 feet, ZONE). Miles Bane misses. Rebound secured by Dejounte McCollum.
+
+[03:57] Team_001 possession (Score: 62-78)
+Miles Griffin attempts a Midrange. Contested by Tyler Porzingis (3.2 feet, MAN). Miles Griffin misses. Rebound secured by Miles Bane.
+
+[03:45] Team_002 possession (Score: 62-78)
+Miles Bane attempts a Layup. BLOCKED BY KLAY HARDEN! Ball goes out of bounds. Turnover!
+
+[03:45] Substitution (Team_001): Klay Harden OUT → Ja Dosunmu IN (stamina_rule2)
+
+[03:34] Team_001 possession (Score: 62-78)
+Cole Ball attempts a 3Pt. Contested by CJ Barrett (4.1 feet, ZONE). Cole Ball misses. Rebound secured by Miles Bane.
+
+[03:19] Team_002 possession (Score: 62-78)
+FOUL! Shooting foul on Miles Griffin. Miles Bane to the line for 2 free throws. [BONUS: 13 team fouls] (Miles Griffin: 4 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Miles Bane makes 2/2 from the line.
+Score: 62-80
+
+[03:04] Team_001 possession (Score: 62-80)
+FOUL! Holding foul on Miles Bane. [IN THE BONUS! 14 team fouls] Ja Dosunmu to the line for 2 free throws. (Miles Bane: 4 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Ja Dosunmu makes 1/2 from the line. Offensive rebound by Miles Griffin! Miles Griffin kicks it out.
+Score: 63-80
+
+[02:51] Team_001 possession (Score: 63-80)
+FOUL! Shooting foul on Miles Bane. Dejounte McCollum to the line for 3 free throws. [BONUS: 15 team fouls] (Miles Bane: 5 personal fouls)   FT 1/3: GOOD   FT 2/3: GOOD   FT 3/3: GOOD Dejounte McCollum makes 3/3 from the line.
+Score: 66-80
+
+[02:40] Team_002 possession (Score: 66-80)
+Jordan Green attempts a 3Pt. Contested by Ja Dosunmu (3.5 feet, ZONE). Jordan Green misses. Rebound secured by Cole Ball.
+
+[02:28] Team_001 possession (Score: 66-80)
+Dirk Young attempts a Midrange. Contested by CJ Barrett (4.2 feet, MAN). Dirk Young misses. Rebound secured by Tyler Porzingis.
+
+[02:11] Team_002 possession (Score: 66-80)
+Carmelo Lowry attempts a 3Pt. Contested by Dejounte McCollum (4.0 feet, MAN). Carmelo Lowry misses. Offensive rebound by Carmelo Lowry! Carmelo Lowry kicks it out.
+
+[01:59] Team_002 possession (Score: 66-80)
+Jordan Green attempts a Layup. Contested by Miles Griffin (4.2 feet, ZONE). JORDAN GREEN MAKES IT!
+Score: 66-82
+
+[01:45] Team_001 possession (Score: 66-82)
+FOUL! Holding foul on Jordan Green. [IN THE BONUS! 16 team fouls] Cole Ball to the line for 2 free throws. (Jordan Green: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Cole Ball makes 2/2 from the line.
+Score: 68-82
+
+[01:34] Team_002 possession (Score: 68-82)
+Tyler Porzingis makes the Layup and draws the foul on Miles Griffin! And-1! Tyler Porzingis to the line for 1. [BONUS: 17 team fouls] (Miles Griffin: 5 personal fouls)   FT 1/1: GOOD Tyler Porzingis makes 1/1 from the line.
+Score: 68-85
+
+[01:22] Team_001 possession (Score: 68-85)
+FOUL! Holding foul on Tyler Porzingis. [IN THE BONUS! 18 team fouls] Miles Griffin to the line for 2 free throws. (Tyler Porzingis: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Miles Griffin makes 2/2 from the line.
+Score: 70-85
+
+[01:06] Team_002 possession (Score: 70-85)
+Jordan Green throws a bad pass! Stolen by Cole Ball! TURNOVER! (live ball)
+
+[00:49] Team_001 possession (Score: 70-85)
+Ja Dosunmu attempts a 3Pt. Contested by Miles Bane (5.0 feet, MAN). Ja Dosunmu misses. Offensive rebound by Cole Ball! Cole Ball kicks it out.
+
+[00:36] Team_001 possession (Score: 70-85)
+Cole Ball attempts a Midrange. Contested by Jordan Green (4.4 feet, MAN). Cole Ball misses. Rebound secured by Carmelo Lowry.
+
+[00:25] Team_002 possession (Score: 70-85)
+FOUL! Shooting foul on Dejounte McCollum. CJ Barrett to the line for 2 free throws. [BONUS: 19 team fouls] (Dejounte McCollum: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD CJ Barrett makes 2/2 from the line.
+Score: 70-87
+
+[00:07] Team_001 possession (Score: 70-87)
+Miles Griffin attempts a Midrange. Contested by Tyler Porzingis (3.8 feet, MAN). MILES GRIFFIN MAKES IT! Assist: Dirk Young
+Score: 72-87
+
+================================================================================
+                              3RD QUARTER COMPLETE                              
+================================================================================
+
+3RD QUARTER SCORE: Team_001 25, Team_002 29
+
+BOX SCORE:
+================================================================================
+
+Team_001
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Dejounte McCollum      26    8    4    0   0   2/3    66.7     0/0   0.0
+Klay Harden            20    8    0    0   0   2/3    66.7     0/0   0.0
+Miles Griffin          21    4    4    0   0   1/2    50.0     0/0   0.0
+Dirk Young             21    2    0    2   0   0/2     0.0     0/0   0.0
+Cole Ball              27    2    2    1   0   0/3     0.0     0/0   0.0
+
+TEAM: FG: 5/13 (38.5%), 3PT: 1/3 (33.3%), REB: 9 (4 off, 5 def), AST: 3, TO: 5
+TEAM FOULS: 0
+
+
+Team_002
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+CJ Barrett             21   10    0    1   0   3/5    60.0     0/0   0.0
+Tyler Porzingis        21    8    2    1   0   2/2   100.0     0/0   0.0
+Miles Bane             21    7    3    1   0   1/3    33.3     0/0   0.0
+Jordan Green           21    2    0    0   0   1/2    50.0     0/0   0.0
+Carmelo Lowry          23    1    4    0   0   0/1     0.0     0/0   0.0
+
+TEAM: FG: 7/13 (53.8%), 3PT: 1/5 (20.0%), REB: 10 (2 off, 8 def), AST: 3, TO: 4
+TEAM FOULS: 19 [Team_001 in BONUS]
+
+================================================================================
+
+================================================================================
+                       4TH QUARTER - Team_001 vs Team_002                       
+================================================================================
+
+[12:00] Substitution (Team_001): Klay Harden OUT (stamina: 80) → Ja Dosunmu IN (comeback_detected)
+
+[12:00] Substitution (Team_002): Miles Bane OUT (stamina: 67) → John Duncan IN (comeback_detected)
+
+[12:00] Team_001 possession (Score: 72-87)
+Dejounte McCollum attempts a Layup. Contested by Tyler Porzingis (3.5 feet, ZONE). Dejounte McCollum misses. Rebound secured by CJ Barrett.
+
+[11:45] Team_002 possession (Score: 72-87)
+John Duncan attempts a 3Pt. Contested by Ja Dosunmu (3.5 feet, MAN). John Duncan misses. Rebound secured by Cole Ball.
+
+[11:33] Team_001 possession (Score: 72-87)
+Dejounte McCollum attempts a Midrange. Contested by Carmelo Lowry (4.2 feet, MAN). Dejounte McCollum misses. Rebound secured by Tyler Porzingis.
+
+[11:20] Team_002 possession (Score: 72-87)
+John Duncan attempts a Midrange. BLOCKED BY JA DOSUNMU! Offensive rebound by Carmelo Lowry! Carmelo Lowry kicks it out.
+
+[11:05] Team_002 possession (Score: 72-87)
+Carmelo Lowry drives and kicks out. Tyler Porzingis attempts a Midrange. Contested by Cole Ball (3.4 feet, ZONE). Tyler Porzingis misses. Rebound secured by Dejounte McCollum.
+
+[10:52] Team_001 possession (Score: 72-87)
+Dirk Young attempts a Midrange. Contested by Carmelo Lowry (4.3 feet, ZONE). Dirk Young misses. Rebound secured by CJ Barrett.
+
+[10:39] Team_002 possession (Score: 72-87)
+John Duncan throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[10:39] Substitution (Team_001): Dirk Young OUT → Rudy George IN (stamina_rule2)
+
+[10:39] Substitution (Team_001): Cole Ball OUT → Larry Trent IN (stamina_rule2)
+
+[10:39] Substitution (Team_001): Dejounte McCollum OUT → Franz Bryant IN (stamina_rule2)
+
+[10:39] Substitution (Team_001): Miles Griffin OUT → Kristaps Ming IN (stamina_rule2)
+
+[10:39] Substitution (Team_002): CJ Barrett OUT → Dirk Middleton IN (stamina_rule2)
+
+[10:39] Substitution (Team_002): Jordan Green OUT → Anfernee Sexton IN (stamina_rule2)
+
+[10:39] Substitution (Team_002): Carmelo Lowry OUT → Julius Curry IN (stamina_rule2)
+
+[10:39] Substitution (Team_002): Tyler Porzingis OUT → Lamelo O'Neal IN (stamina_rule2)
+
+[10:24] Team_001 possession (Score: 72-87)
+FOUL! Shooting foul on Julius Curry. Kristaps Ming to the line for 2 free throws. [Team fouls: 2] (Julius Curry: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Kristaps Ming makes 2/2 from the line.
+Score: 74-87
+
+[10:10] Team_002 possession (Score: 74-87)
+Dirk Middleton attempts a 3Pt. Contested by Ja Dosunmu (3.5 feet, ZONE). Dirk Middleton misses. Rebound secured by Larry Trent.
+
+[09:54] Team_001 possession (Score: 74-87)
+Larry Trent attempts a 3Pt. Contested by Anfernee Sexton (4.4 feet, MAN). Larry Trent misses. Rebound secured by Anfernee Sexton.
+
+[09:37] Team_002 possession (Score: 74-87)
+John Duncan drives to the basket... John Duncan loses the ball! Stripped by Ja Dosunmu! TURNOVER! (live ball)
+
+[09:23] Team_001 possession (Score: 74-87)
+Rudy George attempts a Midrange. Contested by Dirk Middleton (5.9 feet, MAN). RUDY GEORGE MAKES IT!
+Score: 76-87
+
+[09:09] Team_002 possession (Score: 76-87)
+Dirk Middleton attempts a Layup. BLOCKED BY RUDY GEORGE! Ball goes out of bounds. Turnover!
+
+[08:52] Team_001 possession (Score: 76-87)
+Larry Trent attempts a Midrange. Contested by Anfernee Sexton (4.4 feet, MAN). Larry Trent misses. Rebound secured by Julius Curry.
+
+[08:37] Team_002 possession (Score: 76-87)
+Julius Curry attempts a 3Pt. Contested by Franz Bryant (3.8 feet, MAN). Julius Curry misses. Rebound secured by Kristaps Ming.
+
+[08:23] Team_001 possession (Score: 76-87)
+Larry Trent attempts a Midrange. Contested by Julius Curry (5.4 feet, ZONE). Larry Trent misses. Rebound secured by Anfernee Sexton.
+
+[08:05] Team_002 possession (Score: 76-87)
+Julius Curry attempts a Layup. Contested by Franz Bryant (3.8 feet, ZONE). JULIUS CURRY MAKES IT! Assist: Dirk Middleton
+Score: 76-89
+
+[07:51] Team_001 possession (Score: 76-89)
+Franz Bryant attempts a Midrange. Contested by Lamelo O'Neal (3.0 feet, MAN). FRANZ BRYANT MAKES IT! Assist: Kristaps Ming
+Score: 78-89
+
+[07:34] Team_002 possession (Score: 78-89)
+FOUL! Reach-in foul on Ja Dosunmu during the drive. [Team fouls: 3] No free throws, side out. (Ja Dosunmu: 1 personal fouls)
+
+[07:20] Team_001 possession (Score: 78-89)
+Rudy George throws a bad pass out of bounds! TURNOVER! (dead ball)
+
+[07:02] Team_002 possession (Score: 78-89)
+John Duncan attempts a 3Pt. Contested by Ja Dosunmu (3.6 feet, MAN). John Duncan misses. Rebound secured by Kristaps Ming.
+
+[06:44] Team_001 possession (Score: 78-89)
+Franz Bryant drives, Lamelo O'Neal stays with him. Franz Bryant attempts a Dunk. Contested by Lamelo O'Neal (3.0 feet, ZONE). Franz Bryant misses. Rebound secured by Anfernee Sexton.
+
+[06:30] Team_002 possession (Score: 78-89)
+Julius Curry drives, picks up Franz Bryant. Help arrives from Rudy George! Julius Curry attempts a Dunk. Contested by Rudy George (3.8 feet, MAN). JULIUS CURRY MAKES IT! Assist: Anfernee Sexton
+Score: 78-91
+
+[06:18] Team_001 possession (Score: 78-91)
+Rudy George loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[06:04] Team_002 possession (Score: 78-91)
+Lamelo O'Neal drives, Kristaps Ming stays with him. Lamelo O'Neal attempts a Dunk. Contested by Kristaps Ming (5.6 feet, MAN). LAMELO O'NEAL MAKES IT!
+Score: 78-93
+
+[05:52] Team_001 possession (Score: 78-93)
+Larry Trent attempts a 3Pt. Contested by Julius Curry (5.4 feet, ZONE). LARRY TRENT MAKES IT! Assist: Rudy George
+Score: 81-93
+
+[05:39] Team_002 possession (Score: 81-93)
+FOUL! Holding foul on Larry Trent. [Team fouls: 4] No free throws, side out. (Larry Trent: 1 personal fouls)
+
+[05:26] Team_001 possession (Score: 81-93)
+Rudy George attempts a Midrange. Contested by Dirk Middleton (5.9 feet, MAN). Rudy George misses. Offensive rebound by Kristaps Ming! Kristaps Ming kicks it out.
+
+[05:11] Team_001 possession (Score: 81-93)
+Franz Bryant attempts a 3Pt. Contested by Lamelo O'Neal (3.0 feet, MAN). Franz Bryant misses. Offensive rebound by Rudy George! Rudy George kicks it out.
+
+[04:53] Team_001 possession (Score: 81-93)
+Larry Trent attempts a 3Pt. Contested by Julius Curry (5.4 feet, ZONE). Larry Trent misses. Rebound secured by Lamelo O'Neal.
+
+[04:38] Team_002 possession (Score: 81-93)
+FOUL! Shooting foul on Kristaps Ming. Lamelo O'Neal to the line for 2 free throws. [BONUS: 5 team fouls] (Kristaps Ming: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Lamelo O'Neal makes 2/2 from the line.
+Score: 81-95
+
+[04:24] Team_001 possession (Score: 81-95)
+Rudy George drives to the basket... Rudy George loses control! Ball rolls out of bounds! TURNOVER! (dead ball)
+
+[04:14] Team_002 possession (Score: 81-95)
+John Duncan attempts a Midrange. Contested by Ja Dosunmu (4.0 feet, MAN). John Duncan misses. Offensive rebound by Lamelo O'Neal! Lamelo O'Neal's putback is no good. Rebound secured by Kristaps Ming.
+
+[04:02] Team_001 possession (Score: 81-95)
+FOUL! Shooting foul on Lamelo O'Neal. Franz Bryant to the line for 2 free throws. [BONUS: 6 team fouls] (Lamelo O'Neal: 1 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD Franz Bryant makes 2/2 from the line.
+Score: 83-95
+
+[03:48] Team_002 possession (Score: 83-95)
+John Duncan attempts a 3Pt. Contested by Ja Dosunmu (4.1 feet, MAN). John Duncan misses. Offensive rebound by Lamelo O'Neal! Lamelo O'Neal puts it back in!
+Score: 83-97
+
+[03:33] Team_001 possession (Score: 83-97)
+Larry Trent commits an offensive foul! Anfernee Sexton drew the charge! TURNOVER! (dead ball)
+
+[03:16] Team_002 possession (Score: 83-97)
+John Duncan drives, Ja Dosunmu stays with him. John Duncan attempts a Dunk. Contested by Ja Dosunmu (4.2 feet, MAN). JOHN DUNCAN MAKES IT!
+Score: 83-99
+
+[03:02] Team_001 possession (Score: 83-99)
+Larry Trent attempts a Midrange. Contested by Anfernee Sexton (4.4 feet, MAN). LARRY TRENT MAKES IT!
+Score: 85-99
+
+[02:51] Team_002 possession (Score: 85-99)
+Dirk Middleton drives to the basket... Dirk Middleton throws a bad pass! Stolen by Rudy George! TURNOVER! (live ball)
+
+[02:39] Team_001 possession (Score: 85-99)
+Ja Dosunmu drives, John Duncan stays with him. Ja Dosunmu attempts a Layup. Contested by John Duncan (5.7 feet, MAN). JA DOSUNMU MAKES IT!
+Score: 87-99
+
+[02:24] Team_002 possession (Score: 87-99)
+FOUL! Reach-in foul on Ja Dosunmu during the drive. [IN THE BONUS! 7 team fouls] John Duncan to the line for 2 free throws. (Ja Dosunmu: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: GOOD John Duncan makes 2/2 from the line.
+Score: 87-101
+
+[02:10] Team_001 possession (Score: 87-101)
+Rudy George attempts a 3Pt. Contested by Julius Curry (5.5 feet, ZONE). RUDY GEORGE MAKES IT! Assist: Ja Dosunmu
+Score: 90-101
+
+[01:53] Team_002 possession (Score: 90-101)
+Dirk Middleton attempts a 3Pt. Contested by Rudy George (4.8 feet, MAN). Dirk Middleton misses. FOUL! Loose ball foul on Kristaps Ming during the rebound battle. [IN THE BONUS! 8 team fouls] Anfernee Sexton to the line for 2 free throws. (Kristaps Ming: 2 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS Anfernee Sexton makes 1/2 from the line. Offensive rebound by Lamelo O'Neal! Lamelo O'Neal puts it back in!
+Score: 90-104
+
+[01:37] Team_001 possession (Score: 90-104)
+Franz Bryant attempts a 3Pt. Contested by Julius Curry (5.5 feet, ZONE). FRANZ BRYANT MAKES IT! Assist: Rudy George
+Score: 93-104
+
+[01:21] Team_002 possession (Score: 93-104)
+John Duncan drives, Ja Dosunmu stays with him. John Duncan attempts a Layup. Contested by Ja Dosunmu (4.5 feet, MAN). John Duncan misses. Rebound secured by Rudy George.
+
+[01:07] Team_001 possession (Score: 93-104)
+Rudy George throws a bad pass! Stolen by Dirk Middleton! TURNOVER! (live ball)
+
+[00:49] Team_002 possession (Score: 93-104)
+Anfernee Sexton attempts a 3Pt. Contested by Larry Trent (4.2 feet, MAN). Anfernee Sexton misses. Rebound secured by Larry Trent.
+
+[00:35] Team_001 possession (Score: 93-104)
+Kristaps Ming attempts a Layup. BLOCKED BY JOHN DUNCAN! Rebound secured by Anfernee Sexton.
+
+[00:22] Team_002 possession (Score: 93-104)
+FOUL! Shooting foul on Ja Dosunmu. John Duncan to the line for 2 free throws. [BONUS: 9 team fouls] (Ja Dosunmu: 3 personal fouls)   FT 1/2: GOOD   FT 2/2: MISS John Duncan makes 1/2 from the line. Offensive rebound by Lamelo O'Neal! Lamelo O'Neal puts it back in!
+Score: 93-107
+
+[00:07] Team_001 possession (Score: 93-107)
+Ja Dosunmu attempts a 3Pt. Contested by John Duncan (6.0 feet, MAN). Ja Dosunmu misses. Offensive rebound by Kristaps Ming! Kristaps Ming kicks it out.
+
+================================================================================
+                              4TH QUARTER COMPLETE                              
+================================================================================
+
+4TH QUARTER SCORE: Team_001 21, Team_002 20
+
+BOX SCORE:
+================================================================================
+
+Team_001
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Franz Bryant           21    7    0    0   0   2/3    66.7     0/0   0.0
+Larry Trent            19    5    2    0   0   2/6    33.3     0/0   0.0
+Rudy George            30    5    2    2   0   2/2   100.0     0/0   0.0
+Kristaps Ming          26    2    5    1   0   0/1     0.0     0/0   0.0
+Ja Dosunmu             25    2    0    1   0   1/1   100.0     0/0   0.0
+Dejounte McCollum      27    0    1    0   0   0/2     0.0     0/0   0.0
+Cole Ball              29    0    1    0   0   0/0     0.0     0/0   0.0
+Dirk Young             22    0    0    0   0   0/1     0.0     0/0   0.0
+
+TEAM: FG: 7/16 (43.8%), 3PT: 3/5 (60.0%), REB: 10 (3 off, 7 def), AST: 4, TO: 5
+TEAM FOULS: 0
+
+
+Team_002
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%
+--------------------------------------------------------------------------------
+Lamelo O'Neal          26   12    3    0   0   4/4   100.0     0/0   0.0
+John Duncan            27    4    0    0   0   1/5    20.0     0/0   0.0
+Julius Curry           19    4    1    0   0   2/3    66.7     0/0   0.0
+CJ Barrett             22    0    2    0   0   0/0     0.0     0/0   0.0
+Tyler Porzingis        22    0    1    0   0   0/0     0.0     0/0   0.0
+Carmelo Lowry          25    0    1    0   0   0/1     0.0     0/0   0.0
+Dirk Middleton         26    0    0    1   0   0/1     0.0     0/0   0.0
+Anfernee Sexton        30    0    4    1   0   0/1     0.0     0/0   0.0
+
+TEAM: FG: 7/15 (46.7%), 3PT: 2/7 (28.6%), REB: 13 (4 off, 9 def), AST: 2, TO: 4
+TEAM FOULS: 9 [Team_001 in BONUS]
+
+================================================================================
+
+================================================================================
+                               FULL GAME COMPLETE                               
+================================================================================
+
+FINAL SCORE: Team_001 93, Team_002 107
+
+SCORING BY QUARTER:
+--------------------------------------------------------------------------------
+Team                     Q1     Q2     Q3     Q4    FINAL
+--------------------------------------------------------------------------------
+Team_001                 21     26     25     21       93
+Team_002                 22     36     29     20      107
+--------------------------------------------------------------------------------
+
+FULL GAME BOX SCORE:
+================================================================================
+
+Team_001
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Rudy George            30   14    7    2   5   5/7    71.4   3/5    60.0   1/1     1   1
+Cole Ball              29    5    6    2   1   2/7    28.6   1/3    33.3   2/2     2   0
+Dejounte McCollum      27   14   11    1   3   6/10   60.0   1/2    50.0   3/3     0   0
+Kristaps Ming          26    9    7    1   0   0/3     0.0   0/1     0.0   4/4     1   0
+Ja Dosunmu             25    4    0    2   0   2/2   100.0   0/0     0.0   0/0     1   1
+Dirk Young             22    2    2    3   1   0/5     0.0   0/3     0.0   2/2     0   1
+Miles Griffin          22    8    7    0   2   3/6    50.0   0/0     0.0   2/2     0   0
+Franz Bryant           21   14    0    1   0   3/7    42.9   2/3    66.7   6/6     0   0
+Klay Harden            20   14    2    2   3   4/8    50.0   0/2     0.0   6/7     0   1
+Larry Trent            19    8    3    1   2   3/9    33.3   2/5    40.0   0/0     0   0
+
+TEAM: FG: 28/64 (43.8%), 3PT: 9/24 (37.5%), REB: 43 (12 off, 31 def), AST: 15, TO: 17
+
+
+Team_002
+--------------------------------------------------------------------------------
+Player                MIN  PTS  REB  AST  TO      FG   FG%      3P   3P%      FT STL BLK
+--------------------------------------------------------------------------------
+Anfernee Sexton        30    9    6    3   2   3/7    42.9   1/3    33.3   2/2     0   0
+John Duncan            27    7    2    1   2   4/12   33.3   2/6    33.3   2/2     1   1
+Dirk Middleton         26    8    0    1   1   3/8    37.5   3/7    42.9   2/2     2   0
+Lamelo O'Neal          26   16    7    2   0   3/3   100.0   0/0     0.0   2/2     1   0
+Carmelo Lowry          25   11    7    1   2   2/6    33.3   1/2    50.0   3/7     1   0
+CJ Barrett             22   19    5    2   1   6/10   60.0   3/5    60.0   4/4     0   0
+Jordan Green           22    4    0    0   1   1/2    50.0   0/1     0.0   2/2     0   0
+Tyler Porzingis        22    8    7    1   1   2/4    50.0   0/1     0.0   4/4     0   1
+Miles Bane             21   14    4    2   1   3/6    50.0   1/3    33.3   7/8     0   0
+Julius Curry           19    8    4    1   1   4/6    66.7   0/1     0.0   0/0     0   0
+
+TEAM: FG: 31/64 (48.4%), 3PT: 11/29 (37.9%), REB: 43 (7 off, 36 def), AST: 14, TO: 12
+
+================================================================================

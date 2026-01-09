@@ -1,0 +1,113 @@
+================================================================================
+MAN VS ZONE DEFENSE VALIDATION: ROOT CAUSE ANALYSIS
+================================================================================
+
+VALIDATION TEST RESULTS:
+  - 3PT Attempt Rate: +10.8% for ZONE [PASS] ✓
+  - 3PT Shooting %: -1.9% for ZONE [BACKWARDS]
+  - Turnovers: +29.2% for ZONE [BACKWARDS]
+  - Contest Rate: MAN lower than ZONE [BACKWARDS]
+  - STATUS: [FAIL] Only 1/4 tests passed
+
+ROOT CAUSE IDENTIFIED:
+  The man/zone defense implementation has INVERTED logic. Zone defense is
+  coded to INCREASE turnovers and contest effectiveness, when it should DECREASE them.
+
+BASKETBALL REALITY CHECK:
+  MAN DEFENSE (100% man_defense_pct):
+    - Aggressive on-ball pressure
+    - Follows specific players
+    - Forces more steals and turnovers
+    - Better contest rates on shots
+    - Vulnerable to 3PT shooting (one-on-one)
+
+  ZONE DEFENSE (0% man_defense_pct, 100% zone):
+    - Passive lane protection
+    - Prevents paint penetration
+    - FEWER turnovers (no aggressive traps)
+    - WORSE contest rates on perimeter (gaps in zone)
+    - Encourages MORE 3PT attempts
+    - Allows HIGHER 3PT% (open looks from perimeter)
+
+CURRENT IMPLEMENTATION BUG:
+
+  1. TURNOVERS (src/systems/turnovers.py lines 113-119):
+     Code: zone_modifier = ZONE_DEFENSE_TURNOVER_BONUS * zone_pct
+     Constant: ZONE_DEFENSE_TURNOVER_BONUS = 0.03  (+3%)
+     Comment: "Zone defense increases turnovers (more passes required)"
+
+     PROBLEM: This is backwards! Zone should DECREASE turnovers.
+     Real basketball: Man defense forces steals, zone is passive
+
+     Validation Result: Zone +29.2% MORE turnovers (should be LESS)
+
+  2. CONTEST EFFECTIVENESS:
+     Validation Result: Zone contests MORE effectively than man
+     Expected: Man should contest MORE (on-ball pressure)
+
+     Root cause: Likely related to contest penalty being applied incorrectly
+
+  3. 3PT SHOOTING %:
+     Validation Result: Zone allows -1.9% LOWER 3PT% than man
+     Expected: Zone should allow HIGHER 3PT% (open looks)
+
+     Actual observed: 40.6% (MAN) vs 38.6% (ZONE)
+     This contradicts basic zone defense principles
+
+FILES AFFECTED:
+  - src/constants.py line 363: ZONE_DEFENSE_TURNOVER_BONUS
+  - src/systems/turnovers.py lines 113-119: Zone turnover logic
+  - src/systems/defense.py: Likely contest logic inversion
+  - src/systems/shooting.py: Likely 3PT contest logic
+
+RECOMMENDED FIX:
+
+  OPTION A: Invert the logic (make zone REDUCE turnovers)
+    src/constants.py:
+      Change: ZONE_DEFENSE_TURNOVER_BONUS = 0.03
+      To: ZONE_DEFENSE_TURNOVER_PENALTY = -0.03  # -3% turnover rate
+
+    src/systems/turnovers.py:
+      Change: zone_modifier = ZONE_DEFENSE_TURNOVER_BONUS * zone_pct
+      To: zone_modifier = ZONE_DEFENSE_TURNOVER_PENALTY * zone_pct
+
+  OPTION B: Apply bonus to MAN defense instead (conceptually cleaner)
+    src/constants.py:
+      Remove: ZONE_DEFENSE_TURNOVER_BONUS
+      Add: MAN_DEFENSE_TURNOVER_BONUS = 0.03  # +3% for man defense
+
+    src/systems/turnovers.py:
+      Change logic to apply bonus based on man_defense_pct:
+        man_pct = tactical_settings.man_defense_pct / 100.0
+        if man_pct > 0:
+            man_modifier = MAN_DEFENSE_TURNOVER_BONUS * man_pct
+            total_modifier += man_modifier
+
+  RECOMMENDATION: Use OPTION B - it's more intuitive
+    "Man defense forces turnovers" is clearer than "Zone prevents turnovers"
+
+EXPECTED RESULTS AFTER FIX:
+  - MAN (100%): High turnovers (~12-13 per game)
+  - BALANCED (50%): Medium turnovers (~11 per game)
+  - ZONE (100%): Low turnovers (~9-10 per game)
+
+  This would create ~20-30% difference, making defensive choice meaningful.
+
+ADDITIONAL FIXES NEEDED:
+  1. Contest effectiveness logic (shooting.py)
+  2. 3PT percentage logic (defense.py or shooting.py)
+  3. Verify zone contest penalty is applied correctly
+
+SEVERITY: CRITICAL (Pillar #4 violation)
+  Core Pillar #4: "Tactical Input System - User strategy influences outcomes"
+  Current implementation: Man/zone has OPPOSITE effects than intended
+  User impact: Setting zone defense makes the defense MORE aggressive (wrong!)
+
+NEXT STEPS:
+  1. Fix turnover logic (apply bonus to MAN instead of ZONE)
+  2. Investigate contest logic inversion
+  3. Re-run man/zone validation test
+  4. Verify all 4 tests pass with correct directional effects
+
+TIMESTAMP: 2025-11-10
+================================================================================

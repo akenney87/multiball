@@ -1,0 +1,306 @@
+================================================================================
+ROOT CAUSE ANALYSIS: USAGE DISTRIBUTION vs SHOT DISTRIBUTION
+================================================================================
+
+USER INSIGHT:
+"There are many players that, since they're bad at shooting, take the vast
+majority of their shots at the rim. We shouldn't reduce the amount of his shots
+that he takes at the rim, we need to reduce the amount of shots he takes...period."
+
+VERDICT: User is 100% CORRECT. This is the real root cause.
+
+================================================================================
+CURRENT USAGE DISTRIBUTION SYSTEM
+================================================================================
+
+Location: src/systems/possession.py (lines 55-120)
+
+ALGORITHM:
+1. Scoring option #1: 30% of possessions
+2. Scoring option #2: 20% of possessions
+3. Scoring option #3: 15% of possessions
+4. Non-scoring options: Split remaining 35% EQUALLY
+
+PROBLEM: The remaining 35% is split EQUALLY regardless of offensive skill.
+
+EXAMPLE (5-player lineup):
+  - Chris Maestro (Option #1, versatile PG): 30%
+  - Ray Sniper (Option #2, elite shooter): 20%
+  - Marcus Slasher (Option #3, elite slasher): 15%
+  - Hassan Swatter (Center, rim-only): 17.5%
+  - Tony Lockdown (Defensive PG, average scorer): 17.5%
+
+Hassan Swatter gets 17.5% of possessions despite being one-dimensional.
+
+================================================================================
+THE REAL PROBLEM: RIM ATTEMPTS CALCULATION
+================================================================================
+
+CURRENT SYSTEM (Team Alpha example):
+
+Player: Hassan Swatter (Center, rim-only)
+  - Usage: 17.5% of possessions
+  - Shot distribution: 67% rim, 27% mid, 6% 3PT
+  - Rim attempts: 17.5% * 0.67 = 11.7% of TEAM shots at rim
+
+Player: Marcus Slasher (SF, elite slasher)
+  - Usage: 15% of possessions (scoring option #3)
+  - Shot distribution: 60% rim, 30% mid, 10% 3PT
+  - Rim attempts: 15% * 0.60 = 9.0% of TEAM shots at rim
+
+Player: Vince Skywalker (SF, elite dunker, bench)
+  - Usage: 17.5% of possessions (non-option)
+  - Shot distribution: 65% rim, 25% mid, 10% 3PT
+  - Rim attempts: 17.5% * 0.65 = 11.4% of TEAM shots at rim
+
+Player: Tony Lockdown (PG, defensive specialist)
+  - Usage: 17.5% of possessions (non-option)
+  - Shot distribution: 40% rim, 35% mid, 25% 3PT
+  - Rim attempts: 17.5% * 0.40 = 7.0% of TEAM shots at rim
+
+Player: Chris Maestro (PG, versatile)
+  - Usage: 30% of possessions (option #1)
+  - Shot distribution: 45% rim, 30% mid, 25% 3PT
+  - Rim attempts: 30% * 0.45 = 13.5% of TEAM shots at rim
+
+TEAM TOTAL: 11.7% + 9.0% + 11.4% + 7.0% + 13.5% = 52.6% rim attempts
+
+WHY SO HIGH?
+  - Hassan (rim-only): Gets 17.5% usage despite narrow skill set
+  - Vince (rim-only): Gets 17.5% usage despite narrow skill set
+  - These two alone contribute 23% of team rim attempts
+
+================================================================================
+NBA REALITY: USAGE BY OFFENSIVE VERSATILITY
+================================================================================
+
+NBA USAGE RATES (2023-24 season examples):
+
+HIGH-USAGE PLAYERS (Versatile scorers):
+  - Luka Doncic: 36.0% usage (can score anywhere)
+  - Giannis: 34.0% usage (elite rim + improving outside game)
+  - Damian Lillard: 30.5% usage (elite 3PT + can drive)
+  - Kevin Durant: 29.5% usage (can score from all three levels)
+
+MEDIUM-USAGE PLAYERS (Two-level scorers):
+  - Jayson Tatum: 28.0% usage (3PT + midrange, good at rim)
+  - Anthony Edwards: 26.0% usage (3PT + rim, developing midrange)
+  - Devin Booker: 27.5% usage (elite midrange + 3PT + rim)
+
+LOW-USAGE PLAYERS (One-dimensional scorers):
+  - Rudy Gobert: 14.0% usage (rim-only via dunks/putbacks)
+  - Clint Capela: 12.5% usage (rim-only via lobs/putbacks)
+  - Robert Williams: 11.0% usage (rim-only)
+  - PJ Tucker: 9.0% usage (corner 3PT specialist)
+
+PATTERN:
+  - Versatile scorers: 28-36% usage
+  - Two-level scorers: 22-28% usage
+  - One-dimensional scorers: 9-15% usage
+
+OUR SYSTEM:
+  - Scoring options: 30%, 20%, 15% (totals 65%)
+  - Non-options: 17.5% each (if 2 non-options)
+
+PROBLEM: Hassan Swatter (rim-only) gets 17.5% usage, which is MORE than
+Rudy Gobert's 14.0% in the NBA. This inflates rim attempts.
+
+================================================================================
+PROPOSED SOLUTION: SKILL-BASED USAGE DISTRIBUTION
+================================================================================
+
+CONCEPT:
+Instead of flat 35% split among non-options, weight usage by OFFENSIVE VERSATILITY.
+
+OFFENSIVE VERSATILITY METRIC:
+Calculate how many shot types a player can effectively take.
+
+Example calculation:
+  - Can shoot 3PT? (composite_3pt > 60): +1.0
+  - Can shoot midrange? (composite_mid > 60): +1.0
+  - Can finish at rim? (composite_rim > 60): +1.0
+  - Elite at any level? (composite > 80): +0.5 bonus
+
+Hassan Swatter:
+  - 3PT composite: ~52 (NO)
+  - Midrange composite: ~70 (YES)
+  - Rim composite: 77.7 (YES, ELITE)
+  - Versatility: 2.0 + 0.5 = 2.5
+
+Ray Sniper:
+  - 3PT composite: ~90 (YES, ELITE)
+  - Midrange composite: ~88 (YES, ELITE)
+  - Rim composite: ~70 (YES)
+  - Versatility: 3.0 + 1.0 = 4.0
+
+Chris Maestro:
+  - 3PT composite: ~72 (YES)
+  - Midrange composite: ~78 (YES)
+  - Rim composite: ~64 (YES)
+  - Versatility: 3.0
+
+Tony Lockdown:
+  - 3PT composite: ~60 (borderline)
+  - Midrange composite: ~72 (YES)
+  - Rim composite: ~68 (YES)
+  - Versatility: 2.5-3.0
+
+USAGE DISTRIBUTION (35% among non-options):
+If Hassan (2.5) and Tony (3.0) are non-options:
+  Total versatility: 2.5 + 3.0 = 5.5
+  Hassan: 35% * (2.5 / 5.5) = 15.9%
+  Tony: 35% * (3.0 / 5.5) = 19.1%
+
+Compare to CURRENT (flat):
+  Hassan: 17.5% -> 15.9% (-1.6%)
+  Tony: 17.5% -> 19.1% (+1.6%)
+
+IMPACT ON RIM ATTEMPTS:
+  Hassan: 15.9% * 0.67 = 10.7% (was 11.7%) = -1.0% team rim attempts
+  Tony: 19.1% * 0.40 = 7.6% (was 7.0%) = +0.6% team rim attempts
+  Net change: -0.4% team rim attempts
+
+This is MODEST impact from just two players. But across ALL lineups and
+substitutions, skill-based usage could reduce rim attempts by 3-5%.
+
+================================================================================
+ALTERNATIVE: MORE AGGRESSIVE VERSATILITY WEIGHTING
+================================================================================
+
+Instead of linear weighting, use EXPONENTIAL weighting:
+
+Versatility Score = (# of shot types) ^ 1.5
+
+Hassan (2.5 shot types): 2.5^1.5 = 3.95
+Tony (3.0 shot types): 3.0^1.5 = 5.20
+Ray (4.0 shot types): 4.0^1.5 = 8.00
+
+If Hassan (3.95) and Tony (5.20) are non-options:
+  Total: 3.95 + 5.20 = 9.15
+  Hassan: 35% * (3.95 / 9.15) = 15.1%
+  Tony: 35% * (5.20 / 9.15) = 19.9%
+
+More aggressive reduction for one-dimensional players.
+
+If Hassan (3.95) and Ray (8.00) are non-options:
+  Total: 3.95 + 8.00 = 11.95
+  Hassan: 35% * (3.95 / 11.95) = 11.6% (was 17.5%) = -5.9%!
+  Ray: 35% * (8.00 / 11.95) = 23.4%
+
+Hassan's rim attempts: 11.6% * 0.67 = 7.8% (was 11.7%) = -3.9% team rim attempts
+
+THIS IS SIGNIFICANT!
+
+================================================================================
+COMBINED APPROACH: VERSATILITY-BASED USAGE + SHOT DISTRIBUTION TUNING
+================================================================================
+
+PHASE 1+2 (already implemented):
+  - Baseline adjustment: rim 40% -> 30%
+  - Position bonuses: C +25% -> +15%, PF +10% -> +5%
+  - Result: Rim attempts 57.6% -> 44.9%
+
+PHASE 3 (NEW PROPOSAL): Skill-based usage distribution
+  - Implement versatility scoring system
+  - Weight non-option usage by offensive versatility
+  - Result: Rim attempts 44.9% -> 40-42% (estimated 3-5% reduction)
+
+PHASE 4 (if needed): Player composite bonus reduction
+  - Reduce rim composite multiplier 0.008 -> 0.005
+  - Result: Rim attempts 40-42% -> 36-38%
+
+COMBINED RESULT:
+  - Phases 1+2: 57.6% -> 44.9% (-12.7%)
+  - Phase 3 (versatility): 44.9% -> 40-42% (-3-5%)
+  - Phase 4 (if needed): 40-42% -> 36-38% (-4-6%)
+  - TOTAL: 57.6% -> 36-38% = NBA TARGET ACHIEVED
+
+================================================================================
+ADVANTAGES OF VERSATILITY-BASED USAGE
+================================================================================
+
+1. MORE REALISTIC:
+   - Matches NBA reality (Rudy Gobert 14% vs Luka 36%)
+   - One-dimensional players get lower usage
+   - Versatile scorers get higher usage
+
+2. BETTER GAME FLOW:
+   - Elite shooters like Ray Sniper get more touches
+   - Traditional centers get fewer touches (more realistic)
+   - Preserves specialist identity (Hassan still takes 67% at rim, just fewer total)
+
+3. PRESERVES ATTRIBUTE DIFFERENTIATION:
+   - Elite finishers still attack rim frequently (high %)
+   - They just take fewer TOTAL shots (lower usage)
+   - Maintains Pillar 3: Attribute-Driven Outcomes
+
+4. NATURAL PPG INCREASE:
+   - More shots for versatile scorers (higher efficiency)
+   - Fewer shots for one-dimensional players
+   - Should help with PPG problem (currently 96.3, target 108-114)
+
+5. BETTER ASSIST DISTRIBUTION:
+   - Versatile scorers create more assists (drive-and-kick, pass-first)
+   - Currently assists are low (18.7, target 24-27)
+   - This could help both PPG and assists
+
+================================================================================
+IMPLEMENTATION COMPLEXITY
+================================================================================
+
+PHASE 3 (OLD PROPOSAL): One line change (0.008 -> 0.005)
+  - Complexity: TRIVIAL
+  - Time: 5 minutes
+  - Risk: LOW
+
+PHASE 3 (NEW PROPOSAL): Skill-based usage distribution
+  - Complexity: MEDIUM
+  - Changes needed:
+    1. Create calculate_offensive_versatility() function
+    2. Modify build_usage_distribution() to weight by versatility
+    3. Add constants for versatility thresholds
+  - Time: 30-60 minutes
+  - Risk: MEDIUM (changes core usage system)
+  - Testing: Need to verify usage distribution normalizes correctly
+
+TRADE-OFF:
+  - Old proposal: Simpler, but doesn't address root cause
+  - New proposal: More complex, but addresses fundamental architectural issue
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+OPTION A (Conservative):
+  1. Implement versatility-based usage (Phase 3 new)
+  2. Run 20-game validation
+  3. If still high, implement composite reduction (Phase 4 old)
+
+OPTION B (Aggressive):
+  1. Implement versatility-based usage + composite reduction together
+  2. Run 20-game validation
+  3. May overshoot target
+
+OPTION C (Hybrid):
+  1. Implement MODEST versatility weighting (linear, not exponential)
+  2. Implement MODEST composite reduction (0.008 -> 0.006, not 0.005)
+  3. Balance both systems
+  4. Run 20-game validation
+
+MY RECOMMENDATION: Option A (implement versatility-based usage first)
+
+RATIONALE:
+  - Addresses root cause (usage, not shot distribution)
+  - More architecturally sound solution
+  - Should help with PPG and assists as side effects
+  - Preserves player identity (Hassan still rim-heavy, just fewer shots)
+  - Aligns better with NBA reality
+
+ESTIMATED IMPACT:
+  - Rim attempts: 44.9% -> 40-42% (3-5% reduction)
+  - Gets us close to 35% target
+  - Can fine-tune with other phases if needed
+
+================================================================================
+
+AWAITING USER FEEDBACK ON NEW APPROACH

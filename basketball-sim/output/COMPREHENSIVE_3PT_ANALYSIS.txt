@@ -1,0 +1,28 @@
+================================================================================
+COMPREHENSIVE 3PT SHOOTING ANALYSIS
+================================================================================
+
+================================================================================
+ISSUE #1: CONTEST DISTANCE CALCULATION
+================================================================================
+
+Contest distance formula: distance = 10 - (defender_composite / 10)
+With acceleration modifier: ±1 ft based on defender acceleration
+
+Scenario                DefComp    Accel   Distance    Penalty
+--------------------------------------------------------------------------------
+Elite defender               90       70       0.6 ft     -19.0%
+Good defender                70       60       2.8 ft     -10.0%
+Average defender             50       50       5.0 ft      -8.0%
+Poor defender                30       40       7.2 ft       0.0%
+Traceback (most recent call last):
+  File "C:\Users\alexa\desktop\projects\simulator\comprehensive_3pt_analysis.py", line 280, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\alexa\desktop\projects\simulator\comprehensive_3pt_analysis.py", line 121, in main
+    print("\n\u2713 Contest distances ARE attribute-driven (not random)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 2: character maps to <undefined>

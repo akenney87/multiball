@@ -1,0 +1,45 @@
+================================================================================
+M3 PHASE 1 DEMO: FULL 48-MINUTE GAME SIMULATION
+================================================================================
+
+Initializing full game simulator...
+Home Team: Elite Shooters (Fast Pace, Man Defense)
+Away Team: Elite Defenders (Slow Pace, Zone Defense)
+
+Simulating 48-minute game...
+
+
+Simulating Quarter 1...
+Quarter 1 complete: Elite Shooters 13, Elite Defenders 18
+
+Simulating Quarter 2...
+Quarter 2 complete: Elite Shooters 36, Elite Defenders 39
+
+Halftime: All players recovering stamina...
+
+Simulating Quarter 3...
+Quarter 3 complete: Elite Shooters 55, Elite Defenders 60
+
+Simulating Quarter 4...
+Quarter 4 complete: Elite Shooters 78, Elite Defenders 75
+
+================================================================================
+GAME COMPLETE!
+================================================================================
+
+Final Score: 78 - 75
+
+Quarter-by-Quarter:
+  Q1: Elite Shooters 13, Elite Defenders 18
+  Q2: Elite Shooters 23, Elite Defenders 21
+  Q3: Elite Shooters 19, Elite Defenders 21
+  Q4: Elite Shooters 23, Elite Defenders 15
+
+Full game play-by-play saved to: output/demo_full_game.txt
+
+Game Statistics:
+  Total Possessions: 173
+  Elite Shooters: 63 points, 26/57 FG
+  Elite Defenders: 58 points, 26/61 FG
+
+Demo complete!

@@ -1,0 +1,399 @@
+================================================================================
+PHASE 3: PLAYER COMPOSITE BONUS REDUCTION - DETAILED ANALYSIS
+================================================================================
+
+EXECUTIVE SUMMARY:
+Phase 3 proposes reducing the rim composite bonus multiplier from 0.008 to 0.005,
+which would reduce elite finishers' rim bonuses from +32% to +20%. This change
+targets the remaining 9.9% excess rim attempts (currently 44.9% vs NBA 35%).
+
+================================================================================
+CURRENT SYSTEM: PLAYER COMPOSITE BONUSES
+================================================================================
+
+Location: src/systems/shooting.py (lines 184-200)
+
+CURRENT CODE:
+```python
+# Rim shot selection modifier (all positions)
+composite_diff_rim = composite_rim - 50
+
+if composite_diff_rim >= 0:
+    # Above average: linear growth
+    rim_bonus = composite_diff_rim * 0.008  # ~32% bonus at composite=90
+else:
+    # Below average: STEEP exponential decay
+    rim_bonus = -0.50 * (1.0 - math.exp(0.08 * composite_diff_rim))
+
+distribution['rim'] += rim_bonus
+# Reduce 3pt/midrange proportionally (50% from each)
+distribution['3pt'] -= rim_bonus * 0.5
+distribution['midrange'] -= rim_bonus * 0.5
+```
+
+HOW IT WORKS:
+1. Calculate player's rim composite (average of dunk + layup composites)
+2. Compare to baseline (50)
+3. If above average: Apply LINEAR bonus (0.008 per point above 50)
+4. If below average: Apply EXPONENTIAL penalty (steep decay)
+5. Bonus/penalty applied to rim attempts, split reduction across 3PT/midrange
+
+================================================================================
+COMPOSITE CALCULATION
+================================================================================
+
+Rim Composite = (Dunk Composite + Layup Composite) / 2
+
+DUNK COMPOSITE (from constants.py lines 70-75):
+  - Jumping: 40%
+  - Height: 30%
+  - Arm Strength: 20%
+  - Agility: 10%
+
+LAYUP COMPOSITE (from constants.py lines 79-86):
+  - Finesse: 30%
+  - Hand-Eye Coordination: 25%
+  - Balance: 17%
+  - Jumping: 13%
+  - Core Strength: 10%
+  - Throw Accuracy: 5%
+
+KEY INSIGHT: The composite system correctly captures different rim finishing styles:
+  - Hassan Swatter (C): Elite dunker (jumping 95, height 85) but average layup skills
+  - Marcus Slasher (SF): Elite slasher with balanced dunk + layup ability
+  - Chris Maestro (PG): Good finisher but not elite (composite ~60-65)
+
+================================================================================
+CURRENT BONUSES BY PLAYER ARCHETYPE
+================================================================================
+
+CALCULATED COMPOSITES (using actual team specialist players):
+
+1. HASSAN SWATTER (Center - Elite Rim Protector):
+   Dunk Composite:  95*0.40 + 85*0.30 + 85*0.20 + 58*0.10 = 86.3
+   Layup Composite: 58*0.30 + 65*0.25 + 72*0.17 + 95*0.13 + 82*0.10 + 52*0.05 = 69.0
+   Rim Composite:   (86.3 + 69.0) / 2 = 77.7
+
+   Composite Diff:  77.7 - 50 = 27.7
+   CURRENT Bonus:   27.7 * 0.008 = +22.2% rim attempts
+   PHASE 3 Bonus:   27.7 * 0.005 = +13.9% rim attempts
+   CHANGE:          -8.3% rim attempts for Hassan
+
+2. MARCUS SLASHER (SF - Elite Slasher):
+   Dunk Composite:  85*0.40 + 55*0.30 + 75*0.20 + 88*0.10 = 74.3
+   Layup Composite: 82*0.30 + 85*0.25 + 80*0.17 + 85*0.13 + 78*0.10 + 68*0.05 = 81.7
+   Rim Composite:   (74.3 + 81.7) / 2 = 78.0
+
+   Composite Diff:  78.0 - 50 = 28.0
+   CURRENT Bonus:   28.0 * 0.008 = +22.4% rim attempts
+   PHASE 3 Bonus:   28.0 * 0.005 = +14.0% rim attempts
+   CHANGE:          -8.4% rim attempts for Marcus
+
+3. VINCE SKYWALKER (SF - Elite Dunker):
+   Dunk Composite:  98*0.40 + 58*0.30 + 88*0.20 + 82*0.10 = 83.8
+   Layup Composite: 70*0.30 + 85*0.25 + 82*0.17 + 98*0.13 + 85*0.10 + 65*0.05 = 81.8
+   Rim Composite:   (83.8 + 81.8) / 2 = 82.8
+
+   Composite Diff:  82.8 - 50 = 32.8
+   CURRENT Bonus:   32.8 * 0.008 = +26.2% rim attempts
+   PHASE 3 Bonus:   32.8 * 0.005 = +16.4% rim attempts
+   CHANGE:          -9.8% rim attempts for Vince (BIGGEST impact)
+
+4. CHRIS MAESTRO (PG - Good All-Around):
+   Dunk Composite:  60*0.40 + 45*0.30 + 50*0.20 + 75*0.10 = 55.0
+   Layup Composite: 78*0.30 + 88*0.25 + 68*0.17 + 60*0.13 + 60*0.10 + 75*0.05 = 73.1
+   Rim Composite:   (55.0 + 73.1) / 2 = 64.1
+
+   Composite Diff:  64.1 - 50 = 14.1
+   CURRENT Bonus:   14.1 * 0.008 = +11.3% rim attempts
+   PHASE 3 Bonus:   14.1 * 0.005 = +7.1% rim attempts
+   CHANGE:          -4.2% rim attempts for Chris
+
+5. RAY SNIPER (SG - Poor Finisher):
+   Dunk Composite:  65*0.40 + 50*0.30 + 58*0.20 + 70*0.10 = 60.6
+   Layup Composite: 88*0.30 + 90*0.25 + 78*0.17 + 65*0.13 + 62*0.10 + 92*0.05 = 80.5
+   Rim Composite:   (60.6 + 80.5) / 2 = 70.6
+
+   Composite Diff:  70.6 - 50 = 20.6
+   CURRENT Bonus:   20.6 * 0.008 = +16.5% rim attempts
+   PHASE 3 Bonus:   20.6 * 0.005 = +10.3% rim attempts
+   CHANGE:          -6.2% rim attempts for Ray
+
+PATTERN ANALYSIS:
+  - Elite finishers (composite 75-85): -8% to -10% rim attempts
+  - Good finishers (composite 65-75):  -5% to -8% rim attempts
+  - Average finishers (composite 55-65): -3% to -5% rim attempts
+  - Poor finishers (composite <50): NO CHANGE (exponential penalty unchanged)
+
+TEAM-WIDE IMPACT:
+  Weighted average reduction across all players: ~6-7% rim attempts
+  This should reduce overall team rim attempts from 44.9% to ~38-39%
+
+================================================================================
+PROPOSED CHANGE
+================================================================================
+
+PHASE 3 CODE (one line change at shooting.py:191):
+
+BEFORE:
+    rim_bonus = composite_diff_rim * 0.008  # ~32% bonus at composite=90
+
+AFTER:
+    rim_bonus = composite_diff_rim * 0.005  # ~20% bonus at composite=90
+
+SCALE COMPARISON:
+  Composite 50 (average): 0% bonus (unchanged)
+  Composite 60 (good):    +8% -> +5% (-3%)
+  Composite 70 (elite):   +16% -> +10% (-6%)
+  Composite 80 (superstar): +24% -> +15% (-9%)
+  Composite 90 (generational): +32% -> +20% (-12%)
+
+================================================================================
+EXPECTED IMPACT
+================================================================================
+
+SHOT DISTRIBUTION PROJECTIONS:
+
+Current (Phase 2):
+  - Rim: 44.9%
+  - Midrange: 13.6%
+  - 3PT: 41.5%
+
+Expected (Phase 3):
+  - Rim: 38-39% (reduction of 6-7%)
+  - Midrange: 17-19% (increase of 3-5%)
+  - 3PT: 43-44% (increase of 1-2%)
+
+Distance from NBA Targets:
+  - Rim: 38-39% vs 35% target = +3-4% (ACCEPTABLE)
+  - Midrange: 17-19% vs 25% target = -6-8% (still low, but improved)
+  - 3PT: 43-44% vs 40% target = +3-4% (slightly high, but acceptable)
+
+SECONDARY EFFECTS:
+
+1. FG% Impact:
+   - Fewer high-percentage rim attempts (67.9% FG%)
+   - More midrange (44.9% FG%) and 3PT (34.7% FG%)
+   - Overall FG% likely drops: 51.0% -> 49-50%
+   - THIS IS GOOD (moves toward NBA 46-50% target)
+
+2. PPG Impact:
+   - Current trend: 96.3 PPG (down from 99.4 in Phase 1)
+   - Phase 3 may further reduce PPG to ~94-96
+   - THIS IS A CONCERN (moving away from 108-114 target)
+   - Will need separate PPG tuning after shot distribution fixed
+
+3. Attribute Differentiation:
+   - Elite finishers still get +20% bonus (vs +32% current)
+   - Still significant differentiation (50% more rim attempts than average)
+   - Preserves Pillar 3: Attribute-Driven Outcomes
+   - Reduces extreme specialist amplification
+
+================================================================================
+RISKS AND TRADE-OFFS
+================================================================================
+
+RISK 1: Loss of Player Differentiation
+  CONCERN: Elite finishers may not feel "special" enough
+  MITIGATION: +20% bonus is still substantial (vs 0% for average players)
+  VERDICT: LOW RISK - Differentiation preserved
+
+RISK 2: PPG Continues to Drop
+  CONCERN: 96.3 PPG may drop to 94-96 (moving away from 108-114 target)
+  MITIGATION: This is EXPECTED and will require separate tuning
+  VERDICT: MEDIUM RISK - Will need to address PPG separately
+  PLAN: After shot distribution fixed, adjust BaseRates or FT rates
+
+RISK 3: Midrange Still Too Low
+  CONCERN: Phase 3 may only get midrange to 17-19% (vs 25% target)
+  MITIGATION: Phase 3 redistributes rim -> midrange/3PT (50/50 split)
+  VERDICT: MEDIUM RISK - May need Phase 4-5 or midrange-specific tuning
+  ALTERNATIVE: Adjust split ratio (60% to midrange, 40% to 3PT)
+
+RISK 4: 3PT Overshoots Target
+  CONCERN: 3PT may increase to 43-44% (vs 40% target)
+  MITIGATION: +3-4% is within acceptable range for NBA variance
+  VERDICT: LOW RISK - Can fine-tune later if needed
+
+RISK 5: Code Complexity
+  CONCERN: Adding more logic or edge cases
+  MITIGATION: Phase 3 is ONE NUMBER CHANGE (0.008 -> 0.005)
+  VERDICT: MINIMAL RISK - Extremely simple, reversible change
+
+================================================================================
+ALIGNMENT WITH CORE DESIGN PILLARS
+================================================================================
+
+PILLAR 1: Deep, Intricate, Realistic Simulation
+  ASSESSMENT: STRONG ALIGNMENT
+  - NBA shot distribution (38-39% rim) more realistic than current (44.9%)
+  - Elite finishers still differentiated, but less extreme
+  - Reduces "everyone attacks rim" unrealistic behavior
+
+PILLAR 2: Weighted Dice-Roll Mechanics
+  ASSESSMENT: NO IMPACT
+  - Still using composite-based bonuses
+  - Still probabilistic, not deterministic
+  - Formula remains attribute-driven
+
+PILLAR 3: Attribute-Driven Outcomes
+  ASSESSMENT: PRESERVED
+  - Elite finishers (composite 80): +15% rim bonus
+  - Average finishers (composite 50): 0% bonus
+  - Poor finishers (composite 30): -45% penalty (exponential decay unchanged)
+  - 15% differential still creates meaningful specialization
+  CONCERN: Slightly reduced differentiation (-12% vs -32% for generational)
+  VERDICT: Still honors pillar - attributes matter, just less extreme
+
+PILLAR 4: Tactical Input System
+  ASSESSMENT: NO IMPACT
+  - Tactical modifiers (pace, zone, transition) unchanged
+  - User strategy still influences outcomes
+
+OVERALL VERDICT: Phase 3 ALIGNS with all core design pillars.
+
+================================================================================
+ALTERNATIVE APPROACHES
+================================================================================
+
+ALTERNATIVE 1: Adjust Split Ratio (60% midrange, 40% 3PT)
+  CURRENT: rim_bonus redistributed 50% to 3PT, 50% to midrange
+  PROPOSED: Change to 40% to 3PT, 60% to midrange
+
+  CODE CHANGE (shooting.py lines 198-200):
+  ```python
+  distribution['rim'] += rim_bonus
+  distribution['3pt'] -= rim_bonus * 0.4   # Changed from 0.5
+  distribution['midrange'] -= rim_bonus * 0.6  # Changed from 0.5
+  ```
+
+  IMPACT:
+    - Rim: 38-39% (same as Phase 3 option)
+    - Midrange: 19-21% (better than 17-19%)
+    - 3PT: 41-42% (stays closer to 40% target)
+
+  VERDICT: BETTER shot distribution, but adds complexity (two changes)
+  RECOMMENDATION: Try Phase 3 first, then adjust split if midrange still low
+
+ALTERNATIVE 2: Boost Midrange Composite Bonus
+  CURRENT: No explicit midrange composite bonus (only 3PT and rim)
+  PROPOSED: Add midrange composite bonus system
+
+  COMPLEXITY: HIGH (requires new composite calculation, weights, logic)
+  VERDICT: TOO COMPLEX for Phase 3. Save for later if needed.
+
+ALTERNATIVE 3: Skip to Phase 4-5 (Transition/Bravery/Kickout)
+  RATIONALE: Preserve elite finisher differentiation, reduce via situational modifiers
+  VERDICT: RISKY - May not have enough impact (Phase 4-6 combined = ~4-6% reduction)
+  RECOMMENDATION: Try Phase 3 first (higher impact, simpler change)
+
+================================================================================
+IMPLEMENTATION PLAN
+================================================================================
+
+STEP 1: Code Modification (2 minutes)
+  File: src/systems/shooting.py
+  Line: 191
+  Change: 0.008 -> 0.005
+  Add comment: "# M4.5 PHASE 3: Reduced from 0.008 to reduce rim inflation"
+
+STEP 2: Validation Script (5 minutes)
+  Create: validate_phase3_20games.py
+  - Same structure as validate_phase2_20games.py
+  - Add Phase 3 column to comparison table
+  - Update expected values
+
+STEP 3: Run 20-Game Test (3 minutes)
+  Execute: python validate_phase3_20games.py
+  Review: Shot distribution, FG%, PPG
+
+STEP 4: Assessment (5 minutes)
+  Check:
+    - Is rim 38-40%? (SUCCESS)
+    - Is rim 35-38%? (GREAT SUCCESS)
+    - Is rim >40%? (NEED PHASE 4-5)
+    - Is midrange >18%? (SUCCESS)
+    - Is midrange <18%? (CONSIDER SPLIT RATIO ADJUSTMENT)
+    - Is 3PT 40-44%? (SUCCESS)
+    - Is PPG still dropping? (EXPECTED - address later)
+
+TOTAL TIME: ~15 minutes
+
+================================================================================
+SUCCESS CRITERIA
+================================================================================
+
+PRIMARY GOAL: Rim attempts 35-40%
+  - 38-40%: SUCCESS - Acceptable variance from NBA target
+  - 35-38%: GREAT SUCCESS - On target
+  - 40-42%: PARTIAL SUCCESS - May need Phase 4
+  - >42%: FAILURE - Need Phase 4-5
+
+SECONDARY GOAL: Midrange improvement
+  - >20%: GREAT SUCCESS
+  - 17-20%: SUCCESS - Significant improvement
+  - 15-17%: PARTIAL SUCCESS - Some improvement
+  - <15%: FAILURE - Need additional tuning
+
+TERTIARY GOAL: Maintain 3PT target
+  - 38-43%: SUCCESS
+  - >43%: MINOR CONCERN - May need fine-tuning
+
+BLOCKING ISSUES:
+  - Any crashes or errors
+  - Shot distribution doesn't normalize to 100%
+  - Negative probabilities
+  - Elite players taking FEWER rim attempts than average (logic broken)
+
+================================================================================
+POST-PHASE-3 ROADMAP
+================================================================================
+
+SCENARIO A: Phase 3 achieves 38-40% rim, 18-22% midrange
+  NEXT STEP: 100-game validation for stability
+  THEN: Address PPG issue (BaseRates, FT tuning, pace modifiers)
+  TIMELINE: 1-2 hours to complete M4.5 statistical tuning
+
+SCENARIO B: Phase 3 achieves 40-42% rim (still high)
+  NEXT STEP: Phase 4 (reduce transition bonus +20% -> +15%)
+  THEN: Re-test with 20 games
+  TIMELINE: 30-45 minutes for Phase 4, then reassess
+
+SCENARIO C: Phase 3 achieves <35% rim (overshoots)
+  NEXT STEP: Rollback Phase 3, try 0.006 or 0.007 multiplier
+  TIMELINE: 30 minutes for adjusted Phase 3
+
+SCENARIO D: Midrange still <17% after Phase 3
+  OPTION 1: Adjust split ratio (60% to midrange, 40% to 3PT)
+  OPTION 2: Implement midrange composite bonus system (complex)
+  TIMELINE: 1-2 hours depending on approach
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+PROCEED WITH PHASE 3 AS PROPOSED:
+  ✓ Simple one-line change (low risk)
+  ✓ High expected impact (6-7% rim reduction)
+  ✓ Preserves attribute differentiation
+  ✓ Aligns with all core design pillars
+  ✓ Easily reversible if overshoots
+
+Expected Outcome:
+  - Rim: 57.6% -> 44.9% (Phases 1+2) -> 38-39% (Phase 3) ✓ SUCCESS
+  - Midrange: 5.4% -> 13.6% (Phases 1+2) -> 17-19% (Phase 3) → IMPROVED
+  - 3PT: 37.0% -> 41.5% (Phases 1+2) -> 43-44% (Phase 3) → ACCEPTABLE
+
+This gets us 80-90% to target shot distribution. Remaining tuning can be
+addressed via:
+  1. Fine-tuning split ratios (if midrange <18%)
+  2. Phase 4-6 modifiers (if rim still >40%)
+  3. PPG/FG% tuning (separate from shot distribution)
+
+CONFIDENCE: HIGH (85%)
+RISK: LOW-MEDIUM
+TIME INVESTMENT: 15 minutes
+
+================================================================================
+
+AWAITING USER APPROVAL TO IMPLEMENT PHASE 3
