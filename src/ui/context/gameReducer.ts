@@ -1275,6 +1275,24 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'UPDATE_PLAYER': {
+      // Update specific fields on a player
+      const { playerId, updates } = action.payload;
+      const player = state.players[playerId];
+      if (!player) return state;
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [playerId]: {
+            ...player,
+            ...updates,
+          },
+        },
+      };
+    }
+
     case 'APPLY_ACADEMY_TRAINING': {
       // Apply training results to academy prospects
       const { results } = action.payload;
@@ -1360,6 +1378,63 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         updatedPlayers[playerId] = {
           ...player,
           matchFitness: newFitness,
+        };
+      }
+
+      return {
+        ...state,
+        players: updatedPlayers,
+      };
+    }
+
+    // =========================================================================
+    // MORALE SYSTEM
+    // =========================================================================
+
+    case 'RECORD_MATCH_RESULTS': {
+      // Record match outcomes for player morale tracking
+      const matchResults = action.payload as Array<{ playerId: string; outcome: 'win' | 'loss' | 'draw' }>;
+      const updatedPlayers: Record<string, Player> = { ...state.players };
+
+      for (const { playerId, outcome } of matchResults) {
+        const player = updatedPlayers[playerId];
+        if (!player) continue;
+
+        // Add to front (most recent first), cap at 20
+        const newResults = [outcome, ...player.recentMatchResults].slice(0, 20);
+
+        updatedPlayers[playerId] = {
+          ...player,
+          recentMatchResults: newResults,
+        };
+      }
+
+      return {
+        ...state,
+        players: updatedPlayers,
+      };
+    }
+
+    case 'APPLY_MORALE_UPDATE': {
+      // Apply weekly morale updates to players
+      const moraleUpdates = action.payload as Array<{
+        playerId: string;
+        newMorale: number;
+        weeksDisgruntled: number;
+        transferRequestTriggered: boolean;
+      }>;
+      const updatedPlayers: Record<string, Player> = { ...state.players };
+
+      for (const { playerId, newMorale, weeksDisgruntled, transferRequestTriggered } of moraleUpdates) {
+        const player = updatedPlayers[playerId];
+        if (!player) continue;
+
+        updatedPlayers[playerId] = {
+          ...player,
+          morale: newMorale,
+          weeksDisgruntled,
+          transferRequestActive: transferRequestTriggered ? true : player.transferRequestActive,
+          transferRequestDate: transferRequestTriggered ? new Date() : player.transferRequestDate,
         };
       }
 

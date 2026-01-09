@@ -714,11 +714,11 @@ function applySpikeValleyVariance(
 
   // Get attribute indices for archetype spikes/valleys
   const spikeAttrIndices = config.spikeAttrs
-    .map(name => ALL_ATTR_NAMES.indexOf(name))
+    .map(name => ALL_ATTR_NAMES.indexOf(name as typeof ALL_ATTR_NAMES[number]))
     .filter(idx => idx !== -1 && idx !== HEIGHT_INDEX);
 
   const valleyAttrIndices = config.valleyAttrs
-    .map(name => ALL_ATTR_NAMES.indexOf(name))
+    .map(name => ALL_ATTR_NAMES.indexOf(name as typeof ALL_ATTR_NAMES[number]))
     .filter(idx => idx !== -1 && idx !== HEIGHT_INDEX);
 
   // Variance level affects the intensity multiplier
@@ -1541,6 +1541,12 @@ export function createStarterPlayer(overrides?: Partial<Player>): Player {
     matchFitness: 100,
     lastMatchDate: null,
     lastMatchSport: null,
+    // Morale system
+    morale: 75,
+    recentMatchResults: [],
+    transferRequestActive: false,
+    transferRequestDate: null,
+    weeksDisgruntled: 0,
     ...overrides,
   };
 }
@@ -1625,6 +1631,12 @@ export function createRandomPlayer(
     matchFitness: 100,
     lastMatchDate: null,
     lastMatchSport: null,
+    // Morale system
+    morale: 75,
+    recentMatchResults: [],
+    transferRequestActive: false,
+    transferRequestDate: null,
+    weeksDisgruntled: 0,
     ...overrides,
   };
 }

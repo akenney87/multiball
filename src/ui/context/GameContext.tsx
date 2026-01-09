@@ -79,6 +79,17 @@ import {
   getDivisionManager,
   type TeamReference,
 } from '../../ai/divisionManager';
+import {
+  processWeeklyAwards,
+  processMonthlyAwards,
+  processSeasonAwards,
+} from '../../systems/awardSystem';
+import {
+  processWeeklyMorale,
+  applyMoraleToRoster,
+  type PlayingTimeData,
+} from '../../systems/moraleSystem';
+import type { MatchOutcome } from '../../data/types';
 
 /**
  * Normalize TacticalSettings with fallback defaults for old saves.
@@ -1053,6 +1064,120 @@ export function GameProvider({ children }: GameProviderProps) {
     });
 
     // =========================================================================
+    // WEEKLY MORALE PROCESSING
+    // =========================================================================
+    // Process morale changes for all user roster players
+    const moraleState = stateRef.current;
+    const userMoralePlayers: Player[] = moraleState.userTeam.rosterIds
+      .map(id => moraleState.players[id])
+      .filter((p): p is Player => p !== undefined);
+
+    // Build playing time data from completed matches this week
+    const playingTimeMap = new Map<string, PlayingTimeData>();
+
+    // Get user matches from last 5 games for playing time calculation
+    const completedUserMatches = moraleState.season.matches
+      .filter(m =>
+        (m.homeTeamId === 'user' || m.awayTeamId === 'user') &&
+        m.status === 'completed' &&
+        m.result
+      )
+      .slice(-5); // Last 5 completed matches
+
+    // Aggregate playing time per player
+    for (const match of completedUserMatches) {
+      const boxScore = match.result?.boxScore;
+      if (!boxScore) continue;
+
+      for (const player of userMoralePlayers) {
+        let minutes = 0;
+        const existing = playingTimeMap.get(player.id) || {
+          minutesPlayed: 0,
+          gamesPlayed: 0,
+          sport: match.sport,
+        };
+
+        if (match.sport === 'basketball') {
+          const minutesPlayed = boxScore.minutesPlayed as Record<string, number> | undefined;
+          minutes = minutesPlayed?.[player.name] ?? 0;
+        } else if (match.sport === 'soccer') {
+          const homeStats = boxScore.homePlayerStats as Record<string, { minutesPlayed?: number }> | undefined;
+          const awayStats = boxScore.awayPlayerStats as Record<string, { minutesPlayed?: number }> | undefined;
+          const playerStats = homeStats?.[player.id] || awayStats?.[player.id];
+          minutes = playerStats?.minutesPlayed ?? 0;
+        } else if (match.sport === 'baseball') {
+          // Baseball uses innings - check if player participated
+          const homeBatting = boxScore.homeBatting as Record<string, unknown> | undefined;
+          const awayBatting = boxScore.awayBatting as Record<string, unknown> | undefined;
+          const homePitching = boxScore.homePitching as Record<string, { inningsPitched?: number }> | undefined;
+          const awayPitching = boxScore.awayPitching as Record<string, { inningsPitched?: number }> | undefined;
+          const pitcherStats = homePitching?.[player.id] || awayPitching?.[player.id];
+
+          if (pitcherStats) {
+            minutes = pitcherStats.inningsPitched || 0;
+          } else if (homeBatting?.[player.id] !== undefined || awayBatting?.[player.id] !== undefined) {
+            minutes = 9; // Full game for position players
+          }
+        }
+
+        if (minutes > 0) {
+          playingTimeMap.set(player.id, {
+            minutesPlayed: existing.minutesPlayed + minutes,
+            gamesPlayed: existing.gamesPlayed + 1,
+            sport: match.sport,
+          });
+        }
+      }
+    }
+
+    // Process morale for all user players
+    const moraleResults = processWeeklyMorale(
+      userMoralePlayers,
+      new Map(), // Match results already recorded in player.recentMatchResults
+      playingTimeMap
+    );
+
+    // Generate news events for transfer requests
+    const transferRequestEvents: NewsItem[] = [];
+    for (const result of moraleResults) {
+      if (result.transferRequestTriggered) {
+        const player = moraleState.players[result.playerId];
+        if (player) {
+          transferRequestEvents.push({
+            id: `event-transfer-request-${Date.now()}-${player.id}`,
+            type: 'transfer',
+            priority: 'critical',
+            title: 'Transfer Request!',
+            message: `${player.name} has publicly requested a transfer. His morale has dropped to ${result.newMorale}.`,
+            timestamp: new Date(),
+            read: false,
+            relatedEntityId: player.id,
+            scope: 'team',
+            teamId: 'user',
+          });
+        }
+      }
+    }
+
+    // Dispatch morale updates
+    if (moraleResults.length > 0) {
+      dispatch({
+        type: 'APPLY_MORALE_UPDATE',
+        payload: moraleResults.map(r => ({
+          playerId: r.playerId,
+          newMorale: r.newMorale,
+          weeksDisgruntled: r.weeksDisgruntled,
+          transferRequestTriggered: r.transferRequestTriggered,
+        })),
+      });
+    }
+
+    // Dispatch transfer request events
+    for (const event of transferRequestEvents) {
+      dispatch({ type: 'ADD_EVENT', payload: event });
+    }
+
+    // =========================================================================
     // CONTRACT EXPIRATION ALERTS
     // =========================================================================
     const contractState = stateRef.current;
@@ -1300,6 +1425,91 @@ export function GameProvider({ children }: GameProviderProps) {
         `${aiResolvedActions.blockedActions.length} blocked`);
     }
 
+    // =========================================================================
+    // PLAYER AWARDS
+    // =========================================================================
+    const awardState = stateRef.current;
+    const awardWeek = awardState.season.currentWeek;
+
+    // Process weekly awards (Player of the Week for each sport)
+    const weeklyAwardResult = processWeeklyAwards(
+      awardWeek,
+      awardState.season.matches,
+      awardState.players,
+      awardState.userTeam.name,
+      awardState.league.teams
+    );
+
+    // Apply player updates from awards
+    for (const [playerId, updatedPlayer] of Object.entries(weeklyAwardResult.updatedPlayers)) {
+      if (awardState.players[playerId]?.awards !== updatedPlayer.awards) {
+        dispatch({ type: 'UPDATE_PLAYER', payload: { playerId, updates: { awards: updatedPlayer.awards } } });
+      }
+    }
+
+    // Add award news events
+    for (const newsItem of weeklyAwardResult.newsItems) {
+      dispatch({ type: 'ADD_EVENT', payload: newsItem });
+    }
+
+    // Process monthly awards every 4 weeks (Player of the Month for each sport)
+    if (awardWeek > 0 && awardWeek % 4 === 0) {
+      const month = Math.floor(awardWeek / 4);
+      const monthStartWeek = (month - 1) * 4 + 1;
+
+      const monthlyAwardResult = processMonthlyAwards(
+        month,
+        monthStartWeek,
+        awardState.season.matches,
+        awardState.players,
+        awardState.userTeam.name,
+        awardState.league.teams
+      );
+
+      // Apply monthly award updates
+      for (const [playerId, updatedPlayer] of Object.entries(monthlyAwardResult.updatedPlayers)) {
+        if (awardState.players[playerId]?.awards !== updatedPlayer.awards) {
+          dispatch({ type: 'UPDATE_PLAYER', payload: { playerId, updates: { awards: updatedPlayer.awards } } });
+        }
+      }
+
+      // Add monthly award news events
+      for (const newsItem of monthlyAwardResult.newsItems) {
+        dispatch({ type: 'ADD_EVENT', payload: newsItem });
+      }
+
+      console.log(`[Awards] Month ${month}: Processed monthly awards for all sports`);
+    }
+
+    console.log(`[Awards] Week ${awardWeek}: Processed weekly awards`);
+
+    // =========================================================================
+    // SEASON END AWARDS (Player of the Year, Rookie of the Year)
+    // =========================================================================
+    // Process at the end of week 40 (last week of season)
+    if (awardWeek === 40) {
+      const seasonAwardResult = processSeasonAwards(
+        awardState.season.matches,
+        awardState.players,
+        awardState.userTeam.name,
+        awardState.league.teams
+      );
+
+      // Apply season award updates
+      for (const [playerId, updatedPlayer] of Object.entries(seasonAwardResult.updatedPlayers)) {
+        if (awardState.players[playerId]?.awards !== updatedPlayer.awards) {
+          dispatch({ type: 'UPDATE_PLAYER', payload: { playerId, updates: { awards: updatedPlayer.awards } } });
+        }
+      }
+
+      // Add season award news events
+      for (const newsItem of seasonAwardResult.newsItems) {
+        dispatch({ type: 'ADD_EVENT', payload: newsItem });
+      }
+
+      console.log(`[Awards] Season End: Processed Player of the Year and Rookie of the Year awards for all sports`);
+    }
+
     // Advance the week
     dispatch({ type: 'ADVANCE_WEEK' });
 
@@ -1454,6 +1664,10 @@ export function GameProvider({ children }: GameProviderProps) {
       let awayScore: number;
       let boxScore: Record<string, unknown> = {};
 
+      // Apply morale effects to mental attributes before simulation (all sports)
+      const moraleAdjustedHomeRoster = applyMoraleToRoster(homeRoster);
+      const moraleAdjustedAwayRoster = applyMoraleToRoster(awayRoster);
+
       try {
         if (match.sport === 'basketball') {
           // Convert AI basketball strategies to TacticalSettings format
@@ -1483,8 +1697,8 @@ export function GameProvider({ children }: GameProviderProps) {
           const awayTacticsConverted = convertTacticsToSimulationFormat(awayTactics);
 
           const simulator = new GameSimulator(
-            homeRoster,
-            awayRoster,
+            moraleAdjustedHomeRoster,
+            moraleAdjustedAwayRoster,
             homeTacticsConverted,
             awayTacticsConverted,
             match.homeTeamId,
@@ -1505,8 +1719,9 @@ export function GameProvider({ children }: GameProviderProps) {
           };
         } else if (match.sport === 'baseball') {
           // AI vs AI games - pass null for benchIds (AI teams use all non-starters)
-          const homeTeamState = buildBaseballTeamState(match.homeTeamId, homeTeam?.name || match.homeTeamId, homeRoster, undefined, null);
-          const awayTeamState = buildBaseballTeamState(match.awayTeamId, awayTeam?.name || match.awayTeamId, awayRoster, undefined, null);
+          // Use morale-adjusted rosters for mental attribute effects
+          const homeTeamState = buildBaseballTeamState(match.homeTeamId, homeTeam?.name || match.homeTeamId, moraleAdjustedHomeRoster, undefined, null);
+          const awayTeamState = buildBaseballTeamState(match.awayTeamId, awayTeam?.name || match.awayTeamId, moraleAdjustedAwayRoster, undefined, null);
 
           const baseballInput: BaseballGameInput = {
             homeTeam: homeTeamState,
@@ -1523,10 +1738,11 @@ export function GameProvider({ children }: GameProviderProps) {
           boxScore = gameOutput.result.boxScore as unknown as Record<string, unknown>;
         } else if (match.sport === 'soccer') {
           // Soccer simulation - use AI team strategies
+          // Use morale-adjusted rosters for mental attribute effects
           const homeTeamName = homeTeam?.name || match.homeTeamId;
           const awayTeamName = awayTeam?.name || match.awayTeamId;
-          const homeTeamState = buildSoccerTeamState(match.homeTeamId, homeTeamName, homeRoster, undefined, homeSoccerStrategy);
-          const awayTeamState = buildSoccerTeamState(match.awayTeamId, awayTeamName, awayRoster, undefined, awaySoccerStrategy);
+          const homeTeamState = buildSoccerTeamState(match.homeTeamId, homeTeamName, moraleAdjustedHomeRoster, undefined, homeSoccerStrategy);
+          const awayTeamState = buildSoccerTeamState(match.awayTeamId, awayTeamName, moraleAdjustedAwayRoster, undefined, awaySoccerStrategy);
 
           const soccerResult = simulateSoccerMatchV2({
             homeTeam: homeTeamState,
@@ -1860,6 +2076,10 @@ export function GameProvider({ children }: GameProviderProps) {
     let soccerWinner: string | null = null;
     let soccerPenaltyShootout: { homeScore: number; awayScore: number } | undefined;
 
+    // Apply morale effects to mental attributes before simulation (all sports)
+    const moraleAdjustedHomeRoster = applyMoraleToRoster(homeRoster);
+    const moraleAdjustedAwayRoster = applyMoraleToRoster(awayRoster);
+
     try {
       if (match.sport === 'basketball') {
         // Validate user lineup before simulation
@@ -1929,17 +2149,21 @@ export function GameProvider({ children }: GameProviderProps) {
         const homeStartingLineup = isUserHome ? validUserStarting : null;
         const awayStartingLineup = isUserAway ? validUserStarting : null;
 
+        // Apply morale effects to starters (rosters already adjusted above)
+        const moraleAdjustedHomeStarters = homeStartingLineup ? applyMoraleToRoster(homeStartingLineup) : null;
+        const moraleAdjustedAwayStarters = awayStartingLineup ? applyMoraleToRoster(awayStartingLineup) : null;
+
         const simulator = new GameSimulator(
-          homeRoster,
-          awayRoster,
+          moraleAdjustedHomeRoster,
+          moraleAdjustedAwayRoster,
           homeTacticsConverted,
           awayTacticsConverted,
           homeTeamName,
           awayTeamName,
           homeMinutesAllocation,
           awayMinutesAllocation,
-          homeStartingLineup,
-          awayStartingLineup
+          moraleAdjustedHomeStarters,
+          moraleAdjustedAwayStarters
         );
         const gameResult = simulator.simulateGame();
 
@@ -1988,9 +2212,10 @@ export function GameProvider({ children }: GameProviderProps) {
         } : undefined;
 
         // Pass bench array for user teams to filter out reserve players from bullpen
+        // Use morale-adjusted rosters for mental attribute effects
         const userBench = state.userTeam.lineup.bench;
-        const homeTeamState = buildBaseballTeamState(match.homeTeamId, homeTeamName, homeRoster, homeLineupConfig, isUserHome ? userBench : null);
-        const awayTeamState = buildBaseballTeamState(match.awayTeamId, awayTeamName, awayRoster, awayLineupConfig, isUserAway ? userBench : null);
+        const homeTeamState = buildBaseballTeamState(match.homeTeamId, homeTeamName, moraleAdjustedHomeRoster, homeLineupConfig, isUserHome ? userBench : null);
+        const awayTeamState = buildBaseballTeamState(match.awayTeamId, awayTeamName, moraleAdjustedAwayRoster, awayLineupConfig, isUserAway ? userBench : null);
 
         // Get strategies for each team - user's from param, AI's from season-persistent strategies
         const userStrategy = baseballStrategy || DEFAULT_BASEBALL_STRATEGY;
@@ -2106,8 +2331,9 @@ export function GameProvider({ children }: GameProviderProps) {
         const homeTacticsForSoccer = isUserHome ? userSoccerTactics : homeAiSoccerStrategy;
         const awayTacticsForSoccer = isUserAway ? userSoccerTactics : awayAiSoccerStrategy;
 
-        const homeSoccerState = buildSoccerTeamState(match.homeTeamId, homeTeamName, homeRoster, homeSoccerLineup, homeTacticsForSoccer);
-        const awaySoccerState = buildSoccerTeamState(match.awayTeamId, awayTeamName, awayRoster, awaySoccerLineup, awayTacticsForSoccer);
+        // Use morale-adjusted rosters for mental attribute effects
+        const homeSoccerState = buildSoccerTeamState(match.homeTeamId, homeTeamName, moraleAdjustedHomeRoster, homeSoccerLineup, homeTacticsForSoccer);
+        const awaySoccerState = buildSoccerTeamState(match.awayTeamId, awayTeamName, moraleAdjustedAwayRoster, awaySoccerLineup, awayTacticsForSoccer);
 
         const soccerResult = simulateSoccerMatchV2({
           homeTeam: homeSoccerState,
@@ -2302,6 +2528,30 @@ export function GameProvider({ children }: GameProviderProps) {
       });
 
       dispatch({ type: 'UPDATE_STANDINGS', payload: newStandings });
+    }
+
+    // =========================================================================
+    // MORALE - RECORD MATCH RESULT
+    // =========================================================================
+    // Record match outcome for all participating players' morale tracking
+    const homeOutcome: MatchOutcome = homeScore > awayScore ? 'win' : (homeScore < awayScore ? 'loss' : 'draw');
+    const awayOutcome: MatchOutcome = awayScore > homeScore ? 'win' : (awayScore < homeScore ? 'loss' : 'draw');
+
+    const moraleUpdates: Array<{ playerId: string; outcome: MatchOutcome }> = [];
+
+    // Record for all players who played (same logic as fatigue - check minutes > 0)
+    for (const update of fatigueUpdates) {
+      // Find which team this player was on
+      const isHome = homeRoster.some(p => p.id === update.playerId);
+      moraleUpdates.push({
+        playerId: update.playerId,
+        outcome: isHome ? homeOutcome : awayOutcome,
+      });
+    }
+
+    // Dispatch morale updates
+    if (moraleUpdates.length > 0) {
+      dispatch({ type: 'RECORD_MATCH_RESULTS', payload: moraleUpdates });
     }
 
     // Auto-advance week if ALL user matches for this week are now complete

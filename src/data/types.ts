@@ -29,6 +29,15 @@ export const NATIONALITIES: Nationality[] = [
 ];
 
 // =============================================================================
+// MORALE SYSTEM
+// =============================================================================
+
+/**
+ * Match outcome for morale tracking
+ */
+export type MatchOutcome = 'win' | 'loss' | 'draw';
+
+// =============================================================================
 // PLAYER / ATHLETE
 // =============================================================================
 
@@ -160,6 +169,27 @@ export interface WeeklyXP {
   mental: number;
   /** Technical XP earned this week */
   technical: number;
+}
+
+/**
+ * Player awards tracking
+ * Used to calculate performance-based transfer value modifiers
+ */
+export interface PlayerAwards {
+  /** Player of the Week awards (any sport) */
+  playerOfTheWeek: number;
+  /** Player of the Month awards (any sport) */
+  playerOfTheMonth: number;
+  /** Basketball Player of the Year awards */
+  basketballPlayerOfTheYear: number;
+  /** Baseball Player of the Year awards */
+  baseballPlayerOfTheYear: number;
+  /** Soccer Player of the Year awards */
+  soccerPlayerOfTheYear: number;
+  /** Rookie of the Year awards */
+  rookieOfTheYear: number;
+  /** Championship wins */
+  championships: number;
 }
 
 /**
@@ -446,6 +476,12 @@ export interface Player {
    */
   seasonHistory: PlayerSeasonRecord[];
 
+  /**
+   * Awards won throughout career
+   * Used for performance-based transfer value calculation
+   */
+  awards: PlayerAwards;
+
   /** Team assignment ('user' | AI team ID | 'free_agent' | 'youth_academy') */
   teamId: string;
 
@@ -516,6 +552,40 @@ export interface Player {
    * Set to undefined when player reaches age 24.
    */
   youthDevelopment?: YouthPhysicalDevelopment;
+
+  // =========================================================================
+  // MORALE SYSTEM
+  // =========================================================================
+
+  /**
+   * Player morale level (0-100, default 75)
+   * Affected by playing time vs squad role and match results.
+   * Low morale degrades mental attributes and increases transfer request risk.
+   */
+  morale: number;
+
+  /**
+   * Rolling window of last 20 match results for morale calculation
+   * Used with weighted windows: last 1 (40%), last 3 (30%), last 10 (20%), last 20 (10%)
+   */
+  recentMatchResults: MatchOutcome[];
+
+  /**
+   * Has player publicly requested a transfer?
+   * Triggered when morale stays below 40 for consecutive weeks.
+   */
+  transferRequestActive: boolean;
+
+  /**
+   * Date when transfer request was made (null if no active request)
+   */
+  transferRequestDate: Date | null;
+
+  /**
+   * Consecutive weeks player has been disgruntled (morale < 40)
+   * Used to calculate transfer request probability
+   */
+  weeksDisgruntled: number;
 }
 
 // =============================================================================

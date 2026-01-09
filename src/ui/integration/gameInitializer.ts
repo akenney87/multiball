@@ -410,6 +410,22 @@ function generatePlayer(
     youthDevelopment,
     // Season history (empty for new players)
     seasonHistory: [],
+    // Awards
+    awards: {
+      playerOfTheWeek: 0,
+      playerOfTheMonth: 0,
+      basketballPlayerOfTheYear: 0,
+      baseballPlayerOfTheYear: 0,
+      soccerPlayerOfTheYear: 0,
+      rookieOfTheYear: 0,
+      championships: 0,
+    },
+    // Morale system
+    morale: 75,
+    recentMatchResults: [],
+    transferRequestActive: false,
+    transferRequestDate: null,
+    weeksDisgruntled: 0,
   };
 }
 
@@ -501,6 +517,22 @@ function generateFreeAgentPlayer(
     lastMatchDate: null,
     lastMatchSport: null,
     seasonHistory: [],
+    // Awards
+    awards: {
+      playerOfTheWeek: 0,
+      playerOfTheMonth: 0,
+      basketballPlayerOfTheYear: 0,
+      baseballPlayerOfTheYear: 0,
+      soccerPlayerOfTheYear: 0,
+      rookieOfTheYear: 0,
+      championships: 0,
+    },
+    // Morale system
+    morale: 75,
+    recentMatchResults: [],
+    transferRequestActive: false,
+    transferRequestDate: null,
+    weeksDisgruntled: 0,
   };
 }
 

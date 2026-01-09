@@ -504,6 +504,7 @@ export type GameAction =
   | { type: 'SNAPSHOT_SEASON_ATTRIBUTES' }
   | { type: 'APPLY_WEEKLY_PROGRESSION'; payload: { results: PlayerProgressionResult[] } }
   | { type: 'APPLY_ACADEMY_TRAINING'; payload: { results: AcademyProgressionResult[] } }
+  | { type: 'UPDATE_PLAYER'; payload: { playerId: string; updates: Partial<Player> } }
 
   // Match Fitness
   | {
@@ -521,6 +522,24 @@ export type GameAction =
         daysSinceAdvance: number;
         medicalBudgetPct: number;
       };
+    }
+
+  // Morale System
+  | {
+      type: 'RECORD_MATCH_RESULTS';
+      payload: Array<{
+        playerId: string;
+        outcome: 'win' | 'loss' | 'draw';
+      }>;
+    }
+  | {
+      type: 'APPLY_MORALE_UPDATE';
+      payload: Array<{
+        playerId: string;
+        newMorale: number;
+        weeksDisgruntled: number;
+        transferRequestTriggered: boolean;
+      }>;
     }
 
   // AI Actions
