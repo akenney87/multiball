@@ -1233,35 +1233,52 @@ export function createRandomAttributes(
   heightInches?: number,
   weightLbs?: number
 ): PlayerAttributes {
-  // If no physical data provided, generate random
+  // Calculate target midpoint and expand range for variance
+  const targetMid = (min + max) / 2;
+  const tierRange = max - min;
+
+  // Expand the actual attribute range to create strengths/weaknesses
+  // Each attribute varies ±20 points from target, clamped to 1-99
+  // This creates meaningful strengths/weaknesses while keeping average near target
+  const varianceRange = Math.max(20, tierRange * 1.5); // At least 20 points of variance
+
+  // Helper to generate attribute with variance around target
+  const generateWithVariance = (): number => {
+    // Use wider range centered on target midpoint
+    const attrMin = Math.max(1, targetMid - varianceRange);
+    const attrMax = Math.min(99, targetMid + varianceRange);
+    return randomInt(attrMin, attrMax);
+  };
+
+  // If no physical data provided, generate with variance
   if (!heightInches || !weightLbs) {
     return {
-      grip_strength: randomInt(min, max),
-      arm_strength: randomInt(min, max),
-      core_strength: randomInt(min, max),
-      agility: randomInt(min, max),
-      acceleration: randomInt(min, max),
-      top_speed: randomInt(min, max),
-      jumping: randomInt(min, max),
-      reactions: randomInt(min, max),
-      stamina: randomInt(min, max),
-      balance: randomInt(min, max),
-      height: randomInt(min, max),
-      durability: randomInt(min, max),
-      awareness: randomInt(min, max),
-      creativity: randomInt(min, max),
-      determination: randomInt(min, max),
-      bravery: randomInt(min, max),
-      consistency: randomInt(min, max),
-      composure: randomInt(min, max),
-      patience: randomInt(min, max),
-      teamwork: randomInt(min, max),
-      hand_eye_coordination: randomInt(min, max),
-      throw_accuracy: randomInt(min, max),
-      form_technique: randomInt(min, max),
-      finesse: randomInt(min, max),
-      deception: randomInt(min, max),
-      footwork: randomInt(min, max),
+      grip_strength: generateWithVariance(),
+      arm_strength: generateWithVariance(),
+      core_strength: generateWithVariance(),
+      agility: generateWithVariance(),
+      acceleration: generateWithVariance(),
+      top_speed: generateWithVariance(),
+      jumping: generateWithVariance(),
+      reactions: generateWithVariance(),
+      stamina: generateWithVariance(),
+      balance: generateWithVariance(),
+      height: generateWithVariance(),
+      durability: generateWithVariance(),
+      awareness: generateWithVariance(),
+      creativity: generateWithVariance(),
+      determination: generateWithVariance(),
+      bravery: generateWithVariance(),
+      consistency: generateWithVariance(),
+      composure: generateWithVariance(),
+      patience: generateWithVariance(),
+      teamwork: generateWithVariance(),
+      hand_eye_coordination: generateWithVariance(),
+      throw_accuracy: generateWithVariance(),
+      form_technique: generateWithVariance(),
+      finesse: generateWithVariance(),
+      deception: generateWithVariance(),
+      footwork: generateWithVariance(),
     };
   }
 
@@ -1280,54 +1297,54 @@ export function createRandomAttributes(
   // Strength attributes - influenced by weight (heavier = stronger)
   const strengthBase = isHeavy ? 15 : isLight ? -10 : 0;
 
-  const grip_strength = Math.max(min, Math.min(max, randomInt(min, max) + strengthBase));
-  const arm_strength = Math.max(min, Math.min(max, randomInt(min, max) + strengthBase));
-  const core_strength = Math.max(min, Math.min(max, randomInt(min, max) + strengthBase));
+  const grip_strength = Math.max(1, Math.min(99, generateWithVariance() + strengthBase));
+  const arm_strength = Math.max(1, Math.min(99, generateWithVariance() + strengthBase));
+  const core_strength = Math.max(1, Math.min(99, generateWithVariance() + strengthBase));
 
   // Speed/agility attributes - inversely proportional to size (physics)
   const speedPenalty = Math.floor((heightInches - 72) * 1.5); // -1.5 per inch over 6'0"
   const weightPenalty = isHeavy ? 10 : 0;
 
-  const agility = Math.max(min, Math.min(max, randomInt(min, max) - speedPenalty - weightPenalty));
-  const acceleration = Math.max(min, Math.min(max, randomInt(min, max) - speedPenalty - weightPenalty));
-  const top_speed = Math.max(min, Math.min(max, randomInt(min, max) - speedPenalty));
+  const agility = Math.max(1, Math.min(99, generateWithVariance() - speedPenalty - weightPenalty));
+  const acceleration = Math.max(1, Math.min(99, generateWithVariance() - speedPenalty - weightPenalty));
+  const top_speed = Math.max(1, Math.min(99, generateWithVariance() - speedPenalty));
 
-  // Jumping - random within range
-  const jumping = randomInt(min, max);
+  // Jumping - random within range with variance
+  const jumping = generateWithVariance();
 
   // Balance - harder for taller/heavier players (physics)
   const balancePenalty = Math.floor((heightInches - 72) / 2) + (isHeavy ? 5 : 0);
-  const balance = Math.max(min, Math.min(max, randomInt(min, max) - balancePenalty));
+  const balance = Math.max(1, Math.min(99, generateWithVariance() - balancePenalty));
 
   // Durability - heavier athletes tend to be more durable
   const durabilityBonus = isHeavy ? 10 : isLight ? -5 : 0;
-  const durability = Math.max(min, Math.min(max, randomInt(min, max) + durabilityBonus));
+  const durability = Math.max(1, Math.min(99, generateWithVariance() + durabilityBonus));
 
-  // Mental attributes - independent of physical build (pure random)
-  const awareness = randomInt(min, max);
-  const creativity = randomInt(min, max);
-  const determination = randomInt(min, max);
-  const bravery = randomInt(min, max);
-  const consistency = randomInt(min, max);
-  const composure = randomInt(min, max);
-  const patience = randomInt(min, max);
+  // Mental attributes - independent of physical build (with variance)
+  const awareness = generateWithVariance();
+  const creativity = generateWithVariance();
+  const determination = generateWithVariance();
+  const bravery = generateWithVariance();
+  const consistency = generateWithVariance();
+  const composure = generateWithVariance();
+  const patience = generateWithVariance();
 
-  // Technical attributes - pure random (skill-based, not body-type dependent)
-  const hand_eye_coordination = randomInt(min, max);
-  const throw_accuracy = randomInt(min, max);
-  const form_technique = randomInt(min, max);
-  const finesse = randomInt(min, max);
-  const deception = randomInt(min, max);
-  const footwork = randomInt(min, max);
+  // Technical attributes - with variance (skill-based, not body-type dependent)
+  const hand_eye_coordination = generateWithVariance();
+  const throw_accuracy = generateWithVariance();
+  const form_technique = generateWithVariance();
+  const finesse = generateWithVariance();
+  const deception = generateWithVariance();
+  const footwork = generateWithVariance();
 
   // Mental attribute - teamwork
-  const teamwork = randomInt(min, max);
+  const teamwork = generateWithVariance();
 
-  // Reactions - pure random
-  const reactions = randomInt(min, max);
+  // Reactions - with variance
+  const reactions = generateWithVariance();
 
   // Stamina - lighter athletes have better endurance (physics-based)
-  const stamina = Math.max(min, Math.min(max, randomInt(min, max) + (isLight ? 5 : isHeavy ? -5 : 0)));
+  const stamina = Math.max(1, Math.min(99, generateWithVariance() + (isLight ? 5 : isHeavy ? -5 : 0)));
 
   return {
     grip_strength,
