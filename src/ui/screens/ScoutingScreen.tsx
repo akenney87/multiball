@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.sm,
   },
   depthBadgeText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 10,
     fontWeight: '700',
     letterSpacing: 0.5,

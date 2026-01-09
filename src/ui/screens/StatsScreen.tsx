@@ -589,7 +589,7 @@ export function StatsScreen({
                     <Text
                       style={[
                         styles.sortOptionText,
-                        { color: isSelected ? '#FFFFFF' : colors.text },
+                        { color: isSelected ? '#000000' : colors.text },
                       ]}
                     >
                       {option.label}

@@ -231,7 +231,7 @@ export function ScheduleScreen({ userTeamId, onMatchPress }: ScheduleScreenProps
               style={[
                 styles.filterText,
                 {
-                  color: selectedSport === sport ? '#FFFFFF' : colors.text,
+                  color: selectedSport === sport ? '#000000' : colors.text,
                 },
               ]}
             >
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.sm,
   },
   currentBadgeText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 10,
     fontWeight: '600',
   },
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   sportBadgeText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 10,
     fontWeight: '700',
   },

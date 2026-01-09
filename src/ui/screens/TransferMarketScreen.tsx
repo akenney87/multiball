@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   badgeText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 10,
     fontWeight: '700',
   },
@@ -888,7 +888,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 14,
     fontWeight: '600',
   },

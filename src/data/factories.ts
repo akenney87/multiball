@@ -23,6 +23,7 @@ import {
   TrainingFocus,
   WeeklyXP,
   PlayerCareerStats,
+  PlayerAwards,
   Contract,
   Injury,
   Franchise,
@@ -554,11 +555,95 @@ export function processYouthGrowth(
 
 /**
  * Variance level determines how "spiky" a player's attribute profile is
- * - Low: Consistent, attributes within ±12 of base
- * - Moderate: Some spikes/valleys, more interesting profiles
- * - High: Extreme specialists, some very high and very low attributes
+ * - Low: Some variance but more consistent
+ * - Moderate: Clear strengths and weaknesses
+ * - High: Extreme specialists with major spikes and valleys
  */
 type VarianceLevel = 'low' | 'moderate' | 'high';
+
+/**
+ * Player archetypes determine which attributes naturally spike vs valley
+ * Creates coherent player profiles with meaningful specializations
+ */
+type PlayerArchetype =
+  | 'physical'    // High strength/speed, lower mental
+  | 'cerebral'    // High awareness/creativity, lower physical
+  | 'technical'   // High hand-eye/finesse, lower raw physical
+  | 'athletic'    // High speed/agility/jumping, lower technical
+  | 'specialist'  // Extreme: 2-3 elite attributes, most others below average
+  | 'balanced';   // Random distribution (legacy behavior)
+
+interface ArchetypeConfig {
+  spikeAttrs: string[];      // Attributes that get boosted
+  valleyAttrs: string[];     // Attributes that get penalized
+  spikeBoost: [number, number];   // [min, max] boost for spike attrs
+  valleyPenalty: [number, number]; // [min, max] penalty for valley attrs
+  weight: number;            // Probability weight for selection
+  extremeSpike?: boolean;    // If true, creates extreme specialists
+}
+
+const ARCHETYPE_CONFIGS: Record<PlayerArchetype, ArchetypeConfig> = {
+  physical: {
+    spikeAttrs: ['core_strength', 'arm_strength', 'grip_strength', 'top_speed', 'jumping', 'durability', 'stamina'],
+    valleyAttrs: ['creativity', 'patience', 'finesse', 'deception', 'composure'],
+    spikeBoost: [25, 45],
+    valleyPenalty: [20, 40],
+    weight: 0.22,
+  },
+  cerebral: {
+    spikeAttrs: ['awareness', 'creativity', 'composure', 'patience', 'teamwork', 'consistency', 'determination'],
+    valleyAttrs: ['top_speed', 'jumping', 'arm_strength', 'acceleration'],
+    spikeBoost: [25, 45],
+    valleyPenalty: [20, 40],
+    weight: 0.18,
+  },
+  technical: {
+    spikeAttrs: ['hand_eye_coordination', 'form_technique', 'finesse', 'footwork', 'throw_accuracy', 'deception'],
+    valleyAttrs: ['core_strength', 'durability', 'bravery', 'stamina'],
+    spikeBoost: [25, 45],
+    valleyPenalty: [20, 40],
+    weight: 0.18,
+  },
+  athletic: {
+    spikeAttrs: ['agility', 'acceleration', 'top_speed', 'jumping', 'reactions', 'balance', 'stamina'],
+    valleyAttrs: ['patience', 'composure', 'form_technique', 'finesse'],
+    spikeBoost: [25, 45],
+    valleyPenalty: [20, 40],
+    weight: 0.17,
+  },
+  specialist: {
+    spikeAttrs: [], // Randomly selected at generation time
+    valleyAttrs: [], // Most other attributes
+    spikeBoost: [45, 60], // Extreme boosts
+    valleyPenalty: [30, 50], // Severe penalties
+    weight: 0.10,
+    extremeSpike: true,
+  },
+  balanced: {
+    spikeAttrs: [],
+    valleyAttrs: [],
+    spikeBoost: [20, 35],
+    valleyPenalty: [15, 30],
+    weight: 0.15,
+  },
+};
+
+/**
+ * Select a player archetype based on weighted probabilities
+ */
+function selectArchetype(): PlayerArchetype {
+  const roll = Math.random();
+  let cumulative = 0;
+
+  for (const [archetype, config] of Object.entries(ARCHETYPE_CONFIGS)) {
+    cumulative += config.weight;
+    if (roll < cumulative) {
+      return archetype as PlayerArchetype;
+    }
+  }
+
+  return 'balanced'; // Fallback
+}
 
 /**
  * Randomly assign a variance level (33% each)
@@ -608,58 +693,136 @@ function pickRandomIndices(totalCount: number, pickCount: number): number[] {
 }
 
 /**
- * Apply spikes and valleys to a base attribute array
- * Returns a new array with modifications applied
+ * Apply archetype-based spikes and valleys to a base attribute array
+ * Creates meaningful player specializations with high variance
+ *
+ * @param baseAttrs - Array of base attribute values
+ * @param varianceLevel - How extreme the variance should be
+ * @param archetype - Player archetype determining spike/valley patterns
+ * @returns Modified attribute array with spikes and valleys applied
  */
 function applySpikeValleyVariance(
   baseAttrs: number[],
-  varianceLevel: VarianceLevel
+  varianceLevel: VarianceLevel,
+  archetype: PlayerArchetype = 'balanced'
 ): number[] {
   const attrs = [...baseAttrs];
+  const config = ARCHETYPE_CONFIGS[archetype];
 
-  let spikeCount: number, spikeMin: number, spikeMax: number;
-  let valleyCount: number, valleyMin: number, valleyMax: number;
+  // Height attribute index (skip modifications)
+  const HEIGHT_INDEX = 10;
+
+  // Get attribute indices for archetype spikes/valleys
+  const spikeAttrIndices = config.spikeAttrs
+    .map(name => ALL_ATTR_NAMES.indexOf(name))
+    .filter(idx => idx !== -1 && idx !== HEIGHT_INDEX);
+
+  const valleyAttrIndices = config.valleyAttrs
+    .map(name => ALL_ATTR_NAMES.indexOf(name))
+    .filter(idx => idx !== -1 && idx !== HEIGHT_INDEX);
+
+  // Variance level affects the intensity multiplier
+  const intensityMultiplier = varianceLevel === 'high' ? 1.3 :
+                              varianceLevel === 'moderate' ? 1.0 : 0.7;
+
+  // For specialists, randomly pick 2-3 attributes for extreme spikes
+  if (config.extremeSpike) {
+    // Pick 2-3 random attributes for extreme boosts
+    const allNonHeight = ALL_ATTR_NAMES
+      .map((_, idx) => idx)
+      .filter(idx => idx !== HEIGHT_INDEX);
+    const extremeSpikeCount = randomInt(2, 3);
+    const extremeSpikes = pickRandomIndices(allNonHeight.length, extremeSpikeCount)
+      .map(i => allNonHeight[i]!);
+
+    // Apply extreme boosts to selected attributes
+    for (const idx of extremeSpikes) {
+      const boost = randomInt(config.spikeBoost[0], config.spikeBoost[1]);
+      attrs[idx] = Math.min(99, attrs[idx]! + Math.round(boost * intensityMultiplier));
+    }
+
+    // Apply penalties to most OTHER attributes (8-12 random ones)
+    const availableForValleys = allNonHeight.filter(i => !extremeSpikes.includes(i));
+    const valleyCount = randomInt(8, 12);
+    const valleys = pickRandomIndices(availableForValleys.length, valleyCount)
+      .map(i => availableForValleys[i]!);
+
+    for (const idx of valleys) {
+      const penalty = randomInt(config.valleyPenalty[0], config.valleyPenalty[1]);
+      attrs[idx] = Math.max(1, attrs[idx]! - Math.round(penalty * intensityMultiplier));
+    }
+
+    return attrs;
+  }
+
+  // Standard archetype processing (physical, cerebral, technical, athletic, balanced)
+
+  // Apply archetype-specific spikes
+  for (const idx of spikeAttrIndices) {
+    const boost = randomInt(config.spikeBoost[0], config.spikeBoost[1]);
+    attrs[idx] = Math.min(99, attrs[idx]! + Math.round(boost * intensityMultiplier));
+  }
+
+  // Apply archetype-specific valleys
+  for (const idx of valleyAttrIndices) {
+    const penalty = randomInt(config.valleyPenalty[0], config.valleyPenalty[1]);
+    attrs[idx] = Math.max(1, attrs[idx]! - Math.round(penalty * intensityMultiplier));
+  }
+
+  // Add additional random spikes/valleys based on variance level
+  // (affects attributes not already modified by archetype)
+  const modifiedIndices = new Set([...spikeAttrIndices, ...valleyAttrIndices, HEIGHT_INDEX]);
+  const unmodifiedIndices = ALL_ATTR_NAMES
+    .map((_, idx) => idx)
+    .filter(idx => !modifiedIndices.has(idx));
+
+  let additionalSpikeCount: number, additionalValleyCount: number;
+  let randomSpikeRange: [number, number], randomValleyRange: [number, number];
 
   switch (varianceLevel) {
     case 'low':
-      spikeCount = Math.random() < 0.5 ? 0 : 1;
-      spikeMin = 10; spikeMax = 15;
-      valleyCount = Math.random() < 0.5 ? 0 : 1;
-      valleyMin = 10; valleyMax = 15;
+      additionalSpikeCount = randomInt(1, 2);
+      additionalValleyCount = randomInt(1, 2);
+      randomSpikeRange = [15, 25];
+      randomValleyRange = [15, 25];
       break;
     case 'moderate':
-      spikeCount = randomInt(2, 3);
-      spikeMin = 18; spikeMax = 25;
-      valleyCount = randomInt(2, 3);
-      valleyMin = 18; valleyMax = 25;
+      additionalSpikeCount = randomInt(2, 4);
+      additionalValleyCount = randomInt(2, 4);
+      randomSpikeRange = [20, 35];
+      randomValleyRange = [20, 35];
       break;
     case 'high':
-      spikeCount = randomInt(3, 4);
-      spikeMin = 25; spikeMax = 40;
-      valleyCount = randomInt(3, 4);
-      valleyMin = 20; valleyMax = 35;
+      additionalSpikeCount = randomInt(3, 5);
+      additionalValleyCount = randomInt(3, 5);
+      randomSpikeRange = [30, 50];
+      randomValleyRange = [25, 45];
       break;
   }
 
-  // Apply spikes (avoid height attribute index 10, which is derived from physical height)
-  const spikeIndices = pickRandomIndices(26, spikeCount + 2)
-    .filter(i => i !== 10) // Skip height attribute
-    .slice(0, spikeCount);
+  // Apply additional random spikes to unmodified attributes
+  if (unmodifiedIndices.length > 0) {
+    const randomSpikeIndices = pickRandomIndices(
+      unmodifiedIndices.length,
+      Math.min(additionalSpikeCount, Math.floor(unmodifiedIndices.length / 2))
+    ).map(i => unmodifiedIndices[i]!);
 
-  for (const idx of spikeIndices) {
-    const boost = randomInt(spikeMin, spikeMax);
-    attrs[idx] = Math.min(99, attrs[idx]! + boost);
-  }
+    for (const idx of randomSpikeIndices) {
+      const boost = randomInt(randomSpikeRange[0], randomSpikeRange[1]);
+      attrs[idx] = Math.min(99, attrs[idx]! + boost);
+    }
 
-  // Apply valleys (avoid same indices as spikes, and height)
-  const availableForValleys = Array.from({ length: 26 }, (_, i) => i)
-    .filter(i => i !== 10 && !spikeIndices.includes(i));
-  const valleyIndices = pickRandomIndices(availableForValleys.length, valleyCount)
-    .map(i => availableForValleys[i]!);
+    // Apply additional random valleys to remaining unmodified attributes
+    const remainingIndices = unmodifiedIndices.filter(i => !randomSpikeIndices.includes(i));
+    const randomValleyIndices = pickRandomIndices(
+      remainingIndices.length,
+      Math.min(additionalValleyCount, remainingIndices.length)
+    ).map(i => remainingIndices[i]!);
 
-  for (const idx of valleyIndices) {
-    const penalty = randomInt(valleyMin, valleyMax);
-    attrs[idx] = Math.max(1, attrs[idx]! - penalty);
+    for (const idx of randomValleyIndices) {
+      const penalty = randomInt(randomValleyRange[0], randomValleyRange[1]);
+      attrs[idx] = Math.max(1, attrs[idx]! - penalty);
+    }
   }
 
   return attrs;
@@ -800,33 +963,53 @@ function calculateOVR(attrs: Record<string, number>): number {
  * Adjust attributes to hit target OVR (within ±2)
  * Uses iterative adjustment of highest/lowest attributes
  */
+/**
+ * Adjust attributes to hit target OVR while PRESERVING extreme values
+ *
+ * This function only adjusts MIDDLE attributes (not the highest or lowest 5),
+ * which allows spiky profiles with clear strengths/weaknesses to remain intact.
+ *
+ * @param attrs - Attribute values to adjust
+ * @param targetOVR - Target overall rating
+ * @param maxIterations - Maximum adjustment iterations
+ */
 function adjustToTargetOVR(
   attrs: Record<string, number>,
   targetOVR: number,
-  maxIterations: number = 20
+  maxIterations: number = 25
 ): void {
   for (let i = 0; i < maxIterations; i++) {
     const currentOVR = calculateOVR(attrs);
     const diff = targetOVR - currentOVR;
 
-    if (Math.abs(diff) <= 2) return; // Close enough
+    // Allow slightly wider tolerance (±3) to preserve variance
+    if (Math.abs(diff) <= 3) return;
 
     // Get sortable attribute entries (excluding height which is derived)
-    const adjustable = Object.entries(attrs)
+    const sorted = Object.entries(attrs)
       .filter(([key]) => key !== 'height')
       .sort((a, b) => a[1] - b[1]);
 
+    // CRITICAL: Only adjust MIDDLE attributes (skip 5 lowest and 5 highest)
+    // This preserves the extreme spikes and valleys created by the archetype system
+    const middleAttrs = sorted.slice(5, -5);
+
+    if (middleAttrs.length === 0) {
+      // Fallback if not enough attributes (shouldn't happen with 25 non-height attrs)
+      break;
+    }
+
     if (diff > 0) {
-      // Need to increase OVR - boost lowest attributes
-      const toBoost = adjustable.slice(0, 3);
+      // Need to increase OVR - boost lower-middle attributes
+      const toBoost = middleAttrs.slice(0, 4);
       for (const [key] of toBoost) {
-        attrs[key] = Math.min(99, attrs[key]! + Math.ceil(diff / 2));
+        attrs[key] = Math.min(99, attrs[key]! + Math.ceil(diff / 3));
       }
     } else {
-      // Need to decrease OVR - reduce highest attributes
-      const toReduce = adjustable.slice(-3);
+      // Need to decrease OVR - reduce upper-middle attributes
+      const toReduce = middleAttrs.slice(-4);
       for (const [key] of toReduce) {
-        attrs[key] = Math.max(1, attrs[key]! - Math.ceil(Math.abs(diff) / 2));
+        attrs[key] = Math.max(1, attrs[key]! - Math.ceil(Math.abs(diff) / 3));
       }
     }
   }
@@ -878,12 +1061,13 @@ export function generateAttributesWithVariance(
       return randomInt(strengthRanges.arm.min, strengthRanges.arm.max);
     }
 
-    // Other attributes: use target OVR with small variance (±8 points)
-    return Math.max(1, Math.min(99, targetOVR + randomInt(-8, 8)));
+    // Other attributes: use target OVR with wider variance (±15 points)
+    return Math.max(1, Math.min(99, targetOVR + randomInt(-15, 15)));
   });
 
-  // Step 2: Apply spike/valley variance (but protect strength attributes)
-  const variedAttrs = applySpikeValleyVariance(baseAttrs, varianceLevel);
+  // Step 2: Select archetype and apply spike/valley variance (but protect strength attributes)
+  const archetype = selectArchetype();
+  const variedAttrs = applySpikeValleyVariance(baseAttrs, varianceLevel, archetype);
 
   // Step 3: Convert to named attributes
   const attrs: Record<string, number> = {};
@@ -1259,6 +1443,21 @@ export function createEmptyWeeklyXP(): WeeklyXP {
 }
 
 /**
+ * Create empty player awards
+ */
+export function createEmptyAwards(): PlayerAwards {
+  return {
+    playerOfTheWeek: 0,
+    playerOfTheMonth: 0,
+    basketballPlayerOfTheYear: 0,
+    baseballPlayerOfTheYear: 0,
+    soccerPlayerOfTheYear: 0,
+    rookieOfTheYear: 0,
+    championships: 0,
+  };
+}
+
+/**
  * Create empty career stats
  */
 export function createEmptyCareerStats(): PlayerCareerStats {
@@ -1334,6 +1533,7 @@ export function createStarterPlayer(overrides?: Partial<Player>): Player {
     careerStats: createEmptyCareerStats(),
     currentSeasonStats: createEmptyCareerStats(),
     seasonHistory: [],
+    awards: createEmptyAwards(),
     teamId: 'user',
     acquisitionType: 'starter',
     acquisitionDate: new Date(),
@@ -1417,6 +1617,7 @@ export function createRandomPlayer(
     careerStats: createEmptyCareerStats(),
     currentSeasonStats: createEmptyCareerStats(),
     seasonHistory: [],
+    awards: createEmptyAwards(),
     teamId: 'free_agent',
     acquisitionType: 'free_agent',
     acquisitionDate: new Date(),

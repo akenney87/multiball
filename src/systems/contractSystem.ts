@@ -36,19 +36,20 @@ export const MIN_CONTRACT_LENGTH = 1;
 export const MAX_CONTRACT_LENGTH = 5;
 
 // Salary calculation
-export const SALARY_PERCENTAGE = 0.20; // Salary = 20% of market value
+export const SALARY_PERCENTAGE = 0.25; // Salary = 25% of market value
 
-// Agent fees
-export const MIN_AGENT_FEE_PCT = 0.05; // 5% minimum
-export const MAX_AGENT_FEE_PCT = 0.15; // 15% maximum
+// Agent fees (flat 10% for simplicity)
+export const MIN_AGENT_FEE_PCT = 0.08; // 8% minimum
+export const MAX_AGENT_FEE_PCT = 0.12; // 12% maximum
 export const DEFAULT_AGENT_FEE_PCT = 0.10; // 10% default
 
 // Age multipliers for valuation
+// Young high-potential players are MORE valuable (longer careers, upside)
 export const AGE_MULTIPLIERS = {
-  young: 1.5,    // Age < 23
-  prime: 2.0,    // Age 23-28
-  veteran: 1.5,  // Age 29-32
-  aging: 1.0,    // Age >= 33
+  young: 2.0,    // Age < 23 - premium for youth
+  prime: 1.8,    // Age 23-28 - peak performance
+  veteran: 1.2,  // Age 29-32 - declining value
+  aging: 0.7,    // Age >= 33 - limited years left
 };
 
 // Multi-sport bonus
@@ -82,6 +83,7 @@ export const SQUAD_ROLE_MINUTES = {
 
 /**
  * Calculates a player's market value
+ * Uses tiered exponential scaling - higher rated players are disproportionately more valuable
  */
 export function calculateMarketValue(
   overallRating: number,
@@ -89,10 +91,33 @@ export function calculateMarketValue(
   averagePotential: number,
   sportsAbove50: number
 ): number {
-  // Base value: (rating / 100) × $1,000,000
-  const baseValue = (overallRating / 100) * 1000000;
+  // Tiered base value - dramatically increases with rating
+  // This creates realistic salary gaps between rating tiers
+  let baseValue: number;
+  if (overallRating < 40) {
+    // Below replacement level
+    baseValue = 50000 + Math.max(0, overallRating - 20) * 2500; // $50k-$100k
+  } else if (overallRating < 50) {
+    // Poor players
+    baseValue = 100000 + (overallRating - 40) * 15000; // $100k-$250k
+  } else if (overallRating < 60) {
+    // Below average
+    baseValue = 250000 + (overallRating - 50) * 45000; // $250k-$700k
+  } else if (overallRating < 70) {
+    // Average to good
+    baseValue = 700000 + (overallRating - 60) * 130000; // $700k-$2M
+  } else if (overallRating < 80) {
+    // Good to great
+    baseValue = 2000000 + (overallRating - 70) * 300000; // $2M-$5M
+  } else if (overallRating < 90) {
+    // Elite
+    baseValue = 5000000 + (overallRating - 80) * 700000; // $5M-$12M
+  } else {
+    // Superstar
+    baseValue = 12000000 + (overallRating - 90) * 1500000; // $12M+
+  }
 
-  // Age multiplier
+  // Age multiplier - young players with upside are MORE valuable
   let ageMultiplier: number;
   if (age < 23) {
     ageMultiplier = AGE_MULTIPLIERS.young;
@@ -104,8 +129,10 @@ export function calculateMarketValue(
     ageMultiplier = AGE_MULTIPLIERS.aging;
   }
 
-  // Potential modifier
-  const potentialModifier = 1.0 + (averagePotential - overallRating) / 100;
+  // Potential modifier - high potential players cost more
+  // Cap the bonus at 50% to prevent runaway values
+  const potentialGap = Math.max(0, averagePotential - overallRating);
+  const potentialModifier = 1.0 + Math.min(0.5, potentialGap / 50);
 
   // Multi-sport bonus
   const multiSportBonus = 1.0 + (sportsAbove50 - 1) * MULTI_SPORT_BONUS;

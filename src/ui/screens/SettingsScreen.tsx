@@ -145,7 +145,7 @@ export function SettingsScreen({
                   {
                     color:
                       localSettings.simulationSpeed === speed.key
-                        ? '#FFFFFF'
+                        ? '#000000'
                         : colors.text,
                   },
                 ]}
@@ -196,7 +196,7 @@ export function SettingsScreen({
                   {
                     color:
                       localSettings.theme === theme.key
-                        ? '#FFFFFF'
+                        ? '#000000'
                         : colors.text,
                   },
                 ]}

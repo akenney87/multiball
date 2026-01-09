@@ -18,8 +18,9 @@
 import {
   calculatePlayerValuation,
   ContractDemands,
-  generatePlayerDemands,
+  STRATEGY_FLEXIBILITY,
 } from './contractSystem';
+import type { NegotiationStrategy, SquadRole, ContractClauseType } from '../data/types';
 
 /**
  * Free agent player data
@@ -239,6 +240,94 @@ export function generateSportRatings(
 }
 
 /**
+ * Determines a free agent's negotiation strategy based on rating
+ */
+function determineFreeAgentStrategy(overallRating: number): NegotiationStrategy {
+  // Free agents are generally more willing to negotiate (they need jobs)
+  // But high-rated free agents can be pickier
+  if (overallRating >= 75) return 'moderate';
+  if (overallRating >= 60) return 'passive';
+  return 'desperate';
+}
+
+/**
+ * Determines appropriate squad role based on player rating
+ * Free agents expect roles based on their quality
+ */
+function determineFreeAgentRole(overallRating: number): SquadRole {
+  if (overallRating >= 80) return 'important_player';
+  if (overallRating >= 70) return 'rotation_player';
+  if (overallRating >= 55) return 'squad_player';
+  return 'backup';
+}
+
+/**
+ * Generates contract demands for a free agent
+ * Simplified version that doesn't require a full Player object
+ */
+function generateFreeAgentDemands(
+  overallRating: number,
+  age: number,
+  calculatedSalary: number
+): ContractDemands {
+  const strategy = determineFreeAgentStrategy(overallRating);
+
+  // Strategy affects demand multiplier
+  const strategyMultipliers: Record<NegotiationStrategy, number> = {
+    aggressive: 1.30,
+    moderate: 1.15,
+    passive: 1.05,
+    desperate: 0.90, // Free agents often accept less
+  };
+
+  const multiplier = strategyMultipliers[strategy];
+  const randomFactor = 0.95 + Math.random() * 0.1;
+
+  const idealSalary = Math.round(calculatedSalary * multiplier * randomFactor);
+  const minSalary = Math.round(idealSalary * 0.80); // Free agents more flexible
+
+  // Contract length based on age
+  let minLength: number, maxLength: number;
+  if (age < 25) {
+    minLength = 2;
+    maxLength = 4;
+  } else if (age < 30) {
+    minLength = 2;
+    maxLength = 3;
+  } else {
+    minLength = 1;
+    maxLength = 2;
+  }
+
+  // Squad role based on player quality
+  const desiredRole = determineFreeAgentRole(overallRating);
+
+  // Signing bonus - lower for free agents (no bidding war)
+  const signingBonus = Math.round(calculatedSalary * 0.05);
+
+  // Release clause - free agents usually accept
+  const releaseClause = Math.round(calculatedSalary * 3);
+
+  // Free agents rarely have required clauses
+  const requiredClauses: ContractClauseType[] = [];
+
+  // Flexibility based on strategy
+  const flexibility = STRATEGY_FLEXIBILITY[strategy] * 100;
+
+  return {
+    minSalary,
+    idealSalary,
+    minContractLength: minLength,
+    maxContractLength: maxLength,
+    desiredRole,
+    signingBonus,
+    releaseClause,
+    requiredClauses,
+    flexibility,
+  };
+}
+
+/**
  * Generates a random free agent player
  *
  * @param id - Player ID
@@ -265,8 +354,8 @@ export function generateFreeAgent(
   // Calculate valuation using Contract System
   const valuation = calculatePlayerValuation(overallRating, age, averagePotential, sportsAbove50);
 
-  // Generate demands using Contract System
-  const demands = generatePlayerDemands(valuation.annualSalary, age);
+  // Generate demands using proper parameters
+  const demands = generateFreeAgentDemands(overallRating, age, valuation.annualSalary);
 
   // Generate random name
   const firstNames = ['Alex', 'Jordan', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Avery', 'Quinn', 'Reese', 'Drew'];
