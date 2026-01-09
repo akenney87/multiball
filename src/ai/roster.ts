@@ -11,7 +11,7 @@
  * Week 6: Add advanced factors (team chemistry, budget optimization, etc.)
  */
 
-import type { Player } from '../data/types';
+import type { Player, SquadRole } from '../data/types';
 import type {
   DecisionContext,
   AIConfig,
@@ -21,6 +21,7 @@ import type {
 } from './types';
 import { evaluatePlayer, calculateOverallRating } from './evaluation';
 import { getDecisionThresholds, getContractValuation } from './personality';
+import { getRoleForDivision, compareRoles } from '../systems/roleExpectationSystem';
 
 // =============================================================================
 // RELEASE DECISIONS
@@ -107,12 +108,61 @@ export function shouldReleasePlayer(
 // =============================================================================
 
 /**
+ * Determine the squad role a player would likely get on a team
+ *
+ * Compares player rating to current roster at their position to determine
+ * what role they'd realistically fill.
+ *
+ * @param player - Player to evaluate
+ * @param roster - Current team roster
+ * @param context - Decision context (includes division)
+ * @returns The squad role the player would likely receive
+ */
+function determineOfferedRole(
+  player: Player,
+  roster: Player[],
+  context: DecisionContext
+): SquadRole {
+  const playerRating = calculateOverallRating(player);
+  const positionPlayers = roster.filter(p => p.position === player.position);
+
+  // If no players at position, they'd be the starter
+  if (positionPlayers.length === 0) {
+    return getRoleForDivision(playerRating, context.division);
+  }
+
+  // Calculate how they'd rank at their position
+  const positionRatings = positionPlayers
+    .map(p => calculateOverallRating(p))
+    .sort((a, b) => b - a); // Highest first
+
+  // Find where they'd slot in
+  let rank = 0;
+  for (const rating of positionRatings) {
+    if (playerRating >= rating) break;
+    rank++;
+  }
+
+  // Map position rank to role (1st = star/important, 2nd = rotation, etc.)
+  const roleByRank: SquadRole[] = [
+    'star_player',        // Best at position
+    'important_player',   // 2nd best
+    'rotation_player',    // 3rd best
+    'squad_player',       // 4th best
+    'backup',             // 5th+
+  ];
+
+  return roleByRank[Math.min(rank, roleByRank.length - 1)] ?? 'backup';
+}
+
+/**
  * Determine if AI should offer a contract to a free agent
  *
  * Considers:
  * - Free agent's rating vs personality threshold
  * - Available budget
  * - Transfer window status
+ * - Division-based role expectations vs what team can actually offer
  *
  * @param freeAgent - Free agent to evaluate
  * @param roster - Current team roster
@@ -142,6 +192,22 @@ export function shouldOfferContract(
   // Check if player meets signing threshold
   if (rating < thresholds.signPlayerRating) {
     return null;
+  }
+
+  // Check if player's expected role aligns with what we can offer
+  // Don't sign players who expect more than we can give (leads to unhappy players)
+  const expectedRole = getRoleForDivision(rating, context.division);
+  const offeredRole = determineOfferedRole(freeAgent, roster, context);
+  const roleDiff = compareRoles(expectedRole, offeredRole);
+
+  // If player expects significantly higher role than we'd offer, skip them
+  // (They'd be unhappy and request a transfer)
+  if (roleDiff > 1) {
+    // Player expects 2+ levels higher than we'd offer
+    // Only aggressive personalities take this risk
+    if (config.personality !== 'aggressive') {
+      return null;
+    }
   }
 
   // Calculate contract value based on rating and personality

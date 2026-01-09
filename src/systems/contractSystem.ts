@@ -26,6 +26,8 @@ import type {
   NegotiationOutcome,
   Player,
 } from '../data/types';
+import { getExpectedRole } from './roleExpectationSystem';
+import { calculateAllOveralls } from '../utils/overallRating';
 
 // =============================================================================
 // CONSTANTS
@@ -206,6 +208,7 @@ export function determineNegotiationStrategy(
 
 /**
  * Determines appropriate squad role based on player rating
+ * Legacy function for backward compatibility - prefer determineSquadRoleForDivision
  */
 export function determineSquadRole(playerRating: number, teamAvgRating: number): SquadRole {
   const diff = playerRating - teamAvgRating;
@@ -219,13 +222,33 @@ export function determineSquadRole(playerRating: number, teamAvgRating: number):
 }
 
 /**
+ * Determines squad role using division-based expectations
+ * Uses player's OVR, division quality range, and ambition modifier
+ *
+ * @param player - Player to determine role for
+ * @param division - Division number (1-10)
+ * @returns Expected squad role based on division context
+ */
+export function determineSquadRoleForDivision(player: Player, division: number): SquadRole {
+  const overalls = calculateAllOveralls(player);
+  return getExpectedRole(overalls.overall, division, player.ambition);
+}
+
+/**
  * Generates player's contract demands (FM-style)
+ *
+ * @param player - Player making demands
+ * @param calculatedSalary - Base salary calculation
+ * @param strategy - Negotiation strategy
+ * @param teamAvgRatingOrDivision - Either team average rating (legacy) or division number
+ * @param useDivisionSystem - If true, treat 4th param as division and use division-based role expectations
  */
 export function generatePlayerDemands(
   player: Player,
   calculatedSalary: number,
   strategy: NegotiationStrategy,
-  teamAvgRating: number = 60
+  teamAvgRatingOrDivision: number = 60,
+  useDivisionSystem: boolean = false
 ): ContractDemands {
   // Strategy affects demand multiplier
   const strategyMultipliers = {
@@ -254,12 +277,25 @@ export function generatePlayerDemands(
     maxLength = 3;
   }
 
-  // Squad role based on player quality vs team
-  const attrs = player.attributes;
-  const playerRating = attrs
-    ? (Object.values(attrs).filter(v => typeof v === 'number') as number[]).reduce((a, b) => a + b, 0) / 25
-    : 50;
-  const desiredRole = determineSquadRole(playerRating, teamAvgRating);
+  // Squad role based on player quality
+  let desiredRole: SquadRole;
+  let playerRating: number;
+
+  if (useDivisionSystem) {
+    // New system: use division-based role expectations with player's ambition
+    const division = teamAvgRatingOrDivision;
+    desiredRole = determineSquadRoleForDivision(player, division);
+    const overalls = calculateAllOveralls(player);
+    playerRating = overalls.overall;
+  } else {
+    // Legacy system: compare to team average
+    const teamAvgRating = teamAvgRatingOrDivision;
+    const attrs = player.attributes;
+    playerRating = attrs
+      ? (Object.values(attrs).filter(v => typeof v === 'number') as number[]).reduce((a, b) => a + b, 0) / 25
+      : 50;
+    desiredRole = determineSquadRole(playerRating, teamAvgRating);
+  }
 
   // Signing bonus (higher rated players want more)
   const signingBonus = Math.round(calculatedSalary * (0.1 + (playerRating / 100) * 0.2));

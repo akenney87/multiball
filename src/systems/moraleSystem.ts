@@ -8,6 +8,8 @@
  */
 
 import { Player, MatchOutcome, SquadRole } from '../data/types';
+import { getExpectedRole, DEFAULT_DIVISION } from './roleExpectationSystem';
+import { calculateAllOveralls } from '../utils/overallRating';
 
 // =============================================================================
 // CONSTANTS
@@ -421,12 +423,14 @@ export interface PlayingTimeData {
  * @param players - Array of players to process
  * @param matchResultsMap - Map of player ID to their recent match outcome
  * @param playingTimeMap - Map of player ID to their playing time data (last 5 games)
+ * @param division - Division number for role expectations (default: 6 for league average)
  * @returns Array of morale update results
  */
 export function processWeeklyMorale(
   players: Player[],
   _matchResultsMap: Map<string, MatchOutcome>, // Match results stored on player, kept for API compatibility
-  playingTimeMap: Map<string, PlayingTimeData>
+  playingTimeMap: Map<string, PlayingTimeData>,
+  division: number = DEFAULT_DIVISION
 ): MoraleUpdateResult[] {
   const results: MoraleUpdateResult[] = [];
 
@@ -438,8 +442,15 @@ export function processWeeklyMorale(
       : 0;
     const sport = playingTime?.sport ?? 'basketball';
 
-    // Get squad role from contract (default to rotation_player)
-    const squadRole: SquadRole = player.contract?.squadRole ?? 'rotation_player';
+    // Get squad role from contract, or use division-based expectation if no contract
+    let squadRole: SquadRole;
+    if (player.contract?.squadRole) {
+      squadRole = player.contract.squadRole;
+    } else {
+      // Use division-based role expectation with player's ambition
+      const overalls = calculateAllOveralls(player);
+      squadRole = getExpectedRole(overalls.overall, division, player.ambition);
+    }
 
     // Calculate satisfactions
     const playingTimeSatisfaction = calculatePlayingTimeSatisfaction(

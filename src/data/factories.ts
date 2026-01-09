@@ -72,6 +72,27 @@ function randomElement<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)]!;
 }
 
+/**
+ * Generate player ambition using normal distribution
+ * Mean: 1.0 (realistic), StdDev: 0.08, Range: 0.85-1.15
+ *
+ * Ambition affects expected squad role:
+ * - >1.0: Player overestimates ability (expects higher role)
+ * - <1.0: Player is humble (accepts lower role)
+ */
+export function generateAmbition(): number {
+  // Box-Muller transform for normal distribution
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+
+  // Mean 1.0, stddev 0.08
+  const ambition = 1.0 + z * 0.08;
+
+  // Clamp to 0.85-1.15 range
+  return Math.max(0.85, Math.min(1.15, ambition));
+}
+
 // =============================================================================
 // BODY-TYPE ATTRIBUTE CORRELATION SYSTEM
 // =============================================================================
@@ -1547,6 +1568,8 @@ export function createStarterPlayer(overrides?: Partial<Player>): Player {
     transferRequestActive: false,
     transferRequestDate: null,
     weeksDisgruntled: 0,
+    // Role expectation system
+    ambition: generateAmbition(),
     ...overrides,
   };
 }
@@ -1637,6 +1660,8 @@ export function createRandomPlayer(
     transferRequestActive: false,
     transferRequestDate: null,
     weeksDisgruntled: 0,
+    // Role expectation system
+    ambition: generateAmbition(),
     ...overrides,
   };
 }

@@ -53,6 +53,8 @@ import {
   generateGrowthPattern,
   generateTargetAdultBMI,
   calculateCurrentWeight,
+  // Role expectation system
+  generateAmbition,
 } from '../../data/factories';
 import { generateName } from '../../data/nameGenerator';
 import { createAIConfig } from '../../ai/personality';
@@ -426,6 +428,8 @@ function generatePlayer(
     transferRequestActive: false,
     transferRequestDate: null,
     weeksDisgruntled: 0,
+    // Role expectation system
+    ambition: generateAmbition(),
   };
 }
 
@@ -533,6 +537,8 @@ function generateFreeAgentPlayer(
     transferRequestActive: false,
     transferRequestDate: null,
     weeksDisgruntled: 0,
+    // Role expectation system
+    ambition: generateAmbition(),
   };
 }
 

@@ -617,6 +617,79 @@ export function ConnectedPlayerDetailScreen({
                 {Math.round(player.matchFitness)}% Match Fitness
               </Text>
             )}
+            {/* Morale Indicator */}
+            {isOnUserTeam && (
+              <View style={styles.moraleContainer}>
+                <View
+                  style={[
+                    styles.moraleBadge,
+                    {
+                      backgroundColor:
+                        player.morale >= 80
+                          ? colors.success + '20'
+                          : player.morale >= 60
+                          ? colors.textMuted + '15'
+                          : player.morale >= 40
+                          ? colors.warning + '20'
+                          : colors.error + '20',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.moraleText,
+                      {
+                        color:
+                          player.morale >= 80
+                            ? colors.success
+                            : player.morale >= 60
+                            ? colors.textSecondary
+                            : player.morale >= 40
+                            ? colors.warning
+                            : colors.error,
+                      },
+                    ]}
+                  >
+                    {player.morale >= 80
+                      ? 'Happy'
+                      : player.morale >= 60
+                      ? 'Content'
+                      : player.morale >= 40
+                      ? 'Unhappy'
+                      : 'Disgruntled'}
+                  </Text>
+                  <View
+                    style={[
+                      styles.moraleBarContainer,
+                      { backgroundColor: colors.border },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.moraleBarFill,
+                        {
+                          width: `${player.morale}%`,
+                          backgroundColor:
+                            player.morale >= 80
+                              ? colors.success
+                              : player.morale >= 60
+                              ? colors.textMuted
+                              : player.morale >= 40
+                              ? colors.warning
+                              : colors.error,
+                        },
+                      ]}
+                    />
+                  </View>
+                </View>
+                {/* Transfer Request Badge */}
+                {player.transferRequestActive && (
+                  <View style={[styles.transferRequestBadge, { backgroundColor: colors.error }]}>
+                    <Text style={styles.transferRequestText}>WANTS OUT</Text>
+                  </View>
+                )}
+              </View>
+            )}
             {/* Awards Summary Badge */}
             {totalAwards > 0 && (
               <View
@@ -1325,6 +1398,44 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     marginTop: spacing.xs,
+  },
+  moraleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
+  moraleBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: borderRadius.sm,
+    gap: spacing.sm,
+  },
+  moraleText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  moraleBarContainer: {
+    width: 50,
+    height: 4,
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  moraleBarFill: {
+    height: '100%',
+    borderRadius: 2,
+  },
+  transferRequestBadge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: borderRadius.sm,
+  },
+  transferRequestText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '700',
   },
   scoutingStatusBadge: {
     alignSelf: 'flex-start',

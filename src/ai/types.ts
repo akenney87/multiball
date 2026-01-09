@@ -44,6 +44,9 @@ export interface DecisionContext {
   /** Is transfer window currently open? */
   transferWindowOpen: boolean;
 
+  /** Team's division (1-10, affects player role expectations) */
+  division: number;
+
   /** Team financial information */
   finance: {
     /** Available budget for spending */

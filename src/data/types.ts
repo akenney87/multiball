@@ -586,6 +586,13 @@ export interface Player {
    * Used to calculate transfer request probability
    */
   weeksDisgruntled: number;
+
+  /**
+   * Player's self-assessment multiplier (0.85-1.15)
+   * Affects expected squad role relative to division quality
+   * 1.0 = realistic, >1.0 = overestimates ability, <1.0 = humble
+   */
+  ambition: number;
 }
 
 // =============================================================================
