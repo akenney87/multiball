@@ -147,51 +147,120 @@ export function ConnectedPlayerDetailScreen({
     [playerId, state.market.activeNegotiation]
   );
 
-  // Estimate player transfer value based on overall and age (for non-free-agents)
+  // Calculate performance multiplier based on awards and stats
+  // This allows proven players to exceed the salary cap on transfer value
+  const performanceMultiplier = useMemo(() => {
+    if (!player) return 1.0;
+
+    let multiplier = 1.0;
+
+    // Awards add significant value - these are proven accomplishments
+    const awards = player.awards;
+    if (awards) {
+      multiplier += awards.playerOfTheWeek * 0.05;              // +5% per weekly award
+      multiplier += awards.playerOfTheMonth * 0.15;             // +15% per monthly award
+      multiplier += awards.basketballPlayerOfTheYear * 0.50;    // +50% per Basketball POY
+      multiplier += awards.baseballPlayerOfTheYear * 0.50;      // +50% per Baseball POY
+      multiplier += awards.soccerPlayerOfTheYear * 0.50;        // +50% per Soccer POY
+      multiplier += awards.rookieOfTheYear * 0.30;              // +30% for ROY
+      multiplier += awards.championships * 0.35;                // +35% per championship
+    }
+
+    // Games played adds confidence in value (player is proven, not just potential)
+    const gamesPlayed = player.careerStats?.gamesPlayed || { basketball: 0, baseball: 0, soccer: 0 };
+    const totalGames = gamesPlayed.basketball + gamesPlayed.baseball + gamesPlayed.soccer;
+    if (totalGames >= 100) {
+      multiplier += 0.30; // Veteran bonus
+    } else if (totalGames >= 50) {
+      multiplier += 0.15; // Experienced bonus
+    } else if (totalGames >= 20) {
+      multiplier += 0.05; // Some experience
+    }
+
+    // Cap the multiplier at 3x to prevent runaway values
+    return Math.min(3.0, multiplier);
+  }, [player]);
+
+  // Estimate player transfer value based on overall, age, salary, and performance
+  // Philosophy: Transfer value should reflect acquisition cost, not arbitrary inflation
+  // A free agent costing $40k in fees shouldn't have a $900k transfer value
+  // BUT proven performers (awards, games played) can exceed this cap
   const estimatedTransferValue = useMemo(() => {
     if (!player) return 0;
     const rating = overalls.overall;
     const age = player.age;
+    const salary = player.contract?.salary || 0;
 
-    // Use polynomial scaling so low-rated players have much lower values
-    // A 40 OVR player = ~$25k, 50 OVR = ~$100k, 60 OVR = ~$400k, 70 OVR = ~$1M, 80 OVR = ~$3M
+    // Base value tiers - grounded in realistic acquisition costs
+    // These represent what you'd pay to acquire a similar unproven player
     let baseValue: number;
-    if (rating < 50) {
-      // Very low rated: minimal value
-      baseValue = Math.max(10000, (rating - 35) * 5000);
+    if (rating < 45) {
+      baseValue = 10000; // Barely roster-worthy
+    } else if (rating < 50) {
+      baseValue = 10000 + (rating - 45) * 3000; // $10k - $25k
+    } else if (rating < 55) {
+      baseValue = 25000 + (rating - 50) * 5000; // $25k - $50k (end of bench)
     } else if (rating < 60) {
-      // Below average: low value
-      baseValue = 75000 + (rating - 50) * 30000; // $75k to $375k
+      baseValue = 50000 + (rating - 55) * 10000; // $50k - $100k (rotation)
+    } else if (rating < 65) {
+      baseValue = 100000 + (rating - 60) * 20000; // $100k - $200k (contributor)
     } else if (rating < 70) {
-      // Average: moderate value
-      baseValue = 400000 + (rating - 60) * 80000; // $400k to $1.2M
+      baseValue = 200000 + (rating - 65) * 40000; // $200k - $400k (starter)
+    } else if (rating < 75) {
+      baseValue = 400000 + (rating - 70) * 80000; // $400k - $800k (very good)
     } else if (rating < 80) {
-      // Good: high value
-      baseValue = 1200000 + (rating - 70) * 200000; // $1.2M to $3.2M
+      baseValue = 800000 + (rating - 75) * 140000; // $800k - $1.5M (star)
+    } else if (rating < 85) {
+      baseValue = 1500000 + (rating - 80) * 300000; // $1.5M - $3M (superstar)
     } else {
-      // Elite: premium value
-      baseValue = 3200000 + (rating - 80) * 500000; // $3.2M to $8.2M+
+      baseValue = 3000000 + (rating - 85) * 500000; // $3M+ (elite)
     }
 
-    // Age factor - more aggressive penalties for older players
+    // Age factor - young players have upside, old players are depreciating assets
     let ageFactor: number;
     if (age < 22) {
-      ageFactor = 1.4; // High potential premium
+      ageFactor = 1.25; // Potential premium
     } else if (age < 25) {
-      ageFactor = 1.2; // Young premium
+      ageFactor = 1.1; // Young
     } else if (age < 28) {
-      ageFactor = 1.0; // Prime years
+      ageFactor = 1.0; // Prime
     } else if (age < 30) {
-      ageFactor = 0.8; // Declining
+      ageFactor = 0.6; // Declining
     } else if (age < 32) {
-      ageFactor = 0.5; // Past prime
+      ageFactor = 0.3; // Past prime
     } else {
-      ageFactor = 0.25; // Near retirement
+      ageFactor = 0.15; // Near retirement
     }
 
-    // Round to nearest $25k for cleaner numbers
-    return Math.round(baseValue * ageFactor / 25000) * 25000;
-  }, [player, overalls.overall]);
+    // Calculate base transfer value
+    let transferValue = baseValue * ageFactor;
+
+    // Cap transfer value relative to salary for unproven players
+    // This prevents the free agent flip exploit
+    // Philosophy: If you can sign someone for $40k in fees, you shouldn't flip them for $200k
+    if (salary > 0) {
+      // Multiplier scales with rating - unproven players are worth less
+      let maxMultiple: number;
+      if (rating >= 80) {
+        maxMultiple = 2.0; // Elite proven talent
+      } else if (rating >= 75) {
+        maxMultiple = 1.5; // Star player
+      } else if (rating >= 70) {
+        maxMultiple = 1.0; // Very good
+      } else if (rating >= 65) {
+        maxMultiple = 0.5; // Good starter
+      } else {
+        maxMultiple = 0.25; // Unproven - transfer value ~= signing cost
+      }
+      transferValue = Math.min(transferValue, salary * maxMultiple);
+    }
+
+    // Apply performance multiplier (awards, games played boost value)
+    transferValue *= performanceMultiplier;
+
+    // Round to nearest $10k, minimum $10k
+    return Math.max(10000, Math.round(transferValue / 10000) * 10000);
+  }, [player, overalls.overall, performanceMultiplier]);
 
   // Handle extending contract (start renewal negotiation)
   const handleExtendContract = useCallback(() => {
@@ -285,6 +354,34 @@ export function ConnectedPlayerDetailScreen({
     const years = Math.ceil((expiry.getTime() - now.getTime()) / (365 * 24 * 60 * 60 * 1000));
     return Math.max(0, years);
   }, [player?.contract?.expiryDate]);
+
+  // Count total awards
+  const totalAwards = useMemo(() => {
+    if (!player?.awards) return 0;
+    const a = player.awards;
+    return (
+      a.playerOfTheWeek +
+      a.playerOfTheMonth +
+      a.basketballPlayerOfTheYear +
+      a.baseballPlayerOfTheYear +
+      a.soccerPlayerOfTheYear +
+      a.rookieOfTheYear +
+      a.championships
+    );
+  }, [player?.awards]);
+
+  // Check if player has any major awards (POY, ROY, Championships)
+  const hasMajorAwards = useMemo(() => {
+    if (!player?.awards) return false;
+    const a = player.awards;
+    return (
+      a.basketballPlayerOfTheYear > 0 ||
+      a.baseballPlayerOfTheYear > 0 ||
+      a.soccerPlayerOfTheYear > 0 ||
+      a.rookieOfTheYear > 0 ||
+      a.championships > 0
+    );
+  }, [player?.awards]);
 
   const handleRelease = useCallback(() => {
     // Store playerId before any state changes
@@ -520,6 +617,26 @@ export function ConnectedPlayerDetailScreen({
                 {Math.round(player.matchFitness)}% Match Fitness
               </Text>
             )}
+            {/* Awards Summary Badge */}
+            {totalAwards > 0 && (
+              <View
+                style={[
+                  styles.awardsSummaryBadge,
+                  {
+                    backgroundColor: hasMajorAwards ? colors.warning + '20' : colors.primary + '20',
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.awardsSummaryText,
+                    { color: hasMajorAwards ? colors.warning : colors.primary },
+                  ]}
+                >
+                  {totalAwards} Award{totalAwards !== 1 ? 's' : ''}
+                </Text>
+              </View>
+            )}
             {/* Scouting Status Badge */}
             {!isOnUserTeam && (
               <View
@@ -635,7 +752,111 @@ export function ConnectedPlayerDetailScreen({
       )}
 
       {selectedTab === 'stats' && (
-        <CareerStatsCard player={player} hidden={!isScouted && !isOnUserTeam} />
+        <>
+          <CareerStatsCard player={player} hidden={!isScouted && !isOnUserTeam} />
+
+          {/* Awards Card */}
+          {player.awards && totalAwards > 0 && (
+            <View style={[styles.awardsCard, { backgroundColor: colors.card }, shadows.sm]}>
+              <View style={[styles.awardsHeader, { borderBottomColor: colors.border }]}>
+                <Text style={[styles.awardsTitle, { color: colors.text }]}>Awards & Achievements</Text>
+              </View>
+              <View style={styles.awardsGrid}>
+                {player.awards.championships > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.warning + '20' }]}>
+                      <Text style={styles.awardIcon}>🏆</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Championships</Text>
+                      <Text style={[styles.awardCount, { color: colors.warning }]}>
+                        {player.awards.championships}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.basketballPlayerOfTheYear > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                      <Text style={styles.awardIcon}>🏀</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Basketball POY</Text>
+                      <Text style={[styles.awardCount, { color: colors.primary }]}>
+                        {player.awards.basketballPlayerOfTheYear}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.baseballPlayerOfTheYear > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.success + '20' }]}>
+                      <Text style={styles.awardIcon}>⚾</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Baseball POY</Text>
+                      <Text style={[styles.awardCount, { color: colors.success }]}>
+                        {player.awards.baseballPlayerOfTheYear}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.soccerPlayerOfTheYear > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.info + '20' }]}>
+                      <Text style={styles.awardIcon}>⚽</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Soccer POY</Text>
+                      <Text style={[styles.awardCount, { color: colors.info }]}>
+                        {player.awards.soccerPlayerOfTheYear}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.rookieOfTheYear > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: '#F472B6' + '20' }]}>
+                      <Text style={styles.awardIcon}>⭐</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Rookie of the Year</Text>
+                      <Text style={[styles.awardCount, { color: '#F472B6' }]}>
+                        {player.awards.rookieOfTheYear}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.playerOfTheMonth > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.textMuted + '20' }]}>
+                      <Text style={styles.awardIcon}>📅</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Player of the Month</Text>
+                      <Text style={[styles.awardCount, { color: colors.textSecondary }]}>
+                        {player.awards.playerOfTheMonth}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.playerOfTheWeek > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.textMuted + '20' }]}>
+                      <Text style={styles.awardIcon}>📆</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Player of the Week</Text>
+                      <Text style={[styles.awardCount, { color: colors.textSecondary }]}>
+                        {player.awards.playerOfTheWeek}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+            </View>
+          )}
+        </>
       )}
 
       {selectedTab === 'skills' && (
@@ -1274,7 +1495,7 @@ const styles = StyleSheet.create({
   makeOfferText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   offerPendingCard: {
     padding: spacing.lg,
@@ -1399,7 +1620,7 @@ const styles = StyleSheet.create({
   offerModalSubmitText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   scoutingTargetButton: {
     paddingVertical: spacing.md,
@@ -1428,7 +1649,7 @@ const styles = StyleSheet.create({
   extendContractText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   negotiationPendingCard: {
     padding: spacing.lg,
@@ -1464,6 +1685,64 @@ const styles = StyleSheet.create({
   transferListText: {
     fontSize: 14,
     fontWeight: '600',
+  },
+  // Awards styles
+  awardsSummaryBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: borderRadius.sm,
+    marginTop: spacing.xs,
+  },
+  awardsSummaryText: {
+    fontSize: 10,
+    fontWeight: '600',
+  },
+  awardsCard: {
+    borderRadius: borderRadius.lg,
+    overflow: 'hidden',
+    marginTop: spacing.md,
+  },
+  awardsHeader: {
+    padding: spacing.md,
+    borderBottomWidth: 1,
+  },
+  awardsTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  awardsGrid: {
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  awardItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  awardIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  awardIcon: {
+    fontSize: 20,
+  },
+  awardInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  awardName: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  awardCount: {
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 

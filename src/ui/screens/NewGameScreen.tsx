@@ -211,7 +211,7 @@ export function NewGameScreen({
               <Text
                 style={[
                   styles.difficultyLabel,
-                  { color: difficulty === opt.key ? '#FFFFFF' : colors.text },
+                  { color: difficulty === opt.key ? '#000000' : colors.text },
                 ]}
               >
                 {opt.label}
@@ -219,7 +219,7 @@ export function NewGameScreen({
               <Text
                 style={[
                   styles.difficultyDesc,
-                  { color: difficulty === opt.key ? '#FFFFFF99' : colors.textMuted },
+                  { color: difficulty === opt.key ? '#00000099' : colors.textMuted },
                 ]}
               >
                 {opt.description}
@@ -245,7 +245,7 @@ export function NewGameScreen({
           <Text
             style={[
               styles.startButtonText,
-              { color: isValid ? '#FFFFFF' : colors.textMuted },
+              { color: isValid ? '#000000' : colors.textMuted },
             ]}
           >
             Start New Game

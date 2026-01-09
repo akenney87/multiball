@@ -959,7 +959,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sportText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 12,
     fontWeight: '600',
     textTransform: 'uppercase',

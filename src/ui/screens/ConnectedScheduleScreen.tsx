@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.sm,
   },
   sportText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 10,
     fontWeight: '600',
   },

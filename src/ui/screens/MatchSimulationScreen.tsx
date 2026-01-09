@@ -1157,7 +1157,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   halfText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -1197,7 +1197,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   controlText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 14,
     fontWeight: '600',
   },

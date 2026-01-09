@@ -1536,7 +1536,7 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   rankText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -1707,7 +1707,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   timelineTeamText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 0.5,

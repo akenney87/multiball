@@ -398,7 +398,7 @@ export function BudgetScreen({ data = defaultData, onSaveAllocation }: BudgetScr
           <Text
             style={[
               styles.saveText,
-              { color: isValid && hasChanges ? '#FFFFFF' : colors.textMuted },
+              { color: isValid && hasChanges ? '#000000' : colors.textMuted },
             ]}
           >
             Save Allocation

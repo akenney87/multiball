@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   rankText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 12,
     fontWeight: '700',
   },
