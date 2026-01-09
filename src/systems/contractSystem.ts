@@ -259,9 +259,16 @@ export function generatePlayerDemands(
   };
 
   const multiplier = strategyMultipliers[strategy];
-  const randomFactor = 0.95 + Math.random() * 0.1; // ±5% randomness
 
-  const idealSalary = Math.round(calculatedSalary * multiplier * randomFactor);
+  // Ambition significantly affects salary demands (±30% based on 0.85-1.15 range)
+  // Ambitious players overvalue themselves, humble players undervalue
+  // This creates meaningful variance so salary doesn't perfectly indicate quality
+  const ambitionFactor = 0.7 + (player.ambition * 0.6); // 0.85->1.21, 1.0->1.30, 1.15->1.39
+
+  // Additional random variance (±15%) to make scouting valuable
+  const randomFactor = 0.85 + Math.random() * 0.30;
+
+  const idealSalary = Math.round(calculatedSalary * multiplier * ambitionFactor * randomFactor);
   const minSalary = Math.round(idealSalary * 0.85); // Will accept 85% of ideal
 
   // Contract length based on age
