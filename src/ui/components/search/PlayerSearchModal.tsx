@@ -340,13 +340,60 @@ export function PlayerSearchModal({
   ]);
 
   // Sort players by selected criteria
+  // When sorting by overall, only sort scouted players by actual rating
+  // Unscouted players (showing "?") are sorted by last name and placed at the end
   const sortedPlayers = useMemo(() => {
+    // Helper to get sortable overall value for a player
+    // Returns null if player is completely unscouted (shows "?")
+    const getSortableOverall = (playerId: string, player: Player): number | null => {
+      const info = getScoutingInfo(playerId);
+
+      // Fully known: use actual overall
+      if (info.isFullyKnown) {
+        return calculatePlayerOverall(player);
+      }
+
+      // Partially scouted with range: use midpoint of range
+      if (info.scoutingDepth > 0 && info.report?.overallRatings?.basketball) {
+        const range = info.report.overallRatings.basketball;
+        return (range.min + range.max) / 2;
+      }
+
+      // Not scouted at all: no sortable value
+      return null;
+    };
+
     return [...filteredPlayers].sort((a, b) => {
+      // When sorting by overall, handle scouting status
+      if (sortBy === 'overall') {
+        const overallA = getSortableOverall(a.id, a);
+        const overallB = getSortableOverall(b.id, b);
+
+        // Both have sortable values: sort by overall
+        if (overallA !== null && overallB !== null) {
+          const comparison = overallA - overallB;
+          return sortAscending ? comparison : -comparison;
+        }
+
+        // Only A has value: A comes first (scouted players at top)
+        if (overallA !== null && overallB === null) {
+          return sortAscending ? 1 : -1;
+        }
+
+        // Only B has value: B comes first
+        if (overallA === null && overallB !== null) {
+          return sortAscending ? -1 : 1;
+        }
+
+        // Neither has value (both show "?"): sort by last name
+        const lastNameA = a.name.split(' ').pop() || a.name;
+        const lastNameB = b.name.split(' ').pop() || b.name;
+        return lastNameA.localeCompare(lastNameB);
+      }
+
+      // For other sort options, use normal sorting
       let comparison = 0;
       switch (sortBy) {
-        case 'overall':
-          comparison = calculatePlayerOverall(a) - calculatePlayerOverall(b);
-          break;
         case 'age':
           comparison = a.age - b.age;
           break;
@@ -362,7 +409,7 @@ export function PlayerSearchModal({
       }
       return sortAscending ? comparison : -comparison;
     });
-  }, [filteredPlayers, sortBy, sortAscending]);
+  }, [filteredPlayers, sortBy, sortAscending, getScoutingInfo]);
 
   // Get team name for display
   const getTeamName = useCallback(
