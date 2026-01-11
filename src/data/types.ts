@@ -1560,7 +1560,7 @@ export interface NewsItem {
   id: string;
 
   /** News type */
-  type: 'injury' | 'contract' | 'scouting' | 'transfer' | 'match' | 'youth' | 'general' | 'award' | 'progression' | 'stat_line' | 'window';
+  type: 'injury' | 'contract' | 'scouting' | 'transfer' | 'match' | 'youth' | 'general' | 'award' | 'progression' | 'stat_line' | 'window' | 'league' | 'finance';
 
   /** Priority level */
   priority: 'critical' | 'important' | 'info';

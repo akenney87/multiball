@@ -583,6 +583,29 @@ export type GameAction =
   | { type: 'ADD_TO_TRANSFER_LIST'; payload: { playerId: string; askingPrice: number } }
   | { type: 'REMOVE_FROM_TRANSFER_LIST'; payload: { playerId: string } }
 
+  // Offseason
+  | {
+      type: 'PROCESS_SEASON_END';
+      payload: {
+        promotedTeams: string[];
+        relegatedTeams: string[];
+        champion: string;
+        expiredContracts: string[];
+        userPrizeMoney: number;
+        userFinishPosition: number;
+        userMoraleChange: number;
+      };
+    }
+  | {
+      type: 'START_NEW_SEASON';
+      payload: {
+        season: SeasonState;
+        teams: AITeamState[];
+        userDivision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+      };
+    }
+  | { type: 'ADVANCE_OFFSEASON_WEEK' }
+
   // Save
   | { type: 'MARK_SAVED'; payload: { timestamp: Date } };
 

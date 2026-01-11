@@ -231,15 +231,168 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'ADVANCE_WEEK': {
       const nextWeek = state.season.currentWeek + 1;
-      const isSeasonEnd = nextWeek > 40;
+      // Regular season is weeks 1-40, offseason handling is separate
+      const isSeasonEnd = nextWeek > 40 && state.season.status !== 'off_season';
 
       return {
         ...state,
         season: {
           ...state.season,
-          currentWeek: isSeasonEnd ? 40 : nextWeek,
+          currentWeek: isSeasonEnd ? 41 : nextWeek,
           status: isSeasonEnd ? 'off_season' : state.season.status,
         },
+      };
+    }
+
+    case 'ADVANCE_OFFSEASON_WEEK': {
+      // Advance week during offseason (weeks 41-52)
+      const nextWeek = state.season.currentWeek + 1;
+
+      return {
+        ...state,
+        season: {
+          ...state.season,
+          currentWeek: nextWeek,
+        },
+      };
+    }
+
+    case 'PROCESS_SEASON_END': {
+      const {
+        promotedTeams,
+        relegatedTeams,
+        expiredContracts,
+        userPrizeMoney,
+        userMoraleChange,
+      } = action.payload;
+
+      // Process contract expirations - release players to free agency
+      const updatedPlayers: Record<string, Player> = { ...state.players };
+      const newFreeAgentIds = [...state.league.freeAgentIds];
+
+      for (const playerId of expiredContracts) {
+        const player = updatedPlayers[playerId];
+        if (player) {
+          updatedPlayers[playerId] = {
+            ...player,
+            teamId: 'free_agent',
+            contract: null,
+          };
+
+          // Add to free agents if not already there
+          if (!newFreeAgentIds.includes(playerId)) {
+            newFreeAgentIds.push(playerId);
+          }
+        }
+      }
+
+      // Apply morale change to all user team players
+      for (const playerId of state.userTeam.rosterIds) {
+        const player = updatedPlayers[playerId];
+        if (player) {
+          const newMorale = Math.max(0, Math.min(100, player.morale + userMoraleChange));
+          updatedPlayers[playerId] = {
+            ...player,
+            morale: newMorale,
+          };
+        }
+      }
+
+      // Remove expired contract players from team rosters
+      const updatedTeams = state.league.teams.map((team) => ({
+        ...team,
+        rosterIds: team.rosterIds.filter((id) => !expiredContracts.includes(id)),
+      }));
+
+      // Check if user team was promoted or relegated
+      let newUserDivision = state.userTeam.division;
+      if (promotedTeams.includes('user')) {
+        newUserDivision = Math.max(1, state.userTeam.division - 1) as typeof newUserDivision;
+      } else if (relegatedTeams.includes('user')) {
+        newUserDivision = Math.min(10, state.userTeam.division + 1) as typeof newUserDivision;
+      }
+
+      return {
+        ...state,
+        players: updatedPlayers,
+        userTeam: {
+          ...state.userTeam,
+          rosterIds: state.userTeam.rosterIds.filter((id) => !expiredContracts.includes(id)),
+          availableBudget: state.userTeam.availableBudget + userPrizeMoney,
+          division: newUserDivision,
+        },
+        league: {
+          ...state.league,
+          teams: updatedTeams.map((team) => {
+            // Apply division changes to AI teams
+            let newDivision = team.division;
+            if (promotedTeams.includes(team.id)) {
+              newDivision = Math.max(1, team.division - 1) as typeof newDivision;
+            } else if (relegatedTeams.includes(team.id)) {
+              newDivision = Math.min(10, team.division + 1) as typeof newDivision;
+            }
+            return { ...team, division: newDivision };
+          }),
+          freeAgentIds: newFreeAgentIds,
+        },
+      };
+    }
+
+    case 'START_NEW_SEASON': {
+      const { season, teams, userDivision } = action.payload;
+
+      // Reset player season stats and create new season snapshots
+      const updatedPlayers: Record<string, Player> = {};
+      for (const [playerId, player] of Object.entries(state.players)) {
+        // Archive current season stats to history
+        const newSeasonHistory = [...player.seasonHistory];
+        if (player.currentSeasonStats.gamesPlayed.basketball > 0 ||
+            player.currentSeasonStats.gamesPlayed.baseball > 0 ||
+            player.currentSeasonStats.gamesPlayed.soccer > 0) {
+          newSeasonHistory.push({
+            seasonNumber: state.season.number,
+            yearLabel: `Season ${state.season.number}`,
+            teamId: player.teamId,
+            gamesPlayed: { ...player.currentSeasonStats.gamesPlayed },
+            totalPoints: { ...player.currentSeasonStats.totalPoints },
+            minutesPlayed: { ...player.currentSeasonStats.minutesPlayed },
+            basketball: player.currentSeasonStats.basketball ? { ...player.currentSeasonStats.basketball } : undefined,
+            baseball: player.currentSeasonStats.baseball ? { ...player.currentSeasonStats.baseball } : undefined,
+            soccer: player.currentSeasonStats.soccer ? { ...player.currentSeasonStats.soccer } : undefined,
+          });
+        }
+
+        updatedPlayers[playerId] = {
+          ...player,
+          // Reset season stats
+          currentSeasonStats: {
+            gamesPlayed: { basketball: 0, baseball: 0, soccer: 0 },
+            totalPoints: { basketball: 0, baseball: 0, soccer: 0 },
+            minutesPlayed: { basketball: 0, baseball: 0, soccer: 0 },
+          },
+          // Snapshot current attributes for progress tracking
+          seasonStartAttributes: { ...player.attributes },
+          // Archive season history
+          seasonHistory: newSeasonHistory,
+          // Reset weekly XP
+          weeklyXP: { physical: 0, mental: 0, technical: 0 },
+          // Reset match results
+          recentMatchResults: [],
+        };
+      }
+
+      return {
+        ...state,
+        players: updatedPlayers,
+        userTeam: {
+          ...state.userTeam,
+          division: userDivision,
+        },
+        league: {
+          ...state.league,
+          teams,
+        },
+        season,
       };
     }
 

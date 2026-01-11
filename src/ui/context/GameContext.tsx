@@ -90,6 +90,21 @@ import {
   type PlayingTimeData,
 } from '../../systems/moraleSystem';
 import type { MatchOutcome } from '../../data/types';
+import {
+  processSeasonEnd,
+  initializeNewSeason,
+  OFFSEASON_WEEKS,
+  REGULAR_SEASON_WEEKS,
+} from '../../systems/offseasonProcessor';
+
+/**
+ * Get ordinal suffix for a number (1st, 2nd, 3rd, etc.)
+ */
+function getOrdinalSuffix(n: number): string {
+  const s = ['th', 'st', 'nd', 'rd'] as const;
+  const v = n % 100;
+  return s[(v - 20) % 10] ?? s[v] ?? 'th';
+}
 
 /**
  * Normalize TacticalSettings with fallback defaults for old saves.
@@ -1510,14 +1525,198 @@ export function GameProvider({ children }: GameProviderProps) {
       console.log(`[Awards] Season End: Processed Player of the Year and Rookie of the Year awards for all sports`);
     }
 
-    // Advance the week
-    dispatch({ type: 'ADVANCE_WEEK' });
+    // =========================================================================
+    // WEEK ADVANCEMENT AND OFFSEASON HANDLING
+    // =========================================================================
+    const preAdvanceState = stateRef.current;
+    const wasRegularSeason = preAdvanceState.season.status === 'regular_season';
+    const preAdvanceWeek = preAdvanceState.season.currentWeek;
+
+    // Check if we're in offseason
+    if (preAdvanceState.season.status === 'off_season') {
+      // We're in offseason - handle offseason week advancement
+      const currentOffseasonWeek = preAdvanceWeek - REGULAR_SEASON_WEEKS;
+
+      if (currentOffseasonWeek >= OFFSEASON_WEEKS) {
+        // End of offseason - start new season
+        console.log('[Offseason] Week 12 complete - initializing new season');
+
+        // Get promotion/relegation data from standings
+        const standings = preAdvanceState.season.standings;
+        const sorted = Object.values(standings)
+          .sort((a, b) => a.rank - b.rank)
+          .map((s) => s.teamId);
+        const promotedTeams = sorted.slice(0, 3);
+        const relegatedTeams = sorted.slice(-3);
+
+        // Initialize new season
+        const newSeasonResult = initializeNewSeason(
+          preAdvanceState,
+          promotedTeams,
+          relegatedTeams
+        );
+
+        // Dispatch new season start
+        dispatch({
+          type: 'START_NEW_SEASON',
+          payload: newSeasonResult,
+        });
+
+        // Add news event
+        const userPromoted = promotedTeams.includes('user');
+        const userRelegated = relegatedTeams.includes('user');
+
+        let seasonStartMessage = `Season ${newSeasonResult.season.number} has begun!`;
+        if (userPromoted) {
+          seasonStartMessage += ` Congratulations on your promotion to Division ${newSeasonResult.userDivision}!`;
+        } else if (userRelegated) {
+          seasonStartMessage += ` You've been relegated to Division ${newSeasonResult.userDivision}.`;
+        }
+
+        const event: NewsItem = {
+          id: `event-new-season-${Date.now()}`,
+          type: 'league',
+          priority: 'critical',
+          title: `Season ${newSeasonResult.season.number} Begins`,
+          message: seasonStartMessage,
+          timestamp: new Date(),
+          read: false,
+          scope: 'global',
+        };
+        dispatch({ type: 'ADD_EVENT', payload: event });
+
+        console.log(`[Season] New season ${newSeasonResult.season.number} started. User in Division ${newSeasonResult.userDivision}`);
+      } else {
+        // Continue offseason - just advance the week
+        dispatch({ type: 'ADVANCE_OFFSEASON_WEEK' });
+        console.log(`[Offseason] Advanced to week ${currentOffseasonWeek + 1} of ${OFFSEASON_WEEKS}`);
+      }
+    } else {
+      // Regular season - advance normally
+      dispatch({ type: 'ADVANCE_WEEK' });
+
+      // Check if we just transitioned to offseason
+      await new Promise(resolve => setTimeout(resolve, 50));
+      const postAdvanceState = stateRef.current;
+
+      if (wasRegularSeason && postAdvanceState.season.status === 'off_season') {
+        // Just entered offseason - process season end
+        console.log('[Season] Season complete - processing end of season');
+
+        const seasonEndResult = processSeasonEnd(postAdvanceState);
+
+        // Dispatch season end processing
+        dispatch({
+          type: 'PROCESS_SEASON_END',
+          payload: seasonEndResult,
+        });
+
+        // Create news events for season end
+        const userTeamName = postAdvanceState.userTeam.name;
+        const champion = postAdvanceState.league.teams.find((t) => t.id === seasonEndResult.champion);
+        const championName = seasonEndResult.champion === 'user' ? userTeamName : champion?.name || 'Unknown';
+
+        // Championship news
+        const championEvent: NewsItem = {
+          id: `event-champion-${Date.now()}`,
+          type: 'league',
+          priority: 'critical',
+          title: 'Season Complete!',
+          message: `${championName} are the Division ${postAdvanceState.userTeam.division} Champions!`,
+          timestamp: new Date(),
+          read: false,
+          scope: 'global',
+        };
+        dispatch({ type: 'ADD_EVENT', payload: championEvent });
+
+        // Prize money news for user
+        const prizeEvent: NewsItem = {
+          id: `event-prize-${Date.now()}`,
+          type: 'finance',
+          priority: 'important',
+          title: 'Prize Money Received',
+          message: `You finished ${seasonEndResult.userFinishPosition}${getOrdinalSuffix(seasonEndResult.userFinishPosition)} and received $${(seasonEndResult.userPrizeMoney / 1000000).toFixed(2)}M in prize money.`,
+          timestamp: new Date(),
+          read: false,
+          scope: 'team',
+          teamId: 'user',
+        };
+        dispatch({ type: 'ADD_EVENT', payload: prizeEvent });
+
+        // Promotion/relegation news
+        if (seasonEndResult.promotedTeams.includes('user')) {
+          const promoEvent: NewsItem = {
+            id: `event-promoted-${Date.now()}`,
+            type: 'league',
+            priority: 'critical',
+            title: 'PROMOTED!',
+            message: `Congratulations! You've been promoted to Division ${Math.max(1, postAdvanceState.userTeam.division - 1)}!`,
+            timestamp: new Date(),
+            read: false,
+            scope: 'team',
+            teamId: 'user',
+          };
+          dispatch({ type: 'ADD_EVENT', payload: promoEvent });
+        } else if (seasonEndResult.relegatedTeams.includes('user')) {
+          const relegEvent: NewsItem = {
+            id: `event-relegated-${Date.now()}`,
+            type: 'league',
+            priority: 'critical',
+            title: 'Relegated',
+            message: `You've been relegated to Division ${Math.min(10, postAdvanceState.userTeam.division + 1)}.`,
+            timestamp: new Date(),
+            read: false,
+            scope: 'team',
+            teamId: 'user',
+          };
+          dispatch({ type: 'ADD_EVENT', payload: relegEvent });
+        }
+
+        // Contract expiration news
+        if (seasonEndResult.expiredContracts.length > 0) {
+          const expiredNames = seasonEndResult.expiredContracts
+            .map((id) => postAdvanceState.players[id]?.name || 'Unknown')
+            .slice(0, 3);
+          const moreCount = seasonEndResult.expiredContracts.length - 3;
+          const namesText = expiredNames.join(', ') + (moreCount > 0 ? ` and ${moreCount} more` : '');
+
+          const contractEvent: NewsItem = {
+            id: `event-contracts-expired-${Date.now()}`,
+            type: 'contract',
+            priority: 'important',
+            title: 'Contracts Expired',
+            message: `The following players are now free agents: ${namesText}`,
+            timestamp: new Date(),
+            read: false,
+            scope: 'team',
+            teamId: 'user',
+          };
+          dispatch({ type: 'ADD_EVENT', payload: contractEvent });
+        }
+
+        // Offseason begins news
+        const offseasonEvent: NewsItem = {
+          id: `event-offseason-${Date.now()}`,
+          type: 'league',
+          priority: 'info',
+          title: 'Offseason Begins',
+          message: `The offseason has begun. You have ${OFFSEASON_WEEKS} weeks to prepare for next season.`,
+          timestamp: new Date(),
+          read: false,
+          scope: 'team',
+          teamId: 'user',
+        };
+        dispatch({ type: 'ADD_EVENT', payload: offseasonEvent });
+
+        console.log(`[Season End] Position: ${seasonEndResult.userFinishPosition}, Prize: $${seasonEndResult.userPrizeMoney}, Morale: ${seasonEndResult.userMoraleChange > 0 ? '+' : ''}${seasonEndResult.userMoraleChange}`);
+      }
+    }
 
     // Auto-save if enabled
     if (state.settings.autoSaveEnabled) {
       await saveGame();
     }
-  }, [state.settings.autoSaveEnabled, state.season.currentWeek, state.players, saveGame]);
+  }, [state.settings.autoSaveEnabled, state.season.currentWeek, state.season.status, state.players, saveGame]);
 
   /**
    * Simulate all AI-vs-AI matches for the current week
