@@ -1324,6 +1324,155 @@ export interface SeasonHistory {
 }
 
 // =============================================================================
+// TROPHY CASE & MANAGER CAREER
+// =============================================================================
+
+/**
+ * Record of a championship or promotion achievement
+ */
+export interface TrophyRecord {
+  /** Type of trophy */
+  type: 'championship' | 'promotion';
+
+  /** Season number when achieved */
+  seasonNumber: number;
+
+  /** Division at time of achievement */
+  division: number;
+
+  /** Final record (wins-losses) */
+  record: { wins: number; losses: number };
+
+  /** Date achieved */
+  date: Date;
+}
+
+/**
+ * Record of a player award received by user's team
+ */
+export interface PlayerAwardRecord {
+  /** Type of award */
+  type: 'playerOfTheYear' | 'playerOfTheMonth' | 'playerOfTheWeek';
+
+  /** Sport the award was for */
+  sport: 'basketball' | 'baseball' | 'soccer';
+
+  /** Player ID who received the award */
+  playerId: string;
+
+  /** Player name at time of award */
+  playerName: string;
+
+  /** Season number */
+  seasonNumber: number;
+
+  /** Week or month number (for weekly/monthly awards) */
+  period?: number;
+
+  /** Date received */
+  date: Date;
+}
+
+/**
+ * Single season's manager rating data
+ */
+export interface SeasonRating {
+  /** Season number */
+  seasonNumber: number;
+
+  /** Division played in */
+  division: number;
+
+  /** Final position (1-20) */
+  finishPosition: number;
+
+  /** Base points from finish (20 for 1st, 1 for 20th) */
+  basePoints: number;
+
+  /** Division multiplier applied */
+  divisionMultiplier: number;
+
+  /** Bonus points (championship, promotion) */
+  bonusPoints: number;
+
+  /** Penalty points (relegation) */
+  penaltyPoints: number;
+
+  /** Total points for this season */
+  totalPoints: number;
+}
+
+/**
+ * Manager career tracking for leaderboards
+ */
+export interface ManagerCareer {
+  /** Manager/save name */
+  name: string;
+
+  /** Unique career ID */
+  id: string;
+
+  /** Season ratings history */
+  seasonRatings: SeasonRating[];
+
+  /** Total career points */
+  totalPoints: number;
+
+  /** Best single season points */
+  bestSeasonPoints: number;
+
+  /** Best single season number */
+  bestSeasonNumber: number;
+
+  /** Total championships won */
+  championships: number;
+
+  /** Total promotions */
+  promotions: number;
+
+  /** Total relegations */
+  relegations: number;
+
+  /** Highest division reached */
+  highestDivision: number;
+
+  /** Current division */
+  currentDivision: number;
+
+  /** Total seasons played */
+  seasonsPlayed: number;
+
+  /** Date career started */
+  startDate: Date;
+
+  /** Date of last update */
+  lastUpdated: Date;
+}
+
+/**
+ * Leaderboard entry for comparison
+ */
+export interface LeaderboardEntry {
+  /** Manager name */
+  name: string;
+
+  /** Career ID */
+  id: string;
+
+  /** Points for this leaderboard category */
+  points: number;
+
+  /** Rank in leaderboard */
+  rank: number;
+
+  /** Additional context (e.g., division, season) */
+  context?: string;
+
+  /** Is this the current user's career? */
+  isUser: boolean;
+}
+
+// =============================================================================
 // SCOUTING
 // =============================================================================
 

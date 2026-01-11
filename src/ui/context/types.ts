@@ -16,6 +16,9 @@ import type {
   TacticalSettings,
   ContractNegotiation,
   ContractOffer,
+  TrophyRecord,
+  PlayerAwardRecord,
+  ManagerCareer,
 } from '../../data/types';
 import type { BaseballGameStrategy } from '../../simulation/baseball/types';
 import type {
@@ -428,6 +431,15 @@ export interface GameState {
 
   /** Whether user has completed initial budget allocation (required before scouting/simming) */
   budgetConfigured: boolean;
+
+  /** Trophy case - championships and promotions */
+  trophies: TrophyRecord[];
+
+  /** Player awards received by user team players */
+  playerAwards: PlayerAwardRecord[];
+
+  /** Manager career tracking for leaderboards */
+  managerCareer: ManagerCareer;
 }
 
 // =============================================================================
@@ -605,6 +617,11 @@ export type GameAction =
       };
     }
   | { type: 'ADVANCE_OFFSEASON_WEEK' }
+
+  // Trophy Case & Manager Rating
+  | { type: 'ADD_TROPHY'; payload: TrophyRecord }
+  | { type: 'ADD_PLAYER_AWARD'; payload: PlayerAwardRecord }
+  | { type: 'UPDATE_MANAGER_CAREER'; payload: ManagerCareer }
 
   // Save
   | { type: 'MARK_SAVED'; payload: { timestamp: Date } };

@@ -26,6 +26,7 @@ import {
   createContractFromOffer,
   calculateSigningCost,
 } from '../../systems/contractSystem';
+import { createManagerCareer } from '../../systems/managerRatingSystem';
 import { DEFAULT_GAME_STRATEGY as DEFAULT_BASEBALL_STRATEGY } from '../../simulation/baseball/types';
 
 /**
@@ -124,6 +125,11 @@ export const initialGameState: GameState = {
   scoutInstructions: DEFAULT_SCOUT_INSTRUCTIONS,
   scoutingDepthSlider: 0.5,
   budgetConfigured: false,
+
+  // Trophy Case & Manager Rating
+  trophies: [],
+  playerAwards: [],
+  managerCareer: createManagerCareer('', 7),
 };
 
 /**
@@ -176,6 +182,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           difficulty: config.difficulty,
         },
         scoutedPlayerIds,
+        // Initialize trophy case and manager career
+        trophies: [],
+        playerAwards: [],
+        managerCareer: createManagerCareer(userTeam.name, userTeam.division),
       };
     }
 
@@ -188,6 +198,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const scoutingDepthSlider = action.payload.scoutingDepthSlider ?? 0.5;
       // Handle legacy saves that don't have youth academy
       const youthAcademy = action.payload.youthAcademy || DEFAULT_YOUTH_ACADEMY_STATE;
+      // Handle legacy saves that don't have trophy/career data
+      const trophies = action.payload.trophies || [];
+      const playerAwards = action.payload.playerAwards || [];
+      const managerCareer = action.payload.managerCareer ||
+        createManagerCareer(action.payload.userTeam.name, action.payload.userTeam.division);
 
       // Migrate players to have matchFitness fields (v2 migration)
       const migratedPlayers: Record<string, Player> = {};
@@ -218,6 +233,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         scoutInstructions,
         scoutingDepthSlider,
         youthAcademy,
+        trophies,
+        playerAwards,
+        managerCareer,
       };
     }
 
@@ -1855,6 +1873,31 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           transferListPlayerIds: currentTransferList.filter(id => id !== playerId),
           transferListAskingPrices: remainingAskingPrices,
         },
+      };
+    }
+
+    // =========================================================================
+    // TROPHY CASE & MANAGER RATING
+    // =========================================================================
+
+    case 'ADD_TROPHY': {
+      return {
+        ...state,
+        trophies: [...state.trophies, action.payload],
+      };
+    }
+
+    case 'ADD_PLAYER_AWARD': {
+      return {
+        ...state,
+        playerAwards: [...state.playerAwards, action.payload],
+      };
+    }
+
+    case 'UPDATE_MANAGER_CAREER': {
+      return {
+        ...state,
+        managerCareer: action.payload,
       };
     }
 

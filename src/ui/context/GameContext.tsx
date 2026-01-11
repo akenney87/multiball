@@ -96,6 +96,11 @@ import {
   OFFSEASON_WEEKS,
   REGULAR_SEASON_WEEKS,
 } from '../../systems/offseasonProcessor';
+import {
+  calculateSeasonRating,
+  updateManagerCareer,
+} from '../../systems/managerRatingSystem';
+import type { TrophyRecord } from '../../data/types';
 
 /**
  * Get ordinal suffix for a number (1st, 2nd, 3rd, etc.)
@@ -1610,6 +1615,67 @@ export function GameProvider({ children }: GameProviderProps) {
           type: 'PROCESS_SEASON_END',
           payload: seasonEndResult,
         });
+
+        // Get standings record for trophy
+        const userStanding = postAdvanceState.season.standings['user'];
+        const userRecord = userStanding ? {
+          wins: userStanding.wins,
+          losses: userStanding.losses,
+        } : { wins: 0, losses: 0 };
+
+        // Award trophies
+        const userWonChampionship = seasonEndResult.userFinishPosition === 1;
+        const userWasPromoted = seasonEndResult.promotedTeams.includes('user');
+        const userWasRelegated = seasonEndResult.relegatedTeams.includes('user');
+
+        if (userWonChampionship) {
+          const championshipTrophy: TrophyRecord = {
+            type: 'championship',
+            seasonNumber: postAdvanceState.season.number,
+            division: postAdvanceState.userTeam.division,
+            record: userRecord,
+            date: new Date(),
+          };
+          dispatch({ type: 'ADD_TROPHY', payload: championshipTrophy });
+        }
+
+        if (userWasPromoted && !userWonChampionship) {
+          // Only add promotion trophy if not already a championship
+          const promotionTrophy: TrophyRecord = {
+            type: 'promotion',
+            seasonNumber: postAdvanceState.season.number,
+            division: postAdvanceState.userTeam.division,
+            record: userRecord,
+            date: new Date(),
+          };
+          dispatch({ type: 'ADD_TROPHY', payload: promotionTrophy });
+        }
+
+        // Calculate and update manager career rating
+        const seasonRating = calculateSeasonRating(
+          postAdvanceState.season.number,
+          postAdvanceState.userTeam.division,
+          seasonEndResult.userFinishPosition,
+          userWasPromoted,
+          userWasRelegated
+        );
+
+        // Get the new division after promotion/relegation
+        let newDivision = postAdvanceState.userTeam.division;
+        if (userWasPromoted) {
+          newDivision = Math.max(1, newDivision - 1) as typeof newDivision;
+        } else if (userWasRelegated) {
+          newDivision = Math.min(10, newDivision + 1) as typeof newDivision;
+        }
+
+        const updatedCareer = updateManagerCareer(
+          postAdvanceState.managerCareer,
+          seasonRating,
+          newDivision
+        );
+        dispatch({ type: 'UPDATE_MANAGER_CAREER', payload: updatedCareer });
+
+        console.log(`[Manager Rating] Season ${postAdvanceState.season.number} points: ${seasonRating.totalPoints} (Total: ${updatedCareer.totalPoints})`);
 
         // Create news events for season end
         const userTeamName = postAdvanceState.userTeam.name;
