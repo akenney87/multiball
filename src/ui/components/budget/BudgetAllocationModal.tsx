@@ -5,7 +5,7 @@
  * User must allocate their operations budget before proceeding.
  */
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,6 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
-  PanResponder,
-  GestureResponderEvent,
-  LayoutChangeEvent,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors, spacing, borderRadius, shadows } from '../../theme';
@@ -52,81 +49,59 @@ const categoryInfo = {
   },
 };
 
-// Draggable Slider Component
-interface DraggableSliderProps {
+// +/- Stepper Component
+interface AllocationStepperProps {
   value: number;
   color: string;
-  onValueChange: (value: number) => void;
+  canIncrement: boolean;
   onDecrement: () => void;
   onIncrement: () => void;
 }
 
-function DraggableSlider({ value, color, onValueChange, onDecrement, onIncrement }: DraggableSliderProps) {
+function AllocationStepper({ value, color, canIncrement, onDecrement, onIncrement }: AllocationStepperProps) {
   const colors = useColors();
-  const trackWidth = useRef(0);
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (evt: GestureResponderEvent) => {
-        if (trackWidth.current > 0) {
-          const touchX = evt.nativeEvent.locationX;
-          const newValue = Math.round((touchX / trackWidth.current) * 100);
-          onValueChange(Math.max(0, Math.min(100, newValue)));
-        }
-      },
-      onPanResponderMove: (evt: GestureResponderEvent) => {
-        if (trackWidth.current > 0) {
-          const touchX = evt.nativeEvent.locationX;
-          const newValue = Math.round((touchX / trackWidth.current) * 100);
-          onValueChange(Math.max(0, Math.min(100, newValue)));
-        }
-      },
-    })
-  ).current;
-
-  const handleLayout = (event: LayoutChangeEvent) => {
-    trackWidth.current = event.nativeEvent.layout.width;
-  };
+  const canDecrement = value > 0;
 
   return (
-    <View style={styles.sliderRow}>
+    <View style={styles.stepperRow}>
       <TouchableOpacity
-        style={[styles.adjustButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.stepperButton,
+          {
+            backgroundColor: canDecrement ? colors.surface : colors.background,
+            borderColor: canDecrement ? color : colors.border,
+          }
+        ]}
         onPress={onDecrement}
+        disabled={!canDecrement}
         activeOpacity={0.7}
       >
-        <Text style={[styles.adjustText, { color: colors.text }]}>-</Text>
+        <Text style={[
+          styles.stepperText,
+          { color: canDecrement ? color : colors.textMuted }
+        ]}>−</Text>
       </TouchableOpacity>
-      <View
-        style={[styles.sliderTrack, { backgroundColor: colors.border }]}
-        onLayout={handleLayout}
-        {...panResponder.panHandlers}
-      >
-        <View
-          style={[
-            styles.sliderFill,
-            { width: `${value}%`, backgroundColor: color },
-          ]}
-        />
-        <View
-          style={[
-            styles.sliderThumb,
-            {
-              left: `${value}%`,
-              backgroundColor: color,
-              borderColor: '#FFFFFF',
-            },
-          ]}
-        />
+
+      <View style={[styles.valueDisplay, { borderColor: color }]}>
+        <Text style={[styles.valueText, { color: color }]}>{value}%</Text>
       </View>
+
       <TouchableOpacity
-        style={[styles.adjustButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        style={[
+          styles.stepperButton,
+          {
+            backgroundColor: canIncrement ? colors.surface : colors.background,
+            borderColor: canIncrement ? color : colors.border,
+          }
+        ]}
         onPress={onIncrement}
+        disabled={!canIncrement}
         activeOpacity={0.7}
       >
-        <Text style={[styles.adjustText, { color: colors.text }]}>+</Text>
+        <Text style={[
+          styles.stepperText,
+          { color: canIncrement ? color : colors.textMuted }
+        ]}>+</Text>
       </TouchableOpacity>
     </View>
   );
@@ -159,58 +134,19 @@ export function BudgetAllocationModal({
     return `$${(amount / 1000).toFixed(0)}K`;
   };
 
-  // Handle slider changes with normalization
-  const handleSliderChange = (category: keyof OperationsBudget, newValue: number) => {
-    const currentTotal = totalAllocation;
-    const currentCategoryValue = allocation[category];
-    const delta = newValue - currentCategoryValue;
-    const otherCategories = Object.keys(allocation).filter(
-      (k) => k !== category
-    ) as (keyof OperationsBudget)[];
-
-    if (currentTotal + delta <= 100 && newValue >= 0) {
-      // Simply set the new value if it doesn't exceed 100
-      setAllocation((prev) => ({ ...prev, [category]: newValue }));
-    } else if (delta > 0) {
-      // Need to reduce other categories proportionally
-      const otherTotal = otherCategories.reduce((sum, k) => sum + allocation[k], 0);
-      if (otherTotal > 0) {
-        const reduction = Math.min(delta, otherTotal);
-        const newAlloc = { ...allocation, [category]: newValue };
-        let remaining = reduction;
-
-        for (const key of otherCategories) {
-          const proportion = allocation[key] / otherTotal;
-          const keyReduction = Math.min(Math.round(reduction * proportion), allocation[key]);
-          newAlloc[key] = allocation[key] - keyReduction;
-          remaining -= keyReduction;
-        }
-
-        // Handle any rounding errors
-        if (remaining > 0) {
-          for (const key of otherCategories) {
-            if (newAlloc[key] > 0) {
-              const reduction = Math.min(remaining, newAlloc[key]);
-              newAlloc[key] -= reduction;
-              remaining -= reduction;
-              if (remaining <= 0) break;
-            }
-          }
-        }
-
-        setAllocation(newAlloc);
-      }
-    }
-  };
+  // Check if increment is allowed (total must stay <= 100)
+  const canIncrement = totalAllocation < 100;
 
   const handleIncrement = (category: keyof OperationsBudget) => {
-    if (totalAllocation < 100) {
+    if (canIncrement) {
       setAllocation((prev) => ({ ...prev, [category]: Math.min(100, prev[category] + 5) }));
     }
   };
 
   const handleDecrement = (category: keyof OperationsBudget) => {
-    setAllocation((prev) => ({ ...prev, [category]: Math.max(0, prev[category] - 5) }));
+    if (allocation[category] >= 5) {
+      setAllocation((prev) => ({ ...prev, [category]: prev[category] - 5 }));
+    }
   };
 
   const handleConfirm = () => {
@@ -256,10 +192,10 @@ export function BudgetAllocationModal({
             </View>
           </View>
 
-          {/* Allocation Sliders */}
+          {/* Allocation Controls */}
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Operations Allocation</Text>
           <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-            Must total 100% - Currently: {totalAllocation}%
+            Must total 100% — Currently: {totalAllocation}%
           </Text>
 
           {(Object.keys(categoryInfo) as (keyof typeof categoryInfo)[]).map((category) => {
@@ -272,7 +208,7 @@ export function BudgetAllocationModal({
                 key={category}
                 style={[styles.categoryCard, { backgroundColor: colors.surface, ...shadows.sm }]}
               >
-                <View style={styles.categoryHeader}>
+                <View style={styles.categoryRow}>
                   <View style={[styles.colorDot, { backgroundColor: info.color }]} />
                   <View style={styles.categoryInfo}>
                     <Text style={[styles.categoryLabel, { color: colors.text }]}>{info.label}</Text>
@@ -280,20 +216,19 @@ export function BudgetAllocationModal({
                       {info.description}
                     </Text>
                   </View>
-                  <View style={styles.valueContainer}>
-                    <Text style={[styles.percentValue, { color: info.color }]}>{value}%</Text>
-                    <Text style={[styles.dollarValue, { color: colors.textMuted }]}>
-                      {formatCurrency(dollarAmount)}
-                    </Text>
-                  </View>
                 </View>
-                <DraggableSlider
-                  value={value}
-                  color={info.color}
-                  onValueChange={(v) => handleSliderChange(category, v)}
-                  onDecrement={() => handleDecrement(category)}
-                  onIncrement={() => handleIncrement(category)}
-                />
+                <View style={styles.allocationRow}>
+                  <AllocationStepper
+                    value={value}
+                    color={info.color}
+                    canIncrement={canIncrement}
+                    onDecrement={() => handleDecrement(category)}
+                    onIncrement={() => handleIncrement(category)}
+                  />
+                  <Text style={[styles.dollarAmount, { color: colors.textMuted }]}>
+                    {formatCurrency(dollarAmount)}
+                  </Text>
+                </View>
               </View>
             );
           })}
@@ -387,74 +322,66 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     marginBottom: spacing.md,
   },
-  categoryHeader: {
+  categoryRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   colorDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginTop: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginTop: 5,
     marginRight: spacing.sm,
   },
   categoryInfo: {
     flex: 1,
   },
   categoryLabel: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
   },
   categoryDesc: {
     fontSize: 12,
     marginTop: 2,
   },
-  valueContainer: {
-    alignItems: 'flex-end',
+  allocationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  percentValue: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  dollarValue: {
-    fontSize: 12,
-  },
-  sliderRow: {
+  stepperRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  adjustButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
+  stepperButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    borderWidth: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  adjustText: {
-    fontSize: 20,
+  stepperText: {
+    fontSize: 22,
     fontWeight: '600',
   },
-  sliderTrack: {
-    flex: 1,
-    height: 8,
-    borderRadius: 4,
+  valueDisplay: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
     marginHorizontal: spacing.sm,
-    position: 'relative',
+    borderRadius: borderRadius.sm,
+    borderWidth: 1.5,
+    minWidth: 70,
+    alignItems: 'center',
   },
-  sliderFill: {
-    height: '100%',
-    borderRadius: 4,
+  valueText: {
+    fontSize: 18,
+    fontWeight: '700',
   },
-  sliderThumb: {
-    position: 'absolute',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 3,
-    top: -6,
-    marginLeft: -10,
+  dollarAmount: {
+    fontSize: 14,
+    fontWeight: '500',
   },
   validationMessage: {
     padding: spacing.md,
