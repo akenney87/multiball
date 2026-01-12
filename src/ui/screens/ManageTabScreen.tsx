@@ -17,10 +17,13 @@ import { ConnectedStatsScreen } from './ConnectedStatsScreen';
 import { ConnectedTransferMarketScreen } from './ConnectedTransferMarketScreen';
 import { ConnectedScoutingScreen } from './ConnectedScoutingScreen';
 import { ConnectedTrainingScreen } from './ConnectedTrainingScreen';
+import { ConnectedTrophyCaseScreen } from './ConnectedTrophyCaseScreen';
+import { ConnectedLeaderboardScreen } from './ConnectedLeaderboardScreen';
 
-type ManageSegment = 'squad' | 'market';
+type ManageSegment = 'squad' | 'market' | 'career';
 type SquadSubSegment = 'roster' | 'stats' | 'training';
 type MarketSubSegment = 'transfers' | 'scouting';
+type CareerSubSegment = 'trophies' | 'leaderboard';
 
 interface ManageTabScreenProps {
   // Player navigation
@@ -40,15 +43,17 @@ export function ManageTabScreen({
   const [segment, setSegment] = useState<ManageSegment>('squad');
   const [squadSubSegment, setSquadSubSegment] = useState<SquadSubSegment>('roster');
   const [marketSubSegment, setMarketSubSegment] = useState<MarketSubSegment>('transfers');
+  const [careerSubSegment, setCareerSubSegment] = useState<CareerSubSegment>('trophies');
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Main Segment Control: Squad | Market */}
+      {/* Main Segment Control: Squad | Market | Career */}
       <View style={styles.segmentContainer}>
         <SegmentControl
           segments={[
             { key: 'squad', label: 'Squad' },
             { key: 'market', label: 'Market' },
+            { key: 'career', label: 'Career' },
           ]}
           selectedKey={segment}
           onChange={setSegment}
@@ -119,6 +124,34 @@ export function ManageTabScreen({
               onNavigateToBudget={onNavigateToBudget}
               onPlayerPress={onPlayerPress}
             />
+          )}
+        </View>
+      )}
+
+      {/* Career View with Sub-segments */}
+      {segment === 'career' && (
+        <View style={styles.contentContainer}>
+          {/* Sub-segment Control: Trophies | Leaderboard */}
+          <View style={styles.subSegmentContainer}>
+            <SegmentControl
+              segments={[
+                { key: 'trophies', label: 'Trophy Case' },
+                { key: 'leaderboard', label: 'Leaderboard' },
+              ]}
+              selectedKey={careerSubSegment}
+              onChange={setCareerSubSegment}
+              size="compact"
+            />
+          </View>
+
+          {/* Trophy Case */}
+          {careerSubSegment === 'trophies' && (
+            <ConnectedTrophyCaseScreen />
+          )}
+
+          {/* Leaderboard */}
+          {careerSubSegment === 'leaderboard' && (
+            <ConnectedLeaderboardScreen />
           )}
         </View>
       )}
