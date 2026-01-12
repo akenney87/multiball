@@ -1873,13 +1873,18 @@ export function createRandomAIPersonality(): AIPersonality {
  */
 export function createUserFranchise(
   name: string = 'My Team',
-  colors?: TeamColors
+  colors?: TeamColors,
+  country: 'US' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT' | 'CA' | 'AU' = 'US',
+  city: string = 'New York',
+  division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = USER_STARTING_DIVISION
 ): Franchise {
   return {
     id: 'user',
     name,
     colors: colors || createRandomTeamColors(),
-    division: USER_STARTING_DIVISION, // Division 7 by default
+    country,
+    city,
+    division,
     divisionHistory: [],
     budget: createStartingBudget(),
     rosterIds: [],
@@ -1903,8 +1908,16 @@ export function createUserFranchise(
  * Create AI franchise
  *
  * @param division - Division number (1-10)
+ * @param country - Country code
+ * @param city - City name
+ * @param teamName - Team name (optional, will be random if not provided)
  */
-export function createAIFranchise(division: number): Franchise {
+export function createAIFranchise(
+  division: number,
+  country: 'US' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT' | 'CA' | 'AU' = 'US',
+  city: string = 'Unknown City',
+  teamName?: string
+): Franchise {
   // Clamp division to valid range
   const validDivision = Math.max(1, Math.min(DIVISION_COUNT, division)) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -1914,8 +1927,10 @@ export function createAIFranchise(division: number): Franchise {
 
   return {
     id: uuidv4(),
-    name: randomTeamName(),
+    name: teamName || randomTeamName(),
     colors: createRandomTeamColors(),
+    country,
+    city,
     division: validDivision,
     divisionHistory: [],
     budget: {

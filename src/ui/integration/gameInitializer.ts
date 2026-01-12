@@ -38,7 +38,7 @@ import {
   DEFAULT_OPERATIONS_BUDGET,
   DEFAULT_TRAINING_FOCUS,
 } from '../context/types';
-import type { NewGameConfig, Difficulty } from '../screens/NewGameScreen';
+import type { NewGameConfig } from '../screens/NewGameScreen';
 import {
   createRandomAttributes,
   createRandomPotentials,
@@ -59,34 +59,17 @@ import {
 import { generateName } from '../../data/nameGenerator';
 import { createAIConfig } from '../../ai/personality';
 import { generateSeasonSchedule, createInitialStandings } from '../../season';
+import { generateLeagueTeams, type TeamAssignment } from '../../data/teamNameGenerator';
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
+import { BASE_BUDGET, DIFFICULTY_BUDGET_MULTIPLIER } from '../../data/constants';
+import { getDivisionBudgetMultiplier } from '../../ai/divisionManager';
+
 /** Number of AI teams (plus user = 20 total) */
 const AI_TEAM_COUNT = 19;
-
-/** Starting budget based on difficulty */
-const STARTING_BUDGET: Record<Difficulty, number> = {
-  easy: 25000000,    // $25M
-  normal: 20000000,  // $20M
-  hard: 15000000,    // $15M
-};
-
-/** Player attribute range based on difficulty (user team) */
-const USER_ATTR_RANGE: Record<Difficulty, { min: number; max: number }> = {
-  easy: { min: 40, max: 70 },
-  normal: { min: 30, max: 60 },
-  hard: { min: 20, max: 50 },
-};
-
-/** AI team attribute range (slightly better than user on hard) */
-const AI_ATTR_RANGE: Record<Difficulty, { min: number; max: number }> = {
-  easy: { min: 25, max: 55 },
-  normal: { min: 30, max: 60 },
-  hard: { min: 35, max: 65 },
-};
 
 /** Number of free agents to generate */
 const FREE_AGENT_COUNT = 500;
@@ -120,40 +103,6 @@ const FREE_AGENT_AGE_DISTRIBUTION = [
 
 /** Season length in weeks */
 const SEASON_WEEKS = 40;
-
-// =============================================================================
-// TEAM NAMES
-// =============================================================================
-
-const TEAM_NAMES = [
-  'Warriors', 'Lakers', 'Bulls', 'Celtics', 'Heat',
-  'Thunder', 'Rockets', 'Spurs', 'Mavericks', 'Blazers',
-  'Suns', 'Knicks', 'Nets', 'Hawks', 'Wizards',
-  'Clippers', 'Nuggets', 'Jazz', 'Pelicans', 'Kings',
-];
-
-const TEAM_COLORS: Array<{ primary: string; secondary: string }> = [
-  { primary: '#1D428A', secondary: '#FFC72C' }, // Warriors
-  { primary: '#552583', secondary: '#FDB927' }, // Lakers
-  { primary: '#CE1141', secondary: '#000000' }, // Bulls
-  { primary: '#007A33', secondary: '#FFFFFF' }, // Celtics
-  { primary: '#98002E', secondary: '#F9A01B' }, // Heat
-  { primary: '#007AC1', secondary: '#EF3B24' }, // Thunder
-  { primary: '#CE1141', secondary: '#000000' }, // Rockets
-  { primary: '#C4CED4', secondary: '#000000' }, // Spurs
-  { primary: '#00538C', secondary: '#002B5E' }, // Mavericks
-  { primary: '#E03A3E', secondary: '#000000' }, // Blazers
-  { primary: '#1D1160', secondary: '#E56020' }, // Suns
-  { primary: '#006BB6', secondary: '#F58426' }, // Knicks
-  { primary: '#000000', secondary: '#FFFFFF' }, // Nets
-  { primary: '#E03A3E', secondary: '#C1D32F' }, // Hawks
-  { primary: '#002B5C', secondary: '#E31837' }, // Wizards
-  { primary: '#C8102E', secondary: '#1D428A' }, // Clippers
-  { primary: '#0E2240', secondary: '#FEC524' }, // Nuggets
-  { primary: '#002B5C', secondary: '#00471B' }, // Jazz
-  { primary: '#0C2340', secondary: '#C8102E' }, // Pelicans
-  { primary: '#5A2D81', secondary: '#63727A' }, // Kings
-];
 
 // =============================================================================
 // POSITIONS
@@ -269,12 +218,20 @@ function generateNationality(): string {
  *
  * Players under 24 get youth development data tracking their physical growth.
  * Height grows until 18, weight until 24.
+ *
+ * @param teamId - Team ID for contract
+ * @param attrRange - Min/max attribute range for this division
+ * @param position - Player position
+ * @param usedNames - Set of already used names to avoid duplicates
+ * @param targetAvgSalary - Target average salary for this division (for budget fitting)
+ * @param sport - Sport type for position-based height generation
  */
 function generatePlayer(
   teamId: string,
   attrRange: { min: number; max: number },
   position: string,
   usedNames: Set<string>,
+  targetAvgSalary: number,
   sport: 'basketball' | 'baseball' | 'soccer' = 'basketball'
 ): Player {
   const id = uuidv4();
@@ -342,27 +299,31 @@ function generatePlayer(
   const attrValues = Object.values(attributes).filter(v => typeof v === 'number') as number[];
   const overallRating = attrValues.reduce((a, b) => a + b, 0) / attrValues.length;
 
-  // Calculate market-based salary (same formula as free agents)
-  // Market Value = (rating / 100) × $1M × ageMultiplier × potentialModifier
-  let ageMultiplier: number;
+  // Calculate salary based on division's target average and player quality
+  // Better players earn more, worse players earn less, averaging to targetAvgSalary
+  // Quality modifier: 0.4x to 1.6x based on where player falls in attribute range
+  const range = attrRange.max - attrRange.min;
+  const qualityModifier = 0.4 + 1.2 * ((overallRating - attrRange.min) / range);
+
+  // Age modifier: prime players (25-30) earn more
+  let ageModifier: number;
   if (age < 23) {
-    ageMultiplier = 1.5;  // Young
-  } else if (age < 29) {
-    ageMultiplier = 2.0;  // Prime
+    ageModifier = 0.7;   // Young - cheaper
+  } else if (age < 25) {
+    ageModifier = 0.85;  // Developing
+  } else if (age < 30) {
+    ageModifier = 1.15;  // Prime - premium
   } else if (age < 33) {
-    ageMultiplier = 1.5;  // Veteran
+    ageModifier = 0.9;   // Veteran - slight discount
   } else {
-    ageMultiplier = 1.0;  // Aging
+    ageModifier = 0.7;   // Aging - cheaper
   }
 
-  const avgPotential = (potentials.physical + potentials.mental + potentials.technical) / 3;
-  const potentialModifier = 1.0 + (avgPotential - overallRating) / 100;
-  const marketValue = (overallRating / 100) * 1000000 * ageMultiplier * potentialModifier;
-  const baseSalary = marketValue * 0.20; // 20% of market value
+  // Add variance (±20%) for realism
+  const variance = 0.8 + Math.random() * 0.4; // 0.8 to 1.2
 
-  // Add small variance (±15%) for realism
-  const variance = 0.85 + Math.random() * 0.30; // 0.85 to 1.15
-  const salary = Math.round(baseSalary * variance);
+  // Final salary calculation
+  const salary = Math.round(targetAvgSalary * qualityModifier * ageModifier * variance);
 
   const contractLength = randomInt(1, 3);
   const contract: Contract = {
@@ -433,16 +394,32 @@ function generatePlayer(
   };
 }
 
+/** Roster size (35 players: 7 per position) */
+const ROSTER_SIZE = 35;
+
+/** Target percentage of budget to spend on wages (75%) */
+const TARGET_WAGE_PERCENTAGE = 0.75;
+
 /**
  * Generate a roster of players for a team
  * Generates 35 players: 7 per position (PG, SG, SF, PF, C)
+ *
+ * @param teamId - Team ID for contracts
+ * @param attrRange - Min/max attribute range for this division
+ * @param usedNames - Set of already used names
+ * @param teamBudget - Total team budget for salary scaling
  */
 function generateRoster(
   teamId: string,
   attrRange: { min: number; max: number },
-  usedNames: Set<string>
+  usedNames: Set<string>,
+  teamBudget: number
 ): Player[] {
   const players: Player[] = [];
+
+  // Calculate target average salary: 75% of budget divided by roster size
+  const targetWageBill = teamBudget * TARGET_WAGE_PERCENTAGE;
+  const targetAvgSalary = targetWageBill / ROSTER_SIZE;
 
   // Generate 7 players at each position = 35 total
   // This provides a full starting 5 + 30 bench players for rotation depth
@@ -450,7 +427,7 @@ function generateRoster(
 
   for (const [position, count] of Object.entries(positionCounts)) {
     for (let i = 0; i < count; i++) {
-      players.push(generatePlayer(teamId, attrRange, position, usedNames));
+      players.push(generatePlayer(teamId, attrRange, position, usedNames, targetAvgSalary));
     }
   }
 
@@ -928,7 +905,12 @@ function createUserTeam(
   players: Record<string, Player>,
   totalSalary: number
 ): UserTeamState {
-  const totalBudget = STARTING_BUDGET[config.difficulty];
+  const startingDivision = (config.startingDivision || 7) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
+  // Calculate budget: BASE × divisionMultiplier × difficultyMultiplier
+  const divisionMultiplier = getDivisionBudgetMultiplier(startingDivision);
+  const difficultyMultiplier = DIFFICULTY_BUDGET_MULTIPLIER[config.difficulty];
+  const totalBudget = Math.round(BASE_BUDGET * divisionMultiplier * difficultyMultiplier);
 
   // Generate sport-specific lineups
   const baseballLineup = generateBaseballLineup(rosterIds, players);
@@ -957,7 +939,11 @@ function createUserTeam(
       primary: config.primaryColor,
       secondary: config.secondaryColor,
     },
-    division: 5,
+    country: config.country,
+    city: config.city,
+    cityRegion: config.cityRegion,
+    startingDivision,
+    division: startingDivision,
     totalBudget,
     salaryCommitment: totalSalary,
     availableBudget: totalBudget - totalSalary,
@@ -980,19 +966,44 @@ function createUserTeam(
 }
 
 /**
- * Create AI team state
+ * Generate random team colors
+ */
+function generateTeamColors(): { primary: string; secondary: string } {
+  const primaryColors = [
+    '#1D428A', '#552583', '#CE1141', '#007A33', '#98002E',
+    '#007AC1', '#C4CED4', '#00538C', '#E03A3E', '#1D1160',
+    '#006BB6', '#000000', '#0E2240', '#002B5C', '#C8102E',
+    '#5A2D81', '#0C2340', '#2D3436', '#6C5CE7', '#00B894',
+  ];
+  const secondaryColors = [
+    '#FFC72C', '#FDB927', '#000000', '#FFFFFF', '#F9A01B',
+    '#EF3B24', '#F58426', '#002B5E', '#C1D32F', '#E56020',
+    '#FEC524', '#00471B', '#C8102E', '#63727A', '#F9A825',
+  ];
+
+  return {
+    primary: randomElement(primaryColors),
+    secondary: randomElement(secondaryColors),
+  };
+}
+
+/**
+ * Create AI team state from a TeamAssignment
  */
 function createAITeam(
-  index: number,
-  rosterIds: string[]
+  teamAssignment: TeamAssignment,
+  rosterIds: string[],
+  index: number
 ): AITeamState {
   const personalities = ['conservative', 'balanced', 'aggressive'] as const;
 
   return {
     id: `ai-team-${index}`,
-    name: TEAM_NAMES[index] || `Team ${index + 1}`,
-    colors: TEAM_COLORS[index] || { primary: '#333333', secondary: '#FFFFFF' },
-    division: 5,
+    name: teamAssignment.teamName,
+    colors: generateTeamColors(),
+    city: teamAssignment.city.name,
+    cityRegion: teamAssignment.city.region,
+    division: teamAssignment.division as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
     rosterIds,
     aiConfig: createAIConfig(randomElement(personalities)),
   };
@@ -1117,6 +1128,27 @@ function createSeasonState(teamIds: string[]): SeasonState {
 // =============================================================================
 
 /**
+ * Get attribute range based on division
+ * Higher divisions = better players
+ */
+function getDivisionAttrRange(division: number): { min: number; max: number } {
+  // Division 1 = best (60-90), Division 10 = worst (15-40)
+  const ranges: { [key: number]: { min: number; max: number } } = {
+    1: { min: 60, max: 90 },
+    2: { min: 55, max: 85 },
+    3: { min: 50, max: 80 },
+    4: { min: 45, max: 75 },
+    5: { min: 40, max: 70 },
+    6: { min: 35, max: 65 },
+    7: { min: 30, max: 55 },
+    8: { min: 25, max: 50 },
+    9: { min: 20, max: 45 },
+    10: { min: 15, max: 40 },
+  };
+  return ranges[division] ?? { min: 30, max: 55 };
+}
+
+/**
  * Initialize a new game
  *
  * @param config - New game configuration from onboarding
@@ -1126,9 +1158,28 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
   const usedNames = new Set<string>();
   const players: Record<string, Player> = {};
 
-  // Generate user team roster
-  const userAttrRange = USER_ATTR_RANGE[config.difficulty];
-  const userPlayers = generateRoster('user', userAttrRange, usedNames);
+  // Get user's starting division
+  const userDivision = config.startingDivision || 7;
+
+  // Calculate division budget for salary scaling
+  const divisionMultiplier = getDivisionBudgetMultiplier(userDivision);
+  const difficultyMultiplier = DIFFICULTY_BUDGET_MULTIPLIER[config.difficulty];
+  const userTeamBudget = Math.round(BASE_BUDGET * divisionMultiplier * difficultyMultiplier);
+
+  // Generate all league teams from the country's cities
+  const allTeamAssignments = generateLeagueTeams(config.country);
+
+  // Filter to get teams in the user's division (20 teams per division)
+  const divisionTeams = allTeamAssignments.filter(t => t.division === userDivision);
+
+  // Remove the user's city from the AI team pool
+  const aiTeamAssignments = divisionTeams.filter(
+    t => !(t.city.name === config.city && t.city.region === config.cityRegion)
+  );
+
+  // Generate user team roster with division-appropriate attributes and budget-scaled salaries
+  const userAttrRange = getDivisionAttrRange(userDivision);
+  const userPlayers = generateRoster('user', userAttrRange, usedNames, userTeamBudget);
   const userRosterIds = userPlayers.map((p) => p.id);
 
   // Calculate user team salary
@@ -1141,14 +1192,21 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
   // Create user team (passing players for lineup generation)
   const userTeam = createUserTeam(config, userRosterIds, players, userTotalSalary);
 
-  // Generate AI teams
-  const aiAttrRange = AI_ATTR_RANGE[config.difficulty];
+  // Generate AI teams from the remaining city assignments in the division
   const aiTeams: AITeamState[] = [];
   const teamIds = ['user'];
 
-  for (let i = 0; i < AI_TEAM_COUNT; i++) {
+  // AI teams use base budget without difficulty modifier (they're at "normal" difficulty)
+  const aiTeamBudget = Math.round(BASE_BUDGET * divisionMultiplier);
+
+  // Take 19 AI teams (for 20 total teams in the division)
+  const aiTeamsToCreate = aiTeamAssignments.slice(0, AI_TEAM_COUNT);
+
+  aiTeamsToCreate.forEach((teamAssignment, i) => {
     const teamId = `ai-team-${i}`;
-    const aiPlayers = generateRoster(teamId, aiAttrRange, usedNames);
+
+    // Generate roster with division-appropriate attributes and budget-scaled salaries
+    const aiPlayers = generateRoster(teamId, userAttrRange, usedNames, aiTeamBudget);
     const aiRosterIds = aiPlayers.map((p) => p.id);
 
     for (const player of aiPlayers) {
@@ -1160,9 +1218,9 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
       players[player.id] = player;
     }
 
-    aiTeams.push(createAITeam(i, aiRosterIds));
+    aiTeams.push(createAITeam(teamAssignment, aiRosterIds, i));
     teamIds.push(teamId);
-  }
+  });
 
   // Generate free agents
   const freeAgents = generateFreeAgents(FREE_AGENT_COUNT, usedNames);
@@ -1174,6 +1232,7 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
 
   // Create league state
   const league: LeagueState = {
+    country: config.country,
     teams: aiTeams,
     freeAgentIds,
   };

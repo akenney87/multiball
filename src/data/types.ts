@@ -1120,6 +1120,11 @@ export interface AIPersonality {
 }
 
 /**
+ * Country code type (re-exported from countries module)
+ */
+export type FranchiseCountryCode = 'US' | 'UK' | 'DE' | 'FR' | 'ES' | 'IT' | 'CA' | 'AU';
+
+/**
  * Franchise/Team entity
  */
 export interface Franchise {
@@ -1131,6 +1136,15 @@ export interface Franchise {
 
   /** Team colors */
   colors: TeamColors;
+
+  /** Country code for the league */
+  country: FranchiseCountryCode;
+
+  /** Home city name */
+  city: string;
+
+  /** Home city region (state/province for disambiguation) */
+  cityRegion?: string;
 
   /** Current division (1-10) */
   division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;

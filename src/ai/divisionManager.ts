@@ -373,24 +373,33 @@ export function getDivisionPlayerQuality(division: number): { min: number; max: 
 /**
  * Get division budget multiplier
  *
- * Higher divisions have more money (better sponsors, attendance, etc.)
+ * Higher divisions have exponentially more money (sponsors, TV deals, attendance).
+ * Based on real-world football finances where top-tier budgets are ~100x lower-tier.
+ *
+ * Base budget (Division 7) = $4M operational budget
+ * (Higher than real soccer due to larger 35-player rosters)
+ *
+ * - Division 1: $200M (50x) - Elite clubs, major sponsors, TV deals
+ * - Division 7: $4M (1x) - User's starting point, semi-pro
+ * - Division 10: $800K (0.2x) - Amateur/grassroots level
  *
  * @param division - Division number (1-10)
- * @returns Budget multiplier (1.0 = base budget)
+ * @returns Budget multiplier (1.0 = Division 7 base budget of $4M)
  */
 export function getDivisionBudgetMultiplier(division: number): number {
-  // Division 1 = 5x budget, Division 10 = 0.5x budget
+  // Exponential scaling based on real football finances
+  // Each division is roughly 1.5-2x the one below
   const multipliers: Record<number, number> = {
-    1: 5.0,
-    2: 4.0,
-    3: 3.0,
-    4: 2.5,
-    5: 2.0,
-    6: 1.5,
-    7: 1.0,   // User starts here (base budget)
-    8: 0.8,
-    9: 0.6,
-    10: 0.5,
+    1: 50.0,   // $100M - Elite (Premier League level)
+    2: 25.0,   // $50M - Championship level
+    3: 12.0,   // $24M - League One level
+    4: 6.0,    // $12M - League Two level
+    5: 3.0,    // $6M - National League level
+    6: 1.75,   // $3.5M - Regional premier
+    7: 1.0,    // $2M - Semi-pro (user starts here)
+    8: 0.5,    // $1M - Advanced amateur
+    9: 0.3,    // $600K - Amateur
+    10: 0.2,   // $400K - Grassroots
   };
 
   return multipliers[division] || 1.0;

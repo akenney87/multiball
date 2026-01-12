@@ -194,8 +194,25 @@ export const TEAMS_RELEGATED = 3;
 // BUDGET CONSTANTS
 // =============================================================================
 
-/** Starting budget (Division 5) - $20M for normal difficulty */
-export const STARTING_BUDGET = 20_000_000;
+/**
+ * Base budget for Division 7 - $4M
+ * Actual budget = BASE_BUDGET × getDivisionBudgetMultiplier(division) × difficultyMultiplier
+ *
+ * Higher than real soccer due to larger roster size (35 players vs ~25 for soccer)
+ *
+ * Division scaling (see divisionManager.ts):
+ * - Division 1: $200M (50x)
+ * - Division 7: $4M (1x) - base
+ * - Division 10: $800K (0.2x)
+ */
+export const BASE_BUDGET = 4_000_000;
+
+/** Difficulty budget multipliers */
+export const DIFFICULTY_BUDGET_MULTIPLIER = {
+  easy: 1.25,    // 25% more budget
+  normal: 1.0,   // Standard
+  hard: 0.75,    // 25% less budget
+} as const;
 
 /** Minimum youth academy budget */
 export const YOUTH_ACADEMY_MIN_BUDGET = 100_000;

@@ -29,6 +29,7 @@ import type {
 import type { AIConfig } from '../../ai/types';
 import type { Difficulty, NewGameConfig } from '../screens/NewGameScreen';
 import type { ScoutReport } from '../../systems/scoutingSystem';
+import type { CountryCode } from '../../data/countries';
 import type { PlayerProgressionResult, AcademyProgressionResult } from '../../systems/weeklyProgressionProcessor';
 
 // =============================================================================
@@ -177,6 +178,18 @@ export interface UserTeamState {
     secondary: string;
   };
 
+  /** Country code for the league */
+  country: CountryCode;
+
+  /** Home city name */
+  city: string;
+
+  /** Home city region (state/province for disambiguation) */
+  cityRegion?: string;
+
+  /** Division user started in (for leaderboard calculations) */
+  startingDivision: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
   /** Current division (1-10, starts at 7) */
   division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -233,6 +246,12 @@ export interface AITeamState {
     secondary: string;
   };
 
+  /** Home city name */
+  city: string;
+
+  /** Home city region (state/province for disambiguation) */
+  cityRegion?: string;
+
   /** Current division (1-10) */
   division: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -277,6 +296,9 @@ export interface AITeamSeasonStrategy {
  * League state
  */
 export interface LeagueState {
+  /** Country code for the league */
+  country: CountryCode;
+
   /** All teams (including user) */
   teams: AITeamState[];
 
