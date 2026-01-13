@@ -29,7 +29,6 @@ import {
   getAvailableCountries,
   getCitiesByDivision,
   getCityDivision,
-  getDivisionDescription,
   type CityData,
 } from '../../data/countries';
 import { generateTeamName } from '../../data/teamNameGenerator';
@@ -133,7 +132,7 @@ export function NewGameScreen({
   );
 
   const startingDivision = selectedCity
-    ? getCityDivision(selectedCountry, selectedCity.name)
+    ? getCityDivision(selectedCountry, selectedCity.name, selectedCity.region)
     : 7;
 
   const leaderboardMultiplier = getLeaderboardMultiplier(startingDivision);
@@ -252,7 +251,9 @@ export function NewGameScreen({
   );
 
   const renderCityItem = ({ item }: { item: { city: CityData; division: number } }) => {
-    const isSelected = selectedCity?.name === item.city.name;
+    // Compare both name AND region to handle cities with same name in different states
+    const isSelected = selectedCity?.name === item.city.name &&
+      selectedCity?.region === item.city.region;
     const multiplier = getLeaderboardMultiplier(item.division);
 
     return (
@@ -375,14 +376,6 @@ export function NewGameScreen({
             </Text>
           )}
         </TouchableOpacity>
-
-        {selectedCity && (
-          <View style={[styles.divisionInfo, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.divisionInfoText, { color: colors.textSecondary }]}>
-              {getDivisionDescription(startingDivision)}
-            </Text>
-          </View>
-        )}
       </View>
 
       {/* Team Preview */}
@@ -756,15 +749,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 16,
     fontWeight: '700',
-  },
-  divisionInfo: {
-    padding: spacing.sm,
-    borderRadius: borderRadius.sm,
-    marginTop: spacing.sm,
-  },
-  divisionInfoText: {
-    fontSize: 12,
-    textAlign: 'center',
   },
 
   // Team Preview

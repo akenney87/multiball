@@ -306,10 +306,17 @@ export function getCitiesByDivision(code: CountryCode): Map<number, CityData[]> 
 
 /**
  * Get a specific city's division based on its population rank
+ * @param code - Country code
+ * @param cityName - City name
+ * @param cityRegion - Optional region for disambiguation (e.g., "IL" vs "CO" for Aurora)
  */
-export function getCityDivision(code: CountryCode, cityName: string): number {
+export function getCityDivision(code: CountryCode, cityName: string, cityRegion?: string): number {
   const cities = getCitiesForCountry(code);
-  const index = cities.findIndex(c => c.name === cityName);
+
+  // If region provided, match both name and region to handle duplicate city names
+  const index = cityRegion
+    ? cities.findIndex(c => c.name === cityName && c.region === cityRegion)
+    : cities.findIndex(c => c.name === cityName);
 
   if (index === -1) return 7; // Default to Division 7 if not found
 
