@@ -427,6 +427,9 @@ export interface Player {
   /** Player age */
   age: number;
 
+  /** Age when player turned professional (18-22) */
+  careerStartAge: number;
+
   /** Date of birth */
   dateOfBirth: Date;
 

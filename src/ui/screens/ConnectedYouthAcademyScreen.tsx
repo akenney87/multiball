@@ -104,6 +104,7 @@ function convertProspectToPlayer(
     id: prospect.id,
     name: prospect.name,
     age: prospect.age,
+    careerStartAge: prospect.age, // Youth prospect just starting career
     dateOfBirth: new Date(Date.now() - prospect.age * 365 * 24 * 60 * 60 * 1000),
     position: 'SF', // Default position, user can change
     height: heightInches,
@@ -129,6 +130,23 @@ function convertProspectToPlayer(
     lastMatchSport: null,
     // Season history - empty for new players
     seasonHistory: [],
+    // Awards - empty for new players
+    awards: {
+      playerOfTheWeek: 0,
+      playerOfTheMonth: 0,
+      basketballPlayerOfTheYear: 0,
+      baseballPlayerOfTheYear: 0,
+      soccerPlayerOfTheYear: 0,
+      rookieOfTheYear: 0,
+      championships: 0,
+    },
+    // Morale system
+    morale: 75,
+    recentMatchResults: [],
+    transferRequestActive: false,
+    transferRequestDate: null,
+    weeksDisgruntled: 0,
+    ambition: 0.9 + Math.random() * 0.2, // 0.9-1.1 range for youth
   };
 }
 

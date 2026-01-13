@@ -42,6 +42,10 @@ import {
   TEAMS_PER_DIVISION,
   USER_STARTING_DIVISION,
 } from './constants';
+import {
+  generateCareerHistory,
+  assignCareerStartAge,
+} from '../systems/careerHistoryGenerator';
 
 // =============================================================================
 // RANDOM UTILITIES
@@ -1528,6 +1532,42 @@ export function createEmptyCareerStats(): PlayerCareerStats {
       blocks: 0,
       turnovers: 0,
     },
+    baseball: {
+      atBats: 0,
+      runs: 0,
+      hits: 0,
+      doubles: 0,
+      triples: 0,
+      homeRuns: 0,
+      rbi: 0,
+      walks: 0,
+      strikeouts: 0,
+      stolenBases: 0,
+      caughtStealing: 0,
+      gamesStarted: 0,
+      inningsPitched: 0,
+      hitsAllowed: 0,
+      runsAllowed: 0,
+      earnedRuns: 0,
+      walksAllowed: 0,
+      strikeoutsThrown: 0,
+      homeRunsAllowed: 0,
+      wins: 0,
+      losses: 0,
+      saves: 0,
+      putouts: 0,
+      assists: 0,
+      errors: 0,
+    },
+    soccer: {
+      goals: 0,
+      assists: 0,
+      shots: 0,
+      shotsOnTarget: 0,
+      minutesPlayed: 0,
+      yellowCards: 0,
+      redCards: 0,
+    },
   };
 }
 
@@ -1552,11 +1592,16 @@ export function createStarterPlayer(overrides?: Partial<Player>): Player {
   const potentials = createRandomPotentials(attributes);
   const peakAges = createRandomPeakAges();
 
-  return {
+  // Generate age and career start age
+  const age = randomInt(20, 28);
+  const careerStartAge = assignCareerStartAge();
+
+  const player: Player = {
     id: uuidv4(),
     name: randomName(),
-    age: randomInt(20, 28),
-    dateOfBirth: new Date(Date.now() - randomInt(20, 28) * 365 * 24 * 60 * 60 * 1000),
+    age,
+    careerStartAge: Math.min(careerStartAge, age),
+    dateOfBirth: new Date(Date.now() - age * 365 * 24 * 60 * 60 * 1000),
     position,
     height,
     weight,
@@ -1589,6 +1634,91 @@ export function createStarterPlayer(overrides?: Partial<Player>): Player {
     ambition: generateAmbition(),
     ...overrides,
   };
+
+  // Generate career history and aggregate stats
+  if (player.age > player.careerStartAge) {
+    player.seasonHistory = generateCareerHistory(player, 1);
+
+    // Aggregate career stats from history
+    for (const season of player.seasonHistory) {
+      // Aggregate basketball stats
+      if (season.basketball && player.careerStats.basketball) {
+        player.careerStats.basketball.fieldGoalsMade += season.basketball.fieldGoalsMade;
+        player.careerStats.basketball.fieldGoalsAttempted += season.basketball.fieldGoalsAttempted;
+        player.careerStats.basketball.threePointersMade += season.basketball.threePointersMade;
+        player.careerStats.basketball.threePointersAttempted += season.basketball.threePointersAttempted;
+        player.careerStats.basketball.freeThrowsMade += season.basketball.freeThrowsMade;
+        player.careerStats.basketball.freeThrowsAttempted += season.basketball.freeThrowsAttempted;
+        player.careerStats.basketball.rebounds += season.basketball.rebounds;
+        player.careerStats.basketball.assists += season.basketball.assists;
+        player.careerStats.basketball.steals += season.basketball.steals;
+        player.careerStats.basketball.blocks += season.basketball.blocks;
+        player.careerStats.basketball.turnovers += season.basketball.turnovers;
+      }
+
+      // Aggregate baseball stats
+      if (season.baseball && player.careerStats.baseball) {
+        player.careerStats.baseball.atBats += season.baseball.atBats;
+        player.careerStats.baseball.runs += season.baseball.runs;
+        player.careerStats.baseball.hits += season.baseball.hits;
+        player.careerStats.baseball.doubles += season.baseball.doubles;
+        player.careerStats.baseball.triples += season.baseball.triples;
+        player.careerStats.baseball.homeRuns += season.baseball.homeRuns;
+        player.careerStats.baseball.rbi += season.baseball.rbi;
+        player.careerStats.baseball.walks += season.baseball.walks;
+        player.careerStats.baseball.strikeouts += season.baseball.strikeouts;
+        player.careerStats.baseball.stolenBases += season.baseball.stolenBases;
+        player.careerStats.baseball.caughtStealing += season.baseball.caughtStealing;
+        player.careerStats.baseball.gamesStarted += season.baseball.gamesStarted;
+        player.careerStats.baseball.inningsPitched += season.baseball.inningsPitched;
+        player.careerStats.baseball.hitsAllowed += season.baseball.hitsAllowed;
+        player.careerStats.baseball.runsAllowed += season.baseball.runsAllowed;
+        player.careerStats.baseball.earnedRuns += season.baseball.earnedRuns;
+        player.careerStats.baseball.walksAllowed += season.baseball.walksAllowed;
+        player.careerStats.baseball.strikeoutsThrown += season.baseball.strikeoutsThrown;
+        player.careerStats.baseball.homeRunsAllowed += season.baseball.homeRunsAllowed;
+        player.careerStats.baseball.wins += season.baseball.wins;
+        player.careerStats.baseball.losses += season.baseball.losses;
+        player.careerStats.baseball.saves += season.baseball.saves;
+        player.careerStats.baseball.putouts += season.baseball.putouts;
+        player.careerStats.baseball.assists += season.baseball.assists;
+        player.careerStats.baseball.errors += season.baseball.errors;
+      }
+
+      // Aggregate soccer stats
+      if (season.soccer && player.careerStats.soccer) {
+        player.careerStats.soccer.goals += season.soccer.goals;
+        player.careerStats.soccer.assists += season.soccer.assists;
+        player.careerStats.soccer.shots += season.soccer.shots;
+        player.careerStats.soccer.shotsOnTarget += season.soccer.shotsOnTarget;
+        player.careerStats.soccer.minutesPlayed += season.soccer.minutesPlayed;
+        player.careerStats.soccer.yellowCards += season.soccer.yellowCards;
+        player.careerStats.soccer.redCards += season.soccer.redCards;
+        if (season.soccer.saves !== undefined) {
+          player.careerStats.soccer.saves = (player.careerStats.soccer.saves || 0) + season.soccer.saves;
+        }
+        if (season.soccer.cleanSheets !== undefined) {
+          player.careerStats.soccer.cleanSheets = (player.careerStats.soccer.cleanSheets || 0) + season.soccer.cleanSheets;
+        }
+        if (season.soccer.goalsAgainst !== undefined) {
+          player.careerStats.soccer.goalsAgainst = (player.careerStats.soccer.goalsAgainst || 0) + season.soccer.goalsAgainst;
+        }
+      }
+
+      // Aggregate games/minutes/points
+      player.careerStats.gamesPlayed.basketball += season.gamesPlayed.basketball;
+      player.careerStats.gamesPlayed.baseball += season.gamesPlayed.baseball;
+      player.careerStats.gamesPlayed.soccer += season.gamesPlayed.soccer;
+      player.careerStats.minutesPlayed.basketball += season.minutesPlayed.basketball;
+      player.careerStats.minutesPlayed.baseball += season.minutesPlayed.baseball;
+      player.careerStats.minutesPlayed.soccer += season.minutesPlayed.soccer;
+      player.careerStats.totalPoints.basketball += season.totalPoints.basketball;
+      player.careerStats.totalPoints.baseball += season.totalPoints.baseball;
+      player.careerStats.totalPoints.soccer += season.totalPoints.soccer;
+    }
+  }
+
+  return player;
 }
 
 /**
@@ -1644,11 +1774,17 @@ export function createRandomPlayer(
   const potentials = createRandomPotentials(attributes);
   const peakAges = createRandomPeakAges();
 
-  return {
+  // Generate age and career start age
+  const age = randomInt(18, 35);
+  const careerStartAge = assignCareerStartAge();
+
+  // Create base player object first (without history)
+  const player: Player = {
     id: uuidv4(),
     name: randomName(),
-    age: randomInt(18, 35),
-    dateOfBirth: new Date(Date.now() - randomInt(18, 35) * 365 * 24 * 60 * 60 * 1000),
+    age,
+    careerStartAge: Math.min(careerStartAge, age), // Can't start career after current age
+    dateOfBirth: new Date(Date.now() - age * 365 * 24 * 60 * 60 * 1000),
     position,
     height,
     weight,
@@ -1662,7 +1798,7 @@ export function createRandomPlayer(
     weeklyXP: createEmptyWeeklyXP(),
     careerStats: createEmptyCareerStats(),
     currentSeasonStats: createEmptyCareerStats(),
-    seasonHistory: [],
+    seasonHistory: [], // Will be populated below
     awards: createEmptyAwards(),
     teamId: 'free_agent',
     acquisitionType: 'free_agent',
@@ -1681,6 +1817,91 @@ export function createRandomPlayer(
     ambition: generateAmbition(),
     ...overrides,
   };
+
+  // Generate career history for players who have been pro for at least 1 season
+  if (player.age > player.careerStartAge) {
+    player.seasonHistory = generateCareerHistory(player, 1);
+
+    // Aggregate career stats from history
+    for (const season of player.seasonHistory) {
+      // Aggregate basketball stats
+      if (season.basketball && player.careerStats.basketball) {
+        player.careerStats.basketball.fieldGoalsMade += season.basketball.fieldGoalsMade;
+        player.careerStats.basketball.fieldGoalsAttempted += season.basketball.fieldGoalsAttempted;
+        player.careerStats.basketball.threePointersMade += season.basketball.threePointersMade;
+        player.careerStats.basketball.threePointersAttempted += season.basketball.threePointersAttempted;
+        player.careerStats.basketball.freeThrowsMade += season.basketball.freeThrowsMade;
+        player.careerStats.basketball.freeThrowsAttempted += season.basketball.freeThrowsAttempted;
+        player.careerStats.basketball.rebounds += season.basketball.rebounds;
+        player.careerStats.basketball.assists += season.basketball.assists;
+        player.careerStats.basketball.steals += season.basketball.steals;
+        player.careerStats.basketball.blocks += season.basketball.blocks;
+        player.careerStats.basketball.turnovers += season.basketball.turnovers;
+      }
+
+      // Aggregate baseball stats
+      if (season.baseball && player.careerStats.baseball) {
+        player.careerStats.baseball.atBats += season.baseball.atBats;
+        player.careerStats.baseball.runs += season.baseball.runs;
+        player.careerStats.baseball.hits += season.baseball.hits;
+        player.careerStats.baseball.doubles += season.baseball.doubles;
+        player.careerStats.baseball.triples += season.baseball.triples;
+        player.careerStats.baseball.homeRuns += season.baseball.homeRuns;
+        player.careerStats.baseball.rbi += season.baseball.rbi;
+        player.careerStats.baseball.walks += season.baseball.walks;
+        player.careerStats.baseball.strikeouts += season.baseball.strikeouts;
+        player.careerStats.baseball.stolenBases += season.baseball.stolenBases;
+        player.careerStats.baseball.caughtStealing += season.baseball.caughtStealing;
+        player.careerStats.baseball.gamesStarted += season.baseball.gamesStarted;
+        player.careerStats.baseball.inningsPitched += season.baseball.inningsPitched;
+        player.careerStats.baseball.hitsAllowed += season.baseball.hitsAllowed;
+        player.careerStats.baseball.runsAllowed += season.baseball.runsAllowed;
+        player.careerStats.baseball.earnedRuns += season.baseball.earnedRuns;
+        player.careerStats.baseball.walksAllowed += season.baseball.walksAllowed;
+        player.careerStats.baseball.strikeoutsThrown += season.baseball.strikeoutsThrown;
+        player.careerStats.baseball.homeRunsAllowed += season.baseball.homeRunsAllowed;
+        player.careerStats.baseball.wins += season.baseball.wins;
+        player.careerStats.baseball.losses += season.baseball.losses;
+        player.careerStats.baseball.saves += season.baseball.saves;
+        player.careerStats.baseball.putouts += season.baseball.putouts;
+        player.careerStats.baseball.assists += season.baseball.assists;
+        player.careerStats.baseball.errors += season.baseball.errors;
+      }
+
+      // Aggregate soccer stats
+      if (season.soccer && player.careerStats.soccer) {
+        player.careerStats.soccer.goals += season.soccer.goals;
+        player.careerStats.soccer.assists += season.soccer.assists;
+        player.careerStats.soccer.shots += season.soccer.shots;
+        player.careerStats.soccer.shotsOnTarget += season.soccer.shotsOnTarget;
+        player.careerStats.soccer.minutesPlayed += season.soccer.minutesPlayed;
+        player.careerStats.soccer.yellowCards += season.soccer.yellowCards;
+        player.careerStats.soccer.redCards += season.soccer.redCards;
+        if (season.soccer.saves !== undefined) {
+          player.careerStats.soccer.saves = (player.careerStats.soccer.saves || 0) + season.soccer.saves;
+        }
+        if (season.soccer.cleanSheets !== undefined) {
+          player.careerStats.soccer.cleanSheets = (player.careerStats.soccer.cleanSheets || 0) + season.soccer.cleanSheets;
+        }
+        if (season.soccer.goalsAgainst !== undefined) {
+          player.careerStats.soccer.goalsAgainst = (player.careerStats.soccer.goalsAgainst || 0) + season.soccer.goalsAgainst;
+        }
+      }
+
+      // Aggregate games/minutes/points
+      player.careerStats.gamesPlayed.basketball += season.gamesPlayed.basketball;
+      player.careerStats.gamesPlayed.baseball += season.gamesPlayed.baseball;
+      player.careerStats.gamesPlayed.soccer += season.gamesPlayed.soccer;
+      player.careerStats.minutesPlayed.basketball += season.minutesPlayed.basketball;
+      player.careerStats.minutesPlayed.baseball += season.minutesPlayed.baseball;
+      player.careerStats.minutesPlayed.soccer += season.minutesPlayed.soccer;
+      player.careerStats.totalPoints.basketball += season.totalPoints.basketball;
+      player.careerStats.totalPoints.baseball += season.totalPoints.baseball;
+      player.careerStats.totalPoints.soccer += season.totalPoints.soccer;
+    }
+  }
+
+  return player;
 }
 
 /**

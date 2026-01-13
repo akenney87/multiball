@@ -117,9 +117,10 @@ function buildBasketballStats(
 
 function buildBaseballBattingStats(
   stats: BaseballCareerStats | undefined,
-  _mode: DisplayMode // Mode unused - baseball stats shown as rates (AVG, OBP, etc.)
+  gamesPlayed: number,
+  mode: DisplayMode
 ): StatRow[] {
-  if (!stats || stats.atBats === 0) {
+  if (!stats || stats.atBats === 0 || gamesPlayed === 0) {
     return [{ label: 'No batting stats', value: '-' }];
   }
 
@@ -133,11 +134,23 @@ function buildBaseballBattingStats(
 
   const ops = obp + slg;
 
-  // Batting stats are typically shown as totals with calculated rates
+  if (mode === 'perGame') {
+    return [
+      { label: 'AVG', value: formatBattingAverage(stats.hits, stats.atBats), highlight: true },
+      { label: 'OBP', value: formatNumber(obp, 3).replace(/^0/, '') },
+      { label: 'SLG', value: formatNumber(slg, 3).replace(/^0/, '') },
+      { label: 'OPS', value: formatNumber(ops, 3) },
+      { label: 'H/G', value: formatNumber(stats.hits / gamesPlayed, 1) },
+      { label: 'HR/G', value: formatNumber(stats.homeRuns / gamesPlayed, 2) },
+      { label: 'RBI/G', value: formatNumber(stats.rbi / gamesPlayed, 1) },
+      { label: 'R/G', value: formatNumber(stats.runs / gamesPlayed, 1) },
+      { label: 'BB/G', value: formatNumber(stats.walks / gamesPlayed, 1) },
+    ];
+  }
+
   return [
-    { label: 'AVG', value: formatBattingAverage(stats.hits, stats.atBats), highlight: true },
-    { label: 'OBP', value: formatNumber(obp, 3).replace(/^0/, '') },
-    { label: 'SLG', value: formatNumber(slg, 3).replace(/^0/, '') },
+    { label: 'Games', value: formatNumber(gamesPlayed), highlight: true },
+    { label: 'AVG', value: formatBattingAverage(stats.hits, stats.atBats) },
     { label: 'OPS', value: formatNumber(ops, 3) },
     { label: 'AB', value: formatNumber(stats.atBats) },
     { label: 'H', value: formatNumber(stats.hits) },
@@ -151,13 +164,27 @@ function buildBaseballBattingStats(
 
 function buildBaseballPitchingStats(
   stats: BaseballCareerStats | undefined,
-  _mode: DisplayMode // Mode unused - pitching stats shown as rates (ERA, WHIP, etc.)
+  gamesPlayed: number,
+  mode: DisplayMode
 ): StatRow[] {
-  if (!stats || stats.inningsPitched === 0) {
+  if (!stats || stats.inningsPitched === 0 || gamesPlayed === 0) {
     return [{ label: 'No pitching stats', value: '-' }];
   }
 
   const ip = stats.inningsPitched;
+
+  if (mode === 'perGame') {
+    return [
+      { label: 'ERA', value: formatERA(stats.earnedRuns, ip), highlight: true },
+      { label: 'WHIP', value: formatWHIP(stats.walksAllowed, stats.hitsAllowed, ip) },
+      { label: 'IP/G', value: formatNumber(ip / gamesPlayed, 1) },
+      { label: 'K/G', value: formatNumber(stats.strikeoutsThrown / gamesPlayed, 1) },
+      { label: 'BB/G', value: formatNumber(stats.walksAllowed / gamesPlayed, 1) },
+      { label: 'K/9', value: formatNumber((stats.strikeoutsThrown / ip) * 9, 1) },
+      { label: 'W-L', value: `${stats.wins}-${stats.losses}` },
+      { label: 'SV', value: formatNumber(stats.saves) },
+    ];
+  }
 
   return [
     { label: 'W-L', value: `${stats.wins}-${stats.losses}`, highlight: true },
@@ -319,8 +346,8 @@ export function CareerStatsCard({ player, hidden = false }: CareerStatsCardProps
         return buildBasketballStats(stats.basketball, gamesPlayed, displayMode);
       case 'baseball':
         // Show both batting and pitching
-        const batting = buildBaseballBattingStats(stats.baseball, displayMode);
-        const pitching = buildBaseballPitchingStats(stats.baseball, displayMode);
+        const batting = buildBaseballBattingStats(stats.baseball, gamesPlayed, displayMode);
+        const pitching = buildBaseballPitchingStats(stats.baseball, gamesPlayed, displayMode);
         return { batting, pitching };
       case 'soccer':
         return buildSoccerStats(stats.soccer, gamesPlayed, displayMode);

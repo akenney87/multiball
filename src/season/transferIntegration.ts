@@ -339,16 +339,15 @@ export function completeTransfer(
     throw new Error('Player not found');
   }
 
-  const player = players[playerIndex];
+  const player = players[playerIndex]!;
 
-  // Move player to new team
-  const updatedPlayer: Player = {
-    ...player,
+  // Move player to new team - preserve all existing fields including careerStartAge
+  const updatedPlayer: Player = Object.assign({}, player, {
     teamId: offer.buyerTeamId,
-    acquisitionType: 'trade',
+    acquisitionType: 'trade' as const,
     acquisitionDate: new Date(),
-    contract: null, // Contract will need to be negotiated
-  };
+    contract: null,
+  });
 
   // Emit completion event
   const event: TransferCompletedEvent = {
