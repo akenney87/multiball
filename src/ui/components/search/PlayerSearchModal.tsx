@@ -110,21 +110,40 @@ export function PlayerSearchModal({
   const [sortAscending, setSortAscending] = useState(false);
   const [showSortPicker, setShowSortPicker] = useState(false);
 
+  // PERFORMANCE: Create lookup maps for O(1) access instead of O(n) find() calls
+  const playerMap = useMemo(() => {
+    const map = new Map<string, Player>();
+    for (const p of players) {
+      map.set(p.id, p);
+    }
+    return map;
+  }, [players]);
+
+  const scoutingReportMap = useMemo(() => {
+    const map = new Map<string, typeof scoutingReports[0]>();
+    for (const r of scoutingReports) {
+      map.set(r.playerId, r);
+    }
+    return map;
+  }, [scoutingReports]);
+
+  const scoutedPlayerSet = useMemo(() => new Set(scoutedPlayerIds), [scoutedPlayerIds]);
+
   // Helper to get scouting status for a player
   const getScoutingInfo = useCallback((playerId: string) => {
     // User team players are always fully known
-    const player = players.find(p => p.id === playerId);
+    const player = playerMap.get(playerId);
     if (player?.teamId === userTeamId) {
       return { isFullyKnown: true, scoutingDepth: 100, report: null };
     }
 
     // Check if fully scouted
-    if (scoutedPlayerIds.includes(playerId)) {
+    if (scoutedPlayerSet.has(playerId)) {
       return { isFullyKnown: true, scoutingDepth: 100, report: null };
     }
 
     // Check for partial scouting report
-    const report = scoutingReports.find(r => r.playerId === playerId);
+    const report = scoutingReportMap.get(playerId);
     if (report) {
       const depth = report.scoutingQuality || 50;
       return { isFullyKnown: depth >= 100, scoutingDepth: depth, report };
@@ -132,7 +151,7 @@ export function PlayerSearchModal({
 
     // Not scouted at all
     return { isFullyKnown: false, scoutingDepth: 0, report: null };
-  }, [players, userTeamId, scoutedPlayerIds, scoutingReports]);
+  }, [playerMap, userTeamId, scoutedPlayerSet, scoutingReportMap]);
 
   // Search state
   const [searchText, setSearchText] = useState('');
@@ -343,31 +362,30 @@ export function PlayerSearchModal({
   // When sorting by overall, only sort scouted players by actual rating
   // Unscouted players (showing "?") are sorted by last name and placed at the end
   const sortedPlayers = useMemo(() => {
-    // Helper to get sortable overall value for a player
-    // Returns null if player is completely unscouted (shows "?")
-    const getSortableOverall = (playerId: string, player: Player): number | null => {
-      const info = getScoutingInfo(playerId);
+    // PERFORMANCE: Pre-compute sortable overalls ONCE before sorting
+    // This avoids calling getScoutingInfo() for every sort comparison (O(n log n) calls)
+    const sortableOveralls = new Map<string, number | null>();
 
-      // Fully known: use actual overall
-      if (info.isFullyKnown) {
-        return calculatePlayerOverall(player);
+    if (sortBy === 'overall') {
+      for (const player of filteredPlayers) {
+        const info = getScoutingInfo(player.id);
+
+        if (info.isFullyKnown) {
+          sortableOveralls.set(player.id, calculatePlayerOverall(player));
+        } else if (info.scoutingDepth > 0 && info.report?.overallRatings?.basketball) {
+          const range = info.report.overallRatings.basketball;
+          sortableOveralls.set(player.id, (range.min + range.max) / 2);
+        } else {
+          sortableOveralls.set(player.id, null);
+        }
       }
-
-      // Partially scouted with range: use midpoint of range
-      if (info.scoutingDepth > 0 && info.report?.overallRatings?.basketball) {
-        const range = info.report.overallRatings.basketball;
-        return (range.min + range.max) / 2;
-      }
-
-      // Not scouted at all: no sortable value
-      return null;
-    };
+    }
 
     return [...filteredPlayers].sort((a, b) => {
       // When sorting by overall, handle scouting status
       if (sortBy === 'overall') {
-        const overallA = getSortableOverall(a.id, a);
-        const overallB = getSortableOverall(b.id, b);
+        const overallA = sortableOveralls.get(a.id) ?? null;
+        const overallB = sortableOveralls.get(b.id) ?? null;
 
         // Both have sortable values: sort by overall
         if (overallA !== null && overallB !== null) {
