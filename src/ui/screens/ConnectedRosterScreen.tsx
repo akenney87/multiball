@@ -36,7 +36,7 @@ type SortOption =
   | 'awareness';
 
 interface ConnectedRosterScreenProps {
-  onPlayerPress?: (playerId: string) => void;
+  onPlayerPress?: (playerId: string, playerList?: string[]) => void;
 }
 
 // Sort options grouped by category
@@ -161,12 +161,13 @@ export function ConnectedRosterScreen({ onPlayerPress }: ConnectedRosterScreenPr
     ? (roster.reduce((sum, p) => sum + p.age, 0) / roster.length).toFixed(1)
     : 0;
 
-  // Handle player press
+  // Handle player press - pass sorted player list for swipe navigation
   const handlePlayerPress = useCallback(
     (player: PlayerCardData) => {
-      onPlayerPress?.(player.id);
+      const playerIds = filteredRoster.map(p => p.id);
+      onPlayerPress?.(player.id, playerIds);
     },
-    [onPlayerPress]
+    [onPlayerPress, filteredRoster]
   );
 
   const renderPlayer = ({ item }: { item: PlayerCardData }) => (

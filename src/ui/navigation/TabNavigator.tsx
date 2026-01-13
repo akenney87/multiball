@@ -35,6 +35,7 @@ import { ThemePreviewScreen } from '../screens/ThemePreviewScreen';
 import { PlayerSearchModal } from '../components/search';
 import { BudgetAllocationModal } from '../components/budget';
 import { HeaderGear } from '../components/common';
+import { SwipeablePlayerDetail } from '../components/player';
 import { useGame } from '../context/GameContext';
 import type { OperationsBudget } from '../context/types';
 
@@ -89,6 +90,12 @@ export function TabNavigator() {
     matchId?: string;
     sport?: 'basketball' | 'baseball' | 'soccer';
   }>({ type: null });
+
+  // Player navigation context for swipe navigation
+  const [playerNavContext, setPlayerNavContext] = useState<{
+    playerList: string[];
+    currentIndex: number;
+  } | null>(null);
 
   // Modal state for match
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
@@ -199,8 +206,23 @@ export function TabNavigator() {
     setShowMatchSimulation(true);
   }, []);
 
-  // Handler for player press
-  const handlePlayerPress = useCallback((playerId: string) => {
+  // Handler for player press (with optional player list for swipe navigation)
+  const handlePlayerPress = useCallback((playerId: string, playerList?: string[]) => {
+    if (playerList && playerList.length > 1) {
+      const index = playerList.indexOf(playerId);
+      setPlayerNavContext({
+        playerList,
+        currentIndex: index >= 0 ? index : 0,
+      });
+    } else {
+      setPlayerNavContext(null);
+    }
+    setSelectedPlayerId(playerId);
+  }, []);
+
+  // Handler for swipe navigation between players
+  const handleSwipeNavigate = useCallback((playerId: string, newIndex: number) => {
+    setPlayerNavContext(prev => prev ? { ...prev, currentIndex: newIndex } : null);
     setSelectedPlayerId(playerId);
   }, []);
 
@@ -260,6 +282,7 @@ export function TabNavigator() {
     const returnTo = playerDetailReturnTo;
     setSelectedPlayerId(null);
     setPlayerDetailReturnTo({ type: null });
+    setPlayerNavContext(null);
 
     // Reopen the previous modal after a short delay
     setTimeout(() => {
@@ -448,10 +471,10 @@ export function TabNavigator() {
         </View>
         <ConnectedScoutingScreen
           onBack={() => setShowScouting(false)}
-          onPlayerPress={(playerId) => {
+          onPlayerPress={(playerId, playerList) => {
             setShowScouting(false);
             setPlayerDetailReturnTo({ type: 'scouting' });
-            setSelectedPlayerId(playerId);
+            handlePlayerPress(playerId, playerList);
           }}
         />
       </SafeAreaView>
@@ -587,14 +610,14 @@ export function TabNavigator() {
     <PlayerSearchModal
       visible={showSearch}
       onClose={() => setShowSearch(false)}
-      onPlayerPress={(playerId) => {
+      onPlayerPress={(playerId, playerList) => {
         // Close search modal first, then open player detail
         // This avoids nested modal issues on some platforms
         setShowSearch(false);
         setPlayerDetailReturnTo({ type: 'search' });
         // Small delay to allow search modal to close first
         setTimeout(() => {
-          setSelectedPlayerId(playerId);
+          handlePlayerPress(playerId, playerList);
         }, 100);
       }}
       onScoutPlayer={(playerId) => {
@@ -624,12 +647,19 @@ export function TabNavigator() {
           <View style={styles.closeButton} />
         </View>
         {selectedPlayerId && (
-          <ConnectedPlayerDetailScreen
+          <SwipeablePlayerDetail
             playerId={selectedPlayerId}
-            onBack={handleClosePlayerDetail}
-            onRelease={handleClosePlayerDetail}
-            onNavigateToNegotiation={handleNavigateToNegotiation}
-          />
+            playerList={playerNavContext?.playerList || []}
+            currentIndex={playerNavContext?.currentIndex || 0}
+            onNavigate={handleSwipeNavigate}
+          >
+            <ConnectedPlayerDetailScreen
+              playerId={selectedPlayerId}
+              onBack={handleClosePlayerDetail}
+              onRelease={handleClosePlayerDetail}
+              onNavigateToNegotiation={handleNavigateToNegotiation}
+            />
+          </SwipeablePlayerDetail>
         )}
       </SafeAreaView>
     </Modal>

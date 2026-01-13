@@ -22,7 +22,7 @@ import { DEFAULT_SCOUT_INSTRUCTIONS } from '../context/types';
 interface ConnectedScoutingScreenProps {
   onBack?: () => void;
   onNavigateToBudget?: () => void;
-  onPlayerPress?: (playerId: string) => void;
+  onPlayerPress?: (playerId: string, playerList?: string[]) => void;
 }
 
 export function ConnectedScoutingScreen({
@@ -196,7 +196,10 @@ export function ConnectedScoutingScreen({
       onScoutNow={handleScoutNow}
       onBudgetPress={handleBudgetPress}
       onInstructionsChange={handleInstructionsChange}
-      onPlayerPress={onPlayerPress}
+      onPlayerPress={(playerId) => {
+        // Pass scouting target list for swipe navigation
+        onPlayerPress?.(playerId, currentTargetIds);
+      }}
     />
   );
 }

@@ -31,7 +31,7 @@ import { calculatePlayerOverall } from '../../integration/gameInitializer';
 interface PlayerSearchModalProps {
   visible: boolean;
   onClose: () => void;
-  onPlayerPress: (playerId: string) => void;
+  onPlayerPress: (playerId: string, playerList?: string[]) => void;
   onScoutPlayer?: (playerId: string) => void;
   players: Player[];
   teams: Array<{ id: string; name: string }>;
@@ -524,7 +524,9 @@ export function PlayerSearchModal({
           ]}
           onPress={() => {
             // Don't close the modal - let user return to search after viewing player
-            onPlayerPress(player.id);
+            // Pass sorted player list for swipe navigation
+            const playerIds = sortedPlayers.map(p => p.id);
+            onPlayerPress(player.id, playerIds);
           }}
         >
           <View style={styles.playerInfo}>

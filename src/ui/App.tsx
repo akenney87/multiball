@@ -2,6 +2,7 @@
  * Main App Component
  *
  * Root component that sets up:
+ * - Gesture handler (for swipe navigation)
  * - Theme provider
  * - Error boundary
  * - Game context
@@ -11,6 +12,7 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider, useColors } from './theme';
 import { AppNavigator } from './navigation';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -32,15 +34,17 @@ function AppContent() {
 
 export function App() {
   return (
-    <SafeAreaProvider>
-      <ErrorBoundary>
-        <ThemeProvider>
-          <GameProvider>
-            <AppContent />
-          </GameProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ErrorBoundary>
+          <ThemeProvider>
+            <GameProvider>
+              <AppContent />
+            </GameProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
