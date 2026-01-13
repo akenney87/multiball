@@ -1339,7 +1339,7 @@ function SoccerLineupEditor({
           <Text style={[styles.instructionText, { color: colors.primary }]}>
             {selectedSlotIndex !== null
               ? `Tap a bench player to assign, or tap another position to swap`
-              : `Tap a position to select, then tap a bench player`}
+              : `Tap a position to select • Long press for position ratings`}
           </Text>
         </View>
 
@@ -1377,7 +1377,7 @@ function SoccerLineupEditor({
                 onPress={() => handleSlotPress(slotIndex, player)}
                 activeOpacity={0.7}
               >
-                {/* Position badge - tappable when player exists to show position picker */}
+                {/* Position badge - tap to select for swap, long press to show position picker */}
                 <TouchableOpacity
                   style={[
                     styles.positionBadgeLarge,
@@ -1386,12 +1386,17 @@ function SoccerLineupEditor({
                   ]}
                   onPress={(e) => {
                     e.stopPropagation();
+                    // Tap always selects slot for swapping
+                    handleSlotPress(slotIndex, player);
+                  }}
+                  onLongPress={(e) => {
+                    e.stopPropagation();
+                    // Long press opens position picker (shows positional ratings)
                     if (player) {
                       handlePositionBadgePress(player, slotIndex);
-                    } else {
-                      handleSlotPress(slotIndex, player);
                     }
                   }}
+                  delayLongPress={300}
                   activeOpacity={0.7}
                 >
                   <Text style={[
