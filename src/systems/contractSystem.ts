@@ -40,10 +40,11 @@ export const MAX_CONTRACT_LENGTH = 5;
 // Salary calculation
 export const SALARY_PERCENTAGE = 0.25; // Salary = 25% of market value
 
-// Agent fees (flat 10% for simplicity)
-export const MIN_AGENT_FEE_PCT = 0.08; // 8% minimum
+// Agent fees (agents don't work for free!)
+export const MIN_AGENT_FEE_PCT = 0.08; // 8% minimum - agents won't accept less
 export const MAX_AGENT_FEE_PCT = 0.12; // 12% maximum
 export const DEFAULT_AGENT_FEE_PCT = 0.10; // 10% default
+export const ABSOLUTE_MIN_AGENT_FEE_PCT = 0.05; // 5% absolute floor - agents NEVER work for free
 
 // Age multipliers for valuation
 // Young high-potential players are MORE valuable (longer careers, upside)
@@ -304,8 +305,22 @@ export function generatePlayerDemands(
     desiredRole = determineSquadRole(playerRating, teamAvgRating);
   }
 
-  // Signing bonus (higher rated players want more)
-  const signingBonus = Math.round(calculatedSalary * (0.1 + (playerRating / 100) * 0.2));
+  // Signing bonus (higher rated players want more, with variance)
+  // Base: 10-30% of salary depending on rating, then ±30% random variance
+  const bonusBase = calculatedSalary * (0.1 + (playerRating / 100) * 0.2);
+  const bonusVariance = 0.7 + Math.random() * 0.6; // 0.7 to 1.3
+  const signingBonus = Math.round(bonusBase * bonusVariance);
+
+  // Agent fee expectation (with variance - some agents are greedier than others)
+  // Base: 8-12% of salary, then ±25% random variance
+  const agentBase = calculatedSalary * (MIN_AGENT_FEE_PCT + (playerRating / 100) * (MAX_AGENT_FEE_PCT - MIN_AGENT_FEE_PCT));
+  const agentVariance = 0.75 + Math.random() * 0.5; // 0.75 to 1.25
+  const agentFee = Math.round(agentBase * agentVariance);
+
+  // Upfront priority - how much player/agent cares about bonus/fee vs salary
+  // 0.3-0.7 range: some prioritize salary, others want upfront money
+  // Higher ambition players tend to want more upfront (they value immediate compensation)
+  const upfrontPriority = 0.3 + Math.random() * 0.4 + (player.ambition - 1.0) * 0.2;
 
   // Release clause preference
   const releaseClause = strategy === 'aggressive' ? null : Math.round(calculatedSalary * 5);
@@ -330,9 +345,11 @@ export function generatePlayerDemands(
     maxContractLength: maxLength,
     desiredRole,
     signingBonus,
+    agentFee,
     releaseClause,
     requiredClauses,
     flexibility,
+    upfrontPriority: Math.max(0.1, Math.min(0.9, upfrontPriority)), // Clamp to 0.1-0.9
   };
 }
 
@@ -405,6 +422,11 @@ export function createRecommendedOffer(
 
 /**
  * Evaluates how satisfied a player is with an offer (0-100)
+ *
+ * Key design: Uses soft rules with trade-offs
+ * - High salary can partially compensate for low bonus/agent fee
+ * - upfrontPriority determines how much bonus/fee matter vs salary
+ * - Random variance prevents exact minimum predictions
  */
 export function evaluateOfferSatisfaction(
   offer: ContractOffer,
@@ -414,18 +436,26 @@ export function evaluateOfferSatisfaction(
 ): number {
   let satisfaction = 50; // Start neutral
 
-  // Salary satisfaction (most important, 40% weight)
+  // ==========================================================================
+  // SALARY SATISFACTION (base weight ~35-45% depending on upfrontPriority)
+  // ==========================================================================
+  const salaryWeight = 40 - (demands.upfrontPriority * 10); // 31-39 depending on priority
+
   if (offer.salary >= demands.idealSalary) {
-    satisfaction += 40;
+    // Above ideal: full points + overflow bonus that can compensate other areas
+    const overflow = (offer.salary - demands.idealSalary) / demands.idealSalary;
+    satisfaction += salaryWeight + Math.min(15, overflow * 30); // Up to +15 bonus for high salary
   } else if (offer.salary >= demands.minSalary) {
     const salaryRatio = (offer.salary - demands.minSalary) / (demands.idealSalary - demands.minSalary);
-    satisfaction += Math.round(salaryRatio * 30);
+    satisfaction += Math.round(salaryRatio * (salaryWeight - 5));
   } else {
     const deficit = (demands.minSalary - offer.salary) / demands.minSalary;
     satisfaction -= Math.round(deficit * 50);
   }
 
-  // Contract length satisfaction (15% weight)
+  // ==========================================================================
+  // CONTRACT LENGTH (15% weight)
+  // ==========================================================================
   if (offer.contractLength >= demands.minContractLength &&
       offer.contractLength <= demands.maxContractLength) {
     satisfaction += 15;
@@ -433,7 +463,9 @@ export function evaluateOfferSatisfaction(
     satisfaction -= 10;
   }
 
-  // Squad role satisfaction (20% weight)
+  // ==========================================================================
+  // SQUAD ROLE (20% weight)
+  // ==========================================================================
   const roleRanks: Record<SquadRole, number> = {
     star_player: 6,
     important_player: 5,
@@ -450,14 +482,50 @@ export function evaluateOfferSatisfaction(
     satisfaction -= (desiredRank - offeredRank) * 5;
   }
 
-  // Signing bonus (10% weight)
-  if (offer.signingBonus >= demands.signingBonus) {
-    satisfaction += 10;
-  } else if (offer.signingBonus >= demands.signingBonus * 0.5) {
-    satisfaction += 5;
+  // ==========================================================================
+  // UPFRONT MONEY: SIGNING BONUS + AGENT FEE (combined ~15-25% weight)
+  // Weight scales with upfrontPriority - some care more than others
+  // ==========================================================================
+  const upfrontWeight = 10 + (demands.upfrontPriority * 15); // 11.5-23.5 depending on priority
+
+  // Signing bonus satisfaction
+  const bonusRatio = demands.signingBonus > 0
+    ? offer.signingBonus / demands.signingBonus
+    : 1;
+
+  // Agent fee satisfaction - agents won't work for free, but expectations vary
+  const expectedAgentFee = demands.agentFee || (offer.salary * DEFAULT_AGENT_FEE_PCT);
+  const agentRatio = expectedAgentFee > 0
+    ? offer.agentFee / expectedAgentFee
+    : 1;
+
+  // Combined upfront satisfaction with trade-off between bonus and agent fee
+  // Player cares about bonus, agent cares about their fee
+  const upfrontRatio = (bonusRatio * 0.5 + agentRatio * 0.5);
+
+  if (upfrontRatio >= 1.0) {
+    satisfaction += upfrontWeight;
+  } else if (upfrontRatio >= 0.5) {
+    satisfaction += Math.round(upfrontRatio * upfrontWeight);
+  } else if (upfrontRatio >= 0.2) {
+    // Below 50% but not insulting - small penalty
+    satisfaction -= Math.round((0.5 - upfrontRatio) * upfrontWeight);
+  } else {
+    // Very low upfront money - significant penalty, but high salary can still save the deal
+    satisfaction -= Math.round((0.5 - upfrontRatio) * upfrontWeight * 1.5);
   }
 
-  // Required clauses check (5% weight)
+  // Hard floor: Agent fee can't be zero (agents NEVER work for free)
+  // But even this has some variance based on how desperate the situation is
+  const absoluteMinAgentFee = offer.salary * (ABSOLUTE_MIN_AGENT_FEE_PCT * (0.8 + Math.random() * 0.4));
+  if (offer.agentFee < absoluteMinAgentFee) {
+    const agentDeficit = (absoluteMinAgentFee - offer.agentFee) / absoluteMinAgentFee;
+    satisfaction -= Math.round(agentDeficit * 20); // Penalty but not instant rejection
+  }
+
+  // ==========================================================================
+  // REQUIRED CLAUSES (5% weight)
+  // ==========================================================================
   const hasAllClauses = demands.requiredClauses.every(
     req => offer.clauses.some(c => c.type === req)
   );
@@ -467,9 +535,16 @@ export function evaluateOfferSatisfaction(
     satisfaction -= 10;
   }
 
+  // ==========================================================================
+  // FLEXIBILITY & VARIANCE
+  // ==========================================================================
   // Flexibility increases with rounds
   const flexibilityBonus = round * STRATEGY_FLEXIBILITY[strategy] * 20;
   satisfaction += flexibilityBonus;
+
+  // Add small random variance (±5) so exact thresholds aren't predictable
+  const variance = Math.round((Math.random() - 0.5) * 10);
+  satisfaction += variance;
 
   return Math.max(0, Math.min(100, Math.round(satisfaction)));
 }
@@ -537,8 +612,11 @@ export function generateResponseMessage(
   if (offer.squadRole !== demands.desiredRole) {
     issues.push("a more prominent role");
   }
-  if (offer.signingBonus < demands.signingBonus) {
+  if (offer.signingBonus < demands.signingBonus * 0.7) {
     issues.push("a better signing bonus");
+  }
+  if (offer.agentFee < demands.agentFee * 0.7) {
+    issues.push("improved agent compensation");
   }
 
   if (issues.length === 0) {
@@ -590,6 +668,12 @@ export function generateCounterOffer(
   const bonusGap = demands.signingBonus - offer.signingBonus;
   const counterBonus = offer.signingBonus + Math.round(bonusGap * (1 - totalFlex));
 
+  // Counter agent fee - agents will push back on low fees
+  const agentFeeGap = demands.agentFee - offer.agentFee;
+  const counterAgentFee = agentFeeGap > 0
+    ? offer.agentFee + Math.round(agentFeeGap * (1 - totalFlex))
+    : offer.agentFee;
+
   // Add required clauses if missing
   const counterClauses = [...offer.clauses];
   for (const reqType of demands.requiredClauses) {
@@ -613,7 +697,7 @@ export function generateCounterOffer(
     signingBonus: Math.max(offer.signingBonus, counterBonus),
     performanceBonuses: offer.performanceBonuses,
     releaseClause: demands.releaseClause,
-    agentFee: offer.agentFee,
+    agentFee: Math.max(offer.agentFee, counterAgentFee),
     clauses: counterClauses,
     squadRole: demands.desiredRole,
     loyaltyBonus: offer.loyaltyBonus,
@@ -627,18 +711,31 @@ export function generateCounterOffer(
 
 /**
  * Creates a new contract negotiation
+ *
+ * @param player - Player being negotiated with
+ * @param initialOffer - Initial contract offer
+ * @param currentWeek - Current week number
+ * @param negotiationType - Type of negotiation
+ * @param transferFee - Optional transfer fee for transfers
+ * @param division - User's division (1-10) for accurate role expectations
  */
 export function createNegotiation(
   player: Player,
   initialOffer: ContractOffer,
   currentWeek: number,
   negotiationType: 'new_signing' | 'renewal' | 'transfer' = 'new_signing',
-  transferFee?: number
+  transferFee?: number,
+  division?: number
 ): ContractNegotiation {
   const strategy = determineNegotiationStrategy(player, false, true);
   const marketValue = calculatePlayerMarketValue(player);
   const calculatedSalary = calculateAnnualSalary(marketValue);
-  const demands = generatePlayerDemands(player, calculatedSalary, strategy);
+
+  // Use division-based role expectations if division is provided
+  // This ensures players like a 59 OVR in Division 7 expect to be star players
+  const demands = division !== undefined
+    ? generatePlayerDemands(player, calculatedSalary, strategy, division, true)
+    : generatePlayerDemands(player, calculatedSalary, strategy);
 
   return {
     id: `neg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

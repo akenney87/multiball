@@ -686,14 +686,22 @@ export interface ContractDemands {
   maxContractLength: number;
   /** Desired squad role */
   desiredRole: SquadRole;
-  /** Required signing bonus (0 if not required) */
+  /** Expected signing bonus */
   signingBonus: number;
+  /** Expected agent fee */
+  agentFee: number;
   /** Required release clause amount (null if will accept any) */
   releaseClause: number | null;
   /** Required clauses */
   requiredClauses: ContractClauseType[];
   /** How flexible the player is (0-100, higher = more willing to negotiate) */
   flexibility: number;
+  /**
+   * How much the player/agent prioritizes upfront money vs salary (0-1)
+   * Higher = cares more about bonus/agent fee, lower = prioritizes salary
+   * Creates variance so some players accept low bonuses if salary is high
+   */
+  upfrontPriority: number;
 }
 
 /**

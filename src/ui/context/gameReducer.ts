@@ -970,13 +970,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       // Create default offer based on player value
       const defaultOffer = createDefaultOffer(player);
 
-      // Create negotiation
+      // Create negotiation - pass user's division for accurate role expectations
+      // This ensures high OVR players in lower divisions expect appropriate roles
       const negotiation = createNegotiation(
         player,
         defaultOffer,
         state.season.currentWeek,
         negotiationType,
-        transferFee
+        transferFee,
+        state.userTeam.division
       );
 
       // Clean up accepted offer from outgoingOffers if this is a transfer

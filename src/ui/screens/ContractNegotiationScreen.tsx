@@ -80,7 +80,8 @@ const AVAILABLE_CLAUSES: ContractClauseType[] = [
 ];
 
 // Step values for different monetary fields (smaller, more granular)
-const SALARY_STEPS = [1000, 5000, 10000, 50000, 100000]; // $1K, $5K, $10K, $50K, $100K
+// Added $25k step for finer salary adjustments around $600k-$700k range
+const SALARY_STEPS = [1000, 5000, 10000, 25000, 50000, 100000]; // $1K, $5K, $10K, $25K, $50K, $100K
 const BONUS_STEPS = [1000, 5000, 10000, 25000, 50000]; // $1K, $5K, $10K, $25K, $50K
 const RELEASE_CLAUSE_STEPS = [10000, 50000, 100000, 500000, 1000000]; // $10K, $50K, $100K, $500K, $1M
 
@@ -711,6 +712,14 @@ function getDefaultClauseValue(type: ContractClauseType): number {
     default:
       return 0;
   }
+}
+
+/**
+ * Rounds a value to a "nice" number based on step increments
+ */
+function roundToNiceValue(value: number, steps: number[]): number {
+  const step = getStepSize(value, steps);
+  return Math.round(value / step) * step;
 }
 
 // =============================================================================
