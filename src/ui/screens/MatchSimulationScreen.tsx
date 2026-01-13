@@ -292,10 +292,27 @@ export function MatchSimulationScreen({
         const homeTactics = getTeamTactics(match.homeTeamId, isUserHome);
         const awayTactics = getTeamTactics(match.awayTeamId, !isUserHome);
 
+        // CRITICAL: Filter out reserve players for user team basketball
+        // Only players in starters OR bench should be available to play
+        const userLineup = state.userTeam.lineup;
+        const userStarterSet = new Set(userLineup.basketballStarters.filter(id => id));
+        const userBenchSet = new Set(userLineup.bench);
+
+        // User's active roster = starters + bench only (no reserves)
+        const userActiveRoster = userRoster.filter(p =>
+          userStarterSet.has(p.id) || userBenchSet.has(p.id)
+        );
+
+        // For AI teams, use full roster (they don't have lineup management)
+        const activeHomeRoster = isUserHome ? userActiveRoster : homeRoster;
+        const activeAwayRoster = isUserHome ? awayRoster : userActiveRoster;
+
+        console.log('[MatchSimulationScreen] Basketball - User active roster:', userActiveRoster.length,
+          '(starters:', userStarterSet.size, 'bench:', userBenchSet.size, ')');
         console.log('[MatchSimulationScreen] Running basketball simulation...');
         const simulator = new GameSimulator(
-          homeRoster,
-          awayRoster,
+          activeHomeRoster,
+          activeAwayRoster,
           homeTactics,
           awayTactics,
           homeTeamName,
