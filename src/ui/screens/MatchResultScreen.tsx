@@ -71,18 +71,17 @@ export function MatchResultScreen({
       <View style={[styles.card, { backgroundColor: colors.card }, shadows.md]}>
         <Text style={[styles.cardTitle, { color: colors.textMuted }]}>FINAL SCORE</Text>
 
-        <View style={styles.scoreContainer}>
-          <View style={styles.teamColumn}>
-            <Text style={[styles.teamName, { color: colors.text }]}>{homeTeam}</Text>
-            <Text style={[styles.finalScore, { color: colors.text }]}>{homeScore}</Text>
-          </View>
+        {/* Team names row */}
+        <View style={styles.teamNamesRow}>
+          <Text style={[styles.teamName, { color: colors.text }]}>{homeTeam}</Text>
+          <Text style={[styles.teamName, { color: colors.text }]}>{awayTeam}</Text>
+        </View>
 
+        {/* Scores row */}
+        <View style={styles.scoresRow}>
+          <Text style={[styles.finalScore, { color: colors.text }]}>{homeScore}</Text>
           <Text style={[styles.dash, { color: colors.textMuted }]}>-</Text>
-
-          <View style={styles.teamColumn}>
-            <Text style={[styles.teamName, { color: colors.text }]}>{awayTeam}</Text>
-            <Text style={[styles.finalScore, { color: colors.text }]}>{awayScore}</Text>
-          </View>
+          <Text style={[styles.finalScore, { color: colors.text }]}>{awayScore}</Text>
         </View>
       </View>
 
@@ -92,7 +91,7 @@ export function MatchResultScreen({
 
         <View style={styles.quarterTable}>
           <View style={styles.quarterRow}>
-            <Text style={[styles.quarterLabel, { color: colors.textMuted }]}>Team</Text>
+            <Text style={[styles.quarterTeamLabel, { color: colors.textMuted }]}>Team</Text>
             {quarterScores.map((_, i) => (
               <Text key={i} style={[styles.quarterLabel, { color: colors.textMuted }]}>
                 Q{i + 1}
@@ -209,28 +208,32 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     textAlign: 'center',
   },
-  scoreContainer: {
+  teamNamesRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  teamColumn: {
-    flex: 1,
-    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginBottom: spacing.sm,
   },
   teamName: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: spacing.sm,
+    textAlign: 'center',
+    flex: 1,
+  },
+  scoresRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   finalScore: {
     fontSize: 48,
     fontWeight: '800',
+    minWidth: 80,
+    textAlign: 'center',
   },
   dash: {
     fontSize: 32,
     fontWeight: '300',
-    marginHorizontal: spacing.lg,
+    marginHorizontal: spacing.md,
   },
   quarterTable: {
     gap: spacing.sm,
@@ -245,6 +248,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  quarterTeamLabel: {
+    flex: 2,
+    fontSize: 12,
+    fontWeight: '600',
   },
   quarterTeam: {
     flex: 2,
