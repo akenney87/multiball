@@ -27,6 +27,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors, spacing, borderRadius, shadows } from '../../theme';
 import type { Player, PlayerAttributes, ScoutingReport } from '../../../data/types';
 import { calculatePlayerOverall } from '../../integration/gameInitializer';
+import { calculatePlayerValuation } from '../../../systems/contractSystem';
 
 interface PlayerSearchModalProps {
   visible: boolean;
@@ -41,7 +42,7 @@ interface PlayerSearchModalProps {
   scoutingTargetIds?: string[];  // Players currently being scouted
 }
 
-type SortOption = 'overall' | 'age' | 'height' | 'weight' | 'name';
+type SortOption = 'overall' | 'age' | 'height' | 'weight' | 'name' | 'salary';
 
 const SORT_OPTIONS: Array<{ key: SortOption; label: string }> = [
   { key: 'overall', label: 'Overall' },
@@ -49,6 +50,7 @@ const SORT_OPTIONS: Array<{ key: SortOption; label: string }> = [
   { key: 'height', label: 'Height' },
   { key: 'weight', label: 'Weight' },
   { key: 'name', label: 'Name' },
+  { key: 'salary', label: 'Salary' },
 ];
 
 type ComparisonOperator = '>=' | '<=' | '=';
@@ -165,6 +167,8 @@ export function PlayerSearchModal({
   const [selectedNationality, setSelectedNationality] = useState<string>('all');
   const [minOverall, setMinOverall] = useState('');
   const [maxOverall, setMaxOverall] = useState('');
+  const [minSalary, setMinSalary] = useState('');
+  const [maxSalary, setMaxSalary] = useState('');
   const [attributeFilters, setAttributeFilters] = useState<AttributeFilter[]>([]);
 
   // UI state
@@ -180,6 +184,19 @@ export function PlayerSearchModal({
     const unique = new Set(players.map((p) => p.nationality).filter(Boolean));
     return Array.from(unique).sort();
   }, [players]);
+
+  // Helper to get salary for a player (contract salary or calculated for free agents)
+  const getPlayerSalary = useCallback((player: Player): number => {
+    // If player has a contract, use contract salary
+    if (player.contract && player.contract.salary > 0) {
+      return player.contract.salary;
+    }
+    // For free agents, calculate salary demand based on their attributes
+    const overall = calculatePlayerOverall(player);
+    // Calculate average potential (use current overall as estimate)
+    const { annualSalary } = calculatePlayerValuation(overall, player.age, overall, 1);
+    return annualSalary;
+  }, []);
 
   // Build team options including all teams
   const teamOptions = useMemo(() => {
@@ -213,6 +230,8 @@ export function PlayerSearchModal({
     setSelectedNationality('all');
     setMinOverall('');
     setMaxOverall('');
+    setMinSalary('');
+    setMaxSalary('');
     setAttributeFilters([]);
   }, []);
 
@@ -283,6 +302,15 @@ export function PlayerSearchModal({
       if (minOverallNum !== null && !isNaN(minOverallNum) && overall < minOverallNum) return false;
       if (maxOverallNum !== null && !isNaN(maxOverallNum) && overall > maxOverallNum) return false;
 
+      // Salary filter
+      const minSalaryNum = minSalary ? parseFloat(minSalary) * 1000000 : null;
+      const maxSalaryNum = maxSalary ? parseFloat(maxSalary) * 1000000 : null;
+      if (minSalaryNum !== null || maxSalaryNum !== null) {
+        const playerSalary = getPlayerSalary(player);
+        if (minSalaryNum !== null && !isNaN(minSalaryNum) && playerSalary < minSalaryNum) return false;
+        if (maxSalaryNum !== null && !isNaN(maxSalaryNum) && playerSalary > maxSalaryNum) return false;
+      }
+
       // Attribute filters - must respect scouting status
       for (const filter of attributeFilters) {
         const attrValue = (player.attributes as unknown as Record<string, number>)[filter.attribute];
@@ -352,10 +380,13 @@ export function PlayerSearchModal({
     selectedNationality,
     minOverall,
     maxOverall,
+    minSalary,
+    maxSalary,
     attributeFilters,
     userTeamId,
     scoutedPlayerIds,
     scoutingReports,
+    getPlayerSalary,
   ]);
 
   // Sort players by selected criteria
@@ -424,10 +455,13 @@ export function PlayerSearchModal({
         case 'name':
           comparison = a.name.localeCompare(b.name);
           break;
+        case 'salary':
+          comparison = getPlayerSalary(a) - getPlayerSalary(b);
+          break;
       }
       return sortAscending ? comparison : -comparison;
     });
-  }, [filteredPlayers, sortBy, sortAscending, getScoutingInfo]);
+  }, [filteredPlayers, sortBy, sortAscending, getScoutingInfo, getPlayerSalary]);
 
   // Get team name for display
   const getTeamName = useCallback(
@@ -462,6 +496,7 @@ export function PlayerSearchModal({
     if (minWeight || maxWeight) count++;
     if (selectedNationality !== 'all') count++;
     if (minOverall || maxOverall) count++;
+    if (minSalary || maxSalary) count++;
     count += attributeFilters.length;
     return count;
   }, [
@@ -475,6 +510,8 @@ export function PlayerSearchModal({
     selectedNationality,
     minOverall,
     maxOverall,
+    minSalary,
+    maxSalary,
     attributeFilters,
   ]);
 
@@ -752,6 +789,30 @@ export function PlayerSearchModal({
                   value={maxOverall}
                   onChangeText={setMaxOverall}
                   keyboardType="number-pad"
+                />
+              </View>
+            </View>
+
+            {/* Salary Range (in millions) */}
+            <View style={styles.filterRow}>
+              <Text style={[styles.filterLabel, { color: colors.textMuted }]}>Salary ($M)</Text>
+              <View style={styles.rangeInputs}>
+                <TextInput
+                  style={[styles.rangeInput, { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border }]}
+                  placeholder="Min"
+                  placeholderTextColor={colors.textMuted}
+                  value={minSalary}
+                  onChangeText={setMinSalary}
+                  keyboardType="decimal-pad"
+                />
+                <Text style={[styles.rangeSeparator, { color: colors.textMuted }]}>to</Text>
+                <TextInput
+                  style={[styles.rangeInput, { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border }]}
+                  placeholder="Max"
+                  placeholderTextColor={colors.textMuted}
+                  value={maxSalary}
+                  onChangeText={setMaxSalary}
+                  keyboardType="decimal-pad"
                 />
               </View>
             </View>
