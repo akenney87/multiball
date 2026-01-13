@@ -13,12 +13,18 @@ import { COUNTRY_CONFIGS, getCitiesForCountry, getDivisionForRank } from './coun
 
 /**
  * American-style team names (sport-neutral, club-style)
- * Format: [City] [Suffix]
  * Uses traditional club naming conventions, no mascots/nicknames
  */
+
+// Prefixes that come BEFORE city name (e.g., "Sporting Kansas City", "Real Salt Lake")
+const AMERICAN_PREFIXES = [
+  'Sporting', 'Real', 'Inter', 'AC',
+];
+
+// Suffixes that come AFTER city name (e.g., "Austin SC", "Nashville United")
 const AMERICAN_SUFFIXES = [
-  'SC', 'United', 'Athletic', 'Sporting', 'City',
-  'Union', 'Real', 'Inter', 'Olympic', 'Metro',
+  'SC', 'United', 'Athletic', 'City', 'AC',
+  'Union', 'Olympic', 'Metro',
   'Central', 'Premier', 'Academy', 'Alliance',
 ];
 
@@ -126,13 +132,21 @@ function pickRandom<T>(arr: readonly T[], random: () => number): T {
  * Generate American-style team name
  */
 function generateAmericanName(city: string, random: () => number): string {
-  const suffix = pickRandom(AMERICAN_SUFFIXES, random);
-
   // Some special cases for realism
   if (city === 'Los Angeles' && random() > 0.5) return 'LA United';
   if (city === 'New York' && random() > 0.5) return 'New York City';
   if (city === 'Kansas City' && random() > 0.5) return 'Sporting Kansas City';
 
+  // 25% chance to use a prefix (e.g., "Sporting Frisco", "Real Salt Lake")
+  const usePrefix = random() < 0.25;
+
+  if (usePrefix) {
+    const prefix = pickRandom(AMERICAN_PREFIXES, random);
+    return `${prefix} ${city}`;
+  }
+
+  // 75% chance to use a suffix (e.g., "Austin SC", "Nashville United")
+  const suffix = pickRandom(AMERICAN_SUFFIXES, random);
   return `${city} ${suffix}`;
 }
 
