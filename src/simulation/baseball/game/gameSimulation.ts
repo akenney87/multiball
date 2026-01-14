@@ -54,6 +54,11 @@ export interface TeamGameState {
   pitchingStrategy?: PitchingStrategy;
   /** Batting strategy for this team */
   battingStrategy?: BattingStrategy;
+  /**
+   * Ohtani Rule: Player ID of a two-way player (pitcher who is also DH).
+   * When set, this player can be replaced on the mound but remain in batting order.
+   */
+  twoWayPlayerId?: string;
 }
 
 export interface GameInput {
@@ -371,9 +376,13 @@ function playHalfInning(
 /**
  * Substitute pitcher from bullpen
  *
+ * Handles the Ohtani Rule: If the pitcher being replaced is the two-way player
+ * (twoWayPlayerId), they remain in the batting order as DH. The new pitcher
+ * only takes over pitching duties.
+ *
  * @param team - Team state
- * @param removedPitchers - Set to track pitchers removed from game (can't re-enter)
- * @returns The old pitcher who was removed, or null if no substitution occurred
+ * @param removedPitchers - Set to track pitchers removed from game (can't re-enter AS PITCHER)
+ * @returns The old pitcher who was removed from pitching, or null if no substitution occurred
  */
 function substitutePitcher(team: TeamGameState, removedPitchers?: Set<string>): Player | null {
   if (team.bullpen.length === 0) return null;
@@ -382,8 +391,9 @@ function substitutePitcher(team: TeamGameState, removedPitchers?: Set<string>): 
   const newPitcher = team.bullpen.shift();
   if (!newPitcher) return null;
 
-  // Track the old pitcher as removed (can't re-enter in baseball)
   const oldPitcher = team.pitcher;
+
+  // Track the old pitcher as removed from pitching (can't pitch again)
   if (removedPitchers) {
     removedPitchers.add(oldPitcher.id);
   }
@@ -396,8 +406,13 @@ function substitutePitcher(team: TeamGameState, removedPitchers?: Set<string>): 
   team.pitchCount = 0;
   team.pitcherPitchCounts[newPitcher.id] = 0;
 
-  // Update defense
+  // Update defense - new pitcher takes over on the mound
   team.defense['P'] = newPitcher;
+
+  // OHTANI RULE: If the old pitcher was the two-way player, they remain in the batting order as DH.
+  // We do NOT remove them from the lineup - they continue to bat.
+  // The twoWayPlayerId stays set so we know they're still in the game as DH.
+  // (No changes to team.lineup needed - the two-way player just stops pitching)
 
   return oldPitcher;
 }
@@ -412,6 +427,7 @@ function cloneTeamState(team: TeamGameState): TeamGameState {
     bullpen: [...team.bullpen],
     defense: { ...team.defense },
     pitcherPitchCounts: { ...team.pitcherPitchCounts },
+    twoWayPlayerId: team.twoWayPlayerId,
   };
 }
 
@@ -420,7 +436,10 @@ function cloneTeamState(team: TeamGameState): TeamGameState {
  *
  * Convenience function to set up a team for game simulation.
  * The lineup should include 9 batters (8 position players + DH).
- * The pitcher does NOT bat (universal DH rule).
+ * The pitcher does NOT bat (universal DH rule) UNLESS pitcherAsDH is true (Ohtani Rule).
+ *
+ * @param pitcherAsDH - Ohtani Rule: if true, starting pitcher can also be the DH in the lineup.
+ *                      When replaced on the mound, they remain in the batting order as DH.
  */
 export function createTeamGameState(
   teamId: string,
@@ -428,16 +447,20 @@ export function createTeamGameState(
   lineup: Player[],
   startingPitcher: Player,
   bullpen: Player[],
-  defensivePositions: Record<FieldingPosition, Player>
+  defensivePositions: Record<FieldingPosition, Player>,
+  pitcherAsDH: boolean = false
 ): TeamGameState {
-  // Validate lineup - must be 9 batters (no pitcher in lineup with DH)
+  // Validate lineup - must be 9 batters
   if (lineup.length !== 9) {
     throw new Error(`Lineup must have exactly 9 players, got ${lineup.length}`);
   }
 
-  // Validate that pitcher is NOT in the lineup (universal DH)
-  if (lineup.some(p => p.id === startingPitcher.id)) {
-    throw new Error('Pitcher should not be in batting lineup (DH rule)');
+  // Check if pitcher is in the lineup
+  const pitcherInLineup = lineup.some(p => p.id === startingPitcher.id);
+
+  // Ohtani Rule: Allow pitcher in lineup only if pitcherAsDH is true
+  if (pitcherInLineup && !pitcherAsDH) {
+    throw new Error('Pitcher should not be in batting lineup (DH rule). Set pitcherAsDH=true to use Ohtani Rule.');
   }
 
   // Ensure catcher is in defensive positions
@@ -464,5 +487,7 @@ export function createTeamGameState(
     battingOrderPosition: 0,
     pitchCount: 0,
     pitcherPitchCounts,
+    // Set twoWayPlayerId if pitcher is also in the batting order (Ohtani Rule)
+    twoWayPlayerId: pitcherAsDH && pitcherInLineup ? startingPitcher.id : undefined,
   };
 }

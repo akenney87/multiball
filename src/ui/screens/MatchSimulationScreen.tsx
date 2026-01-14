@@ -470,13 +470,17 @@ export function MatchSimulationScreen({
         // Get the user's bench array (for filtering out reserve players)
         const userBench = state.userTeam.lineup.bench;
 
+        // Ohtani Rule: check if user has pitcherAsDH enabled
+        const userPitcherAsDH = userBaseballLineup?.pitcherAsDH ?? false;
+
         const homeTeamState = createTeamGameState(
           match.homeTeamId,
           homeTeamName,
           createLineupFromConfig(homeRoster, isUserHome ? userLineupConfig : null, homeStartingPitcher.id),
           homeStartingPitcher,
           getBullpen(homeRoster, isUserHome ? userLineupConfig : null, isUserHome ? userBench : null),
-          createDefenseFromConfig(homeRoster, isUserHome ? userLineupConfig : null, homeStartingPitcher)
+          createDefenseFromConfig(homeRoster, isUserHome ? userLineupConfig : null, homeStartingPitcher),
+          isUserHome ? userPitcherAsDH : false  // Ohtani Rule for home team
         );
         const awayTeamState = createTeamGameState(
           match.awayTeamId,
@@ -484,7 +488,8 @@ export function MatchSimulationScreen({
           createLineupFromConfig(awayRoster, !isUserHome ? opponentLineupConfig : null, awayStartingPitcher.id),
           awayStartingPitcher,
           getBullpen(awayRoster, !isUserHome ? opponentLineupConfig : null, !isUserHome ? userBench : null),
-          createDefenseFromConfig(awayRoster, !isUserHome ? opponentLineupConfig : null, awayStartingPitcher)
+          createDefenseFromConfig(awayRoster, !isUserHome ? opponentLineupConfig : null, awayStartingPitcher),
+          !isUserHome ? userPitcherAsDH : false  // Ohtani Rule for away team
         );
 
         // Get baseball strategies - user's from global state, AI's from persistent strategies

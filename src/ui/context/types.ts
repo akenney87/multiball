@@ -82,6 +82,13 @@ export interface BaseballLineupConfig {
 
   /** Bullpen configuration */
   bullpen: BaseballBullpenConfig;
+
+  /**
+   * Ohtani Rule: Starting pitcher is also the DH in the batting order.
+   * When enabled, the starting pitcher can be included in battingOrder.
+   * If the pitcher is replaced on the mound, they remain in the batting order as DH.
+   */
+  pitcherAsDH?: boolean;
 }
 
 /**
