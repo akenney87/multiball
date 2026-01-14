@@ -51,6 +51,364 @@ interface ConnectedLineupEditorScreenProps {
   onPlayerPress?: (playerId: string) => void;
 }
 
+// =============================================================================
+// UNIFIED COMPONENTS
+// =============================================================================
+
+type SportType = 'basketball' | 'baseball' | 'soccer';
+
+/** Get sport-specific accent color */
+function getSportColor(sport: SportType, colors: ReturnType<typeof useColors>): string {
+  switch (sport) {
+    case 'basketball': return colors.basketball;
+    case 'baseball': return colors.baseball;
+    case 'soccer': return colors.soccer;
+  }
+}
+
+/** Unified instruction bar shown at top of each editor */
+interface LineupInstructionBarProps {
+  sport: SportType;
+  message: string;
+  colors: ReturnType<typeof useColors>;
+}
+
+function LineupInstructionBar({ sport, message, colors }: LineupInstructionBarProps) {
+  const sportColor = getSportColor(sport, colors);
+  return (
+    <View style={[unifiedStyles.instructionBar, { backgroundColor: sportColor + '15' }]}>
+      <Text style={[unifiedStyles.instructionText, { color: sportColor }]}>
+        {message}
+      </Text>
+    </View>
+  );
+}
+
+/** Unified section header with title, count, stat dropdown, and optional auto-fill */
+interface LineupSectionHeaderProps {
+  sport: SportType;
+  title: string;
+  count?: string; // e.g., "5/5" or just "9"
+  colors: ReturnType<typeof useColors>;
+  statLabel?: string;
+  onStatPress?: () => void;
+  onAutoFill?: () => void;
+  validationHint?: string;
+}
+
+function LineupSectionHeader({
+  sport,
+  title,
+  count,
+  colors,
+  statLabel,
+  onStatPress,
+  onAutoFill,
+  validationHint,
+}: LineupSectionHeaderProps) {
+  const sportColor = getSportColor(sport, colors);
+
+  return (
+    <View style={unifiedStyles.sectionHeaderUnified}>
+      <View style={unifiedStyles.sectionHeaderLeft}>
+        <Text style={[unifiedStyles.sectionTitleUnified, { color: colors.text }]}>
+          {title.toUpperCase()}
+        </Text>
+        {count && (
+          <Text style={[unifiedStyles.sectionCountUnified, { color: colors.textMuted }]}>
+            ({count})
+          </Text>
+        )}
+        {validationHint && (
+          <Text style={[unifiedStyles.validationHintUnified, { color: colors.warning }]}>
+            {validationHint}
+          </Text>
+        )}
+      </View>
+      <View style={unifiedStyles.sectionHeaderRight}>
+        {statLabel && onStatPress && (
+          <TouchableOpacity
+            style={[unifiedStyles.statDropdownUnified, { borderColor: colors.border }]}
+            onPress={onStatPress}
+          >
+            <Text style={[unifiedStyles.statDropdownTextUnified, { color: sportColor }]}>
+              {statLabel} ▼
+            </Text>
+          </TouchableOpacity>
+        )}
+        {onAutoFill && (
+          <TouchableOpacity
+            style={[unifiedStyles.autoFillButton, { backgroundColor: sportColor }]}
+            onPress={onAutoFill}
+          >
+            <Text style={unifiedStyles.autoFillButtonText}>Auto</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+}
+
+/** Unified player row with position badge, name, and stat badge */
+interface LineupPlayerRowProps {
+  sport: SportType;
+  colors: ReturnType<typeof useColors>;
+  positionLabel: string;
+  playerName?: string;
+  playerId?: string;
+  isSelected?: boolean;
+  isSwapTarget?: boolean;
+  emptyText?: string;
+  onRowPress: () => void;
+  onPositionPress?: () => void;
+  onPositionLongPress?: () => void;
+  onNamePress?: () => void;
+  statValue?: string;
+  secondaryInfo?: React.ReactNode;
+  /** For reserves/bench that use muted colors */
+  isMuted?: boolean;
+  /** Extra element to show on right side (e.g., + button for reserves) */
+  rightAction?: React.ReactNode;
+  /** For basketball minutes button */
+  minutesElement?: React.ReactNode;
+}
+
+function LineupPlayerRow({
+  sport,
+  colors,
+  positionLabel,
+  playerName,
+  playerId,
+  isSelected = false,
+  isSwapTarget = false,
+  emptyText = 'Tap to select',
+  onRowPress,
+  onPositionPress,
+  onPositionLongPress,
+  onNamePress,
+  statValue,
+  secondaryInfo,
+  isMuted = false,
+  rightAction,
+  minutesElement,
+}: LineupPlayerRowProps) {
+  const sportColor = isMuted ? colors.textMuted : getSportColor(sport, colors);
+
+  const rowStyle = [
+    unifiedStyles.playerRowUnified,
+    { borderBottomColor: colors.border },
+    isSelected && { backgroundColor: sportColor + '15', borderLeftWidth: 3, borderLeftColor: sportColor },
+    isSwapTarget && !isSelected && { backgroundColor: sportColor + '08' },
+  ];
+
+  const badgeStyle = [
+    unifiedStyles.positionBadgeUnified,
+    { backgroundColor: isSelected ? sportColor : sportColor + '20' },
+  ];
+
+  const badgeTextStyle = [
+    unifiedStyles.positionBadgeTextUnified,
+    { color: isSelected ? '#fff' : sportColor },
+  ];
+
+  return (
+    <TouchableOpacity
+      style={rowStyle}
+      onPress={onRowPress}
+      activeOpacity={0.7}
+    >
+      {/* Position Badge */}
+      <TouchableOpacity
+        style={badgeStyle}
+        onPress={(e) => {
+          e.stopPropagation();
+          onPositionPress ? onPositionPress() : onRowPress();
+        }}
+        onLongPress={onPositionLongPress ? (e) => {
+          e.stopPropagation();
+          onPositionLongPress();
+        } : undefined}
+        delayLongPress={300}
+        activeOpacity={0.7}
+      >
+        <Text style={badgeTextStyle}>{positionLabel}</Text>
+      </TouchableOpacity>
+
+      {/* Minutes element (basketball-specific, shown after position badge) */}
+      {minutesElement}
+
+      {/* Player Info or Empty State */}
+      {playerName ? (
+        <View style={unifiedStyles.playerRowContentUnified}>
+          <TouchableOpacity
+            style={unifiedStyles.playerMainInfoUnified}
+            onPress={onNamePress ? (e) => { e.stopPropagation(); onNamePress(); } : undefined}
+            activeOpacity={onNamePress ? 0.7 : 1}
+            disabled={!onNamePress}
+          >
+            <Text
+              style={[
+                unifiedStyles.playerNameUnified,
+                { color: colors.text },
+                onNamePress && unifiedStyles.tappableNameUnified,
+              ]}
+              numberOfLines={1}
+            >
+              {playerName}
+            </Text>
+            {secondaryInfo}
+          </TouchableOpacity>
+
+          {/* Stat Badge */}
+          {statValue && (
+            <View style={[unifiedStyles.statBadgeUnified, { backgroundColor: sportColor + '15' }]}>
+              <Text style={[unifiedStyles.statBadgeTextUnified, { color: sportColor }]}>
+                {statValue}
+              </Text>
+            </View>
+          )}
+
+          {/* Right Action (e.g., + button) */}
+          {rightAction}
+        </View>
+      ) : (
+        <View style={unifiedStyles.emptySlotContainerUnified}>
+          <Text style={[unifiedStyles.emptySlotUnified, { color: colors.textMuted }]}>
+            {isSelected ? 'Select a player below' : emptyText}
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+}
+
+/** Shared styles for unified components */
+const unifiedStyles = StyleSheet.create({
+  // Instruction Bar
+  instructionBar: {
+    padding: spacing.sm,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  instructionText: {
+    fontSize: 13,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+
+  // Section Header
+  sectionHeaderUnified: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.sm,
+    paddingBottom: spacing.xs,
+  },
+  sectionHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    flexShrink: 1,
+  },
+  sectionHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  sectionTitleUnified: {
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  sectionCountUnified: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  validationHintUnified: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginLeft: spacing.xs,
+  },
+  statDropdownUnified: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderWidth: 1,
+    minWidth: 80,
+  },
+  statDropdownTextUnified: {
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  autoFillButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  autoFillButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#000',
+  },
+
+  // Player Row
+  playerRowUnified: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+    borderBottomWidth: 1,
+  },
+  positionBadgeUnified: {
+    width: 44,
+    height: 32,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: spacing.sm,
+  },
+  positionBadgeTextUnified: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  playerRowContentUnified: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  playerMainInfoUnified: {
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+  playerNameUnified: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  tappableNameUnified: {
+    textDecorationLine: 'underline' as const,
+  },
+  statBadgeUnified: {
+    minWidth: 48,
+    height: 28,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statBadgeTextUnified: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  emptySlotContainerUnified: {
+    flex: 1,
+  },
+  emptySlotUnified: {
+    fontSize: 14,
+    fontStyle: 'italic',
+  },
+})
+
 const BASKETBALL_POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C'] as const;
 const SOCCER_FORMATIONS: SoccerFormation[] = ['4-4-2', '4-3-3', '3-5-2', '4-2-3-1', '5-3-2', '4-1-4-1'];
 
@@ -528,37 +886,40 @@ function BasketballLineupEditor({
     setSelectedSlotIndex(null);
   };
 
+  // Get instruction message based on selection state
+  const getInstructionMessage = () => {
+    if (selectedSlotIndex !== null) {
+      return `Tap another position to swap, or tap bench player to assign to ${BASKETBALL_POSITIONS[selectedSlotIndex]}`;
+    }
+    if (selectedBenchReserve !== null) {
+      return selectedBenchReserve.isBench
+        ? 'Tap a reserve to swap with bench player'
+        : 'Tap a bench player to swap with reserve';
+    }
+    return 'Tap a position to select • Tap minutes to adjust';
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Top Actions Row */}
-        <View style={styles.basketballActionsRow}>
-          <TouchableOpacity
-            style={[styles.optimalButton, { backgroundColor: colors.primary }]}
-            onPress={insertOptimalLineup}
-          >
-            <Text style={styles.optimalButtonText}>Auto-fill Lineup</Text>
-          </TouchableOpacity>
-          {selectedSlotIndex !== null && (
-            <Text style={[styles.swapHintText, { color: colors.primary }]}>
-              Tap another position to swap
-            </Text>
-          )}
-        </View>
+        {/* Unified Instruction Bar */}
+        <LineupInstructionBar
+          sport="basketball"
+          message={getInstructionMessage()}
+          colors={colors}
+        />
 
         {/* Starting Five */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Starting Five</Text>
-            <TouchableOpacity
-              style={[styles.statDropdown, { borderColor: colors.border }]}
-              onPress={() => setShowStatPicker('starters')}
-            >
-              <Text style={[styles.statDropdownText, { color: colors.primary }]}>
-                {getBasketballStatLabel(starterStatSelection)} ▼
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <LineupSectionHeader
+            sport="basketball"
+            title="Starting Five"
+            count={`${starters.filter(s => s).length}/5`}
+            colors={colors}
+            statLabel={getBasketballStatLabel(starterStatSelection)}
+            onStatPress={() => setShowStatPicker('starters')}
+            onAutoFill={insertOptimalLineup}
+          />
           {BASKETBALL_POSITIONS.map((position, index) => {
             const starter = starters[index];
             const isSlotSelected = selectedSlotIndex === index;
@@ -647,24 +1008,14 @@ function BasketballLineupEditor({
 
         {/* Bench */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Bench ({bench.length})
-            </Text>
-            <TouchableOpacity
-              style={[styles.statDropdown, { borderColor: colors.border }]}
-              onPress={() => setShowStatPicker('bench')}
-            >
-              <Text style={[styles.statDropdownText, { color: colors.primary }]}>
-                {getBasketballStatLabel(benchStatSelection)} ▼
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {selectedSlotIndex !== null && (
-            <Text style={[styles.sectionSubtitle, { color: colors.primary }]}>
-              Tap a player to assign to {BASKETBALL_POSITIONS[selectedSlotIndex]}
-            </Text>
-          )}
+          <LineupSectionHeader
+            sport="basketball"
+            title="Bench"
+            count={String(bench.length)}
+            colors={colors}
+            statLabel={getBasketballStatLabel(benchStatSelection)}
+            onStatPress={() => setShowStatPicker('bench')}
+          />
           {bench.length === 0 ? (
             <Text style={[styles.emptyBench, { color: colors.textMuted }]}>
               No bench players
@@ -767,14 +1118,13 @@ function BasketballLineupEditor({
         {/* Reserves */}
         {reserves.length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Reserves ({reserves.length})
-            </Text>
-            <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-              {bench.length < 9
-                ? 'Tap + to add to bench'
-                : 'Tap RSV then BN to swap'}
-            </Text>
+            <LineupSectionHeader
+              sport="basketball"
+              title="Reserves"
+              count={String(reserves.length)}
+              colors={colors}
+              validationHint={bench.length < 9 ? 'Tap + to add' : undefined}
+            />
             {reserves.map((player) => {
               const isSelected = selectedBenchReserve?.id === player.id;
               const isSwapTarget = selectedBenchReserve !== null && selectedBenchReserve.isBench;
@@ -1334,36 +1684,25 @@ function SoccerLineupEditor({
           </View>
         </View>
 
-        {/* Instructions */}
-        <View style={[styles.instructionBar, { backgroundColor: colors.primary + '15' }]}>
-          <Text style={[styles.instructionText, { color: colors.primary }]}>
-            {selectedSlotIndex !== null
-              ? `Tap a bench player to assign, or tap another position to swap`
-              : `Tap a position to select • Long press for position ratings`}
-          </Text>
-        </View>
+        {/* Unified Instruction Bar */}
+        <LineupInstructionBar
+          sport="soccer"
+          message={selectedSlotIndex !== null
+            ? `Tap a bench player to assign, or tap another position to swap`
+            : `Tap a position to select • Long press for position ratings`}
+          colors={colors}
+        />
 
         {/* Starting XI */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Starting XI ({starters.length}/11)
-            </Text>
-            <View style={styles.sectionHeaderButtons}>
-              {!isValidLineup && starters.length < 11 && (
-                <Text style={[styles.validationHint, { color: colors.warning }]}>
-                  Need {11 - starters.length} more
-                </Text>
-              )}
-              <TouchableOpacity
-                style={[styles.optimalButton, { backgroundColor: colors.primary }]}
-                onPress={insertOptimalLineup}
-              >
-                <Text style={styles.optimalButtonText}>Auto-fill</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
+          <LineupSectionHeader
+            sport="soccer"
+            title="Starting XI"
+            count={`${starters.length}/11`}
+            colors={colors}
+            onAutoFill={insertOptimalLineup}
+            validationHint={!isValidLineup && starters.length < 11 ? `Need ${11 - starters.length} more` : undefined}
+          />
           {positionSlots.map(({ position, slotIndex, player }) => {
             const isSlotSelected = selectedSlotIndex === slotIndex;
             return (
@@ -1470,18 +1809,12 @@ function SoccerLineupEditor({
 
         {/* Bench */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Bench ({bench.length})
-          </Text>
-          {selectedSlotIndex !== null ? (
-            <Text style={[styles.sectionSubtitle, { color: colors.primary }]}>
-              Tap a player to assign to {positionSlots[selectedSlotIndex]?.position || ''}
-            </Text>
-          ) : (
-            <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-              Tap BN then RSV to swap
-            </Text>
-          )}
+          <LineupSectionHeader
+            sport="soccer"
+            title="Bench"
+            count={String(bench.length)}
+            colors={colors}
+          />
           {bench.length === 0 ? (
             <Text style={[styles.emptyBench, { color: colors.textMuted }]}>
               All players are in starting lineup
@@ -1595,14 +1928,13 @@ function SoccerLineupEditor({
         {/* Reserves */}
         {reserves.length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Reserves ({reserves.length})
-            </Text>
-            <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-              {bench.length < 9
-                ? 'Tap + to add to bench, or RSV then BN to swap'
-                : 'Players not on active roster • Tap RSV then BN to swap'}
-            </Text>
+            <LineupSectionHeader
+              sport="soccer"
+              title="Reserves"
+              count={String(reserves.length)}
+              colors={colors}
+              validationHint={bench.length < 9 ? 'Tap + to add' : undefined}
+            />
             {reserves.map((player) => {
               const bestFit = getBenchPlayerBestOverall(player.id);
               const isSelected = selectedBenchReserve?.id === player.id;
@@ -2229,45 +2561,36 @@ function BaseballLineupEditor({
     (bullpen?.shortRelievers?.filter(p => p)?.length || 0) +
     (bullpen?.closer ? 1 : 0);
 
+  // Get baseball instruction message based on selection state
+  const getBaseballInstructionMessage = () => {
+    if (selectingPitcher) return 'Tap a batter, bullpen pitcher, or bench player to swap';
+    if (selectingBullpenRole !== null) return 'Tap pitcher, batter, other bullpen, or bench to swap';
+    if (selectedBattingPlayerId) return 'Tap another player to swap (pitcher, bullpen, or batter)';
+    if (selectedBattingSlot !== null) return 'Tap a bench player to add to lineup';
+    return 'Tap any player to select • Long press position to change';
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Instructions */}
-        <View style={[styles.instructionBar, { backgroundColor: colors.baseball + '15' }]}>
-          <Text style={[styles.instructionText, { color: colors.baseball }]}>
-            {selectingPitcher
-              ? 'Tap a batter, bullpen pitcher, or bench player to swap'
-              : selectingBullpenRole !== null
-              ? `Tap pitcher, batter, other bullpen, or bench to swap`
-              : selectedBattingPlayerId
-              ? 'Tap another player to swap (pitcher, bullpen, or batter)'
-              : selectedBattingSlot !== null
-              ? 'Tap a bench player to add to lineup'
-              : 'Tap any player to select, then tap another to swap'}
-          </Text>
-        </View>
+        {/* Unified Instruction Bar */}
+        <LineupInstructionBar
+          sport="baseball"
+          message={getBaseballInstructionMessage()}
+          colors={colors}
+        />
 
         {/* Starting Pitcher */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>Starting Pitcher</Text>
-              <TouchableOpacity
-                style={[styles.statDropdown, { borderColor: colors.border }]}
-                onPress={() => setShowStatPicker('pitcher')}
-              >
-                <Text style={[styles.statDropdownText, { color: colors.baseball }]}>
-                  {getStatLabel(pitcherStatSelection)} ▼
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={[styles.optimalButton, { backgroundColor: colors.baseball }]}
-              onPress={insertOptimalLineup}
-            >
-              <Text style={styles.optimalButtonText}>Auto-fill</Text>
-            </TouchableOpacity>
-          </View>
+          <LineupSectionHeader
+            sport="baseball"
+            title="Starting Pitcher"
+            count="1/1"
+            colors={colors}
+            statLabel={getStatLabel(pitcherStatSelection)}
+            onStatPress={() => setShowStatPicker('pitcher')}
+            onAutoFill={insertOptimalLineup}
+          />
 
           <TouchableOpacity
             style={[
@@ -2329,26 +2652,15 @@ function BaseballLineupEditor({
 
         {/* Batting Order */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Batting Order ({filledBattingSlots}/9)
-              </Text>
-              <TouchableOpacity
-                style={[styles.statDropdown, { borderColor: colors.border }]}
-                onPress={() => setShowStatPicker('batting')}
-              >
-                <Text style={[styles.statDropdownText, { color: colors.baseball }]}>
-                  {getStatLabel(battingStatSelection)} ▼
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {!isValidLineup && filledBattingSlots < 9 && (
-              <Text style={[styles.validationHint, { color: colors.warning }]}>
-                Need {9 - filledBattingSlots} more
-              </Text>
-            )}
-          </View>
+          <LineupSectionHeader
+            sport="baseball"
+            title="Batting Order"
+            count={`${filledBattingSlots}/9`}
+            colors={colors}
+            statLabel={getStatLabel(battingStatSelection)}
+            onStatPress={() => setShowStatPicker('batting')}
+            validationHint={!isValidLineup && filledBattingSlots < 9 ? `Need ${9 - filledBattingSlots} more` : undefined}
+          />
 
           {Array.from({ length: 9 }).map((_, slotIndex) => {
             const player = battingOrder?.[slotIndex];
@@ -2439,21 +2751,14 @@ function BaseballLineupEditor({
 
         {/* Bullpen */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Bullpen ({filledBullpenSlots}/5)
-              </Text>
-              <TouchableOpacity
-                style={[styles.statDropdown, { borderColor: colors.border }]}
-                onPress={() => setShowStatPicker('bullpen')}
-              >
-                <Text style={[styles.statDropdownText, { color: colors.baseball }]}>
-                  {getStatLabel(bullpenStatSelection)} ▼
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <LineupSectionHeader
+            sport="baseball"
+            title="Bullpen"
+            count={`${filledBullpenSlots}/5`}
+            colors={colors}
+            statLabel={getStatLabel(bullpenStatSelection)}
+            onStatPress={() => setShowStatPicker('bullpen')}
+          />
 
           {/* Long Relievers */}
           <Text style={[styles.bullpenRoleLabel, { color: colors.textMuted }]}>Long Relievers</Text>
@@ -2634,30 +2939,14 @@ function BaseballLineupEditor({
 
         {/* Bench */}
         <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Bench ({bench?.length || 0})
-              </Text>
-              <TouchableOpacity
-                style={[styles.statDropdown, { borderColor: colors.border }]}
-                onPress={() => setShowStatPicker('bench')}
-              >
-                <Text style={[styles.statDropdownText, { color: colors.baseball }]}>
-                  {getStatLabel(benchStatSelection)} ▼
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          {(selectingPitcher || selectedBattingSlot !== null || selectingBullpenRole !== null) ? (
-            <Text style={[styles.sectionSubtitle, { color: colors.baseball }]}>
-              Tap a player to assign them
-            </Text>
-          ) : (
-            <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-              Tap BN then RSV to swap
-            </Text>
-          )}
+          <LineupSectionHeader
+            sport="baseball"
+            title="Bench"
+            count={String(bench?.length || 0)}
+            colors={colors}
+            statLabel={getStatLabel(benchStatSelection)}
+            onStatPress={() => setShowStatPicker('bench')}
+          />
           {!bench || bench.length === 0 ? (
             <Text style={[styles.emptyBench, { color: colors.textMuted }]}>
               All players are in lineup
@@ -2756,14 +3045,13 @@ function BaseballLineupEditor({
         {/* Reserves */}
         {reserves && reserves.length > 0 && (
           <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Reserves ({reserves.length})
-            </Text>
-            <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-              {(bench?.length || 0) < 9
-                ? 'Tap + to add to bench, or RSV then BN to swap'
-                : 'Players not on active roster • Tap RSV then BN to swap'}
-            </Text>
+            <LineupSectionHeader
+              sport="baseball"
+              title="Reserves"
+              count={String(reserves.length)}
+              colors={colors}
+              validationHint={(bench?.length || 0) < 9 ? 'Tap + to add' : undefined}
+            />
             {reserves.map((player) => {
               const best = getBestPosition?.(player.id);
               const displayPosition = best?.position || 'DH';
