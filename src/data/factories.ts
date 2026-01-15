@@ -46,6 +46,7 @@ import {
   generateCareerHistory,
   assignCareerStartAge,
 } from '../systems/careerHistoryGenerator';
+import { getDivisionBudgetMultiplier, getDivisionPlayerQuality } from '../ai/divisionManager';
 
 // =============================================================================
 // RANDOM UTILITIES
@@ -2176,49 +2177,7 @@ export function createAIFranchise(
   };
 }
 
-/**
- * Get budget multiplier based on division tier
- *
- * Division 1 = 5x budget (elite teams)
- * Division 10 = 0.5x budget (developing teams)
- */
-function getDivisionBudgetMultiplier(division: number): number {
-  const multipliers: Record<number, number> = {
-    1: 5.0,
-    2: 4.0,
-    3: 3.0,
-    4: 2.5,
-    5: 2.0,
-    6: 1.5,
-    7: 1.0,
-    8: 0.8,
-    9: 0.6,
-    10: 0.5,
-  };
-  return multipliers[division] || 1.0;
-}
 
-/**
- * Get player OVR range based on division tier
- *
- * Division 1 = Elite players (60-90)
- * Division 10 = Developing players (15-40)
- */
-function getDivisionPlayerQuality(division: number): { min: number; max: number } {
-  const qualityRanges: Record<number, { min: number; max: number }> = {
-    1: { min: 60, max: 90 },
-    2: { min: 55, max: 85 },
-    3: { min: 50, max: 80 },
-    4: { min: 45, max: 75 },
-    5: { min: 40, max: 70 },
-    6: { min: 35, max: 65 },
-    7: { min: 30, max: 55 },
-    8: { min: 25, max: 50 },
-    9: { min: 20, max: 45 },
-    10: { min: 15, max: 40 },
-  };
-  return qualityRanges[division] || { min: 30, max: 55 };
-}
 
 // =============================================================================
 // SEASON FACTORIES
