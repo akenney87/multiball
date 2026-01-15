@@ -19,6 +19,7 @@ import type {
   TrophyRecord,
   PlayerAwardRecord,
   ManagerCareer,
+  Injury,
 } from '../../data/types';
 import type { BaseballGameStrategy } from '../../simulation/baseball/types';
 import type {
@@ -547,6 +548,16 @@ export type GameAction =
   | { type: 'APPLY_ACADEMY_TRAINING'; payload: { results: AcademyProgressionResult[] } }
   | { type: 'UPDATE_PLAYER'; payload: { playerId: string; updates: Partial<Player> } }
 
+  // Injuries
+  | {
+      type: 'APPLY_INJURY';
+      payload: {
+        playerId: string;
+        injury: import('../../data/types').Injury;
+        conditionPenalty: number; // Amount to subtract from matchFitness
+      };
+    }
+
   // Match Fitness
   | {
       type: 'APPLY_MATCH_FATIGUE';
@@ -797,6 +808,12 @@ export interface GameContextValue {
    * Used for youth promotions, transfers, etc.
    */
   signPlayer: (player: Player) => void;
+
+  /**
+   * Apply an injury to a player - sets injury status, reduces condition,
+   * and automatically removes from lineup.
+   */
+  applyInjury: (playerId: string, injury: Injury) => void;
 
   /**
    * Sign a prospect to the youth academy

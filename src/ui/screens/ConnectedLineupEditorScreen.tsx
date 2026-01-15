@@ -771,6 +771,7 @@ function BasketballLineupEditor({
     starters,
     bench,
     reserves,
+    injured,
     setStarter,
     moveToBench,
     swapStarters,
@@ -1209,6 +1210,58 @@ function BasketballLineupEditor({
             })}
           </View>
         )}
+
+        {/* Injured Section */}
+        {injured && injured.length > 0 && (
+          <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
+            <LineupSectionHeader
+              sport="basketball"
+              title="Injured"
+              count={String(injured.length)}
+              colors={colors}
+            />
+            {injured.map((player) => {
+              const fullPlayer = allPlayers.find(p => p.id === player.id);
+              const injuryName = fullPlayer?.injury?.injuryName || 'Injured';
+              const recoveryWeeks = fullPlayer?.injury?.recoveryWeeks || 0;
+              return (
+                <View
+                  key={player.id}
+                  style={[
+                    styles.playerRow,
+                    { borderBottomColor: colors.border, opacity: 0.6 },
+                  ]}
+                >
+                  <View style={[styles.positionBadgeLarge, { backgroundColor: colors.error }]}>
+                    <Text style={[styles.positionBadgeTextLarge, { color: '#fff' }]}>INJ</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.basketballPlayerInfo}
+                    onPress={() => onPlayerPress?.(player.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
+                      {player.name}
+                    </Text>
+                    <View style={styles.playerStats}>
+                      <Text style={[styles.statText, { color: colors.error }]}>
+                        {injuryName}
+                      </Text>
+                      <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                      <Text style={[styles.statText, { color: colors.textMuted }]}>
+                        {recoveryWeeks}w recovery
+                      </Text>
+                      <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                      <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
+                        {Math.round(player.matchFitness)}%
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
 
       {/* Sticky Minutes Summary - Always visible */}
@@ -1419,6 +1472,7 @@ function SoccerLineupEditor({
     starters,
     bench,
     reserves,
+    injured,
     formation,
     formationPositions,
     setStarter,
@@ -2050,6 +2104,58 @@ function SoccerLineupEditor({
           </View>
         )}
 
+        {/* Injured Section */}
+        {injured && injured.length > 0 && (
+          <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
+            <LineupSectionHeader
+              sport="soccer"
+              title="Injured"
+              count={String(injured.length)}
+              colors={colors}
+            />
+            {injured.map((player) => {
+              const fullPlayer = state.players.find(p => p.id === player.id);
+              const injuryName = fullPlayer?.injury?.injuryName || 'Injured';
+              const recoveryWeeks = fullPlayer?.injury?.recoveryWeeks || 0;
+              return (
+                <View
+                  key={player.id}
+                  style={[
+                    styles.playerRow,
+                    { borderBottomColor: colors.border, opacity: 0.6 },
+                  ]}
+                >
+                  <View style={[styles.positionBadgeLarge, { backgroundColor: colors.error }]}>
+                    <Text style={[styles.positionBadgeTextLarge, { color: '#fff' }]}>INJ</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.soccerPlayerInfo}
+                    onPress={() => onPlayerPress?.(player.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
+                      {player.name}
+                    </Text>
+                    <View style={styles.playerStats}>
+                      <Text style={[styles.statText, { color: colors.error }]}>
+                        {injuryName}
+                      </Text>
+                      <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                      <Text style={[styles.statText, { color: colors.textMuted }]}>
+                        {recoveryWeeks}w recovery
+                      </Text>
+                      <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                      <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
+                        {Math.round(player.matchFitness)}%
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        )}
+
       </ScrollView>
 
       {/* Action Buttons */}
@@ -2299,6 +2405,7 @@ function BaseballLineupEditor({
     isValidLineup,
     bench,
     reserves,
+    injured,
     bullpen,
     setBullpenRole,
     removeFromBullpen,
@@ -3142,6 +3249,60 @@ function BaseballLineupEditor({
                     </View>
                   </View>
                 </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        {/* Injured Section */}
+        {injured && injured.length > 0 && (
+          <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
+            <LineupSectionHeader
+              sport="baseball"
+              title="Injured"
+              count={String(injured.length)}
+              colors={colors}
+            />
+            {injured.map((player) => {
+              const fullPlayer = allPlayers.find(p => p.id === player.id);
+              const injuryName = fullPlayer?.injury?.injuryName || 'Injured';
+              const recoveryWeeks = fullPlayer?.injury?.recoveryWeeks || 0;
+              return (
+                <View
+                  key={player.id}
+                  style={[
+                    styles.playerRow,
+                    { borderBottomColor: colors.border, opacity: 0.6 },
+                  ]}
+                >
+                  <View style={[styles.positionBadge, { backgroundColor: colors.error }]}>
+                    <Text style={[styles.positionBadgeText, { color: '#fff' }]}>INJ</Text>
+                  </View>
+                  <View style={styles.playerRowContent}>
+                    <TouchableOpacity
+                      style={styles.playerMainInfo}
+                      onPress={() => onPlayerPress?.(player.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
+                        {player.name}
+                      </Text>
+                      <View style={styles.playerStats}>
+                        <Text style={[styles.statText, { color: colors.error }]}>
+                          {injuryName}
+                        </Text>
+                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                        <Text style={[styles.statText, { color: colors.textMuted }]}>
+                          {recoveryWeeks}w recovery
+                        </Text>
+                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                        <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
+                          {Math.round(player.matchFitness)}%
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               );
             })}
           </View>

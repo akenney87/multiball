@@ -201,6 +201,26 @@ const RECOVERY_TIME_RANGES: Record<InjurySeverity, { min: number; max: number }>
   [InjurySeverity.SEASON_ENDING]: { min: 12, max: 24 },
 };
 
+// Condition (matchFitness) penalty by injury severity
+// When injured, player's condition drops significantly
+const CONDITION_PENALTY_BY_SEVERITY: Record<InjurySeverity, number> = {
+  [InjurySeverity.MINOR]: 30,         // Drop ~30 points (e.g., 100 -> 70)
+  [InjurySeverity.MODERATE]: 50,      // Drop ~50 points (e.g., 100 -> 50)
+  [InjurySeverity.MAJOR]: 70,         // Drop ~70 points (e.g., 100 -> 30)
+  [InjurySeverity.SEASON_ENDING]: 90, // Drop ~90 points (e.g., 100 -> 10)
+};
+
+/**
+ * Gets the condition (matchFitness) penalty for an injury severity.
+ * This is subtracted from the player's matchFitness when injured.
+ *
+ * @param severity - Injury severity level
+ * @returns Condition penalty (points to subtract from matchFitness)
+ */
+export function getInjuryConditionPenalty(severity: InjurySeverity): number {
+  return CONDITION_PENALTY_BY_SEVERITY[severity] ?? 30;
+}
+
 /**
  * Calculates injury probability multiplier based on durability attribute
  *

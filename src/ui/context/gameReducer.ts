@@ -1497,6 +1497,84 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'APPLY_INJURY': {
+      // Apply injury to player and remove from all lineup positions
+      const { playerId, injury, conditionPenalty } = action.payload;
+      const player = state.players[playerId];
+      if (!player) return state;
+
+      // Update player with injury and reduced matchFitness
+      const updatedPlayer = {
+        ...player,
+        injury,
+        matchFitness: Math.max(0, (player.matchFitness ?? 100) - conditionPenalty),
+      };
+
+      // Remove injured player from all lineup positions
+      const lineup = state.userTeam.lineup;
+      const newLineup = { ...lineup };
+
+      // Basketball - remove from starters
+      newLineup.basketballStarters = lineup.basketballStarters.map(
+        id => id === playerId ? '' : id
+      ) as [string, string, string, string, string];
+
+      // Soccer - remove from starters and positions
+      if (lineup.soccerLineup.starters.includes(playerId)) {
+        newLineup.soccerLineup = {
+          ...lineup.soccerLineup,
+          starters: lineup.soccerLineup.starters.filter(id => id !== playerId),
+          positions: Object.fromEntries(
+            Object.entries(lineup.soccerLineup.positions).filter(([id]) => id !== playerId)
+          ),
+        };
+      }
+
+      // Baseball - remove from batting order, pitcher, and bullpen
+      if (lineup.baseballLineup.battingOrder.includes(playerId)) {
+        newLineup.baseballLineup = {
+          ...lineup.baseballLineup,
+          battingOrder: lineup.baseballLineup.battingOrder.map(id => id === playerId ? '' : id),
+          positions: Object.fromEntries(
+            Object.entries(lineup.baseballLineup.positions).filter(([id]) => id !== playerId)
+          ),
+        };
+      }
+      if (lineup.baseballLineup.startingPitcher === playerId) {
+        newLineup.baseballLineup = {
+          ...newLineup.baseballLineup,
+          startingPitcher: '',
+        };
+      }
+      // Remove from bullpen if present
+      const bullpen = lineup.baseballLineup.bullpen;
+      if (bullpen) {
+        newLineup.baseballLineup = {
+          ...newLineup.baseballLineup,
+          bullpen: {
+            longRelievers: bullpen.longRelievers.map(id => id === playerId ? '' : id) as [string, string],
+            shortRelievers: bullpen.shortRelievers.map(id => id === playerId ? '' : id) as [string, string],
+            closer: bullpen.closer === playerId ? '' : bullpen.closer,
+          },
+        };
+      }
+
+      // Remove from bench
+      newLineup.bench = lineup.bench.filter(id => id !== playerId);
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [playerId]: updatedPlayer,
+        },
+        userTeam: {
+          ...state.userTeam,
+          lineup: newLineup,
+        },
+      };
+    }
+
     case 'APPLY_ACADEMY_TRAINING': {
       // Apply training results to academy prospects
       const { results } = action.payload;

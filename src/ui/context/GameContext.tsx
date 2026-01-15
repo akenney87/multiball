@@ -34,8 +34,9 @@ import {
 import type { BaseballPosition } from './types';
 import { GameStorage } from '../persistence/gameStorage';
 import type { NewGameConfig } from '../screens/NewGameScreen';
-import type { Player, Match, MatchResult, TeamStanding, TrainingFocus, NewsItem, TacticalSettings } from '../../data/types';
+import type { Player, Match, MatchResult, TeamStanding, TrainingFocus, NewsItem, TacticalSettings, Injury } from '../../data/types';
 import { GameSimulator } from '../../simulation';
+import { getInjuryConditionPenalty, InjurySeverity } from '../../systems/injurySystem';
 import {
   simulateGame as simulateBaseballGame,
   type GameInput as BaseballGameInput,
@@ -3141,6 +3142,42 @@ export function GameProvider({ children }: GameProviderProps) {
     dispatch({ type: 'ADD_EVENT', payload: event });
   }, []);
 
+  /**
+   * Apply an injury to a player - updates injury status, reduces condition,
+   * and automatically removes from lineup.
+   */
+  const applyInjury = useCallback((playerId: string, injury: Injury) => {
+    // Map injury type to severity for condition penalty
+    const severityMap: Record<string, InjurySeverity> = {
+      'minor': InjurySeverity.MINOR,
+      'moderate': InjurySeverity.MODERATE,
+      'severe': InjurySeverity.MAJOR,
+    };
+    const severity = severityMap[injury.injuryType] || InjurySeverity.MINOR;
+    const conditionPenalty = getInjuryConditionPenalty(severity);
+
+    dispatch({
+      type: 'APPLY_INJURY',
+      payload: { playerId, injury, conditionPenalty },
+    });
+
+    // Add news event
+    const player = state.players[playerId];
+    const event: NewsItem = {
+      id: `event-${Date.now()}`,
+      type: 'injury',
+      priority: 'important',
+      title: 'Player Injured',
+      message: `${player?.name || 'A player'} has suffered a ${injury.injuryName}. Expected recovery: ${injury.recoveryWeeks} weeks.`,
+      timestamp: new Date(),
+      read: false,
+      relatedEntityId: playerId,
+      scope: 'team',
+      teamId: 'user',
+    };
+    dispatch({ type: 'ADD_EVENT', payload: event });
+  }, [state.players]);
+
   const signProspectToAcademy = useCallback((prospect: AcademyProspect) => {
     // Sign prospect to academy and deduct $100k signing cost from budget
     dispatch({ type: 'SIGN_PROSPECT_TO_ACADEMY', payload: { prospect, signingCost: YEARLY_PROSPECT_COST } });
@@ -3445,6 +3482,7 @@ export function GameProvider({ children }: GameProviderProps) {
       setBaseballStrategy,
       releasePlayer,
       signPlayer,
+      applyInjury,
       signProspectToAcademy,
       updateYouthScoutingReport,
       setYouthScoutSportFocus,
@@ -3511,6 +3549,7 @@ export function GameProvider({ children }: GameProviderProps) {
       setBaseballStrategy,
       releasePlayer,
       signPlayer,
+      applyInjury,
       signProspectToAcademy,
       updateYouthScoutingReport,
       setYouthScoutSportFocus,
