@@ -29,22 +29,22 @@ interface BudgetAllocationModalProps {
 const categoryInfo = {
   training: {
     label: 'Training',
-    description: 'Improves player development and attribute growth',
+    description: 'Player development speed scales with $ spent',
     color: '#3B82F6',
   },
   scouting: {
     label: 'Scouting',
-    description: 'Reveals more transfer targets and player attributes',
+    description: 'Scout capacity and accuracy scale with $ spent',
     color: '#10B981',
   },
   medical: {
     label: 'Medical',
-    description: 'Speeds up fitness recovery between matches',
+    description: 'Fitness recovery speed scales with $ spent',
     color: '#8B5CF6',
   },
   youthDevelopment: {
     label: 'Youth Development',
-    description: 'Produces better youth academy prospects',
+    description: 'Prospect quality scales with $ spent',
     color: '#F59E0B',
   },
 };
