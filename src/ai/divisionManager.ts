@@ -390,16 +390,16 @@ export function getDivisionBudgetMultiplier(division: number): number {
   // Exponential scaling based on real football finances
   // Each division is roughly 1.5-2x the one below
   const multipliers: Record<number, number> = {
-    1: 50.0,   // $100M - Elite (Premier League level)
-    2: 25.0,   // $50M - Championship level
-    3: 12.0,   // $24M - League One level
-    4: 6.0,    // $12M - League Two level
-    5: 3.0,    // $6M - National League level
-    6: 1.75,   // $3.5M - Regional premier
-    7: 1.0,    // $2M - Semi-pro (user starts here)
-    8: 0.5,    // $1M - Advanced amateur
-    9: 0.3,    // $600K - Amateur
-    10: 0.2,   // $400K - Grassroots
+    1: 50.0,   // $200M - Elite (Premier League level)
+    2: 25.0,   // $100M - Championship level
+    3: 12.0,   // $48M - League One level
+    4: 6.0,    // $24M - League Two level
+    5: 3.0,    // $12M - National League level
+    6: 1.75,   // $7M - Regional premier
+    7: 1.0,    // $4M - Semi-pro (user starts here)
+    8: 0.5,    // $2M - Advanced amateur
+    9: 0.3,    // $1.2M - Amateur
+    10: 0.2,   // $800K - Grassroots
   };
 
   return multipliers[division] || 1.0;
