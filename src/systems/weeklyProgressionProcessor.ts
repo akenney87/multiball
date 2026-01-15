@@ -46,14 +46,31 @@ export interface PlayerProgressionResult {
 const NON_TRAINABLE_ATTRIBUTES = ['height'];
 
 /**
- * Calculates training quality multiplier from budget percentage
+ * Calculates training quality multiplier from actual budget dollars
  *
- * @param trainingBudgetPct - Training budget percentage (0-100)
- * @returns Multiplier (0.5x at 0% to 2.0x at 100%)
+ * Uses logarithmic scaling so actual spending determines quality, not percentage.
+ * A rich Division 1 team spending $500K gets better training than a poor
+ * Division 10 team allocating 100% of their $50K budget.
+ *
+ * @param budgetDollars - Actual training budget in dollars
+ * @returns Multiplier (0.5x at $0 to 2.0x at $5M+)
+ *
+ * Scaling:
+ * - $0-$25K: 0.5x (minimal training)
+ * - $100K: ~0.74x
+ * - $250K: ~1.0x (Division 7 baseline)
+ * - $500K: ~1.12x
+ * - $1M: ~1.24x
+ * - $2.5M: ~1.48x
+ * - $5M+: 2.0x (capped - elite training)
  */
-export function calculateTrainingQualityMultiplier(trainingBudgetPct: number): number {
-  // Linear scale: 0% budget = 0.5x, 50% budget = 1.25x, 100% budget = 2.0x
-  return 0.5 + (trainingBudgetPct / 100) * 1.5;
+export function calculateTrainingQualityMultiplier(budgetDollars: number): number {
+  if (budgetDollars <= 0) return 0.5;
+  // Logarithmic scale: $25K = 0.5x baseline, scaling up to 2.0x cap
+  // log10($250K / $25K) = log10(10) = 1.0 → multiplier = 0.5 + 0.5 = 1.0x
+  // log10($2.5M / $25K) = log10(100) = 2.0 → multiplier = 0.5 + 1.0 = 1.5x
+  const logValue = Math.log10(Math.max(1, budgetDollars / 25000));
+  return 0.5 + Math.min(1.5, 0.5 * logValue);
 }
 
 /**

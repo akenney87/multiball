@@ -1552,15 +1552,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'APPLY_FITNESS_RECOVERY': {
       // Apply fitness recovery to all players
-      const { daysSinceAdvance, medicalBudgetPct } = action.payload;
+      const { daysSinceAdvance, medicalBudgetDollars } = action.payload;
       const updatedPlayers: Record<string, Player> = { ...state.players };
 
-      // Import recovery calculation inline to avoid circular dependencies
+      // Recovery calculation:
       // Base daily recovery: 4.3% (~30%/week)
       // Stamina attr modifier: ±30% at extremes
-      // Medical budget bonus: 0-20%
+      // Medical budget bonus: 0-20% based on actual dollars spent (not percentage)
       const BASE_DAILY_RECOVERY = 4.3;
       const STAMINA_ATTR_RECOVERY_MOD = 0.3;
+
+      // Medical bonus uses logarithmic scaling based on actual dollars
+      // This ensures rich teams spending more get better outcomes than poor teams
+      // $25K or less = 0% bonus (baseline)
+      // $250K = ~8% bonus (typical Division 7)
+      // $1M = ~13% bonus
+      // $5M+ = 20% bonus (capped)
+      const medicalBonus = medicalBudgetDollars <= 25000
+        ? 1.0
+        : 1.0 + Math.min(0.20, 0.08 * Math.log10(medicalBudgetDollars / 25000));
 
       for (const [playerId, player] of Object.entries(updatedPlayers)) {
         // Skip if already at max fitness
@@ -1569,9 +1579,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         // Calculate stamina modifier
         const staminaNormalized = (player.attributes.stamina - 50) / 50;
         const recoveryMod = 1.0 + staminaNormalized * STAMINA_ATTR_RECOVERY_MOD;
-
-        // Medical budget bonus: 0-20%
-        const medicalBonus = 1.0 + (medicalBudgetPct / 500);
 
         // Calculate total recovery
         const recovery = BASE_DAILY_RECOVERY * daysSinceAdvance * recoveryMod * medicalBonus;

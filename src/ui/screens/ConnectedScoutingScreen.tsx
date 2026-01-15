@@ -49,21 +49,27 @@ export function ConnectedScoutingScreen({
   const currentTargetIds = state.scoutingTargetIds || [];
   const scoutReports = state.scoutingReports || [];
 
-  // Calculate scouting settings from budget allocation
+  // Calculate scouting settings from budget allocation (using actual dollars)
   const scoutingSettings = useMemo((): ScoutingSettings => {
-    // Get scouting budget multiplier from operations budget
     const scoutingPct = state.userTeam.operationsBudget.scouting;
-    const budgetMultiplier = 0.5 + (scoutingPct / 100) * 1.5; // 0% = 0.5x, 100% = 2.0x
+    // Calculate actual scouting budget in dollars
+    const operationsPool = Math.max(0, state.userTeam.totalBudget - state.userTeam.salaryCommitment);
+    const scoutingDollars = operationsPool * (scoutingPct / 100);
 
-    // Calculate simultaneous scouts based on budget
-    const simultaneousScouts = Math.max(1, Math.floor(scoutingPct / 10));
+    // Budget multiplier based on dollars: $25K = 0.5x, $250K = 1.0x, $5M+ = 2.0x
+    const budgetMultiplier = scoutingDollars <= 0
+      ? 0.5
+      : 0.5 + Math.min(1.5, 0.5 * Math.log10(Math.max(1, scoutingDollars / 25000)));
+
+    // Scouts based on dollars: $50K = 1, $100K = 2, $250K = 3, $500K = 4, $1M+ = 5
+    const simultaneousScouts = Math.max(1, Math.min(5, Math.floor(Math.log10(Math.max(1, scoutingDollars / 25000)) + 1)));
 
     return {
       depthSlider,
       scoutingBudgetMultiplier: budgetMultiplier,
       simultaneousScouts,
     };
-  }, [state.userTeam.operationsBudget.scouting, depthSlider]);
+  }, [state.userTeam.operationsBudget.scouting, state.userTeam.totalBudget, state.userTeam.salaryCommitment, depthSlider]);
 
   // Calculate derived values
   const playersScoutedPerWeek = useMemo(

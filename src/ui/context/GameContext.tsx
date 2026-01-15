@@ -736,9 +736,17 @@ export function GameProvider({ children }: GameProviderProps) {
     const alreadyScouted = new Set(scoutingState.scoutedPlayerIds || []);
     const existingReportIds = new Set((scoutingState.scoutingReports || []).map(r => r.playerId));
 
-    // Calculate scouting capacity based on budget and depth
-    const budgetMultiplier = 0.5 + (scoutingPct / 100) * 1.5;
-    const simultaneousScouts = Math.max(1, Math.floor(scoutingPct / 10));
+    // Calculate actual scouting budget in dollars (not percentage)
+    const scoutingOpsPool = Math.max(0, scoutingState.userTeam.totalBudget - scoutingState.userTeam.salaryCommitment);
+    const scoutingDollars = scoutingOpsPool * (scoutingPct / 100);
+
+    // Calculate scouting capacity based on actual dollars spent
+    // $25K = 0.5x, $250K = 1.0x, $5M+ = 2.0x (logarithmic)
+    const budgetMultiplier = scoutingDollars <= 0
+      ? 0.5
+      : 0.5 + Math.min(1.5, 0.5 * Math.log10(Math.max(1, scoutingDollars / 25000)));
+    // Scouts based on dollars: $50K = 1, $100K = 2, $250K = 3, $500K = 4, $1M+ = 5
+    const simultaneousScouts = Math.max(1, Math.min(5, Math.floor(Math.log10(Math.max(1, scoutingDollars / 25000)) + 1)));
     const playersPerWeek = calculatePlayersScoutedPerWeek(simultaneousScouts, depthSlider);
     const depthPercent = calculateDepthPercent(depthSlider);
 
@@ -914,11 +922,15 @@ export function GameProvider({ children }: GameProviderProps) {
     // =========================================================================
     const progressionState = stateRef.current;
     const trainingBudgetPct = progressionState.userTeam.operationsBudget.training;
+    // Calculate actual training budget in dollars (not percentage)
+    const trainingOpsPool = Math.max(0, progressionState.userTeam.totalBudget - progressionState.userTeam.salaryCommitment);
+    const trainingDollars = trainingOpsPool * (trainingBudgetPct / 100);
+
     const progressionResults = processWeeklyProgression(
       progressionState.players,
       progressionState.userTeam.rosterIds,
       progressionState.userTeam.trainingFocus,
-      trainingBudgetPct,
+      trainingDollars, // Pass dollars, not percentage
       progressionState.season.currentWeek
     );
 
@@ -944,8 +956,13 @@ export function GameProvider({ children }: GameProviderProps) {
     const youthState = stateRef.current;
     const youthAcademy = youthState.youthAcademy;
     const youthBudgetPct = youthState.userTeam.operationsBudget.youthDevelopment;
-    const youthBudgetAmount = (youthBudgetPct / 100) * 500000;
-    const youthQualityMultiplier = 0.5 + (youthBudgetPct / 100) * 1.0;
+    // Calculate actual youth budget in dollars (not percentage)
+    const youthOpsPool = Math.max(0, youthState.userTeam.totalBudget - youthState.userTeam.salaryCommitment);
+    const youthBudgetAmount = youthOpsPool * (youthBudgetPct / 100);
+    // Quality multiplier based on actual dollars: $25K = 0.5x, $250K = 1.0x, $2.5M = 1.5x
+    const youthQualityMultiplier = youthBudgetAmount <= 0
+      ? 0.5
+      : 0.5 + Math.min(1.0, 0.5 * Math.log10(Math.max(1, youthBudgetAmount / 25000)));
     const reportsPerCycle = calculateReportsPerCycle(youthBudgetAmount);
 
     // Check if it's time for new reports (every 4 weeks)
@@ -1033,10 +1050,13 @@ export function GameProvider({ children }: GameProviderProps) {
     // ACADEMY TRAINING
     // =========================================================================
     const academyBudgetPct = stateRef.current.userTeam.operationsBudget.youthDevelopment;
+    // Calculate actual academy budget in dollars (not percentage)
+    const academyOpsPool = Math.max(0, stateRef.current.userTeam.totalBudget - stateRef.current.userTeam.salaryCommitment);
+    const academyDollars = academyOpsPool * (academyBudgetPct / 100);
     const academyProspects = stateRef.current.youthAcademy?.academyProspects || [];
     const academyResults = processAcademyTraining(
       academyProspects,
-      academyBudgetPct,
+      academyDollars, // Pass dollars, not percentage
       stateRef.current.season.currentWeek
     );
 
@@ -1074,12 +1094,16 @@ export function GameProvider({ children }: GameProviderProps) {
     // Minimum 2 rest days even with heavy schedule
     const restDays = Math.max(2, 7 - userMatchesThisWeek);
 
+    // Calculate actual medical budget in dollars (not percentage)
+    const operationsPool = Math.max(0, fitnessState.userTeam.totalBudget - fitnessState.userTeam.salaryCommitment);
     const medicalPct = fitnessState.userTeam.operationsBudget.medical;
+    const medicalDollars = operationsPool * (medicalPct / 100);
+
     dispatch({
       type: 'APPLY_FITNESS_RECOVERY',
       payload: {
         daysSinceAdvance: restDays,
-        medicalBudgetPct: medicalPct,
+        medicalBudgetDollars: medicalDollars,
       },
     });
 

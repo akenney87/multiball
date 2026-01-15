@@ -200,9 +200,10 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
   const lastReportWeek = youthAcademy?.lastReportWeek || 0;
   const sportFocus = youthAcademy?.scoutSportFocus || 'balanced';
 
-  // Calculate budget-based settings
+  // Calculate budget-based settings (using actual dollars, not percentage)
   const youthBudgetPct = state.userTeam.operationsBudget.youthDevelopment;
-  const budgetAmount = (youthBudgetPct / 100) * 500000;
+  const operationsPool = Math.max(0, state.userTeam.totalBudget - state.userTeam.salaryCommitment);
+  const budgetAmount = operationsPool * (youthBudgetPct / 100);
 
   // Calculate academy capacity
   const capacity = useMemo(() => calculateAcademyCapacity(budgetAmount), [budgetAmount]);

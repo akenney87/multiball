@@ -1005,11 +1005,14 @@ export function ConnectedPlayerDetailScreen({
               teamFocus={state.userTeam.trainingFocus ?? DEFAULT_TRAINING_FOCUS}
               onFocusChange={(focus) => setTrainingFocus(focus, player.id)}
               onResetToTeam={() => setTrainingFocus(null as any, player.id)}
-              budgetMultiplier={
-                state.userTeam.operationsBudget
-                  ? (state.userTeam.operationsBudget.training / 25) * 2
-                  : 1.0
-              }
+              budgetMultiplier={(() => {
+                if (!state.userTeam.operationsBudget) return 1.0;
+                const opsPool = Math.max(0, state.userTeam.totalBudget - state.userTeam.salaryCommitment);
+                const trainingDollars = opsPool * (state.userTeam.operationsBudget.training / 100);
+                if (trainingDollars <= 0) return 0.5;
+                // $25K = 0.5x, $250K = 1.0x, $5M+ = 2.0x (logarithmic)
+                return 0.5 + Math.min(1.5, 0.5 * Math.log10(Math.max(1, trainingDollars / 25000)));
+              })()}
             />
             <View style={{ height: spacing.md }} />
             <TrainingSuggestionsCard player={player} />

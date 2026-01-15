@@ -561,7 +561,7 @@ export type GameAction =
       type: 'APPLY_FITNESS_RECOVERY';
       payload: {
         daysSinceAdvance: number;
-        medicalBudgetPct: number;
+        medicalBudgetDollars: number;
       };
     }
 
