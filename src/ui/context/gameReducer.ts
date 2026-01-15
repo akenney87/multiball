@@ -629,6 +629,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       if (!player) return state;
 
+      // Budget validation - prevent making offers you can't afford
+      if (state.userTeam.availableBudget < amount) {
+        console.warn(`MAKE_OFFER rejected: insufficient budget (need ${amount}, have ${state.userTeam.availableBudget})`);
+        return state;
+      }
+
       const newOffer: TransferOffer = {
         id: `offer-${Date.now()}`,
         offeringTeamId: 'user',
