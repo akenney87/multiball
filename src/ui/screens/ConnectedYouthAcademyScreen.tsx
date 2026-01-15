@@ -23,6 +23,7 @@ import {
   stopScouting,
   getProspectsNeedingAction,
   SCOUTING_CYCLE_WEEKS,
+  YEARLY_PROSPECT_COST,
 } from '../../systems/youthAcademySystem';
 
 // =============================================================================
@@ -254,6 +255,13 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
     const report = scoutingReports.find(r => r.id === reportId);
     if (!report) return;
 
+    // Check budget first - signing costs $100k
+    if (state.userTeam.availableBudget < YEARLY_PROSPECT_COST) {
+      const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(YEARLY_PROSPECT_COST);
+      Alert.alert('Insufficient Budget', `You need at least ${formatted} to sign a youth prospect. Current budget: ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(state.userTeam.availableBudget)}`);
+      return;
+    }
+
     if (!canSignProspect(academyProspects, capacity)) {
       Alert.alert('Academy Full', 'You have reached your academy capacity. Promote or release a prospect first.');
       return;
@@ -267,7 +275,7 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
 
     // Mark report as signed
     updateYouthScoutingReport(reportId, { ...report, status: 'signed' as const });
-  }, [scoutingReports, academyProspects, capacity, currentWeek, signProspectToAcademy, updateYouthScoutingReport]);
+  }, [scoutingReports, academyProspects, capacity, currentWeek, signProspectToAcademy, updateYouthScoutingReport, state.userTeam.availableBudget]);
 
   // Handle promoting a prospect to main squad
   const handlePromoteProspect = useCallback((prospectId: string) => {
