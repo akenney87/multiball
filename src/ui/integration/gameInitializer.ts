@@ -380,8 +380,8 @@ function generatePlayer(
     seasonHistory: [],
     // Awards
     awards: {
-      playerOfTheWeek: 0,
-      playerOfTheMonth: 0,
+      playerOfTheWeek: { basketball: 0, baseball: 0, soccer: 0 },
+      playerOfTheMonth: { basketball: 0, baseball: 0, soccer: 0 },
       basketballPlayerOfTheYear: 0,
       baseballPlayerOfTheYear: 0,
       soccerPlayerOfTheYear: 0,
@@ -594,8 +594,8 @@ function generateFreeAgentPlayer(
     seasonHistory: [],
     // Awards
     awards: {
-      playerOfTheWeek: 0,
-      playerOfTheMonth: 0,
+      playerOfTheWeek: { basketball: 0, baseball: 0, soccer: 0 },
+      playerOfTheMonth: { basketball: 0, baseball: 0, soccer: 0 },
       basketballPlayerOfTheYear: 0,
       baseballPlayerOfTheYear: 0,
       soccerPlayerOfTheYear: 0,

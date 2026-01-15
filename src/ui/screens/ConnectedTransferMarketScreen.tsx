@@ -41,8 +41,17 @@ export function ConnectedTransferMarketScreen({
 
     const awards = player.awards;
     if (awards) {
-      multiplier += awards.playerOfTheWeek * 0.05;              // +5% per weekly award
-      multiplier += awards.playerOfTheMonth * 0.15;             // +15% per monthly award
+      // Sum up weekly awards across all sports
+      const weeklyTotal = awards.playerOfTheWeek.basketball +
+                          awards.playerOfTheWeek.baseball +
+                          awards.playerOfTheWeek.soccer;
+      // Sum up monthly awards across all sports
+      const monthlyTotal = awards.playerOfTheMonth.basketball +
+                           awards.playerOfTheMonth.baseball +
+                           awards.playerOfTheMonth.soccer;
+
+      multiplier += weeklyTotal * 0.05;                         // +5% per weekly award
+      multiplier += monthlyTotal * 0.15;                        // +15% per monthly award
       multiplier += awards.basketballPlayerOfTheYear * 0.50;    // +50% per Basketball POY
       multiplier += awards.baseballPlayerOfTheYear * 0.50;      // +50% per Baseball POY
       multiplier += awards.soccerPlayerOfTheYear * 0.50;        // +50% per Soccer POY

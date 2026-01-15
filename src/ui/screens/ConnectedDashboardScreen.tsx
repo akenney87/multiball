@@ -18,9 +18,11 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { useColors, spacing, borderRadius, glowShadows, cardStyles } from '../theme';
 import { useGame } from '../context/GameContext';
+import type { NewsItem } from '../../data/types';
 
 interface ConnectedDashboardScreenProps {
   onNavigateToMatch?: (matchId: string) => void;
@@ -29,6 +31,7 @@ interface ConnectedDashboardScreenProps {
   onNavigateToScouting?: () => void;
   onNavigateToYouthAcademy?: () => void;
   onNavigateToStandings?: () => void;
+  onPlayerPress?: (playerId: string) => void;
 }
 
 export function ConnectedDashboardScreen({
@@ -38,6 +41,7 @@ export function ConnectedDashboardScreen({
   onNavigateToScouting,
   onNavigateToYouthAcademy,
   onNavigateToStandings,
+  onPlayerPress,
 }: ConnectedDashboardScreenProps) {
   const colors = useColors();
   const {
@@ -54,6 +58,38 @@ export function ConnectedDashboardScreen({
   const [isSimulating, setIsSimulating] = useState(false);
   const [isAdvancing, setIsAdvancing] = useState(false);
   const [alertFilter, setAlertFilter] = useState<'team' | 'division' | 'global'>('team');
+  const [selectedNewsItem, setSelectedNewsItem] = useState<NewsItem | null>(null);
+
+  // Handler for news item press - routes based on event type
+  const handleNewsItemPress = useCallback((event: NewsItem) => {
+    switch (event.type) {
+      case 'scouting':
+        onNavigateToScouting?.();
+        break;
+      case 'youth':
+        onNavigateToYouthAcademy?.();
+        break;
+      case 'match':
+        if (event.relatedEntityId) {
+          onNavigateToMatch?.(event.relatedEntityId);
+        }
+        break;
+      case 'award':
+      case 'injury':
+      case 'contract':
+      case 'transfer':
+      case 'progression':
+      case 'stat_line':
+      case 'finance':
+      case 'window':
+      case 'league':
+      case 'general':
+      default:
+        // Show detail modal for these types
+        setSelectedNewsItem(event);
+        break;
+    }
+  }, [onNavigateToScouting, onNavigateToYouthAcademy, onNavigateToMatch]);
 
   // Derived data
   const nextMatch = useMemo(() => getNextMatch(), [getNextMatch]);
@@ -453,14 +489,22 @@ export function ConnectedDashboardScreen({
         {/* Filtered events based on selected scope */}
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-            <View key={event.id} style={styles.newsItem}>
-              <Text style={[styles.newsTitle, { color: colors.text }]} numberOfLines={1}>
-                {event.title}
-              </Text>
-              <Text style={[styles.newsSubtitle, { color: colors.textMuted }]} numberOfLines={1}>
-                {event.message}
-              </Text>
-            </View>
+            <TouchableOpacity
+              key={event.id}
+              style={styles.newsItem}
+              onPress={() => handleNewsItemPress(event)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.newsItemContent}>
+                <Text style={[styles.newsTitle, { color: colors.text }]} numberOfLines={1}>
+                  {event.title}
+                </Text>
+                <Text style={[styles.newsSubtitle, { color: colors.textMuted }]} numberOfLines={1}>
+                  {event.message}
+                </Text>
+              </View>
+              <Text style={[styles.newsChevron, { color: colors.textMuted }]}>{'>'}</Text>
+            </TouchableOpacity>
           ))
         ) : (
           <Text style={[styles.noNewsText, { color: colors.textMuted }]}>
@@ -468,6 +512,54 @@ export function ConnectedDashboardScreen({
           </Text>
         )}
       </View>
+
+      {/* News Detail Modal */}
+      <Modal
+        visible={selectedNewsItem !== null}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setSelectedNewsItem(null)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setSelectedNewsItem(null)}
+        >
+          <View style={[styles.newsModal, { backgroundColor: colors.card }]}>
+            <View style={[styles.newsModalHeader, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.newsModalTitle, { color: colors.text }]}>
+                {selectedNewsItem?.title}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setSelectedNewsItem(null)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Text style={[styles.newsModalClose, { color: colors.textMuted }]}>X</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.newsModalBody}>
+              <Text style={[styles.newsModalMessage, { color: colors.text }]}>
+                {selectedNewsItem?.message}
+              </Text>
+              {selectedNewsItem?.relatedEntityId && (
+                <TouchableOpacity
+                  style={[styles.newsModalButton, { backgroundColor: colors.primary }]}
+                  onPress={() => {
+                    const entityId = selectedNewsItem.relatedEntityId;
+                    setSelectedNewsItem(null);
+                    // For awards, injuries, contracts, transfers - entity is likely a player
+                    if (entityId && onPlayerPress) {
+                      onPlayerPress(entityId);
+                    }
+                  }}
+                >
+                  <Text style={styles.newsModalButtonText}>View Player</Text>
+                </TouchableOpacity>
+              )}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </ScrollView>
   );
 }
@@ -784,9 +876,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   newsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: spacing.sm,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  newsItemContent: {
+    flex: 1,
+  },
+  newsChevron: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: spacing.sm,
   },
   newsTitle: {
     fontSize: 13,
@@ -804,6 +906,57 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 14,
     fontStyle: 'italic',
+  },
+  // News Detail Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.lg,
+  },
+  newsModal: {
+    width: '100%',
+    maxWidth: 400,
+    maxHeight: '80%',
+    borderRadius: borderRadius.lg,
+    overflow: 'hidden',
+  },
+  newsModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  newsModalTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    flex: 1,
+    marginRight: spacing.md,
+  },
+  newsModalClose: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  newsModalBody: {
+    padding: spacing.md,
+  },
+  newsModalMessage: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  newsModalButton: {
+    marginTop: spacing.lg,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+  },
+  newsModalButtonText: {
+    color: '#000',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
 

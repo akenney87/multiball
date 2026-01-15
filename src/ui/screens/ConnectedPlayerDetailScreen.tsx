@@ -358,13 +358,15 @@ export function ConnectedPlayerDetailScreen({
     return Math.max(0, years);
   }, [player?.contract?.expiryDate]);
 
-  // Count total awards
+  // Count total awards (weekly/monthly are now by sport)
   const totalAwards = useMemo(() => {
     if (!player?.awards) return 0;
     const a = player.awards;
+    const weeklyTotal = a.playerOfTheWeek.basketball + a.playerOfTheWeek.baseball + a.playerOfTheWeek.soccer;
+    const monthlyTotal = a.playerOfTheMonth.basketball + a.playerOfTheMonth.baseball + a.playerOfTheMonth.soccer;
     return (
-      a.playerOfTheWeek +
-      a.playerOfTheMonth +
+      weeklyTotal +
+      monthlyTotal +
       a.basketballPlayerOfTheYear +
       a.baseballPlayerOfTheYear +
       a.soccerPlayerOfTheYear +
@@ -693,15 +695,17 @@ export function ConnectedPlayerDetailScreen({
                 )}
               </View>
             )}
-            {/* Awards Summary Badge */}
+            {/* Awards Summary Badge - tappable to show full awards in Stats tab */}
             {totalAwards > 0 && (
-              <View
+              <TouchableOpacity
                 style={[
                   styles.awardsSummaryBadge,
                   {
                     backgroundColor: hasMajorAwards ? colors.warning + '20' : colors.primary + '20',
                   },
                 ]}
+                onPress={() => setSelectedTab('stats')}
+                activeOpacity={0.7}
               >
                 <Text
                   style={[
@@ -711,7 +715,7 @@ export function ConnectedPlayerDetailScreen({
                 >
                   {totalAwards} Award{totalAwards !== 1 ? 's' : ''}
                 </Text>
-              </View>
+              </TouchableOpacity>
             )}
             {/* Scouting Status Badge */}
             {!isOnUserTeam && (
@@ -903,28 +907,82 @@ export function ConnectedPlayerDetailScreen({
                     </View>
                   </View>
                 )}
-                {player.awards.playerOfTheMonth > 0 && (
+                {/* Player of the Month - by sport */}
+                {player.awards.playerOfTheMonth.basketball > 0 && (
                   <View style={styles.awardItem}>
-                    <View style={[styles.awardIconContainer, { backgroundColor: colors.textMuted + '20' }]}>
-                      <Text style={styles.awardIcon}>📅</Text>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                      <Text style={styles.awardIcon}>🏀</Text>
                     </View>
                     <View style={styles.awardInfo}>
-                      <Text style={[styles.awardName, { color: colors.text }]}>Player of the Month</Text>
-                      <Text style={[styles.awardCount, { color: colors.textSecondary }]}>
-                        {player.awards.playerOfTheMonth}x
+                      <Text style={[styles.awardName, { color: colors.text }]}>Basketball POTM</Text>
+                      <Text style={[styles.awardCount, { color: colors.primary }]}>
+                        {player.awards.playerOfTheMonth.basketball}x
                       </Text>
                     </View>
                   </View>
                 )}
-                {player.awards.playerOfTheWeek > 0 && (
+                {player.awards.playerOfTheMonth.baseball > 0 && (
                   <View style={styles.awardItem}>
-                    <View style={[styles.awardIconContainer, { backgroundColor: colors.textMuted + '20' }]}>
-                      <Text style={styles.awardIcon}>📆</Text>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.success + '20' }]}>
+                      <Text style={styles.awardIcon}>⚾</Text>
                     </View>
                     <View style={styles.awardInfo}>
-                      <Text style={[styles.awardName, { color: colors.text }]}>Player of the Week</Text>
-                      <Text style={[styles.awardCount, { color: colors.textSecondary }]}>
-                        {player.awards.playerOfTheWeek}x
+                      <Text style={[styles.awardName, { color: colors.text }]}>Baseball POTM</Text>
+                      <Text style={[styles.awardCount, { color: colors.success }]}>
+                        {player.awards.playerOfTheMonth.baseball}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.playerOfTheMonth.soccer > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.info + '20' }]}>
+                      <Text style={styles.awardIcon}>⚽</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Soccer POTM</Text>
+                      <Text style={[styles.awardCount, { color: colors.info }]}>
+                        {player.awards.playerOfTheMonth.soccer}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {/* Player of the Week - by sport */}
+                {player.awards.playerOfTheWeek.basketball > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                      <Text style={styles.awardIcon}>🏀</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Basketball POTW</Text>
+                      <Text style={[styles.awardCount, { color: colors.primary }]}>
+                        {player.awards.playerOfTheWeek.basketball}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.playerOfTheWeek.baseball > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.success + '20' }]}>
+                      <Text style={styles.awardIcon}>⚾</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Baseball POTW</Text>
+                      <Text style={[styles.awardCount, { color: colors.success }]}>
+                        {player.awards.playerOfTheWeek.baseball}x
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {player.awards.playerOfTheWeek.soccer > 0 && (
+                  <View style={styles.awardItem}>
+                    <View style={[styles.awardIconContainer, { backgroundColor: colors.info + '20' }]}>
+                      <Text style={styles.awardIcon}>⚽</Text>
+                    </View>
+                    <View style={styles.awardInfo}>
+                      <Text style={[styles.awardName, { color: colors.text }]}>Soccer POTW</Text>
+                      <Text style={[styles.awardCount, { color: colors.info }]}>
+                        {player.awards.playerOfTheWeek.soccer}x
                       </Text>
                     </View>
                   </View>

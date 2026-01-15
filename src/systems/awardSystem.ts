@@ -69,20 +69,21 @@ export interface SeasonAwardResult {
 
 /**
  * Calculate basketball game score for a single game performance
- * Uses weighted efficiency: PTS + 1.2*REB + 1.5*AST + 2*STL + 1.5*BLK - 2*TO
+ * Uses total production (no per-36 normalization):
+ * PTS + 1.2*REB + 1.5*AST + 2*STL + 1.5*BLK - 2*TO
+ *
+ * Total production rewards players who dominate over full games
  */
 function calculateBasketballGameScore(stats: GamePlayerStats, minutes: number): number {
   if (minutes < 10) return 0; // Minimum minutes threshold
 
-  const rawScore = stats.points
+  // Raw total production - no normalization
+  return stats.points
     + 1.2 * stats.rebounds
     + 1.5 * stats.assists
     + 2.0 * stats.steals
     + 1.5 * stats.blocks
     - 2.0 * stats.turnovers;
-
-  // Per-36 normalization to compare fairly across different minutes
-  return (rawScore / Math.max(minutes, 1)) * 36;
 }
 
 /**
@@ -130,7 +131,13 @@ function calculateBaseballBattingGameScore(
 
 /**
  * Calculate baseball pitching game score
- * Based on innings pitched, strikeouts, and runs allowed
+ * Balanced to compete fairly with batting scores (both typically 5-25 range)
+ *
+ * No baseline - pure performance-based:
+ * - IP rewards length (more outs = more value)
+ * - K rewards dominance
+ * - ER heavily penalized (runs allowed hurt)
+ * - H/BB penalized (baserunners are bad)
  */
 function calculateBaseballPitchingGameScore(
   inningsPitched: number,
@@ -141,17 +148,17 @@ function calculateBaseballPitchingGameScore(
 ): number {
   if (inningsPitched < 3) return 0; // Minimum innings threshold
 
-  // Start with 50, add/subtract based on performance
-  let score = 50;
-  score += inningsPitched * 2;
-  score += strikeouts * 1;
-  score -= earnedRuns * 4;
-  score -= hits * 0.5;
-  score -= walks * 1;
+  // No baseline - score purely on performance
+  let score = 0;
+  score += inningsPitched * 2;      // ~12-18 for a full start
+  score += strikeouts * 1.5;        // Reward dominance
+  score -= earnedRuns * 5;          // Heavy penalty for runs
+  score -= hits * 0.5;              // Moderate penalty for hits
+  score -= walks * 1;               // Penalty for free passes
 
-  // Bonus for quality starts (6+ IP, 3 or fewer ER)
+  // Small bonus for quality starts (6+ IP, 3 or fewer ER)
   if (inningsPitched >= 6 && earnedRuns <= 3) {
-    score += 10;
+    score += 3;
   }
 
   return Math.max(0, score);
@@ -183,12 +190,30 @@ function formatBaseballBattingStatLine(
   return `${hits}-${atBats}, ${homeRuns} HR, ${rbi} RBI`;
 }
 
+/**
+ * Format innings pitched in baseball notation (6.2 = 6 and 2/3 innings)
+ */
+function formatInningsPitched(ip: number): string {
+  const whole = Math.floor(ip);
+  const partial = ip - whole;
+
+  if (partial < 0.1) {
+    return `${whole}.0`;
+  } else if (partial < 0.4) {
+    return `${whole}.1`;  // 1/3 inning
+  } else if (partial < 0.7) {
+    return `${whole}.2`;  // 2/3 innings
+  } else {
+    return `${whole + 1}.0`;
+  }
+}
+
 function formatBaseballPitchingStatLine(
   inningsPitched: number,
   strikeouts: number,
   earnedRuns: number
 ): string {
-  return `${inningsPitched} IP, ${strikeouts} K, ${earnedRuns} ER`;
+  return `${formatInningsPitched(inningsPitched)} IP, ${strikeouts} K, ${earnedRuns} ER`;
 }
 
 function formatBaseballSeasonBattingStatLine(stats: AggregatedBaseballBattingStats): string {
@@ -205,7 +230,14 @@ function formatBaseballSeasonPitchingStatLine(stats: AggregatedBaseballPitchingS
 
 /**
  * Calculate soccer game score
- * Goals weighted heavily, assists matter, clean sheets for GK
+ * Goals/assists weighted heavily, plus raw +/- for team impact
+ *
+ * Note: Relative +/- doesn't work for single games because all full-90
+ * players have the same +/- as the team's goal diff (making rel +/- = 0).
+ * Raw +/- still rewards being on winning teams.
+ *
+ * Outfield: goals * 10 + assists * 5 + plusMinus * 2
+ * GK: saves * 2 + cleanSheet * 10 - goalsAgainst * 3 + plusMinus * 2
  */
 function calculateSoccerGameScore(
   goals: number,
@@ -213,22 +245,26 @@ function calculateSoccerGameScore(
   saves: number,
   minutesPlayed: number,
   goalsAgainst: number,
-  isGoalkeeper: boolean
+  isGoalkeeper: boolean,
+  plusMinus: number = 0
 ): number {
   if (minutesPlayed < 45) return 0; // Minimum minutes threshold
 
   if (isGoalkeeper) {
-    // Goalkeeper scoring: saves + clean sheet bonus - goals against penalty
+    // Goalkeeper scoring: saves + clean sheet bonus - goals against penalty + team impact
     let score = saves * 2;
     if (goalsAgainst === 0 && minutesPlayed >= 90) {
       score += 10; // Clean sheet bonus
     }
     score -= goalsAgainst * 3;
+    score += plusMinus * 2;           // Reward being on field when team scores
     return Math.max(0, score);
   }
 
-  // Outfield player scoring
-  return goals * 10 + assists * 5;
+  // Outfield player scoring: goals/assists + team impact
+  let score = goals * 10 + assists * 5;
+  score += plusMinus * 2;             // +/- rewards being on winning teams
+  return Math.max(0, score);
 }
 
 /**
@@ -401,7 +437,8 @@ export function calculateWeeklyAward(
           stats.saves || 0,
           stats.minutesPlayed || 0,
           homeGoalsAgainst,
-          isGK
+          isGK,
+          stats.plusMinus || 0
         );
 
         if (score > 0) {
@@ -430,7 +467,8 @@ export function calculateWeeklyAward(
           stats.saves || 0,
           stats.minutesPlayed || 0,
           awayGoalsAgainst,
-          isGK
+          isGK,
+          stats.plusMinus || 0
         );
 
         if (score > 0) {
@@ -784,14 +822,17 @@ export function calculateRookieOfTheYear(
 
 /**
  * Grant a Player of the Week award to a player
- * Updates the player's awards record
+ * Updates the player's awards record for the specific sport
  */
-export function grantWeeklyAward(player: Player): Player {
+export function grantWeeklyAward(player: Player, sport: Sport): Player {
+  const playerOfTheWeek = { ...player.awards.playerOfTheWeek };
+  playerOfTheWeek[sport] += 1;
+
   return {
     ...player,
     awards: {
       ...player.awards,
-      playerOfTheWeek: player.awards.playerOfTheWeek + 1,
+      playerOfTheWeek,
     },
   };
 }
@@ -799,12 +840,15 @@ export function grantWeeklyAward(player: Player): Player {
 /**
  * Grant a Player of the Month award to a player
  */
-export function grantMonthlyAward(player: Player): Player {
+export function grantMonthlyAward(player: Player, sport: Sport): Player {
+  const playerOfTheMonth = { ...player.awards.playerOfTheMonth };
+  playerOfTheMonth[sport] += 1;
+
   return {
     ...player,
     awards: {
       ...player.awards,
-      playerOfTheMonth: player.awards.playerOfTheMonth + 1,
+      playerOfTheMonth,
     },
   };
 }
@@ -934,7 +978,7 @@ export function processWeeklyAwards(
     if (result.winner) {
       const winnerId = result.winner.playerId;
       if (updatedPlayers[winnerId]) {
-        updatedPlayers[winnerId] = grantWeeklyAward(updatedPlayers[winnerId]);
+        updatedPlayers[winnerId] = grantWeeklyAward(updatedPlayers[winnerId], sport);
         newsItems.push(createAwardNewsItem(
           'weekly',
           sport,
@@ -970,7 +1014,7 @@ export function processMonthlyAwards(
     if (result.winner) {
       const winnerId = result.winner.playerId;
       if (updatedPlayers[winnerId]) {
-        updatedPlayers[winnerId] = grantMonthlyAward(updatedPlayers[winnerId]);
+        updatedPlayers[winnerId] = grantMonthlyAward(updatedPlayers[winnerId], sport);
         newsItems.push(createAwardNewsItem(
           'monthly',
           sport,

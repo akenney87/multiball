@@ -172,14 +172,23 @@ export interface WeeklyXP {
 }
 
 /**
+ * Sport-specific award counts
+ */
+export interface SportAwardCounts {
+  basketball: number;
+  baseball: number;
+  soccer: number;
+}
+
+/**
  * Player awards tracking
  * Used to calculate performance-based transfer value modifiers
  */
 export interface PlayerAwards {
-  /** Player of the Week awards (any sport) */
-  playerOfTheWeek: number;
-  /** Player of the Month awards (any sport) */
-  playerOfTheMonth: number;
+  /** Player of the Week awards by sport */
+  playerOfTheWeek: SportAwardCounts;
+  /** Player of the Month awards by sport */
+  playerOfTheMonth: SportAwardCounts;
   /** Basketball Player of the Year awards */
   basketballPlayerOfTheYear: number;
   /** Baseball Player of the Year awards */

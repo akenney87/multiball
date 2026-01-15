@@ -74,6 +74,7 @@ export function PlayTabScreen({
           onNavigateToScouting={onNavigateToScouting}
           onNavigateToYouthAcademy={onNavigateToYouthAcademy}
           onNavigateToStandings={handleNavigateToStandings}
+          onPlayerPress={onPlayerPress}
         />
       )}
 
