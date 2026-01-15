@@ -553,11 +553,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SIGN_PLAYER': {
       const { player } = action.payload;
 
-      // Add to roster
-      const newRosterIds = [...state.userTeam.rosterIds, player.id];
-
       // Update salary
       const newSalary = player.contract?.salary || 0;
+
+      // Budget validation - prevent signing if it would make budget negative
+      if (state.userTeam.availableBudget < newSalary) {
+        console.warn(`SIGN_PLAYER rejected: insufficient budget (need ${newSalary}, have ${state.userTeam.availableBudget})`);
+        return state;
+      }
+
+      // Add to roster
+      const newRosterIds = [...state.userTeam.rosterIds, player.id];
 
       // Remove from free agents if applicable
       const newFreeAgentIds = state.league.freeAgentIds.filter(
@@ -843,6 +849,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       if (!player) return state;
 
+      // Budget validation - if user is buying, check they can afford it
+      if (toTeamId === 'user' && state.userTeam.availableBudget < fee) {
+        console.warn(`COMPLETE_TRANSFER rejected: insufficient budget (need ${fee}, have ${state.userTeam.availableBudget})`);
+        return state;
+      }
+
       // Create a contract for the player
       const newContract = {
         id: `contract-${Date.now()}`,
@@ -1080,6 +1092,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const signingCost = calculateSigningCost(negotiation.currentOffer);
       const transferFee = negotiation.transferFee || 0;
       const totalCost = signingCost + transferFee;
+
+      // Budget validation - prevent signing if it would make budget negative
+      if (state.userTeam.availableBudget < totalCost) {
+        console.warn(`COMPLETE_SIGNING rejected: insufficient budget (need ${totalCost}, have ${state.userTeam.availableBudget})`);
+        return state;
+      }
 
       // Update player with new contract
       // Free agents start with reduced match fitness (haven't been playing)
@@ -1334,6 +1352,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'SIGN_PROSPECT_TO_ACADEMY': {
       const { prospect, signingCost = 0 } = action.payload;
+
+      // Budget validation - prevent signing if it would make budget negative
+      if (state.userTeam.availableBudget < signingCost) {
+        console.warn(`SIGN_PROSPECT_TO_ACADEMY rejected: insufficient budget (need ${signingCost}, have ${state.userTeam.availableBudget})`);
+        return state;
+      }
+
       return {
         ...state,
         userTeam: {
