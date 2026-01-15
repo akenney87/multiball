@@ -34,6 +34,8 @@ import { TimeoutManager, applyTimeoutStaminaRecovery } from '../systems/timeoutM
 import { PlayByPlayLogger } from '../playByPlay/playByPlay';
 import { PossessionState, DeadBallReason } from '../possession/possessionState';
 import type { FoulSystem } from '../systems/fouls';
+import { InGameInjuryTracker, InGameInjuryOutcome } from '../../systems/injurySystem';
+import type { InjuryData } from '../../systems/injurySystem';
 import * as possession from '../possession/possession';
 import { flattenPlayer, getPlayerAttributes } from '../../types/player';
 
@@ -52,6 +54,10 @@ export interface QuarterResult {
   minutesPlayed: Record<string, number>;
   homeEndingLineup: Player[];
   awayEndingLineup: Player[];
+  /** Post-game injuries to apply (from game-ending in-game injuries) */
+  postGameInjuries: Array<{ playerId: string; injury: InjuryData }>;
+  /** Players removed from game due to injury */
+  injuredOutPlayers: string[];
 }
 
 // =============================================================================
@@ -75,6 +81,7 @@ export class QuarterSimulator {
   private foulSystem: FoulSystem | null;
   private timeoutManager: TimeoutManager | null;
   private playByPlayLogger: PlayByPlayLogger;
+  private injuryTracker: InGameInjuryTracker;
 
   private homeScore: number = 0;
   private awayScore: number = 0;
@@ -150,6 +157,11 @@ export class QuarterSimulator {
     );
 
     this.playByPlayLogger.initializePlayerTeamMapping(homeRoster, awayRoster);
+
+    // Initialize injury tracker for basketball
+    // ~50 checks PER PLAYER per game (500 total checks / 10 active players)
+    // This scales the 7% per-player-per-game rate correctly
+    this.injuryTracker = new InGameInjuryTracker('basketball', 50);
   }
 
   /**
@@ -492,6 +504,96 @@ export class QuarterSimulator {
         }
       }
 
+      // Check for in-game injuries during this possession
+      // Check random active players on both teams
+      const currentMinute = 12 - this.gameClock.getTimeRemaining();
+      const staminaValues = this.staminaTracker.getAllStaminaValues();
+
+      // Select 2-3 random players to check for injuries (high-action plays)
+      const allActivePlayers = [...offensiveTeam, ...defensiveTeam];
+      const playersToCheck = allActivePlayers
+        .sort(() => Math.random() - 0.5)
+        .slice(0, Math.floor(Math.random() * 2) + 2); // 2-3 players
+
+      for (const player of playersToCheck) {
+        const attrs = getPlayerAttributes(player);
+        const durability = attrs.durability ?? 50;
+        const stamina = staminaValues[player.name] ?? 100;
+        const seed = Math.random() * 10000 + possessionCount;
+
+        const injuryResult = this.injuryTracker.checkInjury(
+          player.name,
+          durability,
+          stamina,
+          seed,
+          currentMinute
+        );
+
+        if (injuryResult && injuryResult.injured) {
+          const isHomePlayer = this.homeRoster.some(p => p.name === player.name);
+          const teamKey: 'Home' | 'Away' = isHomePlayer ? 'Home' : 'Away';
+          const teamName = isHomePlayer ? this.homeTeamName : this.awayTeamName;
+
+          // Log injury to play-by-play
+          this.playByPlayLogger.addInjury(
+            this.gameClock.getTimeRemaining(),
+            teamKey,
+            player.name,
+            injuryResult.outcome!,
+            injuryResult.description
+          );
+
+          console.log(`\n[INJURY] ${player.name} (${teamName}) ${injuryResult.description}`);
+
+          // Force substitution for non-momentary injuries
+          if (injuryResult.outcome !== InGameInjuryOutcome.MOMENTARY) {
+            const lineupManager = isHomePlayer
+              ? this.substitutionManager['homeLineupManager']
+              : this.substitutionManager['awayLineupManager'];
+            const benchPlayers = isHomePlayer
+              ? this.substitutionManager.getHomeBench()
+              : this.substitutionManager.getAwayBench();
+
+            // Find injured player in active lineup
+            const activePlayers = lineupManager.getActivePlayers();
+            const playerOut = activePlayers.find((p: Player) => p.name === player.name);
+
+            if (playerOut && benchPlayers.length > 0) {
+              // Filter out already injured players
+              const eligibleBench = benchPlayers.filter(p =>
+                !this.injuryTracker.isInjuredOut(p.name) &&
+                !(this.foulSystem && this.foulSystem.isFouledOut(p.name))
+              );
+
+              if (eligibleBench.length > 0) {
+                const substitute = eligibleBench.reduce((best, p) =>
+                  (staminaValues[p.name] ?? 0) > (staminaValues[best.name] ?? 0) ? p : best
+                );
+
+                const success = lineupManager.substitute(playerOut, substitute);
+
+                if (success) {
+                  const reason = injuryResult.outcome === InGameInjuryOutcome.GAME_ENDING
+                    ? 'injury_out'
+                    : 'injury_temp';
+                  pendingSubstitutions.push({
+                    team: teamName,
+                    playerOut: player.name,
+                    playerIn: substitute.name,
+                    reason,
+                    stamina: staminaValues[player.name] ?? 0,
+                    time: this.gameClock.getTimeRemaining()
+                  });
+                  console.log(`[INJURY] ${player.name} replaced by ${substitute.name}`);
+                }
+              } else {
+                console.warn(`[WARNING] No eligible substitutes for injured player ${player.name}`);
+              }
+            }
+          }
+        }
+      }
+
       // Check for fouled-out players and force substitution
       if (possessionResult.foulEvent && possessionResult.foulEvent.fouled_out) {
         const fouledOutPlayer = possessionResult.foulEvent.fouling_player;
@@ -688,7 +790,9 @@ export class QuarterSimulator {
       staminaFinal,
       minutesPlayed: this.minutesPlayed,
       homeEndingLineup,
-      awayEndingLineup
+      awayEndingLineup,
+      postGameInjuries: this.injuryTracker.getPostGameInjuries(),
+      injuredOutPlayers: this.injuryTracker.getRemovedPlayers(),
     };
   }
 }

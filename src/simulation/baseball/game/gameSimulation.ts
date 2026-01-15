@@ -24,6 +24,8 @@ import { simulateHalfInning, getHalfInningSummary, type HalfInningInput } from '
 import { generateBoxScore } from './boxScore';
 import { type FieldingPosition } from '../systems/fielding';
 import { INNINGS_PER_GAME } from '../constants';
+import { InGameInjuryTracker, InGameInjuryOutcome } from '../../../systems/injurySystem';
+import type { InjuryData } from '../../../systems/injurySystem';
 
 // =============================================================================
 // TYPES
@@ -83,6 +85,10 @@ export interface GameOutput {
   finalHomeState: TeamGameState;
   /** Final away team state */
   finalAwayState: TeamGameState;
+  /** Post-game injuries to apply */
+  postGameInjuries: Array<{ playerId: string; injury: InjuryData }>;
+  /** Players who were removed from game due to injury */
+  injuredOutPlayers: string[];
 }
 
 // =============================================================================
@@ -127,6 +133,10 @@ export function simulateGame(input: GameInput): GameOutput {
   const homeRemovedPitchers = new Set<string>();
   const awayRemovedPitchers = new Set<string>();
 
+  // Initialize injury tracker for baseball
+  // ~50 injury checks per game (18 half-innings × ~3 players checked)
+  const injuryTracker = new InGameInjuryTracker('baseball', 50);
+
   // Play regulation innings
   while (currentInning <= INNINGS_PER_GAME && !gameOver) {
     // Top of inning (away team bats)
@@ -146,6 +156,16 @@ export function simulateGame(input: GameInput): GameOutput {
       pitcherName: homeTeam.pitcher.name,
     }));
     awayScore += topResult.result.runs;
+
+    // Check for injuries after half-inning (pitcher and batters)
+    checkHalfInningInjuries(
+      injuryTracker,
+      homeTeam.pitcher,    // Fielding team's pitcher
+      awayTeam.lineup,     // Batting team's lineup
+      topResult.result.atBats.length,
+      currentInning,
+      playByPlay
+    );
 
     // Update team states from half-inning result
     awayTeam.battingOrderPosition = topResult.newBattingOrderPosition;
@@ -196,6 +216,16 @@ export function simulateGame(input: GameInput): GameOutput {
       pitcherName: awayTeam.pitcher.name,
     }));
     homeScore += bottomResult.result.runs;
+
+    // Check for injuries after half-inning (pitcher and batters)
+    checkHalfInningInjuries(
+      injuryTracker,
+      awayTeam.pitcher,    // Fielding team's pitcher
+      homeTeam.lineup,     // Batting team's lineup
+      bottomResult.result.atBats.length,
+      currentInning,
+      playByPlay
+    );
 
     // Update team states from half-inning result
     homeTeam.battingOrderPosition = bottomResult.newBattingOrderPosition;
@@ -336,6 +366,8 @@ export function simulateGame(input: GameInput): GameOutput {
     result,
     finalHomeState: homeTeam,
     finalAwayState: awayTeam,
+    postGameInjuries: injuryTracker.getPostGameInjuries(),
+    injuredOutPlayers: injuryTracker.getRemovedPlayers(),
   };
 }
 
@@ -490,4 +522,64 @@ export function createTeamGameState(
     // Set twoWayPlayerId if pitcher is also in the batting order (Ohtani Rule)
     twoWayPlayerId: pitcherAsDH && pitcherInLineup ? startingPitcher.id : undefined,
   };
+}
+
+/**
+ * Check for injuries after a half-inning
+ *
+ * In baseball, injured players are removed and cannot return.
+ * Check pitcher (arm injuries especially) and a random subset of batters.
+ *
+ * @param injuryTracker - In-game injury tracker
+ * @param pitcher - Current pitcher
+ * @param lineup - Batting lineup
+ * @param atBatsThisInning - Number of at-bats this half-inning
+ * @param inning - Current inning number
+ * @param playByPlay - Play-by-play array to add injury messages
+ */
+function checkHalfInningInjuries(
+  injuryTracker: InGameInjuryTracker,
+  pitcher: Player,
+  lineup: Player[],
+  atBatsThisInning: number,
+  inning: number,
+  playByPlay: string[]
+): void {
+  // Check pitcher for injury (higher chance with more pitches)
+  const pitcherDurability = pitcher.attributes?.durability ?? 50;
+  const pitcherSeed = Math.random() * 10000 + inning;
+  const pitcherInjury = injuryTracker.checkInjury(
+    pitcher.name,
+    pitcherDurability,
+    100, // Pitchers maintain stamina differently
+    pitcherSeed,
+    inning
+  );
+
+  if (pitcherInjury && pitcherInjury.injured && pitcherInjury.outcome !== InGameInjuryOutcome.MOMENTARY) {
+    playByPlay.push(`INJURY: ${pitcher.name} ${pitcherInjury.description} and leaves the game.`);
+  }
+
+  // Check 1-2 random batters who had at-bats
+  const battersToCheck = Math.min(2, atBatsThisInning);
+  const shuffledLineup = [...lineup].sort(() => Math.random() - 0.5);
+
+  for (let i = 0; i < battersToCheck; i++) {
+    const batter = shuffledLineup[i];
+    if (!batter) continue;
+
+    const batterDurability = batter.attributes?.durability ?? 50;
+    const batterSeed = Math.random() * 10000 + inning * 100 + i;
+    const batterInjury = injuryTracker.checkInjury(
+      batter.name,
+      batterDurability,
+      100,
+      batterSeed,
+      inning
+    );
+
+    if (batterInjury && batterInjury.injured && batterInjury.outcome !== InGameInjuryOutcome.MOMENTARY) {
+      playByPlay.push(`INJURY: ${batter.name} ${batterInjury.description} and leaves the game.`);
+    }
+  }
 }

@@ -94,6 +94,22 @@ export interface TimeoutEvent {
   timeoutsRemaining: number;
 }
 
+/**
+ * Structured event for an in-game injury
+ */
+export interface InjuryEvent {
+  /** Time remaining when injury occurred */
+  gameClock: number;
+  /** Team of injured player */
+  team: 'Home' | 'Away';
+  /** Name of injured player */
+  playerName: string;
+  /** Injury outcome */
+  outcome: 'momentary' | 'temporary' | 'game_ending';
+  /** Description of injury */
+  description: string;
+}
+
 // =============================================================================
 // QUARTER STATISTICS
 // =============================================================================
@@ -595,6 +611,7 @@ export class PlayByPlayLogger {
   private possessionEvents: PossessionEvent[];
   private substitutionEvents: SubstitutionEvent[];
   private timeoutEvents: TimeoutEvent[];
+  private injuryEvents: InjuryEvent[];
   private statistics: QuarterStatistics;
   private homeScore: number;
   private awayScore: number;
@@ -630,6 +647,7 @@ export class PlayByPlayLogger {
     this.possessionEvents = [];
     this.substitutionEvents = [];
     this.timeoutEvents = [];
+    this.injuryEvents = [];
 
     this.statistics = new QuarterStatistics(homeTeamName, awayTeamName);
 
@@ -792,6 +810,33 @@ export class PlayByPlayLogger {
   }
 
   /**
+   * Add an injury event to the log.
+   *
+   * @param gameClock - Seconds remaining when injury occurred
+   * @param team - 'Home' or 'Away'
+   * @param playerName - Name of injured player
+   * @param outcome - Injury outcome type
+   * @param description - Description of the injury
+   */
+  addInjury(
+    gameClock: number,
+    team: 'Home' | 'Away',
+    playerName: string,
+    outcome: 'momentary' | 'temporary' | 'game_ending',
+    description: string
+  ): void {
+    const event: InjuryEvent = {
+      gameClock,
+      team,
+      playerName,
+      outcome,
+      description,
+    };
+
+    this.injuryEvents.push(event);
+  }
+
+  /**
    * Render complete quarter narrative to text.
    *
    * Combines possession events, substitution events, and quarter summary
@@ -812,7 +857,7 @@ export class PlayByPlayLogger {
     lines.push('');
 
     // Sort all events by game clock (descending = chronological)
-    type EventTuple = ['possession' | 'substitution' | 'timeout', number, number, any];
+    type EventTuple = ['possession' | 'substitution' | 'timeout' | 'injury', number, number, any];
     const allEvents: EventTuple[] = [];
 
     for (const poss of this.possessionEvents) {
@@ -828,6 +873,11 @@ export class PlayByPlayLogger {
 
     for (const timeout of this.timeoutEvents) {
       allEvents.push(['timeout', timeout.gameClock, 1, timeout]);
+    }
+
+    for (const injury of this.injuryEvents) {
+      // Injuries happen during possessions, show right after
+      allEvents.push(['injury', injury.gameClock, 2.5, injury]);
     }
 
     // Sort by game clock descending, then by type priority ascending
@@ -846,6 +896,9 @@ export class PlayByPlayLogger {
         lines.push('');
       } else if (eventType === 'timeout') {
         lines.push(this.renderTimeoutEvent(eventData));
+        lines.push('');
+      } else if (eventType === 'injury') {
+        lines.push(this.renderInjuryEvent(eventData));
         lines.push('');
       }
     }
@@ -1043,6 +1096,24 @@ export class PlayByPlayLogger {
     const reasonText = reasonMap[event.reason] ?? event.reason;
 
     return `[${timestamp}] TIMEOUT - ${teamName} (${reasonText}) - ${event.timeoutsRemaining} timeouts remaining`;
+  }
+
+  /**
+   * Render a single injury event to text
+   */
+  private renderInjuryEvent(event: InjuryEvent): string {
+    const timestamp = this.formatGameClock(event.gameClock);
+    const teamName = event.team === 'Home' ? this.homeTeamName : this.awayTeamName;
+
+    // Format outcome
+    const outcomeMap: Record<string, string> = {
+      momentary: 'shakes it off',
+      temporary: 'heads to bench',
+      game_ending: 'out for game',
+    };
+    const outcomeText = outcomeMap[event.outcome] ?? event.outcome;
+
+    return `[${timestamp}] INJURY - ${teamName}: ${event.playerName} ${event.description} (${outcomeText})`;
   }
 }
 

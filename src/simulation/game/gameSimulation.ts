@@ -28,6 +28,7 @@ import { QuarterSimulator, type QuarterResult } from './quarterSimulation';
 import { recoverStamina } from '../stamina/staminaManager';
 import { TimeoutManager } from '../systems/timeoutManager';
 import { FoulSystem } from '../systems/fouls';
+import type { InjuryData } from '../../systems/injurySystem';
 
 // =============================================================================
 // GAME RESULT DATA STRUCTURE
@@ -42,6 +43,10 @@ export interface GameResult {
   quarterResults: QuarterResult[];
   finalStamina: Record<string, number>;
   minutesPlayed: Record<string, number>;
+  /** Post-game injuries to apply (from game-ending in-game injuries) */
+  postGameInjuries: Array<{ playerId: string; injury: InjuryData }>;
+  /** Players removed from game due to injury */
+  injuredOutPlayers: string[];
 }
 
 // =============================================================================
@@ -504,6 +509,22 @@ export class GameSimulator {
 
     const playByPlayText = playByPlaySections.join("\n");
 
+    // Aggregate injuries from all quarters
+    const allPostGameInjuries: Array<{ playerId: string; injury: InjuryData }> = [];
+    const allInjuredOutPlayers: string[] = [];
+    for (const qr of this.quarterResults) {
+      if (qr.postGameInjuries) {
+        allPostGameInjuries.push(...qr.postGameInjuries);
+      }
+      if (qr.injuredOutPlayers) {
+        for (const playerId of qr.injuredOutPlayers) {
+          if (!allInjuredOutPlayers.includes(playerId)) {
+            allInjuredOutPlayers.push(playerId);
+          }
+        }
+      }
+    }
+
     return {
       homeScore: this.homeScore,
       awayScore: this.awayScore,
@@ -512,7 +533,9 @@ export class GameSimulator {
       gameStatistics: gameStats,
       quarterResults: this.quarterResults,
       finalStamina,
-      minutesPlayed: cappedMinutes
+      minutesPlayed: cappedMinutes,
+      postGameInjuries: allPostGameInjuries,
+      injuredOutPlayers: allInjuredOutPlayers
     };
   }
 

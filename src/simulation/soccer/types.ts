@@ -7,6 +7,7 @@
  */
 
 import { Player } from '../../data/types';
+import type { InjuryData } from '../../systems/injurySystem';
 
 // =============================================================================
 // POSITIONS
@@ -216,4 +217,8 @@ export interface SoccerMatchResult {
   playByPlay: string[];
   /** Penalty shootout result (only if match ended in draw) */
   penaltyShootout?: PenaltyShootoutResult;
+  /** Post-game injuries that will persist */
+  postGameInjuries: Array<{ playerId: string; injury: InjuryData }>;
+  /** Players who were injured out during the match */
+  injuredOutPlayers: string[];
 }

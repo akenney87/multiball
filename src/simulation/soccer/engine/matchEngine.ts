@@ -49,6 +49,12 @@ import {
   recordYellowCard,
   DEFAULT_SUB_CONFIG,
 } from '../systems/substitutionSystem';
+import {
+  InGameInjuryTracker,
+  InGameInjuryOutcome,
+  soccerMustSubstitute,
+} from '../../../systems/injurySystem';
+import type { InjuryData } from '../../../systems/injurySystem';
 
 // =============================================================================
 // TYPES
@@ -90,6 +96,9 @@ interface MatchState {
   // Player stats tracking
   homeStats: Map<string, SoccerPlayerStats>;
   awayStats: Map<string, SoccerPlayerStats>;
+
+  // Injury tracking
+  injuryTracker: InGameInjuryTracker;
 }
 
 interface ShotContext {
@@ -1601,6 +1610,79 @@ function handleMatchInjury(state: MatchState, team: 'home' | 'away', playerId: s
 }
 
 /**
+ * Check for injuries during a minute of play
+ * This is called every minute to ensure proper injury rate
+ */
+function checkMinuteInjuries(state: MatchState, minute: number): void {
+  // Check both teams for injuries
+  for (const team of ['home', 'away'] as const) {
+    const lineup = getActiveLineup(team, state);
+    const subState = team === 'home' ? state.homeSubState : state.awaySubState;
+
+    // Check each active player for potential injury
+    for (const player of lineup) {
+      // Get player's durability (default 70 if not set)
+      const durability = player.attributes?.durability ?? 70;
+      // Get player's current fatigue from sub state (100 = fresh)
+      const playerWithMinutes = subState.onField.find(p => p.id === player.id);
+      const fatigue = playerWithMinutes?.fatigue ?? 80;
+
+      // Check if injury occurs based on durability
+      const injuryResult = state.injuryTracker.checkInjury(
+        player.id,
+        durability,
+        fatigue,
+        Math.random(),
+        minute
+      );
+
+      if (injuryResult && injuryResult.injured) {
+        const teamName = state[`${team}Team` as 'homeTeam' | 'awayTeam'].teamName;
+
+        // Generate injury event based on severity
+        if (injuryResult.outcome === InGameInjuryOutcome.MOMENTARY) {
+          // Momentary injury - brief delay, player continues
+          state.events.push({
+            minute,
+            type: 'foul',
+            team,
+            player,
+            description: `Brief delay as ${player.name} (${teamName}) receives treatment for a minor knock.`,
+          });
+          // Small stoppage time
+          if (minute <= 45) state.firstHalfStoppage += 1;
+          else state.secondHalfStoppage += 1;
+        } else {
+          // Temporary or game-ending injury - player must be substituted
+          const isGameEnding = injuryResult.outcome === InGameInjuryOutcome.GAME_ENDING;
+          const injuryDesc = isGameEnding
+            ? `${player.name} (${teamName}) goes down with a serious injury and cannot continue.`
+            : `${player.name} (${teamName}) is injured and will need to be substituted.`;
+
+          state.events.push({
+            minute,
+            type: 'foul',
+            team,
+            player,
+            description: injuryDesc,
+          });
+
+          // Mark player as injured - must be substituted in soccer
+          handleMatchInjury(state, team, player.id);
+
+          // Immediately try to substitute the injured player
+          processInGameSubstitutions(state, team);
+
+          // More stoppage time for serious injuries
+          if (minute <= 45) state.firstHalfStoppage += isGameEnding ? 4 : 2;
+          else state.secondHalfStoppage += isGameEnding ? 4 : 2;
+        }
+      }
+    }
+  }
+}
+
+/**
  * Handle yellow card - updates substitution state
  */
 function handleMatchYellowCard(state: MatchState, team: 'home' | 'away', playerId: string): boolean {
@@ -1672,6 +1754,9 @@ export function simulateSoccerMatchV2(input: SoccerMatchInput): SoccerMatchResul
   const homeSubState = initializeSubstitutionState(input.homeTeam, 'home');
   const awaySubState = initializeSubstitutionState(input.awayTeam, 'away');
 
+  // Initialize injury tracker (soccer checks ~90 times per game, one per minute)
+  const injuryTracker = new InGameInjuryTracker('soccer', 90);
+
   // Initialize match state
   const state: MatchState = {
     minute: 0,
@@ -1693,6 +1778,7 @@ export function simulateSoccerMatchV2(input: SoccerMatchInput): SoccerMatchResul
     awayTeam: input.awayTeam,
     homeStats: initializePlayerStats(input.homeTeam.lineup),
     awayStats: initializePlayerStats(input.awayTeam.lineup),
+    injuryTracker,
   };
 
   // Calculate team strengths for event probabilities
@@ -1810,6 +1896,10 @@ export function simulateSoccerMatchV2(input: SoccerMatchInput): SoccerMatchResul
   // Build play-by-play
   const playByPlay = state.events.map(e => `${e.minute}' ${e.description}`);
 
+  // Get post-game injuries and injured out players from tracker
+  const postGameInjuries = state.injuryTracker.getPostGameInjuries();
+  const injuredOutPlayers = state.injuryTracker.getRemovedPlayers();
+
   return {
     homeTeamId: input.homeTeam.teamId,
     awayTeamId: input.awayTeam.teamId,
@@ -1824,6 +1914,8 @@ export function simulateSoccerMatchV2(input: SoccerMatchInput): SoccerMatchResul
     events: state.events,
     boxScore,
     playByPlay,
+    postGameInjuries,
+    injuredOutPlayers,
   };
 }
 
@@ -1850,6 +1942,9 @@ function simulateHalf(
 
     // Update fatigue for all players each minute
     updateAllFatigue(state);
+
+    // Check for injuries every minute (independent of match events)
+    checkMinuteInjuries(state, minute);
 
     // Check for substitutions at natural break points
     if (SUB_CHECK_MINUTES.includes(minute)) {
@@ -1880,9 +1975,8 @@ function simulateHalf(
     // Foul: 30%
     // Offside: 10%
     // Corner: 15%
-    // Injury delay: 3%
-    // Card (without foul): 2%
-    // Other (nothing notable): 15%
+    // Other (nothing notable): 20%
+    // Note: Injuries are checked separately every minute
 
     if (eventRoll < 25) {
       // Shot attempt
@@ -1908,25 +2002,8 @@ function simulateHalf(
       // Corner (may include set piece shot)
       const cornerEvents = generateCornerEvent(state);
       state.events.push(...cornerEvents);
-    } else if (eventRoll < 83) {
-      // Injury delay
-      const team = Math.random() > 0.5 ? 'home' : 'away';
-      const lineup = getActiveLineup(team, state);
-      const player = randomPick(lineup);
-      const injuryEvents = generateInjuryDelayEvent(player, team, state);
-      state.events.push(...injuryEvents);
-
-      // Mark player as injured in substitution state
-      handleMatchInjury(state, team, player.id);
-
-      // Immediately try to substitute the injured player
-      processInGameSubstitutions(state, team);
-
-      // Add stoppage time
-      if (minute <= 45) state.firstHalfStoppage += 2;
-      else state.secondHalfStoppage += 2;
     }
-    // else: nothing notable happens this minute
+    // else: nothing notable happens this minute (injuries checked separately)
   }
 }
 
