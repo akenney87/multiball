@@ -247,7 +247,7 @@ export function createRadarChartData(allocation: BudgetAllocation): RadarChartDa
 export interface OperationsBudgetAllocation {
   training: number;
   scouting: number;
-  facilities: number;
+  medical: number;
   youthDevelopment: number;
 }
 
@@ -270,7 +270,7 @@ export interface SigningImpact {
   categoryImpacts: {
     training: CategoryImpact;
     scouting: CategoryImpact;
-    facilities: CategoryImpact;
+    medical: CategoryImpact;
     youthDevelopment: CategoryImpact;
   };
 }
@@ -333,7 +333,7 @@ export function calculateSigningImpact(
     categoryImpacts: {
       training: createCategoryImpact(operationsBudget.training),
       scouting: createCategoryImpact(operationsBudget.scouting),
-      facilities: createCategoryImpact(operationsBudget.facilities),
+      medical: createCategoryImpact(operationsBudget.medical),
       youthDevelopment: createCategoryImpact(operationsBudget.youthDevelopment),
     },
   };

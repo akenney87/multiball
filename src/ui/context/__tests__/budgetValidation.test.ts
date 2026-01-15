@@ -23,11 +23,10 @@ function createTestState(overrides: Partial<GameState> = {}): GameState {
       salaryCommitment: 0,
       availableBudget: 100000,
       operationsBudget: {
-        scouting: 20,
-        training: 20,
-        medical: 20,
-        youthDevelopment: 20,
-        facilities: 20,
+        scouting: 25,
+        training: 25,
+        medical: 25,
+        youthDevelopment: 25,
       },
       rosterIds: [],
       lineup: {

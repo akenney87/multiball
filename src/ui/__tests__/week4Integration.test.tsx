@@ -408,7 +408,7 @@ describe('Budget Actions', () => {
     const newAllocation = {
       training: 40,
       scouting: 25,
-      facilities: 15,
+      medical: 15,
       youthDevelopment: 20,
     };
 

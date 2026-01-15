@@ -37,9 +37,9 @@ const categoryInfo = {
     description: 'Reveals more transfer targets and player attributes',
     color: '#10B981',
   },
-  facilities: {
-    label: 'Facilities',
-    description: 'Reduces injury risk and recovery time',
+  medical: {
+    label: 'Medical',
+    description: 'Speeds up fitness recovery between matches',
     color: '#8B5CF6',
   },
   youthDevelopment: {
@@ -121,7 +121,7 @@ export function BudgetAllocationModal({
 
   // Calculate total allocation
   const totalAllocation = useMemo(() => {
-    return allocation.training + allocation.scouting + allocation.facilities + allocation.youthDevelopment;
+    return allocation.training + allocation.scouting + allocation.medical + allocation.youthDevelopment;
   }, [allocation]);
 
   const isValid = totalAllocation === 100;

@@ -29,14 +29,14 @@ interface SigningImpactPreviewProps {
 const categoryLabels = {
   training: 'Training',
   scouting: 'Scouting',
-  facilities: 'Facilities',
+  medical: 'Medical',
   youthDevelopment: 'Youth Dev',
 };
 
 const categoryColors = {
   training: '#3B82F6',
   scouting: '#10B981',
-  facilities: '#8B5CF6',
+  medical: '#8B5CF6',
   youthDevelopment: '#F59E0B',
 };
 

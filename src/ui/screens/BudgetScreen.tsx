@@ -26,7 +26,7 @@ import { ConfirmationModal } from '../components/common/ConfirmationModal';
 export interface BudgetAllocation {
   training: number;
   scouting: number;
-  facilities: number;
+  medical: number;
   youth: number;
 }
 
@@ -47,7 +47,7 @@ const defaultData: BudgetData = {
   allocation: {
     training: 30,
     scouting: 25,
-    facilities: 25,
+    medical: 25,
     youth: 20,
   },
 };
@@ -63,9 +63,9 @@ const categoryInfo = {
     description: 'Reveals more transfer targets and player attributes',
     color: '#10B981',
   },
-  facilities: {
-    label: 'Facilities',
-    description: 'Reduces injury risk and recovery time',
+  medical: {
+    label: 'Medical',
+    description: 'Speeds up fitness recovery between matches',
     color: '#8B5CF6',
   },
   youth: {
@@ -160,14 +160,14 @@ function DraggableSlider({ value, color, onValueChange, onDecrement, onIncrement
 const normalizeAllocation = (alloc: BudgetAllocation): BudgetAllocation => {
   const total = Object.values(alloc).reduce((sum, val) => sum + val, 0);
   if (total === 100) return alloc;
-  if (total === 0) return { training: 25, scouting: 25, facilities: 25, youth: 25 };
+  if (total === 0) return { training: 25, scouting: 25, medical: 25, youth: 25 };
 
   // Scale proportionally and fix rounding
   const scale = 100 / total;
   const normalized: BudgetAllocation = {
     training: Math.round(alloc.training * scale),
     scouting: Math.round(alloc.scouting * scale),
-    facilities: Math.round(alloc.facilities * scale),
+    medical: Math.round(alloc.medical * scale),
     youth: Math.round(alloc.youth * scale),
   };
 

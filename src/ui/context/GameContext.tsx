@@ -1074,7 +1074,7 @@ export function GameProvider({ children }: GameProviderProps) {
     // Minimum 2 rest days even with heavy schedule
     const restDays = Math.max(2, 7 - userMatchesThisWeek);
 
-    const medicalPct = fitnessState.userTeam.operationsBudget.facilities; // Use facilities as medical proxy
+    const medicalPct = fitnessState.userTeam.operationsBudget.medical;
     dispatch({
       type: 'APPLY_FITNESS_RECOVERY',
       payload: {

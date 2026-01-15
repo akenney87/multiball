@@ -135,7 +135,7 @@ export interface LineupConfig {
 export interface OperationsBudget {
   training: number;
   scouting: number;
-  facilities: number;
+  medical: number;
   youthDevelopment: number;
 }
 
@@ -1022,7 +1022,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
 export const DEFAULT_OPERATIONS_BUDGET: OperationsBudget = {
   training: 30,
   scouting: 25,
-  facilities: 25,
+  medical: 25,
   youthDevelopment: 20,
 };
 

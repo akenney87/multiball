@@ -361,7 +361,7 @@ describe('Context Constants', () => {
     const sum =
       DEFAULT_OPERATIONS_BUDGET.training +
       DEFAULT_OPERATIONS_BUDGET.scouting +
-      DEFAULT_OPERATIONS_BUDGET.facilities +
+      DEFAULT_OPERATIONS_BUDGET.medical +
       DEFAULT_OPERATIONS_BUDGET.youthDevelopment;
     expect(sum).toBe(100);
   });

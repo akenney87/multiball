@@ -28,7 +28,7 @@ export function ConnectedBudgetScreen({ onAllocationSaved }: ConnectedBudgetScre
     allocation: {
       training: state.userTeam.operationsBudget.training,
       scouting: state.userTeam.operationsBudget.scouting,
-      facilities: state.userTeam.operationsBudget.facilities,
+      medical: state.userTeam.operationsBudget.medical,
       youth: state.userTeam.operationsBudget.youthDevelopment,
     },
   }), [
@@ -44,7 +44,7 @@ export function ConnectedBudgetScreen({ onAllocationSaved }: ConnectedBudgetScre
       const operationsBudget: OperationsBudget = {
         training: allocation.training,
         scouting: allocation.scouting,
-        facilities: allocation.facilities,
+        medical: allocation.medical,
         youthDevelopment: allocation.youth,
       };
 
