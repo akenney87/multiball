@@ -1847,8 +1847,9 @@ export function GameProvider({ children }: GameProviderProps) {
   /**
    * Simulate all AI-vs-AI matches for the current week
    * Called after the user simulates their match to ensure fair stamina/fatigue
+   * @param justCompletedMatchId - Optional ID of match that was just completed (to handle race condition with stateRef)
    */
-  const simulateAIMatchesForWeek = useCallback(async () => {
+  const simulateAIMatchesForWeek = useCallback(async (justCompletedMatchId?: string) => {
     const matches = stateRef.current.season.matches;
     const players = stateRef.current.players;
     const league = stateRef.current.league;
@@ -1861,7 +1862,9 @@ export function GameProvider({ children }: GameProviderProps) {
       soccer: 0,
     };
     for (const m of matches) {
-      if ((m.homeTeamId === 'user' || m.awayTeamId === 'user') && m.status === 'completed') {
+      // Count as completed if status is 'completed' OR if this is the just-completed match
+      const isCompleted = m.status === 'completed' || m.id === justCompletedMatchId;
+      if ((m.homeTeamId === 'user' || m.awayTeamId === 'user') && isCompleted) {
         const sport = m.sport as keyof typeof userGameCounts;
         userGameCounts[sport]++;
       }
@@ -2918,9 +2921,8 @@ export function GameProvider({ children }: GameProviderProps) {
 
     // Simulate AI matches to keep all teams at the same pace as the user
     // This runs after EVERY user match so opponents don't have stamina advantage
-    // Small delay to allow React state to update (stateRef is updated in useEffect after render)
-    await new Promise(resolve => setTimeout(resolve, 50));
-    await simulateAIMatchesForWeek();
+    // Pass matchId to handle race condition where stateRef hasn't updated yet
+    await simulateAIMatchesForWeek(matchId);
 
     if (remainingUserMatches.length === 0) {
       // All user matches for this week are complete - advance the week
@@ -3080,9 +3082,8 @@ export function GameProvider({ children }: GameProviderProps) {
 
     // Simulate AI matches to keep all teams at the same pace as the user
     // This runs after EVERY user match so opponents don't have stamina advantage
-    // Small delay to allow React state to update (stateRef is updated in useEffect after render)
-    await new Promise(resolve => setTimeout(resolve, 50));
-    await simulateAIMatchesForWeek();
+    // Pass matchId to handle race condition where stateRef hasn't updated yet
+    await simulateAIMatchesForWeek(matchId);
 
     if (remainingUserMatches.length === 0) {
       // All user matches for this week are complete - advance the week

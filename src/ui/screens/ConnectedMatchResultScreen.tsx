@@ -386,10 +386,10 @@ export function ConnectedMatchResultScreen({
       <View style={[styles.card, { backgroundColor: colors.card }, shadows.md]}>
         <Text style={[styles.cardTitle, { color: colors.textMuted }]}>FINAL SCORE</Text>
 
-        {/* Team Names and Scores - aligned in columns */}
-        <View style={styles.scoreContainer}>
-          <View style={styles.teamColumn}>
-            <View style={styles.teamNameRow}>
+        {/* Team Names Row */}
+        <View style={styles.teamNamesRow}>
+          <View style={styles.teamNameColumn}>
+            <View style={styles.teamNameContent}>
               <Text style={[styles.teamName, { color: colors.text }]}>{resultData.homeTeam}</Text>
               {sport === 'soccer' && (match?.result?.boxScore as any)?.redCards?.home > 0 && (
                 <View style={[styles.redCardBadge, { backgroundColor: colors.error }]}>
@@ -399,13 +399,9 @@ export function ConnectedMatchResultScreen({
                 </View>
               )}
             </View>
-            <Text style={[styles.finalScore, { color: colors.text }]}>{resultData.homeScore}</Text>
           </View>
-          <View style={styles.dashColumn}>
-            <Text style={[styles.dash, { color: colors.textMuted }]}>-</Text>
-          </View>
-          <View style={styles.teamColumn}>
-            <View style={styles.teamNameRow}>
+          <View style={styles.teamNameColumn}>
+            <View style={styles.teamNameContent}>
               <Text style={[styles.teamName, { color: colors.text }]}>{resultData.awayTeam}</Text>
               {sport === 'soccer' && (match?.result?.boxScore as any)?.redCards?.away > 0 && (
                 <View style={[styles.redCardBadge, { backgroundColor: colors.error }]}>
@@ -415,6 +411,18 @@ export function ConnectedMatchResultScreen({
                 </View>
               )}
             </View>
+          </View>
+        </View>
+
+        {/* Scores Row - separate so they always align */}
+        <View style={styles.scoresRow}>
+          <View style={styles.scoreColumn}>
+            <Text style={[styles.finalScore, { color: colors.text }]}>{resultData.homeScore}</Text>
+          </View>
+          <View style={styles.dashColumn}>
+            <Text style={[styles.dash, { color: colors.textMuted }]}>-</Text>
+          </View>
+          <View style={styles.scoreColumn}>
             <Text style={[styles.finalScore, { color: colors.text }]}>{resultData.awayScore}</Text>
           </View>
         </View>
@@ -428,7 +436,7 @@ export function ConnectedMatchResultScreen({
                   .filter((e: any) => e.type === 'goal' && e.team === 'home')
                   .map((event: any, idx: number) => (
                     <Text key={idx} style={[styles.scorerText, { color: colors.textMuted }]}>
-                      {event.player?.name || 'Unknown'} {event.minute}'
+                      ⚽ {event.player?.name || 'Unknown'} {event.minute}'
                     </Text>
                   ))}
               </View>
@@ -440,9 +448,44 @@ export function ConnectedMatchResultScreen({
                   .filter((e: any) => e.type === 'goal' && e.team === 'away')
                   .map((event: any, idx: number) => (
                     <Text key={idx} style={[styles.scorerText, { color: colors.textMuted }]}>
-                      {event.player?.name || 'Unknown'} {event.minute}'
+                      ⚽ {event.player?.name || 'Unknown'} {event.minute}'
                     </Text>
                   ))}
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Red Cards - soccer only */}
+        {sport === 'soccer' && (match?.result?.boxScore as any)?.events?.some((e: any) => e.type === 'red_card') && (
+          <View style={[styles.scoreContainer, { marginTop: spacing.sm }]}>
+            <View style={styles.teamColumn}>
+              <View style={styles.scorersList}>
+                {(match?.result?.boxScore as any).events
+                  .filter((e: any) => e.type === 'red_card' && e.team === 'home')
+                  .map((event: any, idx: number) => {
+                    const isSecondYellow = event.description?.includes('SECOND YELLOW');
+                    return (
+                      <Text key={idx} style={[styles.scorerText, { color: colors.error }]}>
+                        {isSecondYellow ? '🟨🟨' : '🟥'} {event.player?.name || 'Unknown'} {event.minute}'
+                      </Text>
+                    );
+                  })}
+              </View>
+            </View>
+            <View style={{ width: 60 }} />
+            <View style={styles.teamColumn}>
+              <View style={styles.scorersList}>
+                {(match?.result?.boxScore as any).events
+                  .filter((e: any) => e.type === 'red_card' && e.team === 'away')
+                  .map((event: any, idx: number) => {
+                    const isSecondYellow = event.description?.includes('SECOND YELLOW');
+                    return (
+                      <Text key={idx} style={[styles.scorerText, { color: colors.error }]}>
+                        {isSecondYellow ? '🟨🟨' : '🟥'} {event.player?.name || 'Unknown'} {event.minute}'
+                      </Text>
+                    );
+                  })}
               </View>
             </View>
           </View>
@@ -1382,6 +1425,32 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
+  teamNamesRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: spacing.sm,
+  },
+  teamNameColumn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    minHeight: 44,
+  },
+  teamNameContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+  },
+  scoresRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scoreColumn: {
+    flex: 1,
+    alignItems: 'center',
+  },
   teamColumn: {
     flex: 1,
     alignItems: 'center',
@@ -1389,8 +1458,7 @@ const styles = StyleSheet.create({
   dashColumn: {
     width: 40,
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: 8,
+    justifyContent: 'center',
   },
   teamName: {
     fontSize: 16,
