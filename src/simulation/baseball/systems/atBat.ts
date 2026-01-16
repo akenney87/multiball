@@ -44,6 +44,7 @@ import {
   BASE_RATE_FLYOUT,
   BASE_RATE_LINEOUT,
   BASE_RATE_POPUP,
+  BASE_RATE_INFIELD_SINGLE,
   CLUTCH_SITUATION_THRESHOLD,
   GROUNDOUT_SCORE_FROM_THIRD,
   GROUNDOUT_ADVANCE_FROM_SECOND,
@@ -192,6 +193,39 @@ function determineOutType(): 'groundout' | 'flyout' | 'lineout' | 'popup' {
     BASE_RATE_POPUP,
   ];
   return weightedRandomChoice(types, weights);
+}
+
+/**
+ * Check if batter beats out a ground ball for an infield single
+ *
+ * Fast players can turn would-be groundouts into infield singles by
+ * beating the throw to first base.
+ *
+ * @param batter - The batter
+ * @param infielderArm - The infielder's arm composite (throw strength + accuracy)
+ * @returns True if batter beats out the ground ball
+ */
+function checkInfieldSingle(batter: Player, infielderArm: number): boolean {
+  const batterSpeed = calculateSpeedComposite(batter);
+
+  // Speed factor: heavily reward fast players, heavily penalize slow players
+  // speedFactor: ~0.03 at speed=4, 1.0 at speed=50, ~2.5 at speed=90
+  const speedFactor = Math.pow(batterSpeed / 50, 1.5);
+
+  // Arm factor: good arms reduce infield single rate
+  // armFactor: 1.2 at arm=30, 1.0 at arm=50, 0.8 at arm=70
+  const armFactor = 1 + (50 - infielderArm) / 100;
+
+  // Calculate probability
+  // For average speed (50) vs average arm (50): 5%
+  // For elite speed (90) vs average arm (50): ~12.5%
+  // For slow player (4) vs average arm (50): ~0.15%
+  const probability = BASE_RATE_INFIELD_SINGLE * speedFactor * armFactor;
+
+  // Cap at reasonable maximum (even Usain Bolt can't beat out everything)
+  const cappedProbability = Math.min(0.20, probability);
+
+  return rollSuccess(cappedProbability);
 }
 
 /**
@@ -676,6 +710,54 @@ export function simulateAtBat(input: AtBatInput): AtBatOutput {
 
   // Regular out - determine type
   const outType = determineOutType();
+
+  // Check for infield single (fast batters beating out ground balls)
+  if (outType === 'groundout') {
+    // Get the infielder's arm strength for the throw to first
+    const infielder = defense[responsiblePosition];
+    const infielderArm = infielder ? calculateArmComposite(infielder) : 50;
+
+    if (checkInfieldSingle(batter, infielderArm)) {
+      // Batter beats the throw - it's an infield single!
+      const advancement = calculateBaseAdvancement(baseState, batter, 'single', 50);
+      const runsChargedCalc = calculateRunsCharged(advancement.scoringRunners, runnerOrigins, pitcher.id, false);
+
+      // Format infield location for play-by-play
+      const infielderName = getInfielderName(hitLocation);
+      const playByPlayText = `${batter.name} beats out an infield single to the ${infielderName}.${advancement.runsScored > 0 ? formatRunsScored(advancement.runsScored) : ''}`;
+
+      const result: AtBatResult = {
+        outcome: 'single',
+        batter,
+        pitcher,
+        runsScored: advancement.runsScored,
+        earnedRunsScored: runsChargedCalc.earnedRuns,
+        rbi: advancement.runsScored,
+        scoringRunners: advancement.scoringRunners,
+        earnedScoringRunners: runsChargedCalc.earnedScoringRunners,
+        runsChargedByPitcher: runsChargedCalc.runsChargedByPitcher,
+        earnedRunsChargedByPitcher: runsChargedCalc.earnedRunsChargedByPitcher,
+        hitLocation,
+        isError: false,
+        baseAdvancement: {
+          first: advancement.newBaseState[0],
+          second: advancement.newBaseState[1],
+          third: advancement.newBaseState[2],
+        },
+        outsRecorded: 0,
+        playByPlayText,
+        debugInfo,
+      };
+
+      return {
+        result,
+        newBaseState: advancement.newBaseState,
+        newOuts: outs,
+        pitchesThrown,
+        inningOver: false,
+      };
+    }
+  }
 
   // Check for double/triple play opportunity
   const runnerOnFirst = baseState[0] !== null;

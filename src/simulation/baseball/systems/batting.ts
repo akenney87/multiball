@@ -409,13 +409,28 @@ export function determineHitType(
   // Power 50 = base rates, Power 100 = 2x HR rate
   const powerFactor = powerComposite / 50; // 0.02 at power=1, 2.0 at power=100
 
+  // Calculate speed factors for extra-base hits
+  // Speed is critical for legging out triples, and important for doubles
+  const attrs = flattenAttributes(batter);
+  const acceleration = attrs.acceleration ?? 50;
+  const topSpeed = attrs.top_speed ?? 50;
+  const speedComposite = (acceleration + topSpeed) / 2;
+  // Triples: Use ^1.5 to heavily penalize slow players (home to third requires exceptional speed)
+  // speedFactorTriple: 0.02 at speed=1, 1.0 at speed=50, ~2.8 at speed=100
+  const speedFactorTriple = Math.pow(speedComposite / 50, 1.5);
+  // Doubles: Use ^0.75 for moderate speed impact (home to second is less demanding)
+  // speedFactorDouble: 0.14 at speed=4, 1.0 at speed=50, ~1.7 at speed=100
+  const speedFactorDouble = Math.pow(speedComposite / 50, 0.75);
+
   // Get swing style modifiers
   const styleMods = SWING_STYLE_MODIFIERS[swingStyle];
 
   // Calculate adjusted probabilities with swing style modifiers
   let homeRunProb = BASE_RATE_HOME_RUN * powerFactor * (1 + styleMods.homeRunRate);
-  let tripleProb = BASE_RATE_TRIPLE * Math.sqrt(powerFactor) * (1 + styleMods.extraBaseHitRate);
-  let doubleProb = BASE_RATE_DOUBLE * Math.pow(powerFactor, 0.7) * (1 + styleMods.extraBaseHitRate);
+  // Triples require both power (to hit the ball far) and speed (to leg it out)
+  let tripleProb = BASE_RATE_TRIPLE * Math.sqrt(powerFactor) * speedFactorTriple * (1 + styleMods.extraBaseHitRate);
+  // Doubles also benefit from speed to stretch singles into doubles
+  let doubleProb = BASE_RATE_DOUBLE * Math.pow(powerFactor, 0.7) * speedFactorDouble * (1 + styleMods.extraBaseHitRate);
   let singleProb = 1 - homeRunProb - tripleProb - doubleProb;
 
   // Normalize to ensure they sum to 1

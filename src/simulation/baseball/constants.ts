@@ -227,6 +227,10 @@ export const BASE_RATE_FLYOUT = 0.35;
 export const BASE_RATE_LINEOUT = 0.15;
 export const BASE_RATE_POPUP = 0.05;
 
+// Infield single - fast players can beat out ground balls
+// Base rate ~5% for average speed player, scales heavily with speed
+export const BASE_RATE_INFIELD_SINGLE = 0.05;
+
 // Fielding
 export const BASE_RATE_ERROR = 0.02;
 export const BASE_RATE_DOUBLE_PLAY = 0.10;
