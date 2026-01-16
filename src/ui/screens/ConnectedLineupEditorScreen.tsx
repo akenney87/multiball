@@ -22,7 +22,9 @@ import {
   aggregateSoccerPlayerStats,
   aggregateSoccerGoalkeeperStats,
   aggregatePlayerStats,
+  aggregateBaseballBattingStats,
   type AggregatedPlayerStats,
+  type AggregatedBaseballBattingStats,
 } from '../../systems/statsAggregator';
 import {
   calculateContactComposite,
@@ -2303,7 +2305,8 @@ const BENCH_STAT_OPTIONS: { value: BaseballStatOption; label: string }[] = [
 function getBaseballStatValue(
   player: LineupPlayer | Player | null | undefined,
   stat: BaseballStatOption,
-  playersRecord?: Record<string, Player>
+  playersRecord?: Record<string, Player>,
+  aggregatedStatsMap?: Map<string, AggregatedBaseballBattingStats>
 ): string {
   if (!player) return '-';
 
@@ -2344,28 +2347,16 @@ function getBaseballStatValue(
     case 'obp':
     case 'slg':
     case 'ops': {
-      // Calculate from current season stats - baseball stats are nested under currentSeasonStats.baseball
-      const stats = p.currentSeasonStats?.baseball;
-      if (!stats || !stats.atBats || stats.atBats === 0) return '-';
+      // Use aggregated stats from completed matches
+      const playerId = player.id;
+      const aggregatedStats = aggregatedStatsMap?.get(playerId);
+      if (!aggregatedStats || aggregatedStats.atBats === 0) return '-';
 
-      const hits = stats.hits || 0;
-      const walks = stats.walks || 0;
-      const hbp = 0; // Not tracked
-      const ab = stats.atBats;
-      const sf = 0; // Not tracked
-      const doubles = stats.doubles || 0;
-      const triples = stats.triples || 0;
-      const hr = stats.homeRuns || 0;
-
-      const avg = hits / ab;
-      const obpVal = (hits + walks + hbp) / (ab + walks + hbp + sf);
-      const tb = hits + doubles + (2 * triples) + (3 * hr);
-      const slgVal = tb / ab;
-
-      if (stat === 'avg') return avg.toFixed(3).replace('0.', '.');
-      if (stat === 'obp') return obpVal.toFixed(3).replace('0.', '.');
-      if (stat === 'slg') return slgVal.toFixed(3).replace('0.', '.');
-      if (stat === 'ops') return (obpVal + slgVal).toFixed(3);
+      if (stat === 'avg') return aggregatedStats.battingAvg.toFixed(3).replace('0.', '.');
+      if (stat === 'obp') return aggregatedStats.obp.toFixed(3).replace('0.', '.');
+      if (stat === 'slg') return aggregatedStats.slg.toFixed(3).replace('0.', '.');
+      if (stat === 'ops') return aggregatedStats.ops.toFixed(3);
+      return '-';
     }
     default:
       return '-';
@@ -2418,6 +2409,23 @@ function BaseballLineupEditor({
 
   // Full player records for looking up attributes
   const allPlayers = state.players;
+
+  // Compute aggregated baseball batting stats from completed matches
+  const aggregatedBattingStatsMap = useMemo(() => {
+    const baseballMatches = state.season.matches.filter(m => m.sport === 'baseball');
+    const aggregatedStats = aggregateBaseballBattingStats(
+      baseballMatches,
+      state.players,
+      state.userTeam.name,
+      state.league.teams
+    );
+    // Build a map for fast lookups by player ID
+    const map = new Map<string, AggregatedBaseballBattingStats>();
+    for (const stats of aggregatedStats) {
+      map.set(stats.playerId, stats);
+    }
+    return map;
+  }, [state.season.matches, state.players, state.userTeam.name, state.league.teams]);
 
   // Auto-fill lineup on mount if not properly configured
   useEffect(() => {
@@ -2731,7 +2739,7 @@ function BaseballLineupEditor({
                 </TouchableOpacity>
                 <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                   <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                    {getBaseballStatValue(startingPitcher, pitcherStatSelection, allPlayers)}
+                    {getBaseballStatValue(startingPitcher, pitcherStatSelection, allPlayers, aggregatedBattingStatsMap)}
                   </Text>
                 </View>
               </View>
@@ -2828,7 +2836,7 @@ function BaseballLineupEditor({
 
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, battingStatSelection, allPlayers)}
+                        {getBaseballStatValue(player, battingStatSelection, allPlayers, aggregatedBattingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -2899,7 +2907,7 @@ function BaseballLineupEditor({
                     </TouchableOpacity>
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers)}
+                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -2958,7 +2966,7 @@ function BaseballLineupEditor({
                     </TouchableOpacity>
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers)}
+                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -3016,7 +3024,7 @@ function BaseballLineupEditor({
                     </TouchableOpacity>
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers)}
+                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -3126,7 +3134,7 @@ function BaseballLineupEditor({
                       </TouchableOpacity>
                       <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                         <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                          {getBaseballStatValue(player, benchStatSelection, allPlayers)}
+                          {getBaseballStatValue(player, benchStatSelection, allPlayers, aggregatedBattingStatsMap)}
                         </Text>
                       </View>
                     </View>
@@ -3227,7 +3235,7 @@ function BaseballLineupEditor({
                       </TouchableOpacity>
                       <View style={[styles.statValueBadge, { backgroundColor: colors.textMuted + '20' }]}>
                         <Text style={[styles.statValueText, { color: colors.textMuted }]}>
-                          {getBaseballStatValue(player, reservesStatSelection, allPlayers)}
+                          {getBaseballStatValue(player, reservesStatSelection, allPlayers, aggregatedBattingStatsMap)}
                         </Text>
                       </View>
                       {canAddToBench && (
