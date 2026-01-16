@@ -87,6 +87,7 @@ export function ConnectedMatchResultScreen({
     if (!match || !matchData || !match.result) return null;
 
     const { homeScore, awayScore, boxScore } = match.result;
+    console.log('[ConnectedMatchResultScreen] Reading match.result - Score:', homeScore, '-', awayScore);
 
     // Extract quarter scores if available
     let quarterScores: [number, number][] = [];
@@ -253,8 +254,13 @@ export function ConnectedMatchResultScreen({
       }
 
       // Sort by minutes played (players who played most first)
-      allPlayerStats.sort((a, b) => b.minutes - a.minutes);
-      opponentPlayerStats.sort((a, b) => b.minutes - a.minutes);
+      // Filter out players with 0 minutes (they didn't play)
+      allPlayerStats = allPlayerStats
+        .filter(p => p.minutes > 0)
+        .sort((a, b) => b.minutes - a.minutes);
+      opponentPlayerStats = opponentPlayerStats
+        .filter(p => p.minutes > 0)
+        .sort((a, b) => b.minutes - a.minutes);
     }
 
     // If no stats found at all, show roster with zeros
@@ -380,9 +386,9 @@ export function ConnectedMatchResultScreen({
       <View style={[styles.card, { backgroundColor: colors.card }, shadows.md]}>
         <Text style={[styles.cardTitle, { color: colors.textMuted }]}>FINAL SCORE</Text>
 
+        {/* Team Names and Scores - aligned in columns */}
         <View style={styles.scoreContainer}>
           <View style={styles.teamColumn}>
-            {/* Team name with red card indicator */}
             <View style={styles.teamNameRow}>
               <Text style={[styles.teamName, { color: colors.text }]}>{resultData.homeTeam}</Text>
               {sport === 'soccer' && (match?.result?.boxScore as any)?.redCards?.home > 0 && (
@@ -394,24 +400,11 @@ export function ConnectedMatchResultScreen({
               )}
             </View>
             <Text style={[styles.finalScore, { color: colors.text }]}>{resultData.homeScore}</Text>
-            {/* Home goal scorers - soccer only */}
-            {sport === 'soccer' && (match?.result?.boxScore as any)?.events && (
-              <View style={styles.scorersList}>
-                {(match?.result?.boxScore as any).events
-                  .filter((e: any) => e.type === 'goal' && e.team === 'home')
-                  .map((event: any, idx: number) => (
-                    <Text key={idx} style={[styles.scorerText, { color: colors.textMuted }]}>
-                      {event.player?.name || 'Unknown'} {event.minute}'
-                    </Text>
-                  ))}
-              </View>
-            )}
           </View>
-
-          <Text style={[styles.dash, { color: colors.textMuted }]}>-</Text>
-
+          <View style={styles.dashColumn}>
+            <Text style={[styles.dash, { color: colors.textMuted }]}>-</Text>
+          </View>
           <View style={styles.teamColumn}>
-            {/* Team name with red card indicator */}
             <View style={styles.teamNameRow}>
               <Text style={[styles.teamName, { color: colors.text }]}>{resultData.awayTeam}</Text>
               {sport === 'soccer' && (match?.result?.boxScore as any)?.redCards?.away > 0 && (
@@ -423,8 +416,25 @@ export function ConnectedMatchResultScreen({
               )}
             </View>
             <Text style={[styles.finalScore, { color: colors.text }]}>{resultData.awayScore}</Text>
-            {/* Away goal scorers - soccer only */}
-            {sport === 'soccer' && (match?.result?.boxScore as any)?.events && (
+          </View>
+        </View>
+
+        {/* Goal Scorers - soccer only */}
+        {sport === 'soccer' && (match?.result?.boxScore as any)?.events && (
+          <View style={styles.scoreContainer}>
+            <View style={styles.teamColumn}>
+              <View style={styles.scorersList}>
+                {(match?.result?.boxScore as any).events
+                  .filter((e: any) => e.type === 'goal' && e.team === 'home')
+                  .map((event: any, idx: number) => (
+                    <Text key={idx} style={[styles.scorerText, { color: colors.textMuted }]}>
+                      {event.player?.name || 'Unknown'} {event.minute}'
+                    </Text>
+                  ))}
+              </View>
+            </View>
+            <View style={{ width: 60 }} />
+            <View style={styles.teamColumn}>
               <View style={styles.scorersList}>
                 {(match?.result?.boxScore as any).events
                   .filter((e: any) => e.type === 'goal' && e.team === 'away')
@@ -434,9 +444,9 @@ export function ConnectedMatchResultScreen({
                     </Text>
                   ))}
               </View>
-            )}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Penalty Shootout Result - shown prominently if match went to penalties */}
         {sport === 'soccer' && resultData.penaltyShootout && (
@@ -1369,12 +1379,18 @@ const styles = StyleSheet.create({
   },
   scoreContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start', // Align columns at top to prevent scorer lists from pushing scores up
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   teamColumn: {
     flex: 1,
     alignItems: 'center',
+  },
+  dashColumn: {
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 8,
   },
   teamName: {
     fontSize: 16,
@@ -1441,15 +1457,16 @@ const styles = StyleSheet.create({
   dash: {
     fontSize: 32,
     fontWeight: '300',
-    marginHorizontal: spacing.lg,
-    marginTop: 36, // Vertically center with score numbers (accounting for team name row + font size difference)
+    marginHorizontal: spacing.md,
   },
   quarterTable: {
     gap: 0,
+    alignItems: 'center',
   },
   quarterRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: spacing.sm,
   },
   quarterHeaderTeam: {

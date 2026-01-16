@@ -1432,42 +1432,45 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
  * Get overall rating for a player (simplified calculation)
  */
 export function calculatePlayerOverall(player: Player): number {
-  const attrs = player.attributes;
+  const attrs = player.attributes || {};
+
+  // Helper to safely get attribute value
+  const get = (key: keyof PlayerAttributes): number => (attrs as PlayerAttributes)[key] ?? 0;
 
   // Physical average
   const physical = (
-    attrs.grip_strength +
-    attrs.arm_strength +
-    attrs.core_strength +
-    attrs.agility +
-    attrs.acceleration +
-    attrs.top_speed +
-    attrs.jumping +
-    attrs.reactions +
-    attrs.stamina +
-    attrs.balance +
-    attrs.durability
+    get('grip_strength') +
+    get('arm_strength') +
+    get('core_strength') +
+    get('agility') +
+    get('acceleration') +
+    get('top_speed') +
+    get('jumping') +
+    get('reactions') +
+    get('stamina') +
+    get('balance') +
+    get('durability')
   ) / 11;
 
   // Mental average
   const mental = (
-    attrs.awareness +
-    attrs.creativity +
-    attrs.determination +
-    attrs.bravery +
-    attrs.consistency +
-    attrs.composure +
-    attrs.patience
+    get('awareness') +
+    get('creativity') +
+    get('determination') +
+    get('bravery') +
+    get('consistency') +
+    get('composure') +
+    get('patience')
   ) / 7;
 
   // Technical average
   const technical = (
-    attrs.hand_eye_coordination +
-    attrs.throw_accuracy +
-    attrs.form_technique +
-    attrs.finesse +
-    attrs.deception +
-    attrs.teamwork
+    get('hand_eye_coordination') +
+    get('throw_accuracy') +
+    get('form_technique') +
+    get('finesse') +
+    get('deception') +
+    get('teamwork')
   ) / 6;
 
   // Weighted average (technical most important for basketball)

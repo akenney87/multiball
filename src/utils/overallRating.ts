@@ -49,6 +49,17 @@ const TECHNICAL_ATTRS: (keyof PlayerAttributes)[] = [
 const ALL_ATTRS = [...PHYSICAL_ATTRS, ...MENTAL_ATTRS, ...TECHNICAL_ATTRS];
 
 // =============================================================================
+// HELPER FUNCTION
+// =============================================================================
+
+/**
+ * Safely get attribute value with fallback to 0 for undefined values
+ */
+function attr(attrs: PlayerAttributes, key: keyof PlayerAttributes): number {
+  return attrs[key] ?? 0;
+}
+
+// =============================================================================
 // SIMPLE OVERALL (Average of all attributes)
 // =============================================================================
 
@@ -73,34 +84,34 @@ export function calculateSimpleOverall(attrs: PlayerAttributes): number {
 export function calculateBasketballOverall(attrs: PlayerAttributes): number {
   const score =
     // Physical
-    attrs.grip_strength * 0.04 +
-    attrs.arm_strength * 0.04 +
-    attrs.core_strength * 0.04 +
-    attrs.agility * 0.05 +
-    attrs.acceleration * 0.05 +
-    attrs.top_speed * 0.01 +
-    attrs.jumping * 0.05 +
-    attrs.reactions * 0.05 +
-    attrs.stamina * 0.05 +
-    attrs.balance * 0.04 +
-    attrs.height * 0.08 +
-    attrs.durability * 0.00 +
+    attr(attrs, 'grip_strength') * 0.04 +
+    attr(attrs, 'arm_strength') * 0.04 +
+    attr(attrs, 'core_strength') * 0.04 +
+    attr(attrs, 'agility') * 0.05 +
+    attr(attrs, 'acceleration') * 0.05 +
+    attr(attrs, 'top_speed') * 0.01 +
+    attr(attrs, 'jumping') * 0.05 +
+    attr(attrs, 'reactions') * 0.05 +
+    attr(attrs, 'stamina') * 0.05 +
+    attr(attrs, 'balance') * 0.04 +
+    attr(attrs, 'height') * 0.08 +
+    attr(attrs, 'durability') * 0.00 +
     // Mental
-    attrs.awareness * 0.02 +
-    attrs.creativity * 0.02 +
-    attrs.determination * 0.02 +
-    attrs.bravery * 0.01 +
-    attrs.consistency * 0.02 +
-    attrs.composure * 0.02 +
-    attrs.patience * 0.01 +
+    attr(attrs, 'awareness') * 0.02 +
+    attr(attrs, 'creativity') * 0.02 +
+    attr(attrs, 'determination') * 0.02 +
+    attr(attrs, 'bravery') * 0.01 +
+    attr(attrs, 'consistency') * 0.02 +
+    attr(attrs, 'composure') * 0.02 +
+    attr(attrs, 'patience') * 0.01 +
     // Technical
-    attrs.hand_eye_coordination * 0.07 +
-    attrs.throw_accuracy * 0.09 +
-    attrs.form_technique * 0.07 +
-    attrs.finesse * 0.06 +
-    attrs.deception * 0.02 +
-    attrs.teamwork * 0.03 +
-    attrs.footwork * 0.04;
+    attr(attrs, 'hand_eye_coordination') * 0.07 +
+    attr(attrs, 'throw_accuracy') * 0.09 +
+    attr(attrs, 'form_technique') * 0.07 +
+    attr(attrs, 'finesse') * 0.06 +
+    attr(attrs, 'deception') * 0.02 +
+    attr(attrs, 'teamwork') * 0.03 +
+    attr(attrs, 'footwork') * 0.04;
 
   return Math.round(score);
 }
@@ -124,109 +135,109 @@ export function calculateBaseballPositionOverall(attrs: PlayerAttributes, positi
   switch (position) {
     case 'P': // Pitcher
       score =
-        attrs.arm_strength * 2.5 +
-        attrs.throw_accuracy * 2.0 +
-        attrs.stamina * 1.5 +
-        attrs.composure * 1.5 +
-        attrs.deception * 1.5 +
-        attrs.form_technique * 1.0 +
-        attrs.consistency * 1.0 +
-        attrs.durability * 0.5;
+        attr(attrs, 'arm_strength') * 2.5 +
+        attr(attrs, 'throw_accuracy') * 2.0 +
+        attr(attrs, 'stamina') * 1.5 +
+        attr(attrs, 'composure') * 1.5 +
+        attr(attrs, 'deception') * 1.5 +
+        attr(attrs, 'form_technique') * 1.0 +
+        attr(attrs, 'consistency') * 1.0 +
+        attr(attrs, 'durability') * 0.5;
       divisor = 11.5;
       break;
 
     case 'C': // Catcher
       score =
-        attrs.durability * 2.0 +
-        attrs.reactions * 2.0 +
-        attrs.arm_strength * 1.5 +
-        attrs.awareness * 1.5 +
-        attrs.composure * 1.0 +
-        attrs.grip_strength * 1.0 +
-        attrs.agility * 0.5 +
-        attrs.bravery * 0.5;
+        attr(attrs, 'durability') * 2.0 +
+        attr(attrs, 'reactions') * 2.0 +
+        attr(attrs, 'arm_strength') * 1.5 +
+        attr(attrs, 'awareness') * 1.5 +
+        attr(attrs, 'composure') * 1.0 +
+        attr(attrs, 'grip_strength') * 1.0 +
+        attr(attrs, 'agility') * 0.5 +
+        attr(attrs, 'bravery') * 0.5;
       divisor = 10.0;
       break;
 
     case '1B': // First Base
       score =
-        attrs.grip_strength * 2.0 +
-        attrs.reactions * 1.5 +
-        attrs.height * 1.5 +
-        attrs.hand_eye_coordination * 1.5 +
-        attrs.balance * 1.0 +
-        attrs.footwork * 0.5;
+        attr(attrs, 'grip_strength') * 2.0 +
+        attr(attrs, 'reactions') * 1.5 +
+        attr(attrs, 'height') * 1.5 +
+        attr(attrs, 'hand_eye_coordination') * 1.5 +
+        attr(attrs, 'balance') * 1.0 +
+        attr(attrs, 'footwork') * 0.5;
       divisor = 8.0;
       break;
 
     case '2B': // Second Base
       score =
-        attrs.agility * 2.0 +
-        attrs.reactions * 2.0 +
-        attrs.throw_accuracy * 1.5 +
-        attrs.footwork * 1.5 +
-        attrs.top_speed * 1.0 +
-        attrs.awareness * 1.0 +
-        attrs.acceleration * 0.5;
+        attr(attrs, 'agility') * 2.0 +
+        attr(attrs, 'reactions') * 2.0 +
+        attr(attrs, 'throw_accuracy') * 1.5 +
+        attr(attrs, 'footwork') * 1.5 +
+        attr(attrs, 'top_speed') * 1.0 +
+        attr(attrs, 'awareness') * 1.0 +
+        attr(attrs, 'acceleration') * 0.5;
       divisor = 9.5;
       break;
 
     case 'SS': // Shortstop
       score =
-        attrs.agility * 2.0 +
-        attrs.reactions * 2.0 +
-        attrs.arm_strength * 1.5 +
-        attrs.throw_accuracy * 1.5 +
-        attrs.top_speed * 1.0 +
-        attrs.awareness * 1.0 +
-        attrs.footwork * 1.0 +
-        attrs.acceleration * 0.5;
+        attr(attrs, 'agility') * 2.0 +
+        attr(attrs, 'reactions') * 2.0 +
+        attr(attrs, 'arm_strength') * 1.5 +
+        attr(attrs, 'throw_accuracy') * 1.5 +
+        attr(attrs, 'top_speed') * 1.0 +
+        attr(attrs, 'awareness') * 1.0 +
+        attr(attrs, 'footwork') * 1.0 +
+        attr(attrs, 'acceleration') * 0.5;
       divisor = 10.5;
       break;
 
     case '3B': // Third Base
       score =
-        attrs.reactions * 2.5 +
-        attrs.arm_strength * 2.0 +
-        attrs.bravery * 1.5 +
-        attrs.grip_strength * 1.0 +
-        attrs.throw_accuracy * 1.0 +
-        attrs.balance * 0.5;
+        attr(attrs, 'reactions') * 2.5 +
+        attr(attrs, 'arm_strength') * 2.0 +
+        attr(attrs, 'bravery') * 1.5 +
+        attr(attrs, 'grip_strength') * 1.0 +
+        attr(attrs, 'throw_accuracy') * 1.0 +
+        attr(attrs, 'balance') * 0.5;
       divisor = 8.5;
       break;
 
     case 'LF': // Left Field
     case 'RF': // Right Field
       score =
-        attrs.arm_strength * 2.0 +
-        attrs.top_speed * 1.5 +
-        attrs.reactions * 1.5 +
-        attrs.acceleration * 1.0 +
-        attrs.throw_accuracy * 1.0 +
-        attrs.awareness * 0.5 +
-        attrs.jumping * 0.5;
+        attr(attrs, 'arm_strength') * 2.0 +
+        attr(attrs, 'top_speed') * 1.5 +
+        attr(attrs, 'reactions') * 1.5 +
+        attr(attrs, 'acceleration') * 1.0 +
+        attr(attrs, 'throw_accuracy') * 1.0 +
+        attr(attrs, 'awareness') * 0.5 +
+        attr(attrs, 'jumping') * 0.5;
       divisor = 8.0;
       break;
 
     case 'CF': // Center Field
       score =
-        attrs.top_speed * 2.5 +
-        attrs.acceleration * 2.0 +
-        attrs.agility * 1.5 +
-        attrs.reactions * 1.5 +
-        attrs.awareness * 1.0 +
-        attrs.jumping * 0.5;
+        attr(attrs, 'top_speed') * 2.5 +
+        attr(attrs, 'acceleration') * 2.0 +
+        attr(attrs, 'agility') * 1.5 +
+        attr(attrs, 'reactions') * 1.5 +
+        attr(attrs, 'awareness') * 1.0 +
+        attr(attrs, 'jumping') * 0.5;
       divisor = 9.0;
       break;
 
     case 'DH': // Designated Hitter (batting only)
       score =
-        attrs.hand_eye_coordination * 2.5 +
-        attrs.composure * 2.0 +
-        attrs.patience * 1.5 +
-        attrs.grip_strength * 1.5 +
-        attrs.consistency * 1.0 +
-        attrs.form_technique * 1.0;
+        attr(attrs, 'hand_eye_coordination') * 2.5 +
+        attr(attrs, 'composure') * 2.0 +
+        attr(attrs, 'patience') * 1.5 +
+        attr(attrs, 'grip_strength') * 1.5 +
+        attr(attrs, 'consistency') * 1.0 +
+        attr(attrs, 'form_technique') * 1.0;
       divisor = 9.5;
       break;
   }
@@ -270,120 +281,120 @@ function calculateSoccerPositionOverall(attrs: PlayerAttributes, position: Socce
   switch (position) {
     case 'GK': // Goalkeeper
       score =
-        attrs.reactions * 2.5 +
-        attrs.jumping * 2.0 +
-        attrs.agility * 1.5 +
-        attrs.composure * 1.5 +
-        attrs.awareness * 1.5 +
-        attrs.bravery * 1.0 +
-        attrs.arm_strength * 1.0 +  // Distribution
-        attrs.height * 1.0 +
-        attrs.durability * 0.5;
+        attr(attrs, 'reactions') * 2.5 +
+        attr(attrs, 'jumping') * 2.0 +
+        attr(attrs, 'agility') * 1.5 +
+        attr(attrs, 'composure') * 1.5 +
+        attr(attrs, 'awareness') * 1.5 +
+        attr(attrs, 'bravery') * 1.0 +
+        attr(attrs, 'arm_strength') * 1.0 +  // Distribution
+        attr(attrs, 'height') * 1.0 +
+        attr(attrs, 'durability') * 0.5;
       divisor = 12.5;
       break;
 
     case 'CB': // Center Back
       score =
-        attrs.awareness * 2.0 +
-        attrs.jumping * 2.0 +
-        attrs.core_strength * 1.5 +
-        attrs.determination * 1.5 +
-        attrs.bravery * 1.5 +
-        attrs.footwork * 1.0 +      // Ball playing ability
-        attrs.balance * 1.0 +
-        attrs.height * 1.0 +
-        attrs.top_speed * 0.5;
+        attr(attrs, 'awareness') * 2.0 +
+        attr(attrs, 'jumping') * 2.0 +
+        attr(attrs, 'core_strength') * 1.5 +
+        attr(attrs, 'determination') * 1.5 +
+        attr(attrs, 'bravery') * 1.5 +
+        attr(attrs, 'footwork') * 1.0 +      // Ball playing ability
+        attr(attrs, 'balance') * 1.0 +
+        attr(attrs, 'height') * 1.0 +
+        attr(attrs, 'top_speed') * 0.5;
       divisor = 12.0;
       break;
 
     case 'LB': // Left Back
     case 'RB': // Right Back
       score =
-        attrs.stamina * 2.0 +
-        attrs.top_speed * 2.0 +
-        attrs.acceleration * 1.5 +
-        attrs.footwork * 1.5 +      // Crossing, passing
-        attrs.awareness * 1.0 +
-        attrs.determination * 1.0 +
-        attrs.agility * 1.0 +
-        attrs.balance * 0.5;
+        attr(attrs, 'stamina') * 2.0 +
+        attr(attrs, 'top_speed') * 2.0 +
+        attr(attrs, 'acceleration') * 1.5 +
+        attr(attrs, 'footwork') * 1.5 +      // Crossing, passing
+        attr(attrs, 'awareness') * 1.0 +
+        attr(attrs, 'determination') * 1.0 +
+        attr(attrs, 'agility') * 1.0 +
+        attr(attrs, 'balance') * 0.5;
       divisor = 10.5;
       break;
 
     case 'CDM': // Defensive Midfielder
       score =
-        attrs.awareness * 2.0 +
-        attrs.stamina * 2.0 +
-        attrs.footwork * 1.5 +      // Passing, tackling technique
-        attrs.determination * 1.5 +
-        attrs.composure * 1.5 +
-        attrs.core_strength * 1.0 +
-        attrs.teamwork * 1.0 +
-        attrs.balance * 0.5;
+        attr(attrs, 'awareness') * 2.0 +
+        attr(attrs, 'stamina') * 2.0 +
+        attr(attrs, 'footwork') * 1.5 +      // Passing, tackling technique
+        attr(attrs, 'determination') * 1.5 +
+        attr(attrs, 'composure') * 1.5 +
+        attr(attrs, 'core_strength') * 1.0 +
+        attr(attrs, 'teamwork') * 1.0 +
+        attr(attrs, 'balance') * 0.5;
       divisor = 11.0;
       break;
 
     case 'CM': // Central Midfielder
       score =
-        attrs.stamina * 2.0 +
-        attrs.footwork * 2.0 +      // Passing, ball control
-        attrs.awareness * 1.5 +
-        attrs.composure * 1.5 +
-        attrs.teamwork * 1.5 +
-        attrs.creativity * 1.0 +
-        attrs.agility * 0.5 +
-        attrs.determination * 0.5;
+        attr(attrs, 'stamina') * 2.0 +
+        attr(attrs, 'footwork') * 2.0 +      // Passing, ball control
+        attr(attrs, 'awareness') * 1.5 +
+        attr(attrs, 'composure') * 1.5 +
+        attr(attrs, 'teamwork') * 1.5 +
+        attr(attrs, 'creativity') * 1.0 +
+        attr(attrs, 'agility') * 0.5 +
+        attr(attrs, 'determination') * 0.5;
       divisor = 10.5;
       break;
 
     case 'CAM': // Attacking Midfielder
       score =
-        attrs.creativity * 2.5 +
-        attrs.footwork * 2.0 +      // Passing, through balls
-        attrs.finesse * 1.5 +       // First touch, shooting
-        attrs.awareness * 1.5 +
-        attrs.composure * 1.5 +
-        attrs.agility * 1.0 +
-        attrs.deception * 0.5;
+        attr(attrs, 'creativity') * 2.5 +
+        attr(attrs, 'footwork') * 2.0 +      // Passing, through balls
+        attr(attrs, 'finesse') * 1.5 +       // First touch, shooting
+        attr(attrs, 'awareness') * 1.5 +
+        attr(attrs, 'composure') * 1.5 +
+        attr(attrs, 'agility') * 1.0 +
+        attr(attrs, 'deception') * 0.5;
       divisor = 10.5;
       break;
 
     case 'LM': // Left Midfielder
     case 'RM': // Right Midfielder
       score =
-        attrs.stamina * 2.0 +
-        attrs.footwork * 1.5 +      // Crossing, passing
-        attrs.top_speed * 1.5 +
-        attrs.creativity * 1.5 +
-        attrs.teamwork * 1.5 +
-        attrs.agility * 1.0 +
-        attrs.acceleration * 1.0 +
-        attrs.awareness * 0.5;
+        attr(attrs, 'stamina') * 2.0 +
+        attr(attrs, 'footwork') * 1.5 +      // Crossing, passing
+        attr(attrs, 'top_speed') * 1.5 +
+        attr(attrs, 'creativity') * 1.5 +
+        attr(attrs, 'teamwork') * 1.5 +
+        attr(attrs, 'agility') * 1.0 +
+        attr(attrs, 'acceleration') * 1.0 +
+        attr(attrs, 'awareness') * 0.5;
       divisor = 10.5;
       break;
 
     case 'LW': // Left Winger
     case 'RW': // Right Winger
       score =
-        attrs.acceleration * 2.0 +
-        attrs.top_speed * 2.0 +
-        attrs.agility * 1.5 +
-        attrs.deception * 1.5 +     // Dribbling, skill moves
-        attrs.finesse * 1.5 +       // Crossing, shooting
-        attrs.footwork * 1.0 +      // Ball control
-        attrs.creativity * 1.0;
+        attr(attrs, 'acceleration') * 2.0 +
+        attr(attrs, 'top_speed') * 2.0 +
+        attr(attrs, 'agility') * 1.5 +
+        attr(attrs, 'deception') * 1.5 +     // Dribbling, skill moves
+        attr(attrs, 'finesse') * 1.5 +       // Crossing, shooting
+        attr(attrs, 'footwork') * 1.0 +      // Ball control
+        attr(attrs, 'creativity') * 1.0;
       divisor = 10.5;
       break;
 
     case 'ST': // Striker
       score =
-        attrs.finesse * 2.5 +       // Finishing, shooting
-        attrs.composure * 2.0 +     // Clinical in front of goal
-        attrs.footwork * 1.5 +      // First touch, control
-        attrs.acceleration * 1.5 +
-        attrs.deception * 1.0 +     // Movement, feints
-        attrs.jumping * 1.0 +       // Aerial ability
-        attrs.bravery * 0.5;
+        attr(attrs, 'finesse') * 2.5 +       // Finishing, shooting
+        attr(attrs, 'composure') * 2.0 +     // Clinical in front of goal
+        attr(attrs, 'footwork') * 1.5 +      // First touch, control
+        attr(attrs, 'acceleration') * 1.5 +
+        attr(attrs, 'deception') * 1.0 +     // Movement, feints
+        attr(attrs, 'jumping') * 1.0 +       // Aerial ability
+        attr(attrs, 'bravery') * 0.5;
       divisor = 10.0;
       break;
   }
@@ -410,7 +421,7 @@ export function calculateSoccerOverall(attrs: PlayerAttributes): number {
  * Calculate all overall ratings for a player
  */
 export function calculateAllOveralls(player: Player): SportOveralls {
-  const attrs = player.attributes;
+  const attrs = player.attributes || ({} as PlayerAttributes);
   return {
     overall: calculateSimpleOverall(attrs),
     basketball: calculateBasketballOverall(attrs),

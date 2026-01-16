@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../theme';
 import { useGame } from '../context/GameContext';
+import { calculatePlayerOverall } from '../integration/gameInitializer';
 import { simulateSoccerMatchV2 } from '../../simulation/soccer/engine/matchEngine';
 import { simulatePenaltyShootout } from '../../simulation/soccer/game/matchSimulation';
 import type { SoccerEvent, SoccerMatchResult, SoccerTeamState, SoccerPosition } from '../../simulation/soccer/types';
@@ -118,6 +119,9 @@ export function MatchSimulationScreen({
   const baseballResultRef = useRef<BaseballGameOutput | null>(null);
   const currentEventIndexRef = useRef(0);
 
+  // Track if simulation has already run (prevent re-running on state changes)
+  const hasSimulatedRef = useRef(false);
+
   // Store soccer team states for penalty shootout (V2 engine doesn't include it)
   const soccerHomeTeamRef = useRef<SoccerTeamState | null>(null);
   const soccerAwayTeamRef = useRef<SoccerTeamState | null>(null);
@@ -142,7 +146,15 @@ export function MatchSimulationScreen({
 
   // Run the simulation once on mount
   useEffect(() => {
-    console.log('[MatchSimulationScreen] Match:', match?.id, 'Sport:', match?.sport);
+    const runId = Math.random().toString(36).substring(7);
+    console.log('[MatchSimulationScreen] useEffect running, runId:', runId, 'Match:', match?.id, 'Sport:', match?.sport);
+
+    // CRITICAL: Prevent re-running simulation if it already ran
+    // This can happen when saveMatchResult updates match state
+    if (hasSimulatedRef.current) {
+      console.log('[MatchSimulationScreen] Simulation already ran, skipping re-run');
+      return;
+    }
 
     if (!match) {
       setIsLoading(false);
@@ -292,23 +304,43 @@ export function MatchSimulationScreen({
         const homeTactics = getTeamTactics(match.homeTeamId, isUserHome);
         const awayTactics = getTeamTactics(match.awayTeamId, !isUserHome);
 
-        // CRITICAL: Filter out reserve players for user team basketball
-        // Only players in starters OR bench should be available to play
+        // CRITICAL: Filter rosters to only eligible players (5 starters + 9 bench = 14 max)
+        // User team: Uses explicit starters and bench from lineup config
+        // AI team: Uses top 14 by overall rating
+        const MAX_BASKETBALL_ROSTER = 14;
         const userLineup = state.userTeam.lineup;
-        const userStarterSet = new Set(userLineup.basketballStarters.filter(id => id));
-        const userBenchSet = new Set(userLineup.bench);
+        const userStarterIds = userLineup.basketballStarters.filter(id => id !== '');
+        const userBenchIds = userLineup.bench;
+        const userEligibleIds = new Set([...userStarterIds, ...userBenchIds]);
 
         // User's active roster = starters + bench only (no reserves)
-        const userActiveRoster = userRoster.filter(p =>
-          userStarterSet.has(p.id) || userBenchSet.has(p.id)
-        );
+        const userActiveRoster = userRoster.filter(p => userEligibleIds.has(p.id));
 
-        // For AI teams, use full roster (they don't have lineup management)
-        const activeHomeRoster = isUserHome ? userActiveRoster : homeRoster;
-        const activeAwayRoster = isUserHome ? awayRoster : userActiveRoster;
+        // AI teams: filter to top 14 by overall rating
+        const filterAIRoster = (roster: typeof userRoster) => {
+          const sorted = [...roster].sort((a, b) =>
+            calculatePlayerOverall(b) - calculatePlayerOverall(a)
+          );
+          return sorted.slice(0, MAX_BASKETBALL_ROSTER);
+        };
+
+        const activeHomeRoster = isUserHome ? userActiveRoster : filterAIRoster(homeRoster);
+        const activeAwayRoster = isUserHome ? filterAIRoster(awayRoster) : userActiveRoster;
+
+        // Get user's minutes allocation (target minutes per player)
+        const userMinutesAllocation = userLineup.minutesAllocation || null;
+        const homeMinutesAllocation = isUserHome ? userMinutesAllocation : null;
+        const awayMinutesAllocation = !isUserHome ? userMinutesAllocation : null;
+
+        // Get user's starting lineup as Player objects
+        const userStartingLineup = userStarterIds
+          .map(id => state.players[id])
+          .filter((p): p is NonNullable<typeof p> => p !== undefined);
+        const homeStartingLineup = isUserHome ? userStartingLineup : null;
+        const awayStartingLineup = !isUserHome ? userStartingLineup : null;
 
         console.log('[MatchSimulationScreen] Basketball - User active roster:', userActiveRoster.length,
-          '(starters:', userStarterSet.size, 'bench:', userBenchSet.size, ')');
+          '(starters:', userStarterIds.length, 'bench:', userBenchIds.length, ')');
         console.log('[MatchSimulationScreen] Running basketball simulation...');
         const simulator = new GameSimulator(
           activeHomeRoster,
@@ -316,10 +348,15 @@ export function MatchSimulationScreen({
           homeTactics,
           awayTactics,
           homeTeamName,
-          awayTeamName
+          awayTeamName,
+          homeMinutesAllocation,
+          awayMinutesAllocation,
+          homeStartingLineup,
+          awayStartingLineup
         );
         const result = simulator.simulateGame();
-        console.log('[MatchSimulationScreen] Basketball simulation complete');
+        console.log('[MatchSimulationScreen] Basketball simulation complete - Score:', result.homeScore, '-', result.awayScore);
+        console.log('[MatchSimulationScreen] Storing result in ref. Match ID:', matchId);
         basketballResultRef.current = result;
 
         // Parse playByPlayText into individual lines for streaming
@@ -517,6 +554,8 @@ export function MatchSimulationScreen({
         return;
       }
 
+      console.log('[MatchSimulationScreen] Simulation setup complete, starting streaming');
+      hasSimulatedRef.current = true; // Mark simulation as completed
       setIsLoading(false);
       setIsRunning(true);
     } catch (error) {
@@ -848,6 +887,7 @@ export function MatchSimulationScreen({
 
     } else if (sport === 'basketball' && basketballResultRef.current) {
       const bbResult = basketballResultRef.current;
+      console.log('[MatchSimulationScreen] handleFinish reading from ref - Score:', bbResult.homeScore, '-', bbResult.awayScore);
       const winner = bbResult.homeScore > bbResult.awayScore
         ? match.homeTeamId
         : match.awayTeamId;
@@ -870,6 +910,7 @@ export function MatchSimulationScreen({
         },
         playByPlay: basketballPlaysRef.current,
       };
+      console.log('[MatchSimulationScreen] handleFinish built matchResult - Score:', matchResult.homeScore, '-', matchResult.awayScore);
 
     } else if (sport === 'baseball' && baseballResultRef.current) {
       const baseResult = baseballResultRef.current.result;

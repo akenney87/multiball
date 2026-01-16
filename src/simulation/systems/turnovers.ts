@@ -202,9 +202,9 @@ export function checkTurnover(
   // BUG FIX v7: Cap turnover rate to prevent extreme outliers
   // Game 6 showed 21.4% rate in edge cases despite formula fixes
   // This safety cap prevents catastrophic turnover spirals
-  // REALISM FIX: Reduced from 0.15 to 0.10, then M4.6 raised to 0.12
-  // M4.6: Raised from 0.10 to 0.12 after increasing BASE_TURNOVER_RATE to 0.08
-  const MAX_TURNOVER_RATE = 0.12; // 12% hard cap per possession (general turnovers only, drive adds more)
+  // REALISM FIX: Reduced from 0.15 to 0.10, then M4.6 raised to 0.12, then 0.16
+  // Raised to 0.16 to allow BASE_TURNOVER_RATE of 0.12 to work with modifiers
+  const MAX_TURNOVER_RATE = 0.16; // 16% hard cap per possession (general turnovers only, drive adds more)
   if (adjustedRate > MAX_TURNOVER_RATE) {
     debugInfo.capped = true;
     debugInfo.uncapped_rate = adjustedRate;

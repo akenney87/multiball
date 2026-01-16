@@ -130,6 +130,41 @@ function convertTacticsToSimulationFormat(tactics: TacticalSettings): TacticalSe
 }
 
 /**
+ * Filter basketball roster to only include eligible players (starters + bench).
+ * For user teams: Uses explicit starters and bench arrays
+ * For AI teams: Selects top 14 players by overall rating
+ *
+ * Basketball rules: Only 5 starters + 9 bench = 14 max players can enter a game.
+ * Reserves (players not on bench) cannot play.
+ *
+ * @param roster - Full team roster
+ * @param starterIds - Array of 5 starter player IDs (or null for AI auto-select)
+ * @param benchIds - Array of up to 9 bench player IDs (or null for AI auto-select)
+ * @returns Filtered roster of max 14 eligible players
+ */
+function filterBasketballEligibleRoster(
+  roster: Player[],
+  starterIds: string[] | null,
+  benchIds: string[] | null
+): Player[] {
+  const MAX_ELIGIBLE = 14; // 5 starters + 9 bench
+
+  if (starterIds && benchIds) {
+    // User team: Use explicit starters and bench
+    const eligibleIds = new Set([...starterIds, ...benchIds]);
+    return roster.filter(p => eligibleIds.has(p.id));
+  } else {
+    // AI team: Select top 14 players by overall rating
+    const sortedRoster = [...roster].sort((a, b) => {
+      const overallA = calculatePlayerOverall(a);
+      const overallB = calculatePlayerOverall(b);
+      return overallB - overallA;
+    });
+    return sortedRoster.slice(0, MAX_ELIGIBLE);
+  }
+}
+
+/**
  * Build BaseballTeamState from roster for baseball simulation
  * Assigns positions based on positional attributes if no specific lineup is provided
  * @param benchIds - Array of player IDs on the bench (not reserves). Null for AI teams.
@@ -1986,9 +2021,14 @@ export function GameProvider({ children }: GameProviderProps) {
           const homeTacticsConverted = convertTacticsToSimulationFormat(homeTactics);
           const awayTacticsConverted = convertTacticsToSimulationFormat(awayTactics);
 
+          // Filter rosters to only eligible players (5 starters + 9 bench = 14 max)
+          // AI teams: Select top 14 by overall rating
+          const eligibleHomeRoster = filterBasketballEligibleRoster(moraleAdjustedHomeRoster, null, null);
+          const eligibleAwayRoster = filterBasketballEligibleRoster(moraleAdjustedAwayRoster, null, null);
+
           const simulator = new GameSimulator(
-            moraleAdjustedHomeRoster,
-            moraleAdjustedAwayRoster,
+            eligibleHomeRoster,
+            eligibleAwayRoster,
             homeTacticsConverted,
             awayTacticsConverted,
             match.homeTeamId,
@@ -2262,6 +2302,7 @@ export function GameProvider({ children }: GameProviderProps) {
     soccerStrategy?: { attackingStyle: 'possession' | 'direct' | 'counter'; pressing: 'high' | 'balanced' | 'low'; width: 'wide' | 'balanced' | 'tight' },
     basketballStrategy?: { pace: 'fast' | 'standard' | 'slow'; defense: 'man' | 'mixed' | 'zone'; rebounding: 'crash_glass' | 'standard' | 'prevent_transition'; scoringOptions: string[] }
   ): Promise<MatchResult> => {
+    console.log('[simulateMatch] Called for matchId:', matchId);
     // Find the match
     const match = state.season.matches.find((m) => m.id === matchId);
     if (!match) {
@@ -2443,9 +2484,25 @@ export function GameProvider({ children }: GameProviderProps) {
         const moraleAdjustedHomeStarters = homeStartingLineup ? applyMoraleToRoster(homeStartingLineup) : null;
         const moraleAdjustedAwayStarters = awayStartingLineup ? applyMoraleToRoster(awayStartingLineup) : null;
 
-        const simulator = new GameSimulator(
+        // Filter rosters to only eligible players (5 starters + 9 bench = 14 max)
+        // User team: Uses explicit starters and bench from lineup config
+        // AI team: Uses top 14 by overall rating
+        const userStarterIds = state.userTeam.lineup.basketballStarters.filter(id => id !== '');
+        const userBenchIds = state.userTeam.lineup.bench;
+        const eligibleHomeRoster = filterBasketballEligibleRoster(
           moraleAdjustedHomeRoster,
+          isUserHome ? userStarterIds : null,
+          isUserHome ? userBenchIds : null
+        );
+        const eligibleAwayRoster = filterBasketballEligibleRoster(
           moraleAdjustedAwayRoster,
+          isUserAway ? userStarterIds : null,
+          isUserAway ? userBenchIds : null
+        );
+
+        const simulator = new GameSimulator(
+          eligibleHomeRoster,
+          eligibleAwayRoster,
           homeTacticsConverted,
           awayTacticsConverted,
           homeTeamName,
@@ -2882,6 +2939,7 @@ export function GameProvider({ children }: GameProviderProps) {
     matchId: string,
     result: MatchResult
   ): Promise<void> => {
+    console.log('[saveMatchResult] Called with matchId:', matchId, 'Score:', result.homeScore, '-', result.awayScore);
     // Find the match
     const match = state.season.matches.find((m) => m.id === matchId);
     if (!match) {
@@ -2889,6 +2947,7 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     // Dispatch the result
+    console.log('[saveMatchResult] Dispatching COMPLETE_MATCH');
     dispatch({ type: 'COMPLETE_MATCH', payload: { matchId, result } });
 
     // Get rosters for fatigue calculation
@@ -2972,11 +3031,8 @@ export function GameProvider({ children }: GameProviderProps) {
     const sport = match.sport as 'basketball' | 'baseball' | 'soccer';
 
     if (homeStanding && awayStanding) {
-      // Penalty shootout determines winner if draw in regulation
-      const homeWins = result.homeScore > result.awayScore ||
-        (result.homeScore === result.awayScore &&
-          result.penaltyShootout !== undefined &&
-          (result.penaltyShootout.homeScore ?? 0) > (result.penaltyShootout.awayScore ?? 0));
+      // Use the winner field from result (already accounts for penalty shootouts)
+      const homeWins = result.winner === match.homeTeamId;
 
       if (homeWins) {
         homeStanding.wins += 1;

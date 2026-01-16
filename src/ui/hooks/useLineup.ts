@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react';
 import { useGame } from '../context/GameContext';
 import { calculatePlayerOverall, calculateSoccerPositionOverall } from '../integration/gameInitializer';
 import type { SoccerFormation, BaseballPosition, BullpenRole, BaseballBullpenConfig } from '../context/types';
-import { calculateBaseballPositionOverall, type BaseballPositionType } from '../../utils/overallRating';
+import { calculateBasketballOverall, calculateBaseballPositionOverall, type BaseballPositionType } from '../../utils/overallRating';
 import type { Player } from '../../data/types';
 
 export interface LineupPlayer {
@@ -67,7 +67,7 @@ export function useLineup(sport: SportType = 'basketball') {
       id: player.id,
       name: player.name,
       position: player.position,
-      overall: calculatePlayerOverall(player),
+      overall: calculateBasketballOverall(player.attributes),
       isStarter: starters.has(player.id),
       isInjured: player.injury !== null,
       // Use allocated minutes, or default: starters get 32, bench gets 0 (until optimal is applied)

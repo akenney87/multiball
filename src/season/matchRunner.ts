@@ -11,7 +11,7 @@
  * Week 4: Add pre/post match hooks, event triggers
  */
 
-import type { Player, Season, MatchResult, TacticalSettings } from '../data/types';
+import type { Player, PlayerAttributes, Season, MatchResult, TacticalSettings } from '../data/types';
 import type { DecisionContext, AIConfig } from '../ai/types';
 import { GameSimulator, type GameResult } from '../simulation/game/gameSimulation';
 import {
@@ -109,43 +109,46 @@ type BaseballPosition = 'P' | 'C' | '1B' | '2B' | 'SS' | '3B' | 'LF' | 'CF' | 'R
  * Get overall rating for a player (simplified calculation)
  */
 function calculatePlayerOverall(player: Player): number {
-  const attrs = player.attributes;
+  const attrs = player.attributes || {};
+
+  // Helper to safely get attribute value
+  const get = (key: keyof PlayerAttributes): number => (attrs as PlayerAttributes)[key] ?? 0;
 
   // Physical average (11 attributes, excluding height which uses player.height)
   const physical = (
-    attrs.grip_strength +
-    attrs.arm_strength +
-    attrs.core_strength +
-    attrs.agility +
-    attrs.acceleration +
-    attrs.top_speed +
-    attrs.jumping +
-    attrs.reactions +
-    attrs.stamina +
-    attrs.balance +
-    attrs.durability
+    get('grip_strength') +
+    get('arm_strength') +
+    get('core_strength') +
+    get('agility') +
+    get('acceleration') +
+    get('top_speed') +
+    get('jumping') +
+    get('reactions') +
+    get('stamina') +
+    get('balance') +
+    get('durability')
   ) / 11;
 
   // Mental average (8 attributes)
   const mental = (
-    attrs.awareness +
-    attrs.creativity +
-    attrs.determination +
-    attrs.bravery +
-    attrs.consistency +
-    attrs.composure +
-    attrs.patience +
-    attrs.teamwork
+    get('awareness') +
+    get('creativity') +
+    get('determination') +
+    get('bravery') +
+    get('consistency') +
+    get('composure') +
+    get('patience') +
+    get('teamwork')
   ) / 8;
 
   // Technical average (6 attributes)
   const technical = (
-    attrs.hand_eye_coordination +
-    attrs.throw_accuracy +
-    attrs.form_technique +
-    attrs.finesse +
-    attrs.deception +
-    attrs.footwork
+    get('hand_eye_coordination') +
+    get('throw_accuracy') +
+    get('form_technique') +
+    get('finesse') +
+    get('deception') +
+    get('footwork')
   ) / 6;
 
   // Weight: 40% physical, 30% mental, 30% technical

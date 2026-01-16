@@ -751,13 +751,16 @@ export class GameSimulator {
     );
     lines.push("-".repeat(80));
 
-    const homePlayers = [...this.homeRoster].sort((a, b) => {
-      const aStats = homePlayerStats[a.name];
-      const bStats = homePlayerStats[b.name];
-      const aPoints = aStats?.points || 0;
-      const bPoints = bStats?.points || 0;
-      return bPoints - aPoints;
-    });
+    // Only show players who actually played (minutes > 0)
+    const homePlayers = [...this.homeRoster]
+      .filter(p => (minutesPlayed[p.name] || 0) > 0)
+      .sort((a, b) => {
+        const aStats = homePlayerStats[a.name];
+        const bStats = homePlayerStats[b.name];
+        const aPoints = aStats?.points || 0;
+        const bPoints = bStats?.points || 0;
+        return bPoints - aPoints;
+      });
 
     for (const player of homePlayers) {
       const mins = minutesPlayed[player.name] || 0;
@@ -785,13 +788,16 @@ export class GameSimulator {
     );
     lines.push("-".repeat(80));
 
-    const awayPlayers = [...this.awayRoster].sort((a, b) => {
-      const aStats = awayPlayerStats[a.name];
-      const bStats = awayPlayerStats[b.name];
-      const aPoints = aStats?.points || 0;
-      const bPoints = bStats?.points || 0;
-      return bPoints - aPoints;
-    });
+    // Only show players who actually played (minutes > 0)
+    const awayPlayers = [...this.awayRoster]
+      .filter(p => (minutesPlayed[p.name] || 0) > 0)
+      .sort((a, b) => {
+        const aStats = awayPlayerStats[a.name];
+        const bStats = awayPlayerStats[b.name];
+        const aPoints = aStats?.points || 0;
+        const bPoints = bStats?.points || 0;
+        return bPoints - aPoints;
+      });
 
     for (const player of awayPlayers) {
       const mins = minutesPlayed[player.name] || 0;

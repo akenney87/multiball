@@ -3,21 +3,25 @@
  *
  * Root navigation container that wraps the entire app.
  * Handles the game initialization flow:
- * - Shows NewGameScreen if no game is initialized
- * - Shows TabNavigator with main game screens otherwise
+ * - Shows TitleScreen first (Continue/New Game)
+ * - Continue loads saved game and goes to MainTabs
+ * - New Game goes to NewGameScreen for onboarding
+ * - Shows TabNavigator with main game screens when initialized
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, View } from 'react-native';
 import { TabNavigator } from './TabNavigator';
 import { NewGameScreen } from '../screens/NewGameScreen';
+import { TitleScreen } from '../screens/TitleScreen';
 import { useGame } from '../context/GameContext';
 import { useColors } from '../theme';
 import { GameStorage } from '../persistence/gameStorage';
 
 type RootStackParamList = {
+  Title: undefined;
   NewGame: undefined;
   MainTabs: undefined;
 };
@@ -29,6 +33,7 @@ export function AppNavigator() {
   const { state, startNewGame, loadGame } = useGame();
   const [isCheckingGame, setIsCheckingGame] = useState(true);
   const [hasSavedGame, setHasSavedGame] = useState(false);
+  const [showTitle, setShowTitle] = useState(true);
 
   // Check for saved game on mount
   useEffect(() => {
@@ -46,6 +51,17 @@ export function AppNavigator() {
     checkSavedGame();
   }, []);
 
+  // Handle continue - load saved game
+  const handleContinue = useCallback(() => {
+    loadGame();
+    setShowTitle(false);
+  }, [loadGame]);
+
+  // Handle new game - go to onboarding
+  const handleNewGame = useCallback(() => {
+    setShowTitle(false);
+  }, []);
+
   // Show loading while checking for saved game
   if (isCheckingGame) {
     return (
@@ -58,14 +74,23 @@ export function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!state.initialized ? (
+        {/* Show title screen first if not initialized and hasn't been dismissed */}
+        {showTitle && !state.initialized ? (
+          <Stack.Screen name="Title">
+            {() => (
+              <TitleScreen
+                onContinue={handleContinue}
+                onNewGame={handleNewGame}
+                hasSaveData={hasSavedGame}
+              />
+            )}
+          </Stack.Screen>
+        ) : !state.initialized ? (
           <Stack.Screen name="NewGame">
             {(props) => (
               <NewGameScreen
                 {...props}
                 onStartGame={startNewGame}
-                onLoadGame={loadGame}
-                hasSavedGame={hasSavedGame}
               />
             )}
           </Stack.Screen>

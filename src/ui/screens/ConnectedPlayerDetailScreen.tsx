@@ -156,19 +156,33 @@ export function ConnectedPlayerDetailScreen({
 
     // Awards add significant value - these are proven accomplishments
     const awards = player.awards;
+
     if (awards) {
-      multiplier += awards.playerOfTheWeek * 0.05;              // +5% per weekly award
-      multiplier += awards.playerOfTheMonth * 0.15;             // +15% per monthly award
-      multiplier += awards.basketballPlayerOfTheYear * 0.50;    // +50% per Basketball POY
-      multiplier += awards.baseballPlayerOfTheYear * 0.50;      // +50% per Baseball POY
-      multiplier += awards.soccerPlayerOfTheYear * 0.50;        // +50% per Soccer POY
-      multiplier += awards.rookieOfTheYear * 0.30;              // +30% for ROY
-      multiplier += awards.championships * 0.35;                // +35% per championship
+      // playerOfTheWeek and playerOfTheMonth are objects with per-sport counts
+      const weeklyAwards = awards.playerOfTheWeek;
+      const monthlyAwards = awards.playerOfTheMonth;
+
+      // Sum up sport-specific awards
+      const totalWeekly = typeof weeklyAwards === 'object' && weeklyAwards
+        ? (weeklyAwards.basketball ?? 0) + (weeklyAwards.baseball ?? 0) + (weeklyAwards.soccer ?? 0)
+        : (weeklyAwards ?? 0);
+      const totalMonthly = typeof monthlyAwards === 'object' && monthlyAwards
+        ? (monthlyAwards.basketball ?? 0) + (monthlyAwards.baseball ?? 0) + (monthlyAwards.soccer ?? 0)
+        : (monthlyAwards ?? 0);
+
+      multiplier += totalWeekly * 0.05;              // +5% per weekly award
+      multiplier += totalMonthly * 0.15;             // +15% per monthly award
+      multiplier += (awards.basketballPlayerOfTheYear ?? 0) * 0.50;
+      multiplier += (awards.baseballPlayerOfTheYear ?? 0) * 0.50;
+      multiplier += (awards.soccerPlayerOfTheYear ?? 0) * 0.50;
+      multiplier += (awards.rookieOfTheYear ?? 0) * 0.30;
+      multiplier += (awards.championships ?? 0) * 0.35;
     }
 
     // Games played adds confidence in value (player is proven, not just potential)
     const gamesPlayed = player.careerStats?.gamesPlayed || { basketball: 0, baseball: 0, soccer: 0 };
-    const totalGames = gamesPlayed.basketball + gamesPlayed.baseball + gamesPlayed.soccer;
+    const totalGames = (gamesPlayed.basketball ?? 0) + (gamesPlayed.baseball ?? 0) + (gamesPlayed.soccer ?? 0);
+
     if (totalGames >= 100) {
       multiplier += 0.30; // Veteran bonus
     } else if (totalGames >= 50) {

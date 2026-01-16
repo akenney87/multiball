@@ -509,7 +509,8 @@ export const PACE_STANDARD_STAMINA_DRAIN = 1.0;
  * New system: 0.08 base (no artificial man/zone modifier)
  * Target: 14-15 total turnovers per game (general + drive combined)
  */
-export const BASE_TURNOVER_RATE = 0.08; // 8% base rate for general possession turnovers (drive adds more)
+export const BASE_TURNOVER_RATE = 0.12; // 12% base rate for general possession turnovers (drive adds more)
+// Increased from 0.08 to 0.12 - was producing only 9 turnovers per game, target is 14-15 per team
 
 /**
  * Pace adjustments to turnover rate

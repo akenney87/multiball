@@ -16,6 +16,7 @@ import {
   SoccerPosition,
   SoccerBoxScore,
   SoccerPlayerStats,
+  PenaltyShootoutResult,
 } from '../types';
 import {
   FORMATION_MODIFIERS,
@@ -1900,22 +1901,214 @@ export function simulateSoccerMatchV2(input: SoccerMatchInput): SoccerMatchResul
   const postGameInjuries = state.injuryTracker.getPostGameInjuries();
   const injuredOutPlayers = state.injuryTracker.getRemovedPlayers();
 
+  // Determine winner - if tied, go to penalty shootout
+  let winner: string | null = null;
+  let penaltyShootout: PenaltyShootoutResult | undefined;
+
+  if (state.homeScore > state.awayScore) {
+    winner = input.homeTeam.teamId;
+  } else if (state.awayScore > state.homeScore) {
+    winner = input.awayTeam.teamId;
+  } else {
+    // Tied - go to penalty shootout
+    penaltyShootout = simulatePenaltyShootoutV2(input.homeTeam, input.awayTeam, state.events);
+    winner = penaltyShootout.winner;
+  }
+
   return {
     homeTeamId: input.homeTeam.teamId,
     awayTeamId: input.awayTeam.teamId,
     homeScore: state.homeScore,
     awayScore: state.awayScore,
-    winner: state.homeScore > state.awayScore
-      ? input.homeTeam.teamId
-      : state.awayScore > state.homeScore
-        ? input.awayTeam.teamId
-        : null,
+    winner,
     halfTimeScore,
     events: state.events,
     boxScore,
-    playByPlay,
+    playByPlay: state.events.map(e => `${e.minute}' ${e.description}`),
+    penaltyShootout,
     postGameInjuries,
     injuredOutPlayers,
+  };
+}
+
+/**
+ * Simulate a penalty shootout between two teams (V2 engine version)
+ * Standard format: 5 kicks each, then sudden death
+ */
+function simulatePenaltyShootoutV2(
+  homeTeam: SoccerTeamState,
+  awayTeam: SoccerTeamState,
+  events: SoccerEvent[]
+): PenaltyShootoutResult {
+  // Calculate GK ratings for each team
+  const getGKRating = (team: SoccerTeamState): number => {
+    const gk = team.lineup.find(p => team.positions[p.id] === 'GK');
+    if (!gk) return 50;
+    return (
+      (gk.attributes.reactions ?? 50) * 0.3 +
+      (gk.attributes.agility ?? 50) * 0.25 +
+      (gk.attributes.jumping ?? 50) * 0.2 +
+      (gk.attributes.composure ?? 50) * 0.15 +
+      (gk.attributes.awareness ?? 50) * 0.1
+    );
+  };
+
+  const homeGK = getGKRating(awayTeam); // Home shoots against away GK
+  const awayGK = getGKRating(homeTeam); // Away shoots against home GK
+
+  // Calculate penalty conversion probability
+  const calcConversion = (player: Player, gkRating: number): number => {
+    const composure = player.attributes.composure ?? 50;
+    const throwAccuracy = player.attributes.throw_accuracy ?? 50;
+    const formTechnique = player.attributes.form_technique ?? 50;
+
+    let probability = 0.75; // Base 75%
+    probability += (composure - 50) / 500;      // +/- 10%
+    probability += (throwAccuracy - 50) / 833;  // +/- 6%
+    probability += (formTechnique - 50) / 1250; // +/- 4%
+    probability -= (gkRating - 50) / 400;       // GK modifier
+
+    return Math.max(0.50, Math.min(0.90, probability));
+  };
+
+  // Get penalty takers (sorted by composure + throw_accuracy)
+  const getKickers = (team: SoccerTeamState): Player[] => {
+    return [...team.lineup]
+      .filter(p => team.positions[p.id] !== 'GK')
+      .sort((a, b) => {
+        const aScore = (a.attributes.composure ?? 50) + (a.attributes.throw_accuracy ?? 50);
+        const bScore = (b.attributes.composure ?? 50) + (b.attributes.throw_accuracy ?? 50);
+        return bScore - aScore;
+      });
+  };
+
+  const homeKickers = getKickers(homeTeam);
+  const awayKickers = getKickers(awayTeam);
+
+  const homeKicks: boolean[] = [];
+  const awayKicks: boolean[] = [];
+  let homeScore = 0;
+  let awayScore = 0;
+
+  // Add penalty shootout start event
+  events.push({
+    minute: 90,
+    type: 'penalty_shootout_start',
+    team: 'home',
+    description: 'Penalty shootout begins!',
+  });
+
+  // First 5 kicks each
+  for (let round = 0; round < 5; round++) {
+    // Home team kicks
+    const homeKicker = homeKickers[round % homeKickers.length];
+    if (homeKicker) {
+      const prob = calcConversion(homeKicker, homeGK);
+      const scored = Math.random() < prob;
+      homeKicks.push(scored);
+      if (scored) homeScore++;
+
+      events.push({
+        minute: 90,
+        type: scored ? 'penalty_scored' : 'penalty_saved',
+        team: 'home',
+        player: homeKicker,
+        description: scored
+          ? `GOAL! ${homeKicker.name} scores! (${homeScore}-${awayScore})`
+          : `SAVED! ${homeKicker.name}'s penalty is stopped! (${homeScore}-${awayScore})`,
+      });
+    }
+
+    // Check if shootout is mathematically decided after home kick
+    const homeKicksRemaining = 5 - round - 1;
+    const awayKicksRemaining = 5 - round;
+    if (homeScore > awayScore + awayKicksRemaining) break;
+    if (awayScore > homeScore + homeKicksRemaining) break;
+
+    // Away team kicks
+    const awayKicker = awayKickers[round % awayKickers.length];
+    if (awayKicker) {
+      const prob = calcConversion(awayKicker, awayGK);
+      const scored = Math.random() < prob;
+      awayKicks.push(scored);
+      if (scored) awayScore++;
+
+      events.push({
+        minute: 90,
+        type: scored ? 'penalty_scored' : 'penalty_saved',
+        team: 'away',
+        player: awayKicker,
+        description: scored
+          ? `GOAL! ${awayKicker.name} scores! (${homeScore}-${awayScore})`
+          : `SAVED! ${awayKicker.name}'s penalty is stopped! (${homeScore}-${awayScore})`,
+      });
+    }
+
+    // Check if shootout is mathematically decided after away kick
+    const homeKicksRemainingAfter = 5 - round - 1;
+    if (homeScore > awayScore + homeKicksRemainingAfter) break;
+    if (awayScore > homeScore + homeKicksRemainingAfter) break;
+  }
+
+  // Sudden death if still tied after 5 rounds
+  let suddenDeathRound = 5;
+  while (homeScore === awayScore && suddenDeathRound < 20) {
+    // Home kicks
+    const homeKicker = homeKickers[suddenDeathRound % homeKickers.length];
+    if (homeKicker) {
+      const prob = calcConversion(homeKicker, homeGK);
+      const scored = Math.random() < prob;
+      homeKicks.push(scored);
+      if (scored) homeScore++;
+
+      events.push({
+        minute: 90,
+        type: scored ? 'penalty_scored' : 'penalty_saved',
+        team: 'home',
+        player: homeKicker,
+        description: scored
+          ? `GOAL! ${homeKicker.name} scores! (${homeScore}-${awayScore})`
+          : `SAVED! ${homeKicker.name}'s penalty is stopped! (${homeScore}-${awayScore})`,
+      });
+    }
+
+    // Away kicks
+    const awayKicker = awayKickers[suddenDeathRound % awayKickers.length];
+    if (awayKicker) {
+      const prob = calcConversion(awayKicker, awayGK);
+      const scored = Math.random() < prob;
+      awayKicks.push(scored);
+      if (scored) awayScore++;
+
+      events.push({
+        minute: 90,
+        type: scored ? 'penalty_scored' : 'penalty_saved',
+        team: 'away',
+        player: awayKicker,
+        description: scored
+          ? `GOAL! ${awayKicker.name} scores! (${homeScore}-${awayScore})`
+          : `SAVED! ${awayKicker.name}'s penalty is stopped! (${homeScore}-${awayScore})`,
+      });
+    }
+
+    suddenDeathRound++;
+  }
+
+  const winner = homeScore > awayScore ? homeTeam.teamId : awayTeam.teamId;
+
+  events.push({
+    minute: 90,
+    type: 'penalty_shootout_end',
+    team: homeScore > awayScore ? 'home' : 'away',
+    description: `${homeScore > awayScore ? homeTeam.teamName : awayTeam.teamName} wins the penalty shootout ${homeScore}-${awayScore}!`,
+  });
+
+  return {
+    homeScore,
+    awayScore,
+    homeKicks,
+    awayKicks,
+    winner,
   };
 }
 

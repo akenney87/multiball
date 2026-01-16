@@ -1373,6 +1373,61 @@ export class SubstitutionManager {
   ): SubstitutionEvent[] {
     const events: SubstitutionEvent[] = [];
 
+    // PRIORITY 0: HARD CAP - Force substitution for anyone at or over 40 minutes
+    // This ensures no player exceeds the maximum allowed game minutes
+    const MAX_GAME_MINUTES = 40;
+    const staminaValues = staminaTracker.getAllStaminaValues();
+
+    // Check home team for 40-minute cap violations
+    const homeActive = this.homeLineupManager.getActivePlayers();
+    const homeBench = this.homeLineupManager.getBenchPlayers();
+    for (const player of homeActive) {
+      const totalMinutes = this.actualMinutesHome[player.name] || 0;
+      if (totalMinutes >= MAX_GAME_MINUTES && homeBench.length > 0) {
+        // Find best available bench player
+        const replacement = homeBench.find(p => (this.actualMinutesHome[p.name] || 0) < MAX_GAME_MINUTES);
+        if (replacement) {
+          const success = this.homeLineupManager.substitute(player, replacement);
+          if (success) {
+            events.push({
+              quarterTime: gameTimeStr,
+              playerOut: player.name,
+              playerIn: replacement.name,
+              reason: 'minutes',
+              staminaOut: staminaValues[player.name] || 0,
+              staminaIn: staminaValues[replacement.name] || 0,
+              team: 'home',
+            });
+          }
+        }
+      }
+    }
+
+    // Check away team for 40-minute cap violations
+    const awayActive = this.awayLineupManager.getActivePlayers();
+    const awayBench = this.awayLineupManager.getBenchPlayers();
+    for (const player of awayActive) {
+      const totalMinutes = this.actualMinutesAway[player.name] || 0;
+      if (totalMinutes >= MAX_GAME_MINUTES && awayBench.length > 0) {
+        // Find best available bench player
+        const replacement = awayBench.find(p => (this.actualMinutesAway[p.name] || 0) < MAX_GAME_MINUTES);
+        if (replacement) {
+          const success = this.awayLineupManager.substitute(player, replacement);
+          if (success) {
+            events.push({
+              quarterTime: gameTimeStr,
+              playerOut: player.name,
+              playerIn: replacement.name,
+              reason: 'minutes',
+              staminaOut: staminaValues[player.name] || 0,
+              staminaIn: staminaValues[replacement.name] || 0,
+              team: 'away',
+            });
+          }
+        }
+      }
+    }
+
     // Q4 CLOSER SYSTEM: REMOVED
     // All substitutions now handled uniformly by rotation plans across all quarters
 

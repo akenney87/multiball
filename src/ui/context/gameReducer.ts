@@ -426,6 +426,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'COMPLETE_MATCH': {
       const { matchId, result } = action.payload;
+      console.log('[gameReducer] COMPLETE_MATCH - matchId:', matchId, 'Score:', result.homeScore, '-', result.awayScore);
       return {
         ...state,
         season: {
