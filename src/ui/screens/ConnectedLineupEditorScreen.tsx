@@ -2344,9 +2344,9 @@ function getBaseballStatValue(
     case 'obp':
     case 'slg':
     case 'ops': {
-      // Calculate from career stats
-      const stats = p.careerStats;
-      if (!stats || stats.atBats === 0) return '.000';
+      // Calculate from current season stats - baseball stats are nested under currentSeasonStats.baseball
+      const stats = p.currentSeasonStats?.baseball;
+      if (!stats || !stats.atBats || stats.atBats === 0) return '-';
 
       const hits = stats.hits || 0;
       const walks = stats.walks || 0;
@@ -2411,6 +2411,7 @@ function BaseballLineupEditor({
     removeFromBullpen,
     swapBullpenRoles,
     swapBullpenWithBatter,
+    swapBullpenWithPitcher,
     swapBenchWithReserve,
     addToBench,
   } = useLineup('baseball');
@@ -2451,7 +2452,8 @@ function BaseballLineupEditor({
   const [pitcherStatSelection, setPitcherStatSelection] = useState<BaseballStatOption>('pitching');
   const [bullpenStatSelection, setBullpenStatSelection] = useState<BaseballStatOption>('pitching');
   const [benchStatSelection, setBenchStatSelection] = useState<BaseballStatOption>('contact');
-  const [showStatPicker, setShowStatPicker] = useState<'batting' | 'pitcher' | 'bullpen' | 'bench' | null>(null);
+  const [reservesStatSelection, setReservesStatSelection] = useState<BaseballStatOption>('contact');
+  const [showStatPicker, setShowStatPicker] = useState<'batting' | 'pitcher' | 'bullpen' | 'bench' | 'reserves' | null>(null);
 
   // Helper to clear all selection
   const clearSelection = () => setSelection(null);
@@ -2551,16 +2553,9 @@ function BaseballLineupEditor({
       return;
     }
 
-    // If selecting a bullpen slot and clicking on pitcher - swap them
+    // If selecting a bullpen slot and clicking on pitcher - swap them atomically
     if (selection?.type === 'bullpen' && selection.playerId && pitcherId) {
-      const bullpenPlayerId = selection.playerId;
-
-      // Remove bullpen player from bullpen
-      removeFromBullpen?.(bullpenPlayerId);
-      // Add current pitcher to bullpen
-      setBullpenRole?.(pitcherId, selection.role, selection.slotIndex);
-      // Set bullpen player as starter
-      setStartingPitcher?.(bullpenPlayerId);
+      swapBullpenWithPitcher?.(selection.playerId, selection.role, selection.slotIndex);
       clearSelection();
       return;
     }
@@ -2591,16 +2586,9 @@ function BaseballLineupEditor({
 
   // Handle tapping a bullpen slot
   const handleBullpenSlotPress = (role: 'longReliever' | 'shortReliever' | 'closer', slotIndex: number | undefined, playerId: string | null) => {
-    // If selecting pitcher and clicking bullpen - swap them
+    // If selecting pitcher and clicking bullpen - swap them atomically
     if (selection?.type === 'pitcher' && selection.playerId && playerId) {
-      const pitcherId = selection.playerId;
-
-      // Remove bullpen player from bullpen
-      removeFromBullpen?.(playerId);
-      // Add current pitcher to bullpen
-      setBullpenRole?.(pitcherId, role, slotIndex);
-      // Set bullpen player as starter
-      setStartingPitcher?.(playerId);
+      swapBullpenWithPitcher?.(playerId, role, slotIndex);
       clearSelection();
       return;
     }
@@ -3157,6 +3145,8 @@ function BaseballLineupEditor({
               title="Reserves"
               count={String(reserves.length)}
               colors={colors}
+              statLabel={getStatLabel(reservesStatSelection)}
+              onStatPress={() => setShowStatPicker('reserves')}
               validationHint={(bench?.length || 0) < 9 ? 'Tap + to add' : undefined}
             />
             {reserves.map((player) => {
@@ -3235,6 +3225,11 @@ function BaseballLineupEditor({
                           )}
                         </View>
                       </TouchableOpacity>
+                      <View style={[styles.statValueBadge, { backgroundColor: colors.textMuted + '20' }]}>
+                        <Text style={[styles.statValueText, { color: colors.textMuted }]}>
+                          {getBaseballStatValue(player, reservesStatSelection, allPlayers)}
+                        </Text>
+                      </View>
                       {canAddToBench && (
                         <TouchableOpacity
                           style={[styles.addToBenchButton, { backgroundColor: colors.success + '20' }]}
@@ -3406,13 +3401,14 @@ function BaseballLineupEditor({
             <View style={styles.positionPickerGrid}>
               {(showStatPicker === 'pitcher' || showStatPicker === 'bullpen'
                 ? PITCHING_STAT_OPTIONS
-                : showStatPicker === 'bench'
+                : showStatPicker === 'bench' || showStatPicker === 'reserves'
                   ? BENCH_STAT_OPTIONS
                   : BATTING_STAT_OPTIONS
               ).map((option) => {
                 const currentSelection = showStatPicker === 'batting' ? battingStatSelection
                   : showStatPicker === 'pitcher' ? pitcherStatSelection
                   : showStatPicker === 'bullpen' ? bullpenStatSelection
+                  : showStatPicker === 'reserves' ? reservesStatSelection
                   : benchStatSelection;
                 const isSelected = currentSelection === option.value;
                 return (
@@ -3428,6 +3424,7 @@ function BaseballLineupEditor({
                       else if (showStatPicker === 'pitcher') setPitcherStatSelection(option.value);
                       else if (showStatPicker === 'bullpen') setBullpenStatSelection(option.value);
                       else if (showStatPicker === 'bench') setBenchStatSelection(option.value);
+                      else if (showStatPicker === 'reserves') setReservesStatSelection(option.value);
                       setShowStatPicker(null);
                     }}
                   >

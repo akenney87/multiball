@@ -1680,6 +1680,73 @@ export function useLineup(sport: SportType = 'basketball') {
   );
 
   /**
+   * Atomically swap a bullpen player with the starting pitcher.
+   * Moves the pitcher to the specified bullpen role, and the bullpen player becomes the starter.
+   */
+  const swapBullpenWithPitcher = useCallback(
+    (
+      bullpenPlayerId: string,
+      bullpenRole: BullpenRole,
+      bullpenSlotIndex: number | undefined
+    ) => {
+      const currentLineup = state.userTeam.lineup;
+      const currentPitcherId = currentLineup.baseballLineup.startingPitcher;
+      if (!currentPitcherId) return;
+
+      const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
+        longRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', ''] as [string, string],
+        closer: '',
+      };
+
+      // 1. Build new bullpen - remove bullpen player, add current pitcher
+      const newBullpen: BaseballBullpenConfig = {
+        longRelievers: currentBullpen.longRelievers.map((id) =>
+          id === bullpenPlayerId ? '' : id
+        ) as [string, string],
+        shortRelievers: currentBullpen.shortRelievers.map((id) =>
+          id === bullpenPlayerId ? '' : id
+        ) as [string, string],
+        closer: currentBullpen.closer === bullpenPlayerId ? '' : currentBullpen.closer,
+      };
+
+      // Add current pitcher to the bullpen role
+      switch (bullpenRole) {
+        case 'closer':
+          newBullpen.closer = currentPitcherId;
+          break;
+        case 'longReliever':
+          if (bullpenSlotIndex !== undefined && bullpenSlotIndex < 2) {
+            newBullpen.longRelievers[bullpenSlotIndex] = currentPitcherId;
+          }
+          break;
+        case 'shortReliever':
+          if (bullpenSlotIndex !== undefined && bullpenSlotIndex < 2) {
+            newBullpen.shortRelievers[bullpenSlotIndex] = currentPitcherId;
+          }
+          break;
+      }
+
+      // 2. Update positions - new pitcher gets 'P', old pitcher loses position
+      const newPositions = { ...currentLineup.baseballLineup.positions };
+      delete newPositions[currentPitcherId]; // Remove old pitcher's 'P' position
+      newPositions[bullpenPlayerId] = 'P'; // Assign 'P' to new pitcher
+
+      // 3. Update in one state change
+      setLineup({
+        ...currentLineup,
+        baseballLineup: {
+          ...currentLineup.baseballLineup,
+          startingPitcher: bullpenPlayerId,
+          bullpen: newBullpen,
+          positions: newPositions,
+        },
+      });
+    },
+    [state.userTeam.lineup, setLineup]
+  );
+
+  /**
    * Apply optimal baseball lineup including batting order, pitcher, and bullpen.
    * Uses position-specific ratings weighted by stamina to find the best player for each slot.
    */
@@ -1842,6 +1909,7 @@ export function useLineup(sport: SportType = 'basketball') {
       removeFromBullpen,
       swapBullpenRoles,
       swapBullpenWithBatter,
+      swapBullpenWithPitcher,
       getPositionOverall: getBaseballPositionOverall,
       getBestPosition: getBaseballBestPosition,
       applyOptimalLineup: applyOptimalBaseballLineup,
