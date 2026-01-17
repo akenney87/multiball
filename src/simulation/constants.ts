@@ -84,22 +84,23 @@ export const WEIGHTS_MIDRANGE: Record<string, number> = {
 export const WEIGHTS_DUNK: Record<string, number> = {
   jumping: 0.4,
   height: 0.3,
-  arm_strength: 0.2,
+  bravery: 0.1, // attacking the rim through contact
+  determination: 0.1, // finishing strong
   agility: 0.05,
   footwork: 0.05, // gather step, approach angle
 };
 
 /**
  * Layups (Section 14.2)
- * PHASE 2: Added core_strength (finishing through contact) and throw_accuracy (touch)
+ * PHASE 2: Added core_strength (finishing through contact) and acceleration (first step)
  */
 export const WEIGHTS_LAYUP: Record<string, number> = {
   finesse: 0.3, // touch and body control
-  hand_eye_coordination: 0.22, // coordination and timing
+  hand_eye_coordination: 0.15, // coordination and timing
   balance: 0.12, // staying upright on contact
   jumping: 0.13, // elevating over defenders
+  acceleration: 0.12, // first step burst to the rim
   core_strength: 0.1, // finishing through contact at rim
-  throw_accuracy: 0.05, // soft touch for floaters, finger rolls
   footwork: 0.08, // pivot moves, drop steps at rim
 };
 
@@ -178,7 +179,8 @@ export const WEIGHTS_BALL_HANDLING: Record<string, number> = {
 export const WEIGHTS_DRIVE_DUNK: Record<string, number> = {
   jumping: 0.4,
   height: 0.22, // Reduced from 0.30 to make room for acceleration
-  arm_strength: 0.2,
+  bravery: 0.1, // attacking the rim through contact
+  determination: 0.1, // finishing strong
   agility: 0.1,
   acceleration: 0.08, // First-step burst to beat defender
 };
@@ -186,16 +188,15 @@ export const WEIGHTS_DRIVE_DUNK: Record<string, number> = {
 /**
  * Drive Outcomes - Layup (Section 14.2)
  * PHASE 1: Added acceleration for first-step quickness to rim
- * PHASE 2: Added core_strength (absorbing contact) and throw_accuracy (touch)
+ * PHASE 2: Added core_strength (absorbing contact)
  */
 export const WEIGHTS_DRIVE_LAYUP: Record<string, number> = {
   finesse: 0.22, // touch and body control
-  hand_eye_coordination: 0.22, // coordination while driving
+  acceleration: 0.19, // first-step burst critical for drives
+  hand_eye_coordination: 0.15, // coordination while driving
   balance: 0.13, // staying upright through contact
   jumping: 0.13, // elevating in traffic
-  acceleration: 0.1, // first-step burst critical
   core_strength: 0.1, // absorbing contact on drives
-  throw_accuracy: 0.02, // touch on difficult finishes
   footwork: 0.08, // euro-step, gather step
 };
 
