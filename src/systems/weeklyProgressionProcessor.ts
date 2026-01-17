@@ -11,8 +11,15 @@
  * This ensures older players can still train but decline outpaces growth.
  */
 
-import type { Player, TrainingFocus } from '../data/types';
+import type { Player, TrainingFocus, AttributeSnapshot, PlayerAttributes, LegacyTrainingFocus } from '../data/types';
+import { isLegacyTrainingFocus } from '../data/types';
 import type { AcademyProspect } from './youthAcademySystem';
+import {
+  calculateBasketballOverall,
+  calculateBaseballOverall,
+  calculateSoccerOverall,
+  calculateSimpleOverall,
+} from '../utils/overallRating';
 import {
   calculateWeeklyXP,
   applyWeeklyTraining,
@@ -38,12 +45,82 @@ export interface PlayerProgressionResult {
   updatedXP: WeeklyXP;
   improvements: AttributeImprovement[];
   regressions: AttributeRegressionResult[];
+  /** Attribute snapshot for growth chart (generated after updates) */
+  snapshot?: AttributeSnapshot;
 }
 
 /**
  * Non-trainable attributes (these should never change from training/regression)
  */
 const NON_TRAINABLE_ATTRIBUTES = ['height'];
+
+// Attribute category definitions for calculating averages
+const PHYSICAL_ATTRS = [
+  'grip_strength', 'arm_strength', 'core_strength', 'agility', 'acceleration',
+  'top_speed', 'jumping', 'reactions', 'stamina', 'balance', 'height', 'durability',
+];
+const MENTAL_ATTRS = [
+  'awareness', 'creativity', 'determination', 'bravery',
+  'consistency', 'composure', 'patience', 'teamwork',
+];
+const TECHNICAL_ATTRS = [
+  'hand_eye_coordination', 'throw_accuracy', 'form_technique',
+  'finesse', 'deception', 'footwork',
+];
+
+/**
+ * Converts any training focus to legacy format for backwards compatibility
+ * New format focuses are converted to balanced legacy format
+ */
+function toLegacyTrainingFocus(focus: TrainingFocus | null): LegacyTrainingFocus {
+  if (!focus) {
+    return DEFAULT_TRAINING_FOCUS as LegacyTrainingFocus;
+  }
+  if (isLegacyTrainingFocus(focus)) {
+    return focus;
+  }
+  // New format - use balanced distribution for legacy system
+  // The new per-attribute system will be used when fully implemented
+  return DEFAULT_TRAINING_FOCUS as LegacyTrainingFocus;
+}
+
+/**
+ * Creates an attribute snapshot for growth/regression charts
+ *
+ * @param attributes - Current player attributes
+ * @param gameDay - Current game day
+ * @param season - Current season number
+ * @returns Attribute snapshot
+ */
+export function createAttributeSnapshot(
+  attributes: Record<string, number>,
+  gameDay: number,
+  season: number
+): AttributeSnapshot {
+  // Convert Record to PlayerAttributes for overall calculations
+  const playerAttrs = attributes as unknown as PlayerAttributes;
+
+  // Calculate category averages
+  const physicalSum = PHYSICAL_ATTRS.reduce((sum, attr) => sum + (attributes[attr] ?? 0), 0);
+  const mentalSum = MENTAL_ATTRS.reduce((sum, attr) => sum + (attributes[attr] ?? 0), 0);
+  const technicalSum = TECHNICAL_ATTRS.reduce((sum, attr) => sum + (attributes[attr] ?? 0), 0);
+
+  return {
+    gameDay,
+    season,
+    overalls: {
+      basketball: calculateBasketballOverall(playerAttrs),
+      baseball: calculateBaseballOverall(playerAttrs),
+      soccer: calculateSoccerOverall(playerAttrs),
+      simple: calculateSimpleOverall(playerAttrs),
+    },
+    categoryAverages: {
+      physical: Math.round(physicalSum / PHYSICAL_ATTRS.length),
+      mental: Math.round(mentalSum / MENTAL_ATTRS.length),
+      technical: Math.round(technicalSum / TECHNICAL_ATTRS.length),
+    },
+  };
+}
 
 /**
  * Calculates training quality multiplier from actual budget dollars
@@ -91,7 +168,8 @@ export function processPlayerProgression(
   minutesPlayed: number = 0
 ): PlayerProgressionResult {
   // Use player-specific training focus if set, otherwise team default
-  const trainingFocus = player.trainingFocus || teamTrainingFocus;
+  // Convert to legacy format for backwards compatibility with existing training system
+  const trainingFocus = toLegacyTrainingFocus(player.trainingFocus || teamTrainingFocus);
 
   // Convert PlayerAttributes to Record<string, number> for processing
   const currentAttributes: Record<string, number> = { ...player.attributes };
@@ -166,7 +244,9 @@ export function processWeeklyProgression(
   rosterIds: string[],
   teamTrainingFocus: TrainingFocus | null,
   trainingBudgetPct: number,
-  weekNumber: number
+  weekNumber: number,
+  gameDay: number = 0,
+  season: number = 1
 ): PlayerProgressionResult[] {
   const results: PlayerProgressionResult[] = [];
   const qualityMultiplier = calculateTrainingQualityMultiplier(trainingBudgetPct);
@@ -186,6 +266,16 @@ export function processWeeklyProgression(
       weekNumber,
       0 // TODO: Pass actual minutes played when match stats are tracked
     );
+
+    // Generate attribute snapshot for growth chart
+    // Only generate snapshots every 4 weeks to reduce data size
+    if (weekNumber % 4 === 0 || weekNumber === 1) {
+      result.snapshot = createAttributeSnapshot(
+        result.updatedAttributes,
+        gameDay,
+        season
+      );
+    }
 
     results.push(result);
   }
@@ -230,7 +320,7 @@ const ACADEMY_TRAINING_MULTIPLIER = 1.5;
 /**
  * Default balanced training focus for academy prospects
  */
-const ACADEMY_TRAINING_FOCUS: TrainingFocus = {
+const ACADEMY_TRAINING_FOCUS: LegacyTrainingFocus = {
   physical: 34,
   mental: 33,
   technical: 33,
@@ -245,6 +335,9 @@ export function processAcademyProspectProgression(
   youthBudgetPct: number,
   weekNumber: number
 ): AcademyProgressionResult {
+  // weekNumber reserved for future use (e.g., seeding)
+  void weekNumber;
+
   // Convert attributes for processing
   const currentAttributes: Record<string, number> = { ...prospect.attributes };
 

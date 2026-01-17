@@ -19,10 +19,11 @@ import {
 } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../theme';
 import { ConfirmationModal, SegmentControl } from '../components/common';
-import { CareerStatsCard, SkillsBreakdownCard, TrainingSuggestionsCard } from '../components/player';
-import { TrainingFocusCard } from '../components/training';
+import { CareerStatsCard, SkillsBreakdownCard } from '../components/player';
+import { PlayerTrainingPanel } from '../components/training';
 import { useGame } from '../context/GameContext';
-import { DEFAULT_TRAINING_FOCUS } from '../../systems/trainingSystem';
+import { createBalancedFocus } from '../../utils/trainingFocusMapper';
+import { isNewTrainingFocus } from '../../data/types';
 import { calculateAllOveralls } from '../../utils/overallRating';
 import { getVisibleAttributesForUnscouted } from '../utils/scoutingUtils';
 import type { ScoutReport } from '../../systems/scoutingSystem';
@@ -1013,26 +1014,33 @@ export function ConnectedPlayerDetailScreen({
 
       {selectedTab === 'training' && (
         isOnUserTeam ? (
-          <>
-            <TrainingFocusCard
-              player={player}
-              teamFocus={state.userTeam.trainingFocus ?? DEFAULT_TRAINING_FOCUS}
-              onFocusChange={(focus) => setTrainingFocus(focus, player.id)}
-              onResetToTeam={() => setTrainingFocus(null as any, player.id)}
-              budgetMultiplier={(() => {
-                if (!state.userTeam.operationsBudget) return 1.0;
-                const opsPool = Math.max(0, state.userTeam.totalBudget - state.userTeam.salaryCommitment);
-                const trainingDollars = opsPool * (state.userTeam.operationsBudget.training / 100);
-                if (trainingDollars <= 0) return 0.5;
-                // $25K = 0.5x, $250K = 1.0x, $5M+ = 2.0x (logarithmic)
-                return 0.5 + Math.min(1.5, 0.5 * Math.log10(Math.max(1, trainingDollars / 25000)));
-              })()}
-            />
-            <View style={{ height: spacing.md }} />
-            <TrainingSuggestionsCard player={player} />
-          </>
+          <PlayerTrainingPanel
+            player={player}
+            teamFocus={(() => {
+              const focus = state.userTeam.trainingFocus;
+              if (focus && isNewTrainingFocus(focus)) return focus;
+              return createBalancedFocus();
+            })()}
+            onFocusChange={(focus) => setTrainingFocus(focus as any, player.id)}
+            onResetToTeam={() => setTrainingFocus(null as any, player.id)}
+            budgetMultiplier={(() => {
+              if (!state.userTeam.operationsBudget) return 1.0;
+              const opsPool = Math.max(0, state.userTeam.totalBudget - state.userTeam.salaryCommitment);
+              const trainingDollars = opsPool * (state.userTeam.operationsBudget.training / 100);
+              if (trainingDollars <= 0) return 0.5;
+              // $25K = 0.5x, $250K = 1.0x, $5M+ = 2.0x (logarithmic)
+              return 0.5 + Math.min(1.5, 0.5 * Math.log10(Math.max(1, trainingDollars / 25000)));
+            })()}
+          />
         ) : (
-          <TrainingSuggestionsCard player={player} hidden={!isScouted} />
+          <View style={[styles.notOnTeamMessage, { backgroundColor: colors.card }]}>
+            <Text style={[styles.notOnTeamText, { color: colors.textMuted }]}>
+              {isScouted
+                ? 'Sign this player to manage their training'
+                : 'Scout this player to view training information'
+              }
+            </Text>
+          </View>
         )
       )}
 
@@ -1932,6 +1940,17 @@ const styles = StyleSheet.create({
   awardCount: {
     fontSize: 16,
     fontWeight: '700',
+  },
+  // Training tab - not on team message
+  notOnTeamMessage: {
+    borderRadius: borderRadius.lg,
+    padding: spacing.xl,
+    alignItems: 'center',
+  },
+  notOnTeamText: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
 });
 

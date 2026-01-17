@@ -147,16 +147,105 @@ export interface PeakAges {
 }
 
 /**
- * Training focus allocation
+ * Legacy training focus allocation (physical/mental/technical)
  * Percentages must sum to 100
+ * @deprecated Use NewTrainingFocus for new saves
  */
-export interface TrainingFocus {
+export interface LegacyTrainingFocus {
   /** Physical training percentage (0-100) */
   physical: number;
   /** Mental training percentage (0-100) */
   mental: number;
   /** Technical training percentage (0-100) */
   technical: number;
+}
+
+// =============================================================================
+// NEW TRAINING FOCUS SYSTEM
+// =============================================================================
+
+/** Training focus level - how specific the training target is */
+export type TrainingFocusLevel = 'balanced' | 'sport' | 'skill';
+
+/** Sport options for training focus */
+export type SportFocusType = 'basketball' | 'baseball' | 'soccer';
+
+/** Basketball skill options */
+export type BasketballSkillFocus = 'Shooting' | 'Rebounding' | 'Playmaking' | 'Defense' | 'Athleticism';
+
+/** Baseball skill options */
+export type BaseballSkillFocus = 'Contact' | 'Power' | 'Plate Discipline' | 'Speed' | 'Fielding' | 'Pitching';
+
+/** Soccer skill options */
+export type SoccerSkillFocus = 'Finishing' | 'Passing' | 'Defending' | 'Physical' | 'Technical' | 'Goalkeeping';
+
+/** Skill focus with sport context */
+export type SkillFocusType =
+  | { sport: 'basketball'; skill: BasketballSkillFocus }
+  | { sport: 'baseball'; skill: BaseballSkillFocus }
+  | { sport: 'soccer'; skill: SoccerSkillFocus };
+
+/**
+ * New hierarchical training focus system
+ * - balanced: Even distribution across all trainable attributes
+ * - sport: Train attributes weighted by their impact on sport overall rating
+ * - skill: Train attributes weighted by their impact on specific skill composite
+ */
+export interface NewTrainingFocus {
+  /** Training level: balanced, sport-focused, or skill-focused */
+  level: TrainingFocusLevel;
+  /** Sport to focus on (required when level is 'sport' or 'skill') */
+  sport?: SportFocusType;
+  /** Specific skill to train (required when level is 'skill') */
+  skill?: SkillFocusType;
+}
+
+/**
+ * Training focus - supports both legacy and new formats for backwards compatibility
+ */
+export type TrainingFocus = LegacyTrainingFocus | NewTrainingFocus;
+
+/**
+ * Type guard to check if training focus is legacy format
+ */
+export function isLegacyTrainingFocus(focus: TrainingFocus): focus is LegacyTrainingFocus {
+  return 'physical' in focus && 'mental' in focus && 'technical' in focus;
+}
+
+/**
+ * Type guard to check if training focus is new format
+ */
+export function isNewTrainingFocus(focus: TrainingFocus): focus is NewTrainingFocus {
+  return 'level' in focus;
+}
+
+// =============================================================================
+// ATTRIBUTE HISTORY FOR GROWTH CHARTS
+// =============================================================================
+
+/**
+ * Snapshot of player attributes at a point in time
+ * Used for growth/regression charts
+ */
+export interface AttributeSnapshot {
+  /** Game day when snapshot was taken */
+  gameDay: number;
+  /** Season number */
+  season: number;
+  /** Overall ratings at time of snapshot */
+  overalls: {
+    basketball: number;
+    baseball: number;
+    soccer: number;
+    /** Simple average of all attributes */
+    simple: number;
+  };
+  /** Category averages for detailed view */
+  categoryAverages: {
+    physical: number;
+    mental: number;
+    technical: number;
+  };
 }
 
 /**
@@ -509,6 +598,13 @@ export interface Player {
    * Optional - null if not yet set (e.g., mid-season acquisition)
    */
   seasonStartAttributes?: PlayerAttributes;
+
+  /**
+   * Historical attribute snapshots for growth/regression charts
+   * Collected weekly during season, pruned at season end
+   * Empty array for new players, populated during weekly progression
+   */
+  attributeHistory?: AttributeSnapshot[];
 
   /**
    * Sport-specific metadata (optional)

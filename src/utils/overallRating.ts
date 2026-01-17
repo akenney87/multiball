@@ -17,7 +17,7 @@ import type { Player, PlayerAttributes } from '../data/types';
 // =============================================================================
 
 export interface SportOveralls {
-  /** Simple average of all 26 attributes */
+  /** Average of the 3 sport-specific overalls */
   overall: number;
   /** Basketball-weighted overall */
   basketball: number;
@@ -422,11 +422,14 @@ export function calculateSoccerOverall(attrs: PlayerAttributes): number {
  */
 export function calculateAllOveralls(player: Player): SportOveralls {
   const attrs = player.attributes || ({} as PlayerAttributes);
+  const basketball = calculateBasketballOverall(attrs);
+  const baseball = calculateBaseballOverall(attrs);
+  const soccer = calculateSoccerOverall(attrs);
   return {
-    overall: calculateSimpleOverall(attrs),
-    basketball: calculateBasketballOverall(attrs),
-    baseball: calculateBaseballOverall(attrs),
-    soccer: calculateSoccerOverall(attrs),
+    overall: Math.round((basketball + baseball + soccer) / 3),
+    basketball,
+    baseball,
+    soccer,
   };
 }
 
@@ -437,10 +440,13 @@ export function calculateAllOveralls(player: Player): SportOveralls {
 export function calculateAllOverallsFromAttrs(attrs: PlayerAttributes | Record<string, number>): SportOveralls {
   // Cast to PlayerAttributes - assumes all required keys exist
   const typedAttrs = attrs as PlayerAttributes;
+  const basketball = calculateBasketballOverall(typedAttrs);
+  const baseball = calculateBaseballOverall(typedAttrs);
+  const soccer = calculateSoccerOverall(typedAttrs);
   return {
-    overall: calculateSimpleOverall(typedAttrs),
-    basketball: calculateBasketballOverall(typedAttrs),
-    baseball: calculateBaseballOverall(typedAttrs),
-    soccer: calculateSoccerOverall(typedAttrs),
+    overall: Math.round((basketball + baseball + soccer) / 3),
+    basketball,
+    baseball,
+    soccer,
   };
 }

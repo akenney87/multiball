@@ -42,61 +42,97 @@ export interface CalculatedSkill {
 
 export const BASKETBALL_SKILLS: SkillComposite[] = [
   {
+    // Based on average of WEIGHTS_3PT and WEIGHTS_MIDRANGE from simulation/constants.ts
     name: 'Shooting',
-    description: 'Ability to score from all areas of the court',
+    description: 'Perimeter scoring ability (3PT and midrange)',
     attributes: {
-      form_technique: 0.25,
-      throw_accuracy: 0.25,
-      finesse: 0.20,
-      composure: 0.15,
-      consistency: 0.15,
+      form_technique: 0.24,
+      throw_accuracy: 0.19,
+      finesse: 0.18,
+      hand_eye_coordination: 0.13,
+      balance: 0.11,
+      composure: 0.08,
+      consistency: 0.05,
+      agility: 0.02,
     },
   },
   {
+    // Based on average of modified WEIGHTS_LAYUP and WEIGHTS_DUNK
+    // Layup: finesse .30, hand_eye .15, jumping .13, balance .12, acceleration .12, core_strength .10, footwork .08
+    // Dunk: jumping .40, height .30, bravery .10, determination .10, agility .05, footwork .05
+    name: 'Finishing',
+    description: 'Rim attacks, layups, and dunks',
+    attributes: {
+      jumping: 0.26,
+      finesse: 0.15,
+      height: 0.15,
+      hand_eye_coordination: 0.08,
+      footwork: 0.06,
+      balance: 0.06,
+      acceleration: 0.06,
+      core_strength: 0.05,
+      bravery: 0.05,
+      determination: 0.05,
+      agility: 0.03,
+    },
+  },
+  {
+    // Matches WEIGHTS_REBOUND from simulation/constants.ts exactly
     name: 'Rebounding',
     description: 'Ability to secure boards on both ends',
     attributes: {
-      height: 0.25,
-      jumping: 0.20,
-      awareness: 0.20,
-      determination: 0.15,
+      height: 0.20,
+      awareness: 0.17,
+      jumping: 0.16,
       grip_strength: 0.10,
-      arm_strength: 0.10,
+      arm_strength: 0.09,
+      core_strength: 0.08,
+      footwork: 0.08,
+      determination: 0.07,
+      reactions: 0.05,
     },
   },
   {
+    // Based on average of WEIGHTS_FIND_OPEN_TEAMMATE and WEIGHTS_BALL_HANDLING from simulation/constants.ts
     name: 'Playmaking',
     description: 'Court vision, passing, and ball handling',
     attributes: {
+      hand_eye_coordination: 0.18,
       awareness: 0.25,
-      creativity: 0.25,
-      throw_accuracy: 0.20,
-      teamwork: 0.15,
-      composure: 0.15,
+      creativity: 0.13,
+      composure: 0.13,
+      throw_accuracy: 0.08,
+      teamwork: 0.10,
+      agility: 0.10,
+      grip_strength: 0.03,
     },
   },
   {
+    // Based on average of WEIGHTS_CONTEST and WEIGHTS_STEAL_DEFENSE from simulation/constants.ts
     name: 'Defense',
     description: 'Ability to stop opponents and contest shots',
     attributes: {
       reactions: 0.25,
-      agility: 0.20,
-      determination: 0.15,
-      awareness: 0.15,
-      height: 0.15,
-      balance: 0.10,
+      agility: 0.19,
+      grip_strength: 0.15,
+      height: 0.13,
+      awareness: 0.10,
+      determination: 0.10,
+      balance: 0.05,
+      footwork: 0.03,
     },
   },
   {
+    // Based on WEIGHTS_TRANSITION_SUCCESS from simulation/constants.ts
     name: 'Athleticism',
     description: 'Physical tools and explosiveness',
     attributes: {
-      acceleration: 0.20,
-      top_speed: 0.20,
-      jumping: 0.20,
-      agility: 0.20,
-      stamina: 0.10,
-      core_strength: 0.10,
+      acceleration: 0.28,
+      top_speed: 0.23,
+      awareness: 0.17,
+      agility: 0.17,
+      composure: 0.10,
+      hand_eye_coordination: 0.05,
     },
   },
 ];
@@ -107,28 +143,34 @@ export const BASKETBALL_SKILLS: SkillComposite[] = [
 
 export const BASEBALL_SKILLS: SkillComposite[] = [
   {
+    // Matches WEIGHTS_BATTING_CONTACT from simulation/baseball/constants.ts exactly
     name: 'Contact',
     description: 'Ability to make contact with the ball',
     attributes: {
       hand_eye_coordination: 0.30,
-      form_technique: 0.20,
-      reactions: 0.20,
+      form_technique: 0.15,
+      reactions: 0.15,
       composure: 0.15,
-      patience: 0.15,
+      patience: 0.10,
+      consistency: 0.10,
+      awareness: 0.05,
     },
   },
   {
+    // Matches WEIGHTS_BATTING_POWER from simulation/baseball/constants.ts exactly
     name: 'Power',
     description: 'Extra-base hit and home run ability',
     attributes: {
       core_strength: 0.35,
-      arm_strength: 0.20,
+      arm_strength: 0.15,
       grip_strength: 0.15,
       form_technique: 0.15,
-      height: 0.15,
+      balance: 0.10,
+      height: 0.10,
     },
   },
   {
+    // Matches WEIGHTS_PLATE_DISCIPLINE from simulation/baseball/constants.ts exactly
     name: 'Plate Discipline',
     description: 'Working counts and drawing walks',
     attributes: {
@@ -140,6 +182,19 @@ export const BASEBALL_SKILLS: SkillComposite[] = [
     },
   },
   {
+    // Matches WEIGHTS_STEALING from simulation/baseball/constants.ts exactly
+    name: 'Speed',
+    description: 'Baserunning speed and stealing ability',
+    attributes: {
+      acceleration: 0.30,
+      top_speed: 0.25,
+      reactions: 0.20,
+      awareness: 0.15,
+      bravery: 0.10,
+    },
+  },
+  {
+    // Matches WEIGHTS_FIELDING_INFIELD from simulation/baseball/constants.ts exactly
     name: 'Fielding',
     description: 'Defensive ability and range',
     attributes: {
@@ -147,19 +202,24 @@ export const BASEBALL_SKILLS: SkillComposite[] = [
       agility: 0.20,
       throw_accuracy: 0.20,
       arm_strength: 0.15,
-      awareness: 0.10,
       hand_eye_coordination: 0.10,
+      awareness: 0.10,
     },
   },
   {
+    // Based on average of WEIGHTS_PITCHING_VELOCITY, CONTROL, and MOVEMENT from simulation/baseball/constants.ts
     name: 'Pitching',
     description: 'Pitching effectiveness and control',
     attributes: {
-      arm_strength: 0.25,
-      throw_accuracy: 0.25,
-      deception: 0.20,
-      composure: 0.15,
-      stamina: 0.15,
+      arm_strength: 0.15,
+      throw_accuracy: 0.15,
+      deception: 0.15,
+      form_technique: 0.12,
+      composure: 0.10,
+      finesse: 0.10,
+      hand_eye_coordination: 0.08,
+      core_strength: 0.08,
+      consistency: 0.07,
     },
   },
 ];
@@ -170,60 +230,81 @@ export const BASEBALL_SKILLS: SkillComposite[] = [
 
 export const SOCCER_SKILLS: SkillComposite[] = [
   {
+    // Matches getShootingAccuracy() from simulation/soccer/engine/matchEngine.ts exactly
     name: 'Finishing',
     description: 'Goal scoring ability',
     attributes: {
-      finesse: 0.30,
-      composure: 0.25,
-      footwork: 0.20,
-      form_technique: 0.15,
-      bravery: 0.10,
+      form_technique: 0.25,
+      finesse: 0.25,
+      composure: 0.20,
+      balance: 0.15,
+      footwork: 0.15,
     },
   },
   {
+    // Matches getPlaymakingRating() from simulation/soccer/engine/matchEngine.ts exactly
     name: 'Passing',
     description: 'Distribution and vision',
     attributes: {
-      footwork: 0.25,
+      creativity: 0.30,
       awareness: 0.25,
-      creativity: 0.20,
-      throw_accuracy: 0.15, // Maps to passing accuracy
+      finesse: 0.20,
       composure: 0.15,
+      teamwork: 0.10,
     },
   },
   {
+    // Matches getDefensiveAbility() from simulation/soccer/engine/matchEngine.ts exactly
     name: 'Defending',
     description: 'Defensive prowess and tackling',
     attributes: {
+      reactions: 0.25,
       awareness: 0.25,
-      core_strength: 0.20,
-      agility: 0.20,
-      determination: 0.15,
-      bravery: 0.10,
-      reactions: 0.10,
+      bravery: 0.20,
+      agility: 0.15,
+      jumping: 0.10,
+      determination: 0.05,
     },
   },
   {
+    // Based on common position rating weights for outfield players (acceleration, speed, stamina, strength)
     name: 'Physical',
     description: 'Athletic ability and endurance',
     attributes: {
-      stamina: 0.25,
-      top_speed: 0.20,
-      acceleration: 0.20,
-      core_strength: 0.15,
+      acceleration: 0.22,
+      top_speed: 0.22,
+      agility: 0.18,
+      stamina: 0.15,
+      core_strength: 0.13,
       balance: 0.10,
-      jumping: 0.10,
     },
   },
   {
+    // Based on getShotQualityRating() attributes that measure technical skill
     name: 'Technical',
     description: 'Ball control and skill moves',
     attributes: {
-      footwork: 0.30,
-      finesse: 0.25,
+      footwork: 0.25,
+      finesse: 0.20,
       deception: 0.20,
-      hand_eye_coordination: 0.15,
+      form_technique: 0.15,
+      creativity: 0.10,
       balance: 0.10,
+    },
+  },
+  {
+    // Based on calculateSoccerPositionOverall() GK weights from simulation/soccer/utils/positionRatings.ts
+    name: 'Goalkeeping',
+    description: 'Shot stopping and distribution',
+    attributes: {
+      reactions: 0.22,
+      height: 0.18,
+      agility: 0.18,
+      jumping: 0.12,
+      hand_eye_coordination: 0.10,
+      awareness: 0.10,
+      composure: 0.07,
+      throw_accuracy: 0.03,
     },
   },
 ];

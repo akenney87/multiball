@@ -8,18 +8,29 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../../theme';
-import type { Player } from '../../../data/types';
-import type { TrainingFocus } from '../../../systems/trainingSystem';
-import { DEFAULT_TRAINING_FOCUS } from '../../../systems/trainingSystem';
+import type { Player, NewTrainingFocus } from '../../../data/types';
+import { isNewTrainingFocus } from '../../../data/types';
+import {
+  getTrainingFocusDisplayName,
+  createBalancedFocus,
+} from '../../../utils/trainingFocusMapper';
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
-const CATEGORY_COLORS = {
-  physical: '#3B82F6',  // Blue
-  mental: '#8B5CF6',    // Purple
-  technical: '#10B981', // Green
+const SPORT_COLORS: Record<string, string> = {
+  basketball: '#FF6B35', // Orange
+  baseball: '#3B82F6',   // Blue
+  soccer: '#10B981',     // Green
+  balanced: '#8B5CF6',   // Purple
+};
+
+const SPORT_ICONS: Record<string, string> = {
+  basketball: '🏀',
+  baseball: '⚾',
+  soccer: '⚽',
+  balanced: '⚖️',
 };
 
 // =============================================================================
@@ -28,9 +39,41 @@ const CATEGORY_COLORS = {
 
 interface PlayerTrainingRowProps {
   player: Player;
-  teamFocus: TrainingFocus;
+  teamFocus: NewTrainingFocus;
   onEditPress: () => void;
   onResetToTeam: () => void;
+}
+
+// =============================================================================
+// HELPER FUNCTIONS
+// =============================================================================
+
+/**
+ * Convert any training focus to NewTrainingFocus
+ */
+function normalizeToNewFocus(focus: any): NewTrainingFocus {
+  if (!focus) return createBalancedFocus();
+  if (isNewTrainingFocus(focus)) return focus;
+  // Legacy format - convert to balanced
+  return createBalancedFocus();
+}
+
+/**
+ * Get icon and color for a focus
+ */
+function getFocusVisuals(focus: NewTrainingFocus): { icon: string; color: string } {
+  const BALANCED_ICON = '⚖️';
+  const BALANCED_COLOR = '#8B5CF6';
+
+  if (focus.level === 'balanced') {
+    return { icon: BALANCED_ICON, color: BALANCED_COLOR };
+  }
+
+  const sport = focus.sport ?? 'basketball';
+  return {
+    icon: SPORT_ICONS[sport] ?? BALANCED_ICON,
+    color: SPORT_COLORS[sport] ?? BALANCED_COLOR,
+  };
 }
 
 // =============================================================================
@@ -45,13 +88,30 @@ export function PlayerTrainingRow({
 }: PlayerTrainingRowProps) {
   const colors = useColors();
 
+  // Normalize team focus
+  const normalizedTeamFocus = useMemo(
+    () => normalizeToNewFocus(teamFocus),
+    [teamFocus]
+  );
+
   // Get current focus
   const currentFocus = useMemo(
-    () => player.trainingFocus ?? teamFocus ?? DEFAULT_TRAINING_FOCUS,
-    [player.trainingFocus, teamFocus]
+    () => normalizeToNewFocus(player.trainingFocus) ?? normalizedTeamFocus,
+    [player.trainingFocus, normalizedTeamFocus]
   );
 
   const isUsingTeamDefault = player.trainingFocus === null || player.trainingFocus === undefined;
+
+  // Get display values
+  const focusDisplayName = useMemo(
+    () => getTrainingFocusDisplayName(currentFocus),
+    [currentFocus]
+  );
+
+  const { icon, color } = useMemo(
+    () => getFocusVisuals(currentFocus),
+    [currentFocus]
+  );
 
   return (
     <TouchableOpacity
@@ -69,31 +129,25 @@ export function PlayerTrainingRow({
         </Text>
       </View>
 
-      {/* Mini Training Bars */}
-      <View style={styles.barsContainer}>
-        {(['physical', 'mental', 'technical'] as const).map((category) => (
-          <View key={category} style={styles.miniBarRow}>
-            <View
-              style={[
-                styles.miniBarBg,
-                { backgroundColor: colors.surface },
-              ]}
-            >
-              <View
-                style={[
-                  styles.miniBarFill,
-                  {
-                    width: `${currentFocus[category]}%` as any,
-                    backgroundColor: CATEGORY_COLORS[category],
-                  },
-                ]}
-              />
-            </View>
-            <Text style={[styles.miniBarValue, { color: colors.textMuted }]}>
-              {currentFocus[category]}%
-            </Text>
-          </View>
-        ))}
+      {/* Training Focus Display */}
+      <View style={styles.focusContainer}>
+        <View
+          style={[
+            styles.focusChip,
+            {
+              backgroundColor: color + '20',
+              borderColor: color,
+            },
+          ]}
+        >
+          <Text style={styles.focusIcon}>{icon}</Text>
+          <Text
+            style={[styles.focusText, { color }]}
+            numberOfLines={1}
+          >
+            {focusDisplayName}
+          </Text>
+        </View>
       </View>
 
       {/* Status Badge */}
@@ -152,29 +206,26 @@ const styles = StyleSheet.create({
     fontSize: 11,
     marginTop: 2,
   },
-  barsContainer: {
+  focusContainer: {
     flex: 1,
-    gap: 4,
+    alignItems: 'flex-start',
   },
-  miniBarRow: {
+  focusChip: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
     gap: spacing.xs,
   },
-  miniBarBg: {
-    flex: 1,
-    height: 4,
-    borderRadius: 2,
-    overflow: 'hidden',
+  focusIcon: {
+    fontSize: 12,
   },
-  miniBarFill: {
-    height: '100%',
-    borderRadius: 2,
-  },
-  miniBarValue: {
-    fontSize: 9,
-    width: 28,
-    textAlign: 'right',
+  focusText: {
+    fontSize: 11,
+    fontWeight: '600',
+    maxWidth: 100,
   },
   statusContainer: {
     flexDirection: 'row',

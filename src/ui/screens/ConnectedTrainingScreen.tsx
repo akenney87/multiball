@@ -16,20 +16,13 @@ import {
 } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../theme';
 import { useGame } from '../context/GameContext';
-import { TrainingFocusSlider, PlayerTrainingRow } from '../components/training';
-import type { TrainingFocus } from '../../systems/trainingSystem';
-import { DEFAULT_TRAINING_FOCUS } from '../../systems/trainingSystem';
-
-// =============================================================================
-// CONSTANTS
-// =============================================================================
-
-const PRESETS: { label: string; focus: TrainingFocus }[] = [
-  { label: 'Balanced', focus: { physical: 34, mental: 33, technical: 33 } },
-  { label: 'Physical', focus: { physical: 50, mental: 25, technical: 25 } },
-  { label: 'Mental', focus: { physical: 25, mental: 50, technical: 25 } },
-  { label: 'Technical', focus: { physical: 25, mental: 25, technical: 50 } },
-];
+import { TrainingFocusSelector, PlayerTrainingRow } from '../components/training';
+import type { NewTrainingFocus } from '../../data/types';
+import { isNewTrainingFocus } from '../../data/types';
+import {
+  createBalancedFocus,
+  getTrainingFocusDisplayName,
+} from '../../utils/trainingFocusMapper';
 
 // =============================================================================
 // TYPES
@@ -40,6 +33,20 @@ interface ConnectedTrainingScreenProps {
 }
 
 type FilterMode = 'all' | 'custom' | 'team';
+
+// =============================================================================
+// HELPER FUNCTIONS
+// =============================================================================
+
+/**
+ * Convert any training focus to NewTrainingFocus
+ */
+function normalizeToNewFocus(focus: any): NewTrainingFocus {
+  if (!focus) return createBalancedFocus();
+  if (isNewTrainingFocus(focus)) return focus;
+  // Legacy format - convert to balanced
+  return createBalancedFocus();
+}
 
 // =============================================================================
 // COMPONENT
@@ -53,9 +60,9 @@ export function ConnectedTrainingScreen({ onPlayerPress: _onPlayerPress }: Conne
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
 
-  // Get team focus
+  // Get team focus (normalized to new format)
   const teamFocus = useMemo(
-    () => state.userTeam.trainingFocus ?? DEFAULT_TRAINING_FOCUS,
+    () => normalizeToNewFocus(state.userTeam.trainingFocus),
     [state.userTeam.trainingFocus]
   );
 
@@ -88,17 +95,23 @@ export function ConnectedTrainingScreen({ onPlayerPress: _onPlayerPress }: Conne
     [editingPlayerId, getPlayer]
   );
 
+  // Get focus display name for team
+  const teamFocusDisplayName = useMemo(
+    () => getTrainingFocusDisplayName(teamFocus),
+    [teamFocus]
+  );
+
   // Handlers
   const handleTeamFocusChange = useCallback(
-    (focus: TrainingFocus) => {
-      setTrainingFocus(focus);
+    (focus: NewTrainingFocus) => {
+      setTrainingFocus(focus as any);
     },
     [setTrainingFocus]
   );
 
   const handlePlayerFocusChange = useCallback(
-    (playerId: string, focus: TrainingFocus) => {
-      setTrainingFocus(focus, playerId);
+    (playerId: string, focus: NewTrainingFocus) => {
+      setTrainingFocus(focus as any, playerId);
     },
     [setTrainingFocus]
   );
@@ -106,13 +119,6 @@ export function ConnectedTrainingScreen({ onPlayerPress: _onPlayerPress }: Conne
   const handleResetToTeam = useCallback(
     (playerId: string) => {
       setTrainingFocus(null as any, playerId);
-    },
-    [setTrainingFocus]
-  );
-
-  const handlePresetPress = useCallback(
-    (preset: TrainingFocus) => {
-      setTrainingFocus(preset);
     },
     [setTrainingFocus]
   );
@@ -131,43 +137,22 @@ export function ConnectedTrainingScreen({ onPlayerPress: _onPlayerPress }: Conne
           Applied to all players without custom training
         </Text>
 
-        <View style={styles.teamSliders}>
-          <TrainingFocusSlider focus={teamFocus} onChange={handleTeamFocusChange} />
+        {/* Current Focus Display */}
+        <View style={[styles.currentFocusDisplay, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.currentFocusLabel, { color: colors.textMuted }]}>
+            CURRENT
+          </Text>
+          <Text style={[styles.currentFocusValue, { color: colors.primary }]}>
+            {teamFocusDisplayName}
+          </Text>
         </View>
 
-        {/* Presets */}
-        <View style={styles.presetsRow}>
-          {PRESETS.map((preset) => {
-            const isActive =
-              teamFocus.physical === preset.focus.physical &&
-              teamFocus.mental === preset.focus.mental &&
-              teamFocus.technical === preset.focus.technical;
-
-            return (
-              <TouchableOpacity
-                key={preset.label}
-                style={[
-                  styles.presetButton,
-                  {
-                    backgroundColor: isActive
-                      ? colors.primary + '20'
-                      : colors.surface,
-                    borderColor: isActive ? colors.primary : colors.border,
-                  },
-                ]}
-                onPress={() => handlePresetPress(preset.focus)}
-              >
-                <Text
-                  style={[
-                    styles.presetText,
-                    { color: isActive ? colors.primary : colors.text },
-                  ]}
-                >
-                  {preset.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+        {/* Team Focus Selector */}
+        <View style={styles.teamSelector}>
+          <TrainingFocusSelector
+            focus={teamFocus}
+            onChange={handleTeamFocusChange}
+          />
         </View>
       </View>
 
@@ -246,54 +231,14 @@ export function ConnectedTrainingScreen({ onPlayerPress: _onPlayerPress }: Conne
               Age {editingPlayer?.age}
             </Text>
 
-            <View style={styles.modalSliders}>
-              <TrainingFocusSlider
-                focus={
-                  editingPlayer?.trainingFocus ?? teamFocus ?? DEFAULT_TRAINING_FOCUS
-                }
+            <View style={styles.modalSelector}>
+              <TrainingFocusSelector
+                focus={normalizeToNewFocus(editingPlayer?.trainingFocus) ?? teamFocus}
                 onChange={(focus) =>
                   editingPlayerId && handlePlayerFocusChange(editingPlayerId, focus)
                 }
+                player={editingPlayer ?? undefined}
               />
-            </View>
-
-            {/* Modal Presets */}
-            <View style={styles.presetsRow}>
-              {PRESETS.map((preset) => {
-                const playerFocus = editingPlayer?.trainingFocus ?? teamFocus;
-                const isActive =
-                  playerFocus.physical === preset.focus.physical &&
-                  playerFocus.mental === preset.focus.mental &&
-                  playerFocus.technical === preset.focus.technical;
-
-                return (
-                  <TouchableOpacity
-                    key={preset.label}
-                    style={[
-                      styles.presetButton,
-                      {
-                        backgroundColor: isActive
-                          ? colors.primary + '20'
-                          : colors.surface,
-                        borderColor: isActive ? colors.primary : colors.border,
-                      },
-                    ]}
-                    onPress={() =>
-                      editingPlayerId &&
-                      handlePlayerFocusChange(editingPlayerId, preset.focus)
-                    }
-                  >
-                    <Text
-                      style={[
-                        styles.presetText,
-                        { color: isActive ? colors.primary : colors.text },
-                      ]}
-                    >
-                      {preset.label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
             </View>
 
             {/* Modal Actions */}
@@ -351,24 +296,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: spacing.md,
   },
-  teamSliders: {
-    marginBottom: spacing.lg,
-  },
-  presetsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  presetButton: {
-    flex: 1,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xs,
+  currentFocusDisplay: {
+    padding: spacing.md,
     borderRadius: borderRadius.md,
-    borderWidth: 1,
     alignItems: 'center',
+    marginBottom: spacing.md,
   },
-  presetText: {
-    fontSize: 11,
-    fontWeight: '500',
+  currentFocusLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 1,
+    marginBottom: spacing.xs,
+  },
+  currentFocusValue: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  teamSelector: {
+    marginTop: spacing.sm,
   },
   rosterSection: {
     gap: spacing.md,
@@ -431,7 +376,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: spacing.lg,
   },
-  modalSliders: {
+  modalSelector: {
     marginBottom: spacing.lg,
   },
   modalActions: {

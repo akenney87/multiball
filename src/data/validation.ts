@@ -25,6 +25,8 @@ import {
   TransferOffer,
   NewsItem,
   GameSave,
+  isLegacyTrainingFocus,
+  isNewTrainingFocus,
 } from './types';
 
 // =============================================================================
@@ -149,24 +151,62 @@ export function validatePeakAges(peakAges: PeakAges): void {
 }
 
 /**
- * Validate training focus (must sum to 100)
+ * Validate training focus (supports both legacy and new format)
  */
 export function validateTrainingFocus(focus: TrainingFocus): void {
-  const total = focus.physical + focus.mental + focus.technical;
+  // New format validation
+  if (isNewTrainingFocus(focus)) {
+    const validLevels = ['balanced', 'sport', 'skill'];
+    if (!validLevels.includes(focus.level)) {
+      throw new ValidationError(
+        `Invalid training focus level: ${focus.level}`,
+        'trainingFocus.level'
+      );
+    }
 
-  if (total !== 100) {
-    throw new ValidationError(
-      `Training focus must sum to 100, got ${total}`,
-      'trainingFocus'
-    );
+    if (focus.level === 'sport' && !focus.sport) {
+      throw new ValidationError(
+        'Sport-level training focus must specify a sport',
+        'trainingFocus.sport'
+      );
+    }
+
+    if (focus.level === 'skill' && !focus.skill) {
+      throw new ValidationError(
+        'Skill-level training focus must specify a skill',
+        'trainingFocus.skill'
+      );
+    }
+
+    return;
   }
 
-  if (focus.physical < 0 || focus.mental < 0 || focus.technical < 0) {
-    throw new ValidationError(
-      'Training focus percentages cannot be negative',
-      'trainingFocus'
-    );
+  // Legacy format validation
+  if (isLegacyTrainingFocus(focus)) {
+    const total = focus.physical + focus.mental + focus.technical;
+
+    if (total !== 100) {
+      throw new ValidationError(
+        `Training focus must sum to 100, got ${total}`,
+        'trainingFocus'
+      );
+    }
+
+    if (focus.physical < 0 || focus.mental < 0 || focus.technical < 0) {
+      throw new ValidationError(
+        'Training focus percentages cannot be negative',
+        'trainingFocus'
+      );
+    }
+
+    return;
   }
+
+  // Unknown format
+  throw new ValidationError(
+    'Invalid training focus format',
+    'trainingFocus'
+  );
 }
 
 // =============================================================================

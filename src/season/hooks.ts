@@ -10,7 +10,8 @@
  * Week 4: Hook infrastructure
  */
 
-import type { Player, Season, Match, MatchResult, Injury } from '../data/types';
+import type { Player, Season, Match, MatchResult, Injury, LegacyTrainingFocus } from '../data/types';
+import { isNewTrainingFocus } from '../data/types';
 import type { AIConfig } from '../ai/types';
 import {
   GameEventEmitter,
@@ -550,6 +551,29 @@ export const recoveryProcessingHook: PreWeekHook = (context) => {
 };
 
 /**
+ * Convert training focus to legacy format for XP distribution
+ * New format is converted to balanced distribution
+ */
+function toLegacyFocus(focus: any): LegacyTrainingFocus {
+  if (!focus) {
+    return { physical: 34, mental: 33, technical: 33 };
+  }
+
+  // New format - use balanced distribution
+  if (isNewTrainingFocus(focus)) {
+    return { physical: 34, mental: 33, technical: 33 };
+  }
+
+  // Legacy format - use as-is
+  if (typeof focus.physical === 'number' && typeof focus.mental === 'number' && typeof focus.technical === 'number') {
+    return focus as LegacyTrainingFocus;
+  }
+
+  // Fallback
+  return { physical: 34, mental: 33, technical: 33 };
+}
+
+/**
  * Post-week: Distribute training XP
  */
 export const trainingXpHook: PostWeekHook = (context) => {
@@ -560,8 +584,8 @@ export const trainingXpHook: PostWeekHook = (context) => {
     // Skip injured players (reduced training)
     const injuryModifier = player.injury ? 0.25 : 1.0;
 
-    // Base XP from training focus
-    const focus = player.trainingFocus ?? { physical: 34, mental: 33, technical: 33 };
+    // Base XP from training focus (convert to legacy format for distribution)
+    const focus = toLegacyFocus(player.trainingFocus);
 
     // Base XP per week: 5-15 depending on determination
     const baseXp = 5 + (player.attributes.determination / 100) * 10;

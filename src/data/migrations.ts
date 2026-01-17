@@ -55,22 +55,68 @@ export interface MigrationResult {
 // =============================================================================
 
 /**
+ * Helper: Convert legacy training focus to new format
+ * Legacy format: { physical: number, mental: number, technical: number }
+ * New format: { level: 'balanced' | 'sport' | 'skill', sport?, skill? }
+ */
+function migrateTrainingFocus(focus: any): any {
+  // If it's already new format (has 'level' property), keep it
+  if (focus && typeof focus.level === 'string') {
+    return focus;
+  }
+
+  // If it's legacy format (has physical/mental/technical), convert to balanced
+  if (focus && (typeof focus.physical === 'number' || typeof focus.mental === 'number' || typeof focus.technical === 'number')) {
+    return { level: 'balanced' };
+  }
+
+  // Default to balanced for null/undefined/malformed
+  return { level: 'balanced' };
+}
+
+/**
+ * Helper: Migrate a single player
+ */
+function migratePlayer(player: any): any {
+  return {
+    ...player,
+    // Convert training focus to new format
+    trainingFocus: migrateTrainingFocus(player.trainingFocus),
+    // Initialize empty attribute history if not present
+    attributeHistory: player.attributeHistory || [],
+  };
+}
+
+/**
  * All registered migrations
  * Migrations are applied in order from oldest to newest
  */
 const migrations: MigrationHandler[] = [
-  // Example migration (0.1.0 -> 0.2.0)
+  // Migration 0.1.0 -> 0.2.0: New training focus system
   {
     fromVersion: '0.1.0',
     toVersion: '0.2.0',
-    description: 'Add new fields for multi-sport expansion',
+    description: 'New hierarchical training focus system and attribute history tracking',
     migrate: (old: any): GameSave => {
-      // Example: Add new fields, transform data
+      // Migrate all players in the players record
+      const migratedPlayers: Record<string, any> = {};
+      if (old.players) {
+        for (const [playerId, player] of Object.entries(old.players)) {
+          migratedPlayers[playerId] = migratePlayer(player);
+        }
+      }
+
+      // Migrate user team training focus
+      const migratedUserTeam = old.userTeam ? {
+        ...old.userTeam,
+        trainingFocus: migrateTrainingFocus(old.userTeam.trainingFocus),
+      } : old.userTeam;
+
       return {
         ...old,
         version: '0.2.0',
-        // Add any new fields with defaults
-        // Transform existing fields if needed
+        players: migratedPlayers,
+        userTeam: migratedUserTeam,
       };
     },
   },
@@ -86,7 +132,7 @@ const migrations: MigrationHandler[] = [
  * Get current game version
  * This should match the version in package.json
  */
-export const CURRENT_VERSION = '0.1.0';
+export const CURRENT_VERSION = '0.2.0';
 
 /**
  * Check if migration is needed

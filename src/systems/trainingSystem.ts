@@ -13,10 +13,23 @@
  * - Optional depth (per-player customization)
  * - Soft caps based on hidden potentials
  * - Linear XP cost prevents runaway growth
+ *
+ * New Training Focus System (v2):
+ * - Balanced: Even distribution across all trainable attributes
+ * - Sport: Train attributes weighted by sport overall impact
+ * - Skill: Train attributes weighted by specific skill composite
  */
+
+import {
+  type TrainingFocus as TrainingFocusType,
+  type NewTrainingFocus,
+  isNewTrainingFocus,
+} from '../data/types';
+import { getAttributeWeights, createBalancedFocus } from '../utils/trainingFocusMapper';
 
 /**
  * Training focus allocation (percentages must sum to 100)
+ * @deprecated Use NewTrainingFocus from types.ts instead
  */
 export interface TrainingFocus {
   physical: number;   // 0-100%
@@ -299,6 +312,8 @@ export function applyWeeklyTraining(
       if (!(attrName in updatedAttributes)) continue;
 
       const currentValue = updatedAttributes[attrName];
+      if (currentValue === undefined) continue;
+
       const xpRequired = calculateXPRequired(currentValue, potential);
 
       // Check if we can improve this attribute
@@ -361,8 +376,8 @@ export function simulateTrainingWeek(
     minutesPlayed
   );
 
-  // Apply training
-  const { updatedAttributes, updatedXP, improvements } = applyWeeklyTraining(
+  // Apply training (updatedAttributes and updatedXP are handled by caller)
+  const { improvements } = applyWeeklyTraining(
     currentAttributes,
     currentXP,
     xpEarned,
@@ -375,4 +390,200 @@ export function simulateTrainingWeek(
     improvements,
     totalImprovements: improvements.length,
   };
+}
+
+// =============================================================================
+// NEW PER-ATTRIBUTE TRAINING SYSTEM
+// =============================================================================
+
+/**
+ * Per-attribute XP tracking for new training system
+ */
+export interface AttributeXP {
+  [attributeName: string]: number;
+}
+
+/**
+ * Training result for per-attribute system
+ */
+export interface PerAttributeTrainingResult {
+  playerName: string;
+  xpEarnedPerAttribute: AttributeXP;
+  improvements: AttributeImprovement[];
+  totalImprovements: number;
+}
+
+/** Trainable attributes (excludes height) */
+const TRAINABLE_ATTRIBUTES = [
+  ...PHYSICAL_ATTRIBUTES.filter(a => a !== 'height'),
+  ...MENTAL_ATTRIBUTES,
+  ...TECHNICAL_ATTRIBUTES,
+];
+
+/**
+ * Converts any training focus to the new format
+ * Handles backwards compatibility with legacy format
+ */
+export function normalizeTrainingFocus(focus: TrainingFocusType | TrainingFocus | null): NewTrainingFocus {
+  if (!focus) {
+    return createBalancedFocus();
+  }
+
+  // Check if it's already new format
+  if (isNewTrainingFocus(focus as TrainingFocusType)) {
+    return focus as NewTrainingFocus;
+  }
+
+  // Legacy format - convert to balanced (since we can't map physical/mental/technical to the new system)
+  return createBalancedFocus();
+}
+
+/**
+ * Calculates per-attribute XP earned based on new training focus
+ *
+ * @param focus - Training focus (new or legacy format)
+ * @param trainingQualityMultiplier - From budget allocation (0.5x to 2.0x)
+ * @param age - Player age
+ * @param minutesPlayed - Minutes played this week
+ * @returns XP earned per attribute
+ */
+export function calculatePerAttributeXP(
+  focus: TrainingFocusType | TrainingFocus | null,
+  trainingQualityMultiplier: number,
+  age: number,
+  minutesPlayed: number
+): AttributeXP {
+  const normalizedFocus = normalizeTrainingFocus(focus);
+
+  // Calculate total XP
+  const baseXP = BASE_XP_PER_WEEK;
+  const ageMultiplier = getAgeMultiplier(age);
+  const playingTimeMultiplier = calculatePlayingTimeBonus(minutesPlayed);
+  const totalXP = baseXP * trainingQualityMultiplier * ageMultiplier * playingTimeMultiplier;
+
+  // Get attribute weights from focus
+  const weights = getAttributeWeights(normalizedFocus);
+
+  // Distribute XP according to weights
+  const xpPerAttribute: AttributeXP = {};
+  for (const attr of TRAINABLE_ATTRIBUTES) {
+    const weight = weights[attr] ?? 0;
+    xpPerAttribute[attr] = totalXP * weight;
+  }
+
+  return xpPerAttribute;
+}
+
+/**
+ * Applies per-attribute training to a player's attributes
+ *
+ * @param currentAttributes - Player's current attribute values
+ * @param currentXP - Player's current XP progress per attribute
+ * @param weeklyXP - XP earned this week per attribute
+ * @param potentials - Player's category potentials
+ * @returns Updated attributes and XP progress
+ */
+export function applyPerAttributeTraining(
+  currentAttributes: Record<string, number>,
+  currentXP: AttributeXP,
+  weeklyXP: AttributeXP,
+  potentials: CategoryPotentials
+): {
+  updatedAttributes: Record<string, number>;
+  updatedXP: AttributeXP;
+  improvements: AttributeImprovement[];
+} {
+  const updatedAttributes = { ...currentAttributes };
+  const updatedXP: AttributeXP = { ...currentXP };
+  const improvements: AttributeImprovement[] = [];
+
+  // Add weekly XP to accumulated XP
+  for (const attr of TRAINABLE_ATTRIBUTES) {
+    updatedXP[attr] = (updatedXP[attr] ?? 0) + (weeklyXP[attr] ?? 0);
+  }
+
+  // Try to improve each attribute
+  for (const attrName of TRAINABLE_ATTRIBUTES) {
+    if (!(attrName in updatedAttributes)) continue;
+
+    const currentValue = updatedAttributes[attrName];
+    if (currentValue === undefined) continue;
+
+    const category = getAttributeCategory(attrName);
+    if (!category) continue;
+
+    const potential = potentials[category];
+    const xpRequired = calculateXPRequired(currentValue, potential);
+    const attrXP = updatedXP[attrName] ?? 0;
+
+    // Check if we can improve this attribute
+    if (attrXP >= xpRequired) {
+      const oldValue = currentValue;
+      const newValue = Math.min(100, currentValue + 1); // Cap at 100
+
+      updatedAttributes[attrName] = newValue;
+      updatedXP[attrName] = attrXP - xpRequired;
+
+      improvements.push({
+        attributeName: attrName,
+        oldValue,
+        newValue,
+        xpProgress: updatedXP[attrName] ?? 0,
+        xpRequired: calculateXPRequired(newValue, potential),
+      });
+    }
+  }
+
+  return {
+    updatedAttributes,
+    updatedXP,
+    improvements,
+  };
+}
+
+/**
+ * Converts per-attribute XP to category-based WeeklyXP for compatibility
+ */
+export function convertToWeeklyXP(attributeXP: AttributeXP): WeeklyXP {
+  let physical = 0;
+  let mental = 0;
+  let technical = 0;
+
+  for (const [attr, xp] of Object.entries(attributeXP)) {
+    const category = getAttributeCategory(attr);
+    if (category === 'physical') physical += xp;
+    else if (category === 'mental') mental += xp;
+    else if (category === 'technical') technical += xp;
+  }
+
+  return { physical, mental, technical };
+}
+
+/**
+ * Initializes per-attribute XP tracking from legacy WeeklyXP
+ * Distributes category XP evenly across attributes in that category
+ */
+export function initializeAttributeXP(weeklyXP: WeeklyXP): AttributeXP {
+  const attributeXP: AttributeXP = {};
+
+  // Distribute physical XP
+  const physicalAttrs = PHYSICAL_ATTRIBUTES.filter(a => a !== 'height');
+  const physicalXPPerAttr = weeklyXP.physical / physicalAttrs.length;
+  for (const attr of physicalAttrs) {
+    attributeXP[attr] = physicalXPPerAttr;
+  }
+
+  // Distribute mental XP
+  const mentalXPPerAttr = weeklyXP.mental / MENTAL_ATTRIBUTES.length;
+  for (const attr of MENTAL_ATTRIBUTES) {
+    attributeXP[attr] = mentalXPPerAttr;
+  }
+
+  // Distribute technical XP
+  const technicalXPPerAttr = weeklyXP.technical / TECHNICAL_ATTRIBUTES.length;
+  for (const attr of TECHNICAL_ATTRIBUTES) {
+    attributeXP[attr] = technicalXPPerAttr;
+  }
+
+  return attributeXP;
 }
