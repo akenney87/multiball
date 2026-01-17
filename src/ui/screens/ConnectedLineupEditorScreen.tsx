@@ -867,6 +867,17 @@ function BasketballLineupEditor({
 
   // Handle tapping a position slot in Starting Five
   const handleSlotPress = (slotIndex: number, _currentPlayer: LineupPlayer | undefined) => {
+    // If a bench player is already selected, put them in this slot
+    if (selectedBenchReserve !== null && selectedBenchReserve.isBench) {
+      const benchPlayer = bench.find(p => p.id === selectedBenchReserve.id);
+      if (benchPlayer) {
+        setStarter(benchPlayer.id, slotIndex);
+      }
+      setSelectedBenchReserve(null);
+      setSelectedSlotIndex(null);
+      return;
+    }
+
     if (selectedSlotIndex === null) {
       // Nothing selected - select this slot
       setSelectedSlotIndex(slotIndex);
@@ -896,7 +907,7 @@ function BasketballLineupEditor({
     }
     if (selectedBenchReserve !== null) {
       return selectedBenchReserve.isBench
-        ? 'Tap a reserve to swap with bench player'
+        ? 'Tap a position to assign, or tap reserve to swap'
         : 'Tap a bench player to swap with reserve';
     }
     return 'Tap a position to select • Tap minutes to adjust';
@@ -1621,6 +1632,21 @@ function SoccerLineupEditor({
 
   // Handle tapping a position slot in Starting XI
   const handleSlotPress = (slotIndex: number, currentPlayer: LineupPlayer | undefined) => {
+    // If a bench player is already selected, put them in this slot
+    if (selectedBenchReserve !== null && selectedBenchReserve.isBench) {
+      const benchPlayer = bench.find(p => p.id === selectedBenchReserve.id);
+      if (benchPlayer) {
+        // If slot has a player, move them to bench first
+        if (currentPlayer) {
+          moveToBench(currentPlayer.id);
+        }
+        setStarter(benchPlayer.id, slotIndex);
+      }
+      setSelectedBenchReserve(null);
+      setSelectedSlotIndex(null);
+      return;
+    }
+
     if (selectedSlotIndex === null) {
       // Nothing selected - select this slot
       setSelectedSlotIndex(slotIndex);
@@ -1745,7 +1771,9 @@ function SoccerLineupEditor({
           sport="soccer"
           message={selectedSlotIndex !== null
             ? `Tap a bench player to assign, or tap another position to swap`
-            : `Tap a position to select • Long press for position ratings`}
+            : selectedBenchReserve !== null && selectedBenchReserve.isBench
+              ? 'Tap a position to assign, or tap reserve to swap'
+              : `Tap a position to select • Long press for position ratings`}
           colors={colors}
         />
 
@@ -2494,6 +2522,19 @@ function BaseballLineupEditor({
 
   // Handle tapping a batting order slot
   const handleBattingSlotPress = (slotIndex: number, playerId?: string) => {
+    // If a bench player is already selected, put them in this slot
+    if (selectedBenchReserve !== null && selectedBenchReserve.isBench) {
+      const benchPlayer = bench.find(p => p.id === selectedBenchReserve.id);
+      if (benchPlayer) {
+        // Preserve the defensive position from the player being displaced
+        const displacedPosition = battingOrder?.[slotIndex]?.baseballPosition || 'DH';
+        addToBattingOrder?.(benchPlayer.id, slotIndex, displacedPosition);
+      }
+      setSelectedBenchReserve(null);
+      clearSelection();
+      return;
+    }
+
     // If selecting a bullpen slot and clicking on a batter - swap them atomically
     if (selection?.type === 'bullpen' && selection.playerId && playerId) {
       const bullpenPlayerId = selection.playerId;
@@ -2547,6 +2588,17 @@ function BaseballLineupEditor({
   const handlePitcherPress = () => {
     const pitcherId = startingPitcher?.id || null;
 
+    // If a bench player is already selected, make them the starting pitcher
+    if (selectedBenchReserve !== null && selectedBenchReserve.isBench) {
+      const benchPlayer = bench.find(p => p.id === selectedBenchReserve.id);
+      if (benchPlayer) {
+        setStartingPitcher?.(benchPlayer.id);
+      }
+      setSelectedBenchReserve(null);
+      clearSelection();
+      return;
+    }
+
     // If selecting a batter and clicking on pitcher - swap them
     if (selection?.type === 'batting' && selection.playerId && pitcherId) {
       const batterPlayerId = selection.playerId;
@@ -2594,6 +2646,17 @@ function BaseballLineupEditor({
 
   // Handle tapping a bullpen slot
   const handleBullpenSlotPress = (role: 'longReliever' | 'shortReliever' | 'closer', slotIndex: number | undefined, playerId: string | null) => {
+    // If a bench player is already selected, assign them to this bullpen role
+    if (selectedBenchReserve !== null && selectedBenchReserve.isBench) {
+      const benchPlayer = bench.find(p => p.id === selectedBenchReserve.id);
+      if (benchPlayer) {
+        setBullpenRole?.(benchPlayer.id, role, slotIndex);
+      }
+      setSelectedBenchReserve(null);
+      clearSelection();
+      return;
+    }
+
     // If selecting pitcher and clicking bullpen - swap them atomically
     if (selection?.type === 'pitcher' && selection.playerId && playerId) {
       swapBullpenWithPitcher?.(playerId, role, slotIndex);
@@ -2670,6 +2733,9 @@ function BaseballLineupEditor({
     if (selectingBullpenRole !== null) return 'Tap pitcher, batter, other bullpen, or bench to swap';
     if (selectedBattingPlayerId) return 'Tap another player to swap (pitcher, bullpen, or batter)';
     if (selectedBattingSlot !== null) return 'Tap a bench player to add to lineup';
+    if (selectedBenchReserve !== null && selectedBenchReserve.isBench) {
+      return 'Tap a batting slot, pitcher, or bullpen to assign';
+    }
     return 'Tap any player to select • Long press position to change';
   };
 
