@@ -165,6 +165,121 @@ function filterBasketballEligibleRoster(
 }
 
 /**
+ * Get player's effective condition (accounting for injuries)
+ * Uses matchFitness as the base condition
+ */
+function getPlayerCondition(player: Player): number {
+  const baseCondition = player.matchFitness ?? 100;
+  if (player.injury) {
+    const penalty = getInjuryConditionPenalty(player.injury.injuryType as InjurySeverity);
+    return Math.max(0, baseCondition - penalty);
+  }
+  return baseCondition;
+}
+
+/**
+ * Low condition threshold - players below this should be replaced
+ */
+const LOW_CONDITION_THRESHOLD = 40;
+
+/**
+ * Generate an auto-filled basketball lineup from roster
+ * Selects top 5 by overall rating who have condition >= threshold, or best available
+ */
+function generateAutoBasketballLineup(
+  roster: Player[],
+  conditionThreshold: number = LOW_CONDITION_THRESHOLD
+): { starters: [string, string, string, string, string]; bench: string[] } {
+  // Sort by: condition >= threshold first, then by overall rating
+  const sortedRoster = [...roster].sort((a, b) => {
+    const condA = getPlayerCondition(a);
+    const condB = getPlayerCondition(b);
+    const aAboveThreshold = condA >= conditionThreshold;
+    const bAboveThreshold = condB >= conditionThreshold;
+
+    // Prioritize players above threshold
+    if (aAboveThreshold && !bAboveThreshold) return -1;
+    if (!aAboveThreshold && bAboveThreshold) return 1;
+
+    // Among same threshold group, sort by overall
+    const overallA = calculatePlayerOverall(a);
+    const overallB = calculatePlayerOverall(b);
+    return overallB - overallA;
+  });
+
+  // Top 5 become starters, next 9 become bench
+  const starters = sortedRoster.slice(0, 5).map(p => p.id);
+  const bench = sortedRoster.slice(5, 14).map(p => p.id);
+
+  // Ensure we have 5 starters (pad with empty if somehow not enough players)
+  while (starters.length < 5) {
+    starters.push('');
+  }
+
+  return {
+    starters: starters as [string, string, string, string, string],
+    bench,
+  };
+}
+
+/**
+ * Replace low-condition starters with higher-condition bench players
+ * Returns new starters and bench arrays
+ */
+function replaceExhaustedPlayers(
+  starterIds: string[],
+  benchIds: string[],
+  players: Record<string, Player>,
+  conditionThreshold: number = LOW_CONDITION_THRESHOLD
+): { starters: string[]; bench: string[] } {
+  const newStarters: string[] = [...starterIds];
+  const newBench: string[] = [...benchIds];
+
+  // Check each starter
+  for (let i = 0; i < newStarters.length; i++) {
+    const starterId = newStarters[i];
+    if (!starterId) continue;
+
+    const starter = players[starterId];
+    if (!starter) continue;
+
+    const starterCondition = getPlayerCondition(starter);
+
+    // If starter is below threshold, try to find a bench replacement
+    if (starterCondition < conditionThreshold) {
+      // Find best bench player with better condition
+      let bestBenchIdx = -1;
+      let bestBenchCondition = starterCondition;
+
+      for (let j = 0; j < newBench.length; j++) {
+        const benchId = newBench[j];
+        if (!benchId) continue;
+
+        const benchPlayer = players[benchId];
+        if (!benchPlayer) continue;
+
+        const benchCondition = getPlayerCondition(benchPlayer);
+        if (benchCondition > bestBenchCondition && benchCondition >= conditionThreshold) {
+          bestBenchIdx = j;
+          bestBenchCondition = benchCondition;
+        }
+      }
+
+      // Swap if we found a better player
+      if (bestBenchIdx >= 0) {
+        const benchReplacement = newBench[bestBenchIdx];
+        if (benchReplacement) {
+          newBench[bestBenchIdx] = starterId;
+          newStarters[i] = benchReplacement;
+        }
+      }
+    }
+  }
+
+  return { starters: newStarters, bench: newBench };
+}
+
+/**
  * Build BaseballTeamState from roster for baseball simulation
  * Assigns positions based on positional attributes if no specific lineup is provided
  * @param benchIds - Array of player IDs on the bench (not reserves). Null for AI teams.
@@ -558,7 +673,6 @@ export function GameProvider({ children }: GameProviderProps) {
       try {
         // Use stateRef to get the latest state
         await GameStorage.saveFullGameState(stateRef.current);
-        console.log('[AutoSave] Game state saved');
       } catch (err) {
         console.error('[AutoSave] Failed to save:', err);
       }
@@ -972,16 +1086,6 @@ export function GameProvider({ children }: GameProviderProps) {
 
     // Apply progression results
     if (progressionResults.length > 0) {
-      // Debug: Log training progress
-      const improvements = progressionResults.filter(r => r.improvements.length > 0);
-      if (improvements.length > 0) {
-        console.log(`[Training] Week ${progressionState.season.currentWeek}: ${improvements.length} players improved`);
-        improvements.forEach(r => {
-          r.improvements.forEach(i => {
-            console.log(`  ${r.playerName}: ${i.attributeName} ${i.oldValue} → ${i.newValue}`);
-          });
-        });
-      }
       dispatch({ type: 'APPLY_WEEKLY_PROGRESSION', payload: { results: progressionResults } });
     }
 
@@ -1079,7 +1183,6 @@ export function GameProvider({ children }: GameProviderProps) {
         dispatch({ type: 'ADD_EVENT', payload: event });
       }
 
-      console.log(`[Youth Academy] Week ${youthState.season.currentWeek}: Generated ${newReports.length} new reports, ${continuingReports.length} continuing`);
     }
 
     // =========================================================================
@@ -1098,16 +1201,6 @@ export function GameProvider({ children }: GameProviderProps) {
 
     // Apply academy training results
     if (academyResults.length > 0) {
-      // Debug: Log academy training progress
-      const academyImprovements = academyResults.filter(r => r.improvements.length > 0);
-      if (academyImprovements.length > 0) {
-        console.log(`[Academy] Week ${stateRef.current.season.currentWeek}: ${academyImprovements.length} prospects improved`);
-        academyImprovements.forEach(r => {
-          r.improvements.forEach(i => {
-            console.log(`  ${r.prospectName}: ${i.attributeName} ${i.oldValue} → ${i.newValue}`);
-          });
-        });
-      }
       dispatch({ type: 'APPLY_ACADEMY_TRAINING', payload: { results: academyResults } });
     }
 
@@ -1494,16 +1587,6 @@ export function GameProvider({ children }: GameProviderProps) {
       dispatch({ type: 'ADD_EVENT', payload: event });
     }
 
-    // Log AI activity summary
-    if (aiResolvedActions.signings.length > 0 ||
-        aiResolvedActions.transferBids.length > 0 ||
-        aiResolvedActions.releases.length > 0) {
-      console.log(`[AI Activity] Week ${aiState.season.currentWeek}: ` +
-        `${aiResolvedActions.signings.length} signings, ` +
-        `${aiResolvedActions.transferBids.length} bids, ` +
-        `${aiResolvedActions.releases.length} releases, ` +
-        `${aiResolvedActions.blockedActions.length} blocked`);
-    }
 
     // =========================================================================
     // PLAYER AWARDS
@@ -1558,10 +1641,7 @@ export function GameProvider({ children }: GameProviderProps) {
         dispatch({ type: 'ADD_EVENT', payload: newsItem });
       }
 
-      console.log(`[Awards] Month ${month}: Processed monthly awards for all sports`);
     }
-
-    console.log(`[Awards] Week ${awardWeek}: Processed weekly awards`);
 
     // =========================================================================
     // SEASON END AWARDS (Player of the Year, Rookie of the Year)
@@ -1587,7 +1667,6 @@ export function GameProvider({ children }: GameProviderProps) {
         dispatch({ type: 'ADD_EVENT', payload: newsItem });
       }
 
-      console.log(`[Awards] Season End: Processed Player of the Year and Rookie of the Year awards for all sports`);
     }
 
     // =========================================================================
@@ -1604,8 +1683,6 @@ export function GameProvider({ children }: GameProviderProps) {
 
       if (currentOffseasonWeek >= OFFSEASON_WEEKS) {
         // End of offseason - start new season
-        console.log('[Offseason] Week 12 complete - initializing new season');
-
         // Get promotion/relegation data from standings
         const standings = preAdvanceState.season.standings;
         const sorted = Object.values(standings)
@@ -1650,11 +1727,9 @@ export function GameProvider({ children }: GameProviderProps) {
         };
         dispatch({ type: 'ADD_EVENT', payload: event });
 
-        console.log(`[Season] New season ${newSeasonResult.season.number} started. User in Division ${newSeasonResult.userDivision}`);
       } else {
         // Continue offseason - just advance the week
         dispatch({ type: 'ADVANCE_OFFSEASON_WEEK' });
-        console.log(`[Offseason] Advanced to week ${currentOffseasonWeek + 1} of ${OFFSEASON_WEEKS}`);
       }
     } else {
       // Regular season - advance normally
@@ -1666,7 +1741,6 @@ export function GameProvider({ children }: GameProviderProps) {
 
       if (wasRegularSeason && postAdvanceState.season.status === 'off_season') {
         // Just entered offseason - process season end
-        console.log('[Season] Season complete - processing end of season');
 
         const seasonEndResult = processSeasonEnd(postAdvanceState);
 
@@ -1734,8 +1808,6 @@ export function GameProvider({ children }: GameProviderProps) {
           newDivision
         );
         dispatch({ type: 'UPDATE_MANAGER_CAREER', payload: updatedCareer });
-
-        console.log(`[Manager Rating] Season ${postAdvanceState.season.number} points: ${seasonRating.totalPoints} (Total: ${updatedCareer.totalPoints})`);
 
         // Create news events for season end
         const userTeamName = postAdvanceState.userTeam.name;
@@ -1834,7 +1906,6 @@ export function GameProvider({ children }: GameProviderProps) {
         };
         dispatch({ type: 'ADD_EVENT', payload: offseasonEvent });
 
-        console.log(`[Season End] Position: ${seasonEndResult.userFinishPosition}, Prize: $${seasonEndResult.userPrizeMoney}, Morale: ${seasonEndResult.userMoraleChange > 0 ? '+' : ''}${seasonEndResult.userMoraleChange}`);
       }
     }
 
@@ -1846,67 +1917,24 @@ export function GameProvider({ children }: GameProviderProps) {
 
   /**
    * Simulate all AI-vs-AI matches for the current week
-   * Called after the user simulates their match to ensure fair stamina/fatigue
-   * @param justCompletedMatchId - Optional ID of match that was just completed (to handle race condition with stateRef)
+   * Called after the user finishes their matches for the week, before advancing
+   *
+   * Simple approach: just simulate ALL AI matches scheduled for the current week.
+   * This ensures all teams complete their scheduled matches each week.
    */
-  const simulateAIMatchesForWeek = useCallback(async (justCompletedMatchId?: string) => {
+  const simulateAIMatchesForWeek = useCallback(async () => {
+    const currentWeek = stateRef.current.season.currentWeek;
     const matches = stateRef.current.season.matches;
     const players = stateRef.current.players;
     const league = stateRef.current.league;
     const aiTeamStrategies = stateRef.current.season.aiTeamStrategies || {};
 
-    // Count how many games the user has completed per sport
-    const userGameCounts = {
-      basketball: 0,
-      baseball: 0,
-      soccer: 0,
-    };
-    for (const m of matches) {
-      // Count as completed if status is 'completed' OR if this is the just-completed match
-      const isCompleted = m.status === 'completed' || m.id === justCompletedMatchId;
-      if ((m.homeTeamId === 'user' || m.awayTeamId === 'user') && isCompleted) {
-        const sport = m.sport as keyof typeof userGameCounts;
-        userGameCounts[sport]++;
-      }
-    }
-
-    // Count games played by each AI team per sport
-    const aiTeamGameCounts: Record<string, { basketball: number; baseball: number; soccer: number }> = {};
-    for (const team of league.teams) {
-      aiTeamGameCounts[team.id] = { basketball: 0, baseball: 0, soccer: 0 };
-    }
-    for (const m of matches) {
-      if (m.status === 'completed') {
-        const sport = m.sport as keyof typeof userGameCounts;
-        const homeTeamCounts = aiTeamGameCounts[m.homeTeamId];
-        const awayTeamCounts = aiTeamGameCounts[m.awayTeamId];
-        if (m.homeTeamId !== 'user' && homeTeamCounts) {
-          homeTeamCounts[sport]++;
-        }
-        if (m.awayTeamId !== 'user' && awayTeamCounts) {
-          awayTeamCounts[sport]++;
-        }
-      }
-    }
-
-    // Find AI matches where at least one team is behind the user's pace
-    // Sort by week to simulate in chronological order
-    const aiMatchesToSimulate = matches
-      .filter((m) => {
-        if (m.homeTeamId === 'user' || m.awayTeamId === 'user') return false;
-        if (m.status !== 'scheduled') return false;
-
-        const sport = m.sport as keyof typeof userGameCounts;
-        const userCount = userGameCounts[sport];
-        const homeTeamCounts = aiTeamGameCounts[m.homeTeamId];
-        const awayTeamCounts = aiTeamGameCounts[m.awayTeamId];
-        const homeCount = homeTeamCounts?.[sport] ?? 0;
-        const awayCount = awayTeamCounts?.[sport] ?? 0;
-
-        // Simulate if either team is behind the user
-        return homeCount < userCount || awayCount < userCount;
-      })
-      .sort((a, b) => a.week - b.week); // Simulate earlier weeks first
+    // Find all AI-vs-AI matches for the current week that are still scheduled
+    const aiMatchesToSimulate = matches.filter((m) => {
+      if (m.homeTeamId === 'user' || m.awayTeamId === 'user') return false;
+      if (m.status !== 'scheduled') return false;
+      return m.week === currentWeek;
+    });
 
     // Default tactics for AI teams
     const defaultTactics: TacticalSettings = {
@@ -1927,44 +1955,7 @@ export function GameProvider({ children }: GameProviderProps) {
       sport: 'basketball' | 'baseball' | 'soccer';
     }> = [];
 
-    // Track standings updates
-    const standingsUpdates: Record<string, {
-      wins: number;
-      losses: number;
-      basketball: { wins: number; losses: number };
-      baseball: { wins: number; losses: number };
-      soccer: { wins: number; losses: number };
-    }> = {};
-
     for (const match of aiMatchesToSimulate) {
-      const sport = match.sport as keyof typeof userGameCounts;
-      const homeTeamCounts = aiTeamGameCounts[match.homeTeamId];
-      const awayTeamCounts = aiTeamGameCounts[match.awayTeamId];
-
-      // Update counts as we simulate (so we don't over-simulate)
-      if (homeTeamCounts) {
-        homeTeamCounts[sport]++;
-      }
-      if (awayTeamCounts) {
-        awayTeamCounts[sport]++;
-      }
-
-      // Skip if either team would go ahead of the user's pace
-      // (counts were already incremented above, so check if > userCount)
-      const userCount = userGameCounts[sport];
-      const homeCount = homeTeamCounts?.[sport] ?? 0;
-      const awayCount = awayTeamCounts?.[sport] ?? 0;
-      if (homeCount > userCount || awayCount > userCount) {
-        // At least one team would be ahead of user - don't simulate yet
-        // Revert the counts we just added
-        if (homeTeamCounts) {
-          homeTeamCounts[sport]--;
-        }
-        if (awayTeamCounts) {
-          awayTeamCounts[sport]--;
-        }
-        continue;
-      }
       // Get home team roster
       const homeTeam = league.teams.find((t) => t.id === match.homeTeamId);
       const homeRoster = homeTeam
@@ -2131,6 +2122,17 @@ export function GameProvider({ children }: GameProviderProps) {
           if (soccerFatigueUpdates.length > 0) {
             dispatch({ type: 'APPLY_MATCH_FATIGUE', payload: soccerFatigueUpdates });
           }
+
+          // Update standings for soccer (was missing - caused AI teams to have fewer games!)
+          dispatch({
+            type: 'INCREMENT_STANDINGS',
+            payload: {
+              homeTeamId: match.homeTeamId,
+              awayTeamId: match.awayTeamId,
+              homeWon: winner === match.homeTeamId,
+              sport: 'soccer',
+            },
+          });
           continue; // Soccer handled completely, skip common logic
         } else {
           continue; // Skip unknown sports
@@ -2215,40 +2217,17 @@ export function GameProvider({ children }: GameProviderProps) {
           }
         }
 
-        // Track standings updates - ensure entries exist
-        if (!standingsUpdates[match.homeTeamId]) {
-          standingsUpdates[match.homeTeamId] = {
-            wins: 0, losses: 0,
-            basketball: { wins: 0, losses: 0 },
-            baseball: { wins: 0, losses: 0 },
-            soccer: { wins: 0, losses: 0 },
-          };
-        }
-        if (!standingsUpdates[match.awayTeamId]) {
-          standingsUpdates[match.awayTeamId] = {
-            wins: 0, losses: 0,
-            basketball: { wins: 0, losses: 0 },
-            baseball: { wins: 0, losses: 0 },
-            soccer: { wins: 0, losses: 0 },
-          };
-        }
-
-        const homeUpdate = standingsUpdates[match.homeTeamId]!;
-        const awayUpdate = standingsUpdates[match.awayTeamId]!;
+        // Update standings immediately using incremental action (avoids race conditions)
         const sport = match.sport as 'basketball' | 'baseball' | 'soccer';
-
-        if (homeScore > awayScore) {
-          homeUpdate.wins += 1;
-          homeUpdate[sport].wins += 1;
-          awayUpdate.losses += 1;
-          awayUpdate[sport].losses += 1;
-        } else {
-          // Away wins (no draws in this system)
-          awayUpdate.wins += 1;
-          awayUpdate[sport].wins += 1;
-          homeUpdate.losses += 1;
-          homeUpdate[sport].losses += 1;
-        }
+        dispatch({
+          type: 'INCREMENT_STANDINGS',
+          payload: {
+            homeTeamId: match.homeTeamId,
+            awayTeamId: match.awayTeamId,
+            homeWon: homeScore > awayScore,
+            sport,
+          },
+        });
       } catch (err) {
         // Log error but continue with other matches
         console.warn(`Failed to simulate AI match ${match.id}:`, err);
@@ -2260,52 +2239,18 @@ export function GameProvider({ children }: GameProviderProps) {
       dispatch({ type: 'APPLY_MATCH_FATIGUE', payload: allFatigueUpdates });
     }
 
-    // Update standings with all AI match results
-    if (Object.keys(standingsUpdates).length > 0) {
-      const newStandings = { ...stateRef.current.season.standings };
-
-      for (const [teamId, update] of Object.entries(standingsUpdates)) {
-        const standing = newStandings[teamId];
-        if (standing) {
-          standing.wins += update.wins;
-          standing.losses += update.losses;
-          standing.basketball.wins += update.basketball.wins;
-          standing.basketball.losses += update.basketball.losses;
-          standing.baseball.wins += update.baseball.wins;
-          standing.baseball.losses += update.baseball.losses;
-          standing.soccer.wins += update.soccer.wins;
-          standing.soccer.losses += update.soccer.losses;
-        }
-      }
-
-      // Recalculate ranks by W-L%
-      const getWinPct = (w: number, l: number) => (w + l === 0 ? 0 : w / (w + l));
-      const sorted = Object.values(newStandings).sort((a, b) => {
-        const aWinPct = getWinPct(a.wins, a.losses);
-        const bWinPct = getWinPct(b.wins, b.losses);
-        if (bWinPct !== aWinPct) return bWinPct - aWinPct;
-        if (b.wins !== a.wins) return b.wins - a.wins;
-        if (a.losses !== b.losses) return a.losses - b.losses; // Fewer losses is better
-        return a.teamId.localeCompare(b.teamId);
-      });
-      sorted.forEach((s, i) => {
-        const standing = newStandings[s.teamId];
-        if (standing) {
-          standing.rank = i + 1;
-        }
-      });
-
-      dispatch({ type: 'UPDATE_STANDINGS', payload: newStandings });
-    }
+    // Note: Standings are now updated incrementally via INCREMENT_STANDINGS dispatch
+    // in the simulation loop above, which avoids race conditions with stale stateRef
   }, []);
 
   const simulateMatch = useCallback(async (
     matchId: string,
     baseballStrategy?: BaseballGameStrategy,
     soccerStrategy?: { attackingStyle: 'possession' | 'direct' | 'counter'; pressing: 'high' | 'balanced' | 'low'; width: 'wide' | 'balanced' | 'tight' },
-    basketballStrategy?: { pace: 'fast' | 'standard' | 'slow'; defense: 'man' | 'mixed' | 'zone'; rebounding: 'crash_glass' | 'standard' | 'prevent_transition'; scoringOptions: string[] }
+    basketballStrategy?: { pace: 'fast' | 'standard' | 'slow'; defense: 'man' | 'mixed' | 'zone'; rebounding: 'crash_glass' | 'standard' | 'prevent_transition'; scoringOptions: string[] },
+    /** If true, skip the auto-advance and AI match simulation (used by quickSimWeek which handles these separately) */
+    skipAutoAdvance?: boolean
   ): Promise<MatchResult> => {
-    console.log('[simulateMatch] Called for matchId:', matchId);
     // Find the match
     const match = state.season.matches.find((m) => m.id === matchId);
     if (!match) {
@@ -2416,15 +2361,37 @@ export function GameProvider({ children }: GameProviderProps) {
 
     try {
       if (match.sport === 'basketball') {
-        // Validate user lineup before simulation
+        // Determine effective starters and bench for user team
+        let effectiveUserStarters = state.userTeam.lineup.basketballStarters;
+        let effectiveUserBench = state.userTeam.lineup.bench;
+
         if (isUserHome || isUserAway) {
           const userRoster = getUserRoster();
           const validation = validateBasketballLineup(
             state.userTeam.lineup.basketballStarters,
             userRoster
           );
+
           if (!validation.valid) {
-            throw new Error(validation.error || 'Invalid basketball lineup');
+            // Auto-generate lineup if invalid (like baseball does)
+            console.warn('Basketball lineup invalid, auto-generating:', validation.error);
+            const autoLineup = generateAutoBasketballLineup(userRoster);
+            effectiveUserStarters = autoLineup.starters;
+            effectiveUserBench = autoLineup.bench;
+          } else {
+            // Lineup is valid - check for low-condition starters and replace them
+            const replaced = replaceExhaustedPlayers(
+              effectiveUserStarters.filter(id => id !== ''),
+              effectiveUserBench,
+              state.players
+            );
+            // Ensure we have exactly 5 starters (pad with empty if needed)
+            const paddedStarters = [...replaced.starters];
+            while (paddedStarters.length < 5) {
+              paddedStarters.push('');
+            }
+            effectiveUserStarters = paddedStarters.slice(0, 5) as [string, string, string, string, string];
+            effectiveUserBench = replaced.bench;
           }
         }
 
@@ -2474,7 +2441,7 @@ export function GameProvider({ children }: GameProviderProps) {
         const awayMinutesAllocation = isUserAway ? state.userTeam.lineup.minutesAllocation : null;
 
         // Get user's starting lineup (convert IDs to Player objects)
-        const userStartingLineup = state.userTeam.lineup.basketballStarters
+        const userStartingLineup = effectiveUserStarters
           .map(id => state.players[id])
           .filter((p): p is Player => p !== undefined);
 
@@ -2488,10 +2455,10 @@ export function GameProvider({ children }: GameProviderProps) {
         const moraleAdjustedAwayStarters = awayStartingLineup ? applyMoraleToRoster(awayStartingLineup) : null;
 
         // Filter rosters to only eligible players (5 starters + 9 bench = 14 max)
-        // User team: Uses explicit starters and bench from lineup config
+        // User team: Uses effective starters and bench (may have been auto-replaced)
         // AI team: Uses top 14 by overall rating
-        const userStarterIds = state.userTeam.lineup.basketballStarters.filter(id => id !== '');
-        const userBenchIds = state.userTeam.lineup.bench;
+        const userStarterIds = effectiveUserStarters.filter(id => id !== '');
+        const userBenchIds = effectiveUserBench;
         const eligibleHomeRoster = filterBasketballEligibleRoster(
           moraleAdjustedHomeRoster,
           isUserHome ? userStarterIds : null,
@@ -2541,7 +2508,23 @@ export function GameProvider({ children }: GameProviderProps) {
             userRoster
           );
           if (validation.valid) {
-            useUserLineup = true;
+            // Check if any starters have low condition
+            const battingOrder = state.userTeam.lineup.baseballLineup.battingOrder;
+            const pitcher = state.userTeam.lineup.baseballLineup.startingPitcher;
+            const allStarters = [...battingOrder, pitcher].filter(id => id);
+
+            const hasExhaustedStarter = allStarters.some(id => {
+              const player = state.players[id];
+              return player && getPlayerCondition(player) < LOW_CONDITION_THRESHOLD;
+            });
+
+            if (hasExhaustedStarter) {
+              // Trigger auto-generation to replace tired players with fresh ones
+              console.warn('Baseball lineup has exhausted starters, auto-generating');
+              useUserLineup = false;
+            } else {
+              useUserLineup = true;
+            }
           } else {
             // Old lineup format or invalid - will auto-generate
             console.warn('Baseball lineup invalid, auto-generating:', validation.error);
@@ -2651,14 +2634,30 @@ export function GameProvider({ children }: GameProviderProps) {
 
       } else if (match.sport === 'soccer') {
         // Soccer simulation
-        // Build soccer team states
-        const homeSoccerLineup = isUserHome ? {
+        // Check if user lineup has exhausted starters
+        let useSoccerUserLineup = true;
+        if (isUserHome || isUserAway) {
+          const soccerStarters = state.userTeam.lineup.soccerLineup.starters;
+          const hasExhaustedStarter = soccerStarters.some(id => {
+            if (!id) return false;
+            const player = state.players[id];
+            return player && getPlayerCondition(player) < LOW_CONDITION_THRESHOLD;
+          });
+
+          if (hasExhaustedStarter) {
+            console.warn('Soccer lineup has exhausted starters, auto-generating');
+            useSoccerUserLineup = false;
+          }
+        }
+
+        // Build soccer team states - pass undefined to trigger auto-generation if exhausted
+        const homeSoccerLineup = (isUserHome && useSoccerUserLineup) ? {
           starters: state.userTeam.lineup.soccerLineup.starters,
           formation: state.userTeam.lineup.soccerLineup.formation,
           positions: state.userTeam.lineup.soccerLineup.positions,
         } : undefined;
 
-        const awaySoccerLineup = isUserAway ? {
+        const awaySoccerLineup = (isUserAway && useSoccerUserLineup) ? {
           starters: state.userTeam.lineup.soccerLineup.starters,
           formation: state.userTeam.lineup.soccerLineup.formation,
           positions: state.userTeam.lineup.soccerLineup.positions,
@@ -2840,45 +2839,17 @@ export function GameProvider({ children }: GameProviderProps) {
       dispatch({ type: 'APPLY_MATCH_FATIGUE', payload: fatigueUpdates });
     }
 
-    // Update standings - use stateRef to get latest standings after dispatch
-    // This is critical for quick succession calls (like quickSimWeek)
-    const newStandings = { ...stateRef.current.season.standings };
-    const homeStanding = newStandings[match.homeTeamId];
-    const awayStanding = newStandings[match.awayTeamId];
+    // Update standings using incremental action (avoids race conditions with stale stateRef)
     const sport = match.sport as 'basketball' | 'baseball' | 'soccer';
-
-    if (homeStanding && awayStanding) {
-      if (homeScore > awayScore) {
-        homeStanding.wins += 1;
-        homeStanding[sport].wins += 1;
-        awayStanding.losses += 1;
-        awayStanding[sport].losses += 1;
-      } else {
-        awayStanding.wins += 1;
-        awayStanding[sport].wins += 1;
-        homeStanding.losses += 1;
-        homeStanding[sport].losses += 1;
-      }
-
-      // Update ranks by W-L%
-      const getWinPct = (w: number, l: number) => (w + l === 0 ? 0 : w / (w + l));
-      const sorted = Object.values(newStandings).sort((a, b) => {
-        const aWinPct = getWinPct(a.wins, a.losses);
-        const bWinPct = getWinPct(b.wins, b.losses);
-        if (bWinPct !== aWinPct) return bWinPct - aWinPct;
-        if (b.wins !== a.wins) return b.wins - a.wins;
-        if (a.losses !== b.losses) return a.losses - b.losses; // Fewer losses is better
-        return a.teamId.localeCompare(b.teamId);
-      });
-      sorted.forEach((s, i) => {
-        const standing = newStandings[s.teamId];
-        if (standing) {
-          standing.rank = i + 1;
-        }
-      });
-
-      dispatch({ type: 'UPDATE_STANDINGS', payload: newStandings });
-    }
+    dispatch({
+      type: 'INCREMENT_STANDINGS',
+      payload: {
+        homeTeamId: match.homeTeamId,
+        awayTeamId: match.awayTeamId,
+        homeWon: homeScore > awayScore,
+        sport,
+      },
+    });
 
     // =========================================================================
     // MORALE - RECORD MATCH RESULT
@@ -2904,30 +2875,34 @@ export function GameProvider({ children }: GameProviderProps) {
       dispatch({ type: 'RECORD_MATCH_RESULTS', payload: moraleUpdates });
     }
 
-    // Auto-advance week if ALL user matches for this week are now complete
-    // Use stateRef to get fresh state after dispatch
-    const currentWeek = stateRef.current.season.currentWeek;
-    const currentMatches = stateRef.current.season.matches;
+    // Auto-advance and AI match simulation logic
+    // Skip this when called from quickSimWeek (which handles these separately to avoid race conditions)
+    if (!skipAutoAdvance) {
+      // Auto-advance week if ALL user matches for this week are now complete
+      // Use stateRef to get fresh state after dispatch
+      const currentWeek = stateRef.current.season.currentWeek;
+      const currentMatches = stateRef.current.season.matches;
 
-    // Get all user matches for the current week
-    const userMatchesThisWeek = currentMatches.filter(
-      (m) => (m.homeTeamId === 'user' || m.awayTeamId === 'user') && m.week === currentWeek
-    );
+      // Get all user matches for the current week
+      const userMatchesThisWeek = currentMatches.filter(
+        (m) => (m.homeTeamId === 'user' || m.awayTeamId === 'user') && m.week === currentWeek
+      );
 
-    // Check for remaining scheduled matches (exclude the one we just simmed by ID)
-    const remainingUserMatches = userMatchesThisWeek.filter(
-      (m) => m.status === 'scheduled' && m.id !== matchId
-    );
+      // Check for remaining scheduled matches (exclude the one we just simmed by ID)
+      const remainingUserMatches = userMatchesThisWeek.filter(
+        (m) => m.status === 'scheduled' && m.id !== matchId
+      );
 
-    // Simulate AI matches to keep all teams at the same pace as the user
-    // This runs after EVERY user match so opponents don't have stamina advantage
-    // Pass matchId to handle race condition where stateRef hasn't updated yet
-    await simulateAIMatchesForWeek(matchId);
+      // Simulate AI matches to keep all teams at the same pace as the user
+      // This runs after EVERY user match so opponents don't have stamina advantage
+      // Pass matchId to handle race condition where stateRef hasn't updated yet
+      await simulateAIMatchesForWeek();
 
-    if (remainingUserMatches.length === 0) {
-      // All user matches for this week are complete - advance the week
-      await new Promise(resolve => setTimeout(resolve, 100));
-      await advanceWeek();
+      if (remainingUserMatches.length === 0) {
+        // All user matches for this week are complete - advance the week
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await advanceWeek();
+      }
     }
 
     return result;
@@ -2941,7 +2916,6 @@ export function GameProvider({ children }: GameProviderProps) {
     matchId: string,
     result: MatchResult
   ): Promise<void> => {
-    console.log('[saveMatchResult] Called with matchId:', matchId, 'Score:', result.homeScore, '-', result.awayScore);
     // Find the match
     const match = state.season.matches.find((m) => m.id === matchId);
     if (!match) {
@@ -2949,7 +2923,6 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     // Dispatch the result
-    console.log('[saveMatchResult] Dispatching COMPLETE_MATCH');
     dispatch({ type: 'COMPLETE_MATCH', payload: { matchId, result } });
 
     // Get rosters for fatigue calculation
@@ -3026,47 +2999,19 @@ export function GameProvider({ children }: GameProviderProps) {
       dispatch({ type: 'APPLY_MATCH_FATIGUE', payload: fatigueUpdates });
     }
 
-    // Update standings
-    const newStandings = { ...stateRef.current.season.standings };
-    const homeStanding = newStandings[match.homeTeamId];
-    const awayStanding = newStandings[match.awayTeamId];
+    // Update standings using incremental action (avoids race conditions)
     const sport = match.sport as 'basketball' | 'baseball' | 'soccer';
-
-    if (homeStanding && awayStanding) {
-      // Use the winner field from result (already accounts for penalty shootouts)
-      const homeWins = result.winner === match.homeTeamId;
-
-      if (homeWins) {
-        homeStanding.wins += 1;
-        homeStanding[sport].wins += 1;
-        awayStanding.losses += 1;
-        awayStanding[sport].losses += 1;
-      } else {
-        awayStanding.wins += 1;
-        awayStanding[sport].wins += 1;
-        homeStanding.losses += 1;
-        homeStanding[sport].losses += 1;
-      }
-
-      // Recalculate ranks by W-L%
-      const getWinPct = (w: number, l: number) => (w + l === 0 ? 0 : w / (w + l));
-      const sorted = Object.values(newStandings).sort((a, b) => {
-        const aWinPct = getWinPct(a.wins, a.losses);
-        const bWinPct = getWinPct(b.wins, b.losses);
-        if (bWinPct !== aWinPct) return bWinPct - aWinPct;
-        if (b.wins !== a.wins) return b.wins - a.wins;
-        if (a.losses !== b.losses) return a.losses - b.losses; // Fewer losses is better
-        return a.teamId.localeCompare(b.teamId);
-      });
-      sorted.forEach((s, i) => {
-        const standing = newStandings[s.teamId];
-        if (standing) {
-          standing.rank = i + 1;
-        }
-      });
-
-      dispatch({ type: 'UPDATE_STANDINGS', payload: newStandings });
-    }
+    // Use the winner field from result (already accounts for penalty shootouts)
+    const homeWon = result.winner === match.homeTeamId;
+    dispatch({
+      type: 'INCREMENT_STANDINGS',
+      payload: {
+        homeTeamId: match.homeTeamId,
+        awayTeamId: match.awayTeamId,
+        homeWon,
+        sport,
+      },
+    });
 
     // Auto-advance week if all user matches for this week are complete
     const currentWeek = stateRef.current.season.currentWeek;
@@ -3083,7 +3028,7 @@ export function GameProvider({ children }: GameProviderProps) {
     // Simulate AI matches to keep all teams at the same pace as the user
     // This runs after EVERY user match so opponents don't have stamina advantage
     // Pass matchId to handle race condition where stateRef hasn't updated yet
-    await simulateAIMatchesForWeek(matchId);
+    await simulateAIMatchesForWeek();
 
     if (remainingUserMatches.length === 0) {
       // All user matches for this week are complete - advance the week
@@ -3093,18 +3038,40 @@ export function GameProvider({ children }: GameProviderProps) {
   }, [state.season.matches, state.userTeam, state.league.teams, state.players, advanceWeek, simulateAIMatchesForWeek]);
 
   const quickSimWeek = useCallback(async () => {
-    const weekMatches = state.season.matches.filter(
-      (m) => m.status === 'scheduled'
-    ).slice(0, 10); // Sim first 10 scheduled matches
+    // Get USER matches for the current week only
+    const currentWeek = state.season.currentWeek;
+    const userMatchesThisWeek = state.season.matches.filter(
+      (m) => m.status === 'scheduled' &&
+             m.week === currentWeek &&
+             (m.homeTeamId === 'user' || m.awayTeamId === 'user')
+    );
 
-    for (const match of weekMatches) {
-      await simulateMatch(match.id);
-      // Small delay to allow state updates to process before next simulation
-      await new Promise(resolve => setTimeout(resolve, 10));
+    if (userMatchesThisWeek.length === 0) {
+      // No user matches this week - just advance
+      await advanceWeek();
+      return;
     }
 
+    // Step 1: Simulate each user match with skipAutoAdvance=true
+    // This prevents race conditions where multiple simulateAIMatchesForWeek calls
+    // overwrite each other's standings updates
+    for (const match of userMatchesThisWeek) {
+      // Pass undefined for strategies, true for skipAutoAdvance
+      await simulateMatch(match.id, undefined, undefined, undefined, true);
+      // Small delay to allow state updates to process before next simulation
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    // Step 2: Wait for all user match state updates to settle
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Step 3: Simulate all AI matches for this week
+    await simulateAIMatchesForWeek();
+
+    // Step 4: Advance the week
+    await new Promise(resolve => setTimeout(resolve, 100));
     await advanceWeek();
-  }, [state.season.matches, simulateMatch, advanceWeek]);
+  }, [state.season.matches, state.season.currentWeek, simulateMatch, simulateAIMatchesForWeek, advanceWeek]);
 
   const getNextMatch = useCallback((): Match | null => {
     return state.season.matches.find(

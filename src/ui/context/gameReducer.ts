@@ -424,6 +424,68 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'INCREMENT_STANDINGS': {
+      // Incremental standings update - avoids race conditions with stale stateRef
+      const { homeTeamId, awayTeamId, homeWon, sport } = action.payload;
+      const newStandings = { ...state.season.standings };
+
+      // Deep copy the standings entries we're updating
+      if (newStandings[homeTeamId]) {
+        newStandings[homeTeamId] = {
+          ...newStandings[homeTeamId],
+          [sport]: { ...newStandings[homeTeamId][sport] },
+        };
+      }
+      if (newStandings[awayTeamId]) {
+        newStandings[awayTeamId] = {
+          ...newStandings[awayTeamId],
+          [sport]: { ...newStandings[awayTeamId][sport] },
+        };
+      }
+
+      const homeStanding = newStandings[homeTeamId];
+      const awayStanding = newStandings[awayTeamId];
+
+      if (homeStanding && awayStanding) {
+        if (homeWon) {
+          homeStanding.wins += 1;
+          homeStanding[sport].wins += 1;
+          awayStanding.losses += 1;
+          awayStanding[sport].losses += 1;
+        } else {
+          awayStanding.wins += 1;
+          awayStanding[sport].wins += 1;
+          homeStanding.losses += 1;
+          homeStanding[sport].losses += 1;
+        }
+
+        // Recalculate ranks by W-L%
+        const getWinPct = (w: number, l: number) => (w + l === 0 ? 0 : w / (w + l));
+        const sorted = Object.values(newStandings).sort((a, b) => {
+          const aWinPct = getWinPct(a.wins, a.losses);
+          const bWinPct = getWinPct(b.wins, b.losses);
+          if (bWinPct !== aWinPct) return bWinPct - aWinPct;
+          if (b.wins !== a.wins) return b.wins - a.wins;
+          if (a.losses !== b.losses) return a.losses - b.losses;
+          return a.teamId.localeCompare(b.teamId);
+        });
+        sorted.forEach((s, i) => {
+          const standing = newStandings[s.teamId];
+          if (standing) {
+            standing.rank = i + 1;
+          }
+        });
+      }
+
+      return {
+        ...state,
+        season: {
+          ...state.season,
+          standings: newStandings,
+        },
+      };
+    }
+
     case 'COMPLETE_MATCH': {
       const { matchId, result } = action.payload;
       console.log('[gameReducer] COMPLETE_MATCH - matchId:', matchId, 'Score:', result.homeScore, '-', result.awayScore);

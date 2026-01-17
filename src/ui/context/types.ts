@@ -488,6 +488,7 @@ export type GameAction =
   // Season
   | { type: 'ADVANCE_WEEK' }
   | { type: 'UPDATE_STANDINGS'; payload: Record<string, TeamStanding> }
+  | { type: 'INCREMENT_STANDINGS'; payload: { homeTeamId: string; awayTeamId: string; homeWon: boolean; sport: 'basketball' | 'baseball' | 'soccer' } }
   | { type: 'COMPLETE_MATCH'; payload: { matchId: string; result: MatchResult } }
 
   // Roster
