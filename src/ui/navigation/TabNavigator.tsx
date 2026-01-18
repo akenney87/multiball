@@ -11,10 +11,7 @@ import { Text, StyleSheet, Modal, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors, layout, spacing } from '../theme';
 import type { TabParamList } from './types';
-import {
-  type BaseballGameStrategy,
-  DEFAULT_GAME_STRATEGY as DEFAULT_BASEBALL_STRATEGY,
-} from '../../simulation/baseball';
+import { DEFAULT_GAME_STRATEGY as DEFAULT_BASEBALL_STRATEGY } from '../../simulation/baseball';
 
 // Tab Container Screens (new 2-tab structure)
 import { PlayTabScreen } from '../screens/PlayTabScreen';
@@ -431,9 +428,7 @@ export function TabNavigator() {
               const matchId = selectedMatchId;
               setSelectedMatchId(null);
               setTimeout(() => setSelectedMatchId(matchId), 50);
-              // Reset baseball strategy to defaults after sim completes
-              // (Soccer strategy persists in global state and should NOT be reset)
-              setBaseballStrategy(DEFAULT_BASEBALL_STRATEGY);
+              // Note: All strategies (baseball, soccer, basketball) persist in global state
             }}
             onEditLineup={() => {
               const match = state.season.matches.find((m) => m.id === selectedMatchId);
