@@ -44,6 +44,10 @@ import {
   calculateFieldingComposite,
   calculateArmComposite,
 } from '../../simulation/baseball/systems/fielding';
+import {
+  SOCCER_SKILLS,
+  calculateSkillComposite,
+} from '../../utils/skillComposites';
 import type { Player } from '../../data/types';
 
 interface ConnectedLineupEditorScreenProps {
@@ -51,6 +55,13 @@ interface ConnectedLineupEditorScreenProps {
   onSave: () => void;
   onCancel: () => void;
   onPlayerPress?: (playerId: string) => void;
+  /** Hide save/cancel buttons (for default lineup editor where changes auto-persist) */
+  hideActionButtons?: boolean;
+  /**
+   * When true, edits go to gamedayLineup instead of the default lineup.
+   * Use this for pre-match lineup editing where changes shouldn't persist.
+   */
+  isGameday?: boolean;
 }
 
 // =============================================================================
@@ -544,6 +555,68 @@ function getBasketballStatLabel(stat: BasketballStatOption): string {
 }
 
 // =============================================================================
+// SOCCER STAT OPTIONS
+// =============================================================================
+
+/** Soccer stat options for dropdown */
+type SoccerStatOption =
+  | 'overall' | 'finishing' | 'passing' | 'defending' | 'physical' | 'technical' | 'goalkeeping' | 'fitness';
+
+const SOCCER_STAT_OPTIONS: { value: SoccerStatOption; label: string }[] = [
+  { value: 'overall', label: 'Overall' },
+  { value: 'finishing', label: 'Finishing' },
+  { value: 'passing', label: 'Passing' },
+  { value: 'defending', label: 'Defending' },
+  { value: 'physical', label: 'Physical' },
+  { value: 'technical', label: 'Technical' },
+  { value: 'goalkeeping', label: 'Goalkeeping' },
+  { value: 'fitness', label: 'Fitness' },
+];
+
+/** Calculate soccer stat value for a player */
+function getSoccerStatValue(
+  player: LineupPlayer | null | undefined,
+  stat: SoccerStatOption,
+  playersRecord?: Record<string, Player>
+): string {
+  if (!player) return '-';
+
+  // Get full player data if available
+  let p: Player | undefined;
+  if (playersRecord && player.id) {
+    p = playersRecord[player.id];
+  }
+
+  switch (stat) {
+    case 'overall':
+      return String(player.overall);
+    case 'fitness':
+      return `${Math.round(player.matchFitness)}%`;
+    case 'finishing':
+    case 'passing':
+    case 'defending':
+    case 'physical':
+    case 'technical':
+    case 'goalkeeping': {
+      if (!p?.attributes) return String(player.overall);
+      // Find the matching skill composite
+      const skillName = stat.charAt(0).toUpperCase() + stat.slice(1);
+      const skill = SOCCER_SKILLS.find(s => s.name === skillName);
+      if (!skill) return String(player.overall);
+      return String(calculateSkillComposite(p.attributes, skill));
+    }
+    default:
+      return String(player.overall);
+  }
+}
+
+/** Get label for soccer stat option */
+function getSoccerStatLabel(stat: SoccerStatOption): string {
+  const option = SOCCER_STAT_OPTIONS.find(o => o.value === stat);
+  return option?.label || stat;
+}
+
+// =============================================================================
 // MINUTES SLIDER COMPONENT
 // =============================================================================
 
@@ -738,20 +811,22 @@ export function ConnectedLineupEditorScreen({
   onSave,
   onCancel,
   onPlayerPress,
+  hideActionButtons = false,
+  isGameday = false,
 }: ConnectedLineupEditorScreenProps) {
   const colors = useColors();
 
   // Baseball
   if (sport === 'baseball') {
-    return <BaseballLineupEditor colors={colors} onSave={onSave} onCancel={onCancel} onPlayerPress={onPlayerPress} />;
+    return <BaseballLineupEditor colors={colors} onSave={onSave} onCancel={onCancel} onPlayerPress={onPlayerPress} hideActionButtons={hideActionButtons} isGameday={isGameday} />;
   }
 
   // Basketball
   if (sport === 'basketball') {
-    return <BasketballLineupEditor colors={colors} onSave={onSave} onCancel={onCancel} onPlayerPress={onPlayerPress} />;
+    return <BasketballLineupEditor colors={colors} onSave={onSave} onCancel={onCancel} onPlayerPress={onPlayerPress} hideActionButtons={hideActionButtons} isGameday={isGameday} />;
   }
 
-  return <SoccerLineupEditor colors={colors} onSave={onSave} onCancel={onCancel} onPlayerPress={onPlayerPress} />;
+  return <SoccerLineupEditor colors={colors} onSave={onSave} onCancel={onCancel} onPlayerPress={onPlayerPress} hideActionButtons={hideActionButtons} isGameday={isGameday} />;
 }
 
 // =============================================================================
@@ -763,11 +838,15 @@ function BasketballLineupEditor({
   onSave,
   onCancel,
   onPlayerPress,
+  hideActionButtons = false,
+  isGameday = false,
 }: {
   colors: ReturnType<typeof useColors>;
   onSave: () => void;
   onCancel: () => void;
   onPlayerPress?: (playerId: string) => void;
+  hideActionButtons?: boolean;
+  isGameday?: boolean;
 }) {
   const {
     starters,
@@ -784,7 +863,7 @@ function BasketballLineupEditor({
     isValidLineup,
     swapBenchWithReserve,
     addToBench,
-  } = useLineup('basketball');
+  } = useLineup('basketball', { isGameday });
 
   const { state } = useGame();
   const allPlayers = state.players;
@@ -1296,27 +1375,29 @@ function BasketballLineupEditor({
       </View>
 
       {/* Action Buttons */}
-      <View style={[styles.buttonRow, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
-          onPress={onCancel}
-        >
-          <Text style={[styles.buttonText, { color: colors.text }]}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.saveButton,
-            { backgroundColor: isValidLineup && totalMinutesAllocated <= 240 ? colors.primary : colors.textMuted },
-          ]}
-          onPress={onSave}
-          disabled={!isValidLineup || totalMinutesAllocated > 240}
-        >
-          <Text style={[styles.buttonText, { color: '#000' }]}>
-            {totalMinutesAllocated > 240 ? 'Over Limit' : 'Save Lineup'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {!hideActionButtons && (
+        <View style={[styles.buttonRow, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
+          <TouchableOpacity
+            style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
+            onPress={onCancel}
+          >
+            <Text style={[styles.buttonText, { color: colors.text }]}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.saveButton,
+              { backgroundColor: isValidLineup && totalMinutesAllocated <= 240 ? colors.primary : colors.textMuted },
+            ]}
+            onPress={onSave}
+            disabled={!isValidLineup || totalMinutesAllocated > 240}
+          >
+            <Text style={[styles.buttonText, { color: '#000' }]}>
+              {totalMinutesAllocated > 240 ? 'Over Limit' : 'Save Lineup'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Stat Picker Modal */}
       <Modal
@@ -1474,11 +1555,15 @@ function SoccerLineupEditor({
   onSave,
   onCancel,
   onPlayerPress,
+  hideActionButtons = false,
+  isGameday = false,
 }: {
   colors: ReturnType<typeof useColors>;
   onSave: () => void;
   onCancel: () => void;
   onPlayerPress?: (playerId: string) => void;
+  hideActionButtons?: boolean;
+  isGameday?: boolean;
 }) {
   const { state } = useGame();
   const {
@@ -1498,7 +1583,7 @@ function SoccerLineupEditor({
     applyOptimalLineup,
     swapBenchWithReserve,
     addToBench,
-  } = useLineup('soccer');
+  } = useLineup('soccer', { isGameday });
 
   // Get formation ratings for comparison
   const formationRatings = useMemo((): Record<SoccerFormation, number> => {
@@ -1565,6 +1650,12 @@ function SoccerLineupEditor({
     playerName: string;
     currentSlot: number;
   } | null>(null);
+
+  // Stat display selection for each section
+  const [starterStatSelection, setStarterStatSelection] = useState<SoccerStatOption>('overall');
+  const [benchStatSelection, setBenchStatSelection] = useState<SoccerStatOption>('overall');
+  const [reservesStatSelection, setReservesStatSelection] = useState<SoccerStatOption>('overall');
+  const [showStatPicker, setShowStatPicker] = useState<'starters' | 'bench' | 'reserves' | null>(null);
 
   // Handle tapping a bench or reserve player's badge for swap
   const handleBenchReserveBadgePress = (playerId: string, isBench: boolean) => {
@@ -1784,6 +1875,8 @@ function SoccerLineupEditor({
             title="Starting XI"
             count={`${starters.length}/11`}
             colors={colors}
+            statLabel={getSoccerStatLabel(starterStatSelection)}
+            onStatPress={() => setShowStatPicker('starters')}
             onAutoFill={insertOptimalLineup}
             validationHint={!isValidLineup && starters.length < 11 ? `Need ${11 - starters.length} more` : undefined}
           />
@@ -1831,7 +1924,7 @@ function SoccerLineupEditor({
                 </TouchableOpacity>
 
                 {player ? (
-                  <View style={styles.playerRowContent}>
+                  <>
                     <TouchableOpacity
                       style={styles.playerMainInfo}
                       onPress={(e) => {
@@ -1851,25 +1944,6 @@ function SoccerLineupEditor({
                         <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
                           {Math.round(player.matchFitness)}% fit
                         </Text>
-                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                        <Text style={[styles.statText, { color: colors.textMuted }]}>±</Text>
-                        {(() => {
-                          const relPM = playerRelPlusMinus[player.id];
-                          if (relPM === undefined) {
-                            return <Text style={[styles.statText, { color: colors.textMuted }]}>--</Text>;
-                          }
-                          return (
-                            <Text style={[
-                              styles.statText,
-                              {
-                                color: relPM > 0 ? colors.success : relPM < 0 ? colors.error : colors.textMuted,
-                                fontWeight: '600'
-                              }
-                            ]}>
-                              {relPM > 0 ? '+' : ''}{relPM.toFixed(1)}
-                            </Text>
-                          );
-                        })()}
                         {player.isInjured && (
                           <>
                             <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
@@ -1878,7 +1952,12 @@ function SoccerLineupEditor({
                         )}
                       </View>
                     </TouchableOpacity>
-                  </View>
+                    <View style={styles.basketballStatColumn}>
+                      <Text style={[styles.basketballStatValue, { color: colors.primary }]}>
+                        {getSoccerStatValue(player, starterStatSelection, state.players)}
+                      </Text>
+                    </View>
+                  </>
                 ) : (
                   <View style={styles.emptySlotContainer}>
                     <Text style={[styles.emptySlot, { color: colors.textMuted }]}>
@@ -1898,6 +1977,8 @@ function SoccerLineupEditor({
             title="Bench"
             count={String(bench.length)}
             colors={colors}
+            statLabel={getSoccerStatLabel(benchStatSelection)}
+            onStatPress={() => setShowStatPicker('bench')}
           />
           {bench.length === 0 ? (
             <Text style={[styles.emptyBench, { color: colors.textMuted }]}>
@@ -1950,58 +2031,42 @@ function SoccerLineupEditor({
                       { color: isSelected ? '#000' : colors.primary }
                     ]}>BN</Text>
                   </TouchableOpacity>
-                  <View style={styles.playerRowContent}>
-                    <TouchableOpacity
-                      style={styles.playerMainInfo}
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        onPlayerPress?.(player.id);
-                      }}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
-                        {player.name}
-                      </Text>
-                      <View style={styles.playerStats}>
-                        <View style={[styles.naturalPosBadge, { backgroundColor: colors.success + '20' }]}>
-                          <Text style={[styles.naturalPosText, { color: colors.success }]}>
-                            {bestFit.position}
-                          </Text>
-                        </View>
-                        <Text style={[styles.statText, { color: colors.primary, fontWeight: '600' }]}>
-                          {displayOverall} OVR
+                  <TouchableOpacity
+                    style={styles.playerMainInfo}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      onPlayerPress?.(player.id);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
+                      {player.name}
+                    </Text>
+                    <View style={styles.playerStats}>
+                      <View style={[styles.naturalPosBadge, { backgroundColor: colors.success + '20' }]}>
+                        <Text style={[styles.naturalPosText, { color: colors.success }]}>
+                          {bestFit.position}
                         </Text>
-                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                        <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
-                          {Math.round(player.matchFitness)}% fit
-                        </Text>
-                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                        <Text style={[styles.statText, { color: colors.textMuted }]}>±</Text>
-                        {(() => {
-                          const relPM = playerRelPlusMinus[player.id];
-                          if (relPM === undefined) {
-                            return <Text style={[styles.statText, { color: colors.textMuted }]}>--</Text>;
-                          }
-                          return (
-                            <Text style={[
-                              styles.statText,
-                              {
-                                color: relPM > 0 ? colors.success : relPM < 0 ? colors.error : colors.textMuted,
-                                fontWeight: '600'
-                              }
-                            ]}>
-                              {relPM > 0 ? '+' : ''}{relPM.toFixed(1)}
-                            </Text>
-                          );
-                        })()}
-                        {player.isInjured && (
-                          <>
-                            <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                            <Text style={[styles.statText, { color: colors.error, fontWeight: '600' }]}>INJ</Text>
-                          </>
-                        )}
                       </View>
-                    </TouchableOpacity>
+                      <Text style={[styles.statText, { color: colors.primary, fontWeight: '600' }]}>
+                        {displayOverall} OVR
+                      </Text>
+                      <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                      <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
+                        {Math.round(player.matchFitness)}% fit
+                      </Text>
+                      {player.isInjured && (
+                        <>
+                          <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                          <Text style={[styles.statText, { color: colors.error, fontWeight: '600' }]}>INJ</Text>
+                        </>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.basketballStatColumn}>
+                    <Text style={[styles.basketballStatValue, { color: colors.primary }]}>
+                      {getSoccerStatValue(player, benchStatSelection, state.players)}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -2017,6 +2082,8 @@ function SoccerLineupEditor({
               title="Reserves"
               count={String(reserves.length)}
               colors={colors}
+              statLabel={getSoccerStatLabel(reservesStatSelection)}
+              onStatPress={() => setShowStatPicker('reserves')}
               validationHint={bench.length < 9 ? 'Tap + to add' : undefined}
             />
             {reserves.map((player) => {
@@ -2064,70 +2131,54 @@ function SoccerLineupEditor({
                       { color: isSelected ? '#fff' : colors.textMuted }
                     ]}>RSV</Text>
                   </TouchableOpacity>
-                  <View style={styles.playerRowContent}>
+                  <TouchableOpacity
+                    style={styles.playerMainInfo}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      onPlayerPress?.(player.id);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
+                      {player.name}
+                    </Text>
+                    <View style={styles.playerStats}>
+                      <View style={[styles.naturalPosBadge, { backgroundColor: colors.success + '20' }]}>
+                        <Text style={[styles.naturalPosText, { color: colors.success }]}>
+                          {bestFit.position}
+                        </Text>
+                      </View>
+                      <Text style={[styles.statText, { color: colors.primary, fontWeight: '600' }]}>
+                        {bestFit.overall} OVR
+                      </Text>
+                      <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                      <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
+                        {Math.round(player.matchFitness)}% fit
+                      </Text>
+                      {player.isInjured && (
+                        <>
+                          <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
+                          <Text style={[styles.statText, { color: colors.error, fontWeight: '600' }]}>INJ</Text>
+                        </>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.basketballStatColumn}>
+                    <Text style={[styles.basketballStatValue, { color: colors.primary }]}>
+                      {getSoccerStatValue(player, reservesStatSelection, state.players)}
+                    </Text>
+                  </View>
+                  {canAddToBench && (
                     <TouchableOpacity
-                      style={styles.playerMainInfo}
+                      style={[styles.addToBenchButton, { backgroundColor: colors.success + '20' }]}
                       onPress={(e) => {
                         e.stopPropagation();
-                        onPlayerPress?.(player.id);
+                        addToBench?.(player.id);
                       }}
-                      activeOpacity={0.7}
                     >
-                      <Text style={[styles.playerName, styles.tappableName, { color: colors.text }]} numberOfLines={1}>
-                        {player.name}
-                      </Text>
-                      <View style={styles.playerStats}>
-                        <View style={[styles.naturalPosBadge, { backgroundColor: colors.success + '20' }]}>
-                          <Text style={[styles.naturalPosText, { color: colors.success }]}>
-                            {bestFit.position}
-                          </Text>
-                        </View>
-                        <Text style={[styles.statText, { color: colors.primary, fontWeight: '600' }]}>
-                          {bestFit.overall} OVR
-                        </Text>
-                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                        <Text style={[styles.statText, { color: getFitnessColor(player.matchFitness, colors) }]}>
-                          {Math.round(player.matchFitness)}% fit
-                        </Text>
-                        <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                        <Text style={[styles.statText, { color: colors.textMuted }]}>±</Text>
-                        {(() => {
-                          const relPM = playerRelPlusMinus[player.id];
-                          if (relPM === undefined) {
-                            return <Text style={[styles.statText, { color: colors.textMuted }]}>--</Text>;
-                          }
-                          return (
-                            <Text style={[
-                              styles.statText,
-                              {
-                                color: relPM > 0 ? colors.success : relPM < 0 ? colors.error : colors.textMuted,
-                                fontWeight: '600'
-                              }
-                            ]}>
-                              {relPM > 0 ? '+' : ''}{relPM.toFixed(1)}
-                            </Text>
-                          );
-                        })()}
-                        {player.isInjured && (
-                          <>
-                            <Text style={[styles.statDivider, { color: colors.border }]}>|</Text>
-                            <Text style={[styles.statText, { color: colors.error, fontWeight: '600' }]}>INJ</Text>
-                          </>
-                        )}
-                      </View>
+                      <Text style={[styles.addToBenchButtonText, { color: colors.success }]}>+</Text>
                     </TouchableOpacity>
-                    {canAddToBench && (
-                      <TouchableOpacity
-                        style={[styles.addToBenchButton, { backgroundColor: colors.success + '20' }]}
-                        onPress={(e) => {
-                          e.stopPropagation();
-                          addToBench?.(player.id);
-                        }}
-                      >
-                        <Text style={[styles.addToBenchButtonText, { color: colors.success }]}>+</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
+                  )}
                 </TouchableOpacity>
               );
             })}
@@ -2189,27 +2240,29 @@ function SoccerLineupEditor({
       </ScrollView>
 
       {/* Action Buttons */}
-      <View style={[styles.buttonRow, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
-          onPress={onCancel}
-        >
-          <Text style={[styles.buttonText, { color: colors.text }]}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.saveButton,
-            { backgroundColor: isValidLineup ? colors.primary : colors.textMuted },
-          ]}
-          onPress={onSave}
-          disabled={!isValidLineup}
-        >
-          <Text style={[styles.buttonText, { color: '#000' }]}>
-            {!isValidLineup ? `Need ${11 - starters.length} more` : 'Save Lineup'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {!hideActionButtons && (
+        <View style={[styles.buttonRow, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
+          <TouchableOpacity
+            style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
+            onPress={onCancel}
+          >
+            <Text style={[styles.buttonText, { color: colors.text }]}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.saveButton,
+              { backgroundColor: isValidLineup ? colors.primary : colors.textMuted },
+            ]}
+            onPress={onSave}
+            disabled={!isValidLineup}
+          >
+            <Text style={[styles.buttonText, { color: '#000' }]}>
+              {!isValidLineup ? `Need ${11 - starters.length} more` : 'Save Lineup'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Soccer Position Picker Modal */}
       <Modal
@@ -2279,6 +2332,59 @@ function SoccerLineupEditor({
             <TouchableOpacity
               style={[styles.positionPickerCancel, { borderTopColor: colors.border }]}
               onPress={() => setPositionPickerPlayer(null)}
+            >
+              <Text style={[styles.positionPickerCancelText, { color: colors.textMuted }]}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Stat Picker Modal */}
+      <Modal
+        visible={showStatPicker !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowStatPicker(null)}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setShowStatPicker(null)}
+        >
+          <View style={[styles.positionPickerModal, { backgroundColor: colors.card }, shadows.lg]}>
+            <Text style={[styles.positionPickerTitle, { color: colors.text }]}>
+              Select Stat to Display
+            </Text>
+            <View style={styles.positionPickerGrid}>
+              {SOCCER_STAT_OPTIONS.map((option) => {
+                const currentSelection = showStatPicker === 'starters' ? starterStatSelection
+                  : showStatPicker === 'reserves' ? reservesStatSelection
+                  : benchStatSelection;
+                const isSelected = currentSelection === option.value;
+                return (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.positionPickerButton,
+                      { borderColor: colors.border },
+                      isSelected && { backgroundColor: colors.primary + '20', borderColor: colors.primary },
+                    ]}
+                    onPress={() => {
+                      if (showStatPicker === 'starters') setStarterStatSelection(option.value);
+                      else if (showStatPicker === 'bench') setBenchStatSelection(option.value);
+                      else if (showStatPicker === 'reserves') setReservesStatSelection(option.value);
+                      setShowStatPicker(null);
+                    }}
+                  >
+                    <Text style={[styles.positionPickerButtonText, { color: isSelected ? colors.primary : colors.text }]}>
+                      {option.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <TouchableOpacity
+              style={[styles.positionPickerCancel, { borderTopColor: colors.border }]}
+              onPress={() => setShowStatPicker(null)}
             >
               <Text style={[styles.positionPickerCancelText, { color: colors.textMuted }]}>Cancel</Text>
             </TouchableOpacity>
@@ -2402,11 +2508,15 @@ function BaseballLineupEditor({
   onSave,
   onCancel,
   onPlayerPress,
+  hideActionButtons = false,
+  isGameday = false,
 }: {
   colors: ReturnType<typeof useColors>;
   onSave: () => void;
   onCancel: () => void;
   onPlayerPress?: (playerId: string) => void;
+  hideActionButtons?: boolean;
+  isGameday?: boolean;
 }) {
   const { state } = useGame();
   const {
@@ -2433,7 +2543,7 @@ function BaseballLineupEditor({
     swapBullpenWithPitcher,
     swapBenchWithReserve,
     addToBench,
-  } = useLineup('baseball');
+  } = useLineup('baseball', { isGameday });
 
   // Full player records for looking up attributes
   const allPlayers = state.players;
@@ -3379,27 +3489,29 @@ function BaseballLineupEditor({
       </ScrollView>
 
       {/* Action Buttons */}
-      <View style={[styles.buttonRow, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
-          onPress={onCancel}
-        >
-          <Text style={[styles.buttonText, { color: colors.text }]}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.saveButton,
-            { backgroundColor: isValidLineup ? colors.baseball : colors.textMuted },
-          ]}
-          onPress={onSave}
-          disabled={!isValidLineup}
-        >
-          <Text style={[styles.buttonText, { color: '#000' }]}>
-            {isValidLineup ? 'Save Lineup' : `Need ${9 - filledBattingSlots} batters`}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {!hideActionButtons && (
+        <View style={[styles.buttonRow, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
+          <TouchableOpacity
+            style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
+            onPress={onCancel}
+          >
+            <Text style={[styles.buttonText, { color: colors.text }]}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.saveButton,
+              { backgroundColor: isValidLineup ? colors.baseball : colors.textMuted },
+            ]}
+            onPress={onSave}
+            disabled={!isValidLineup}
+          >
+            <Text style={[styles.buttonText, { color: '#000' }]}>
+              {isValidLineup ? 'Save Lineup' : `Need ${9 - filledBattingSlots} batters`}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Position Picker Modal */}
       <Modal

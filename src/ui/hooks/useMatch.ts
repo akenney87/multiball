@@ -117,10 +117,15 @@ export function useMatch(matchId: string | undefined) {
     };
   }, [match, getTeamData, state.season.currentWeek]);
 
+  // Get the active lineup (gamedayLineup if set, otherwise default lineup)
+  const activeLineup = useMemo(() => {
+    return state.userTeam.gamedayLineup || state.userTeam.lineup;
+  }, [state.userTeam.gamedayLineup, state.userTeam.lineup]);
+
   // Get basketball lineup data
   const basketballLineup = useMemo(() => {
-    const starterIds = state.userTeam.lineup.basketballStarters;
-    const benchIds = state.userTeam.lineup.bench;
+    const starterIds = activeLineup.basketballStarters;
+    const benchIds = activeLineup.bench;
 
     const starters = starterIds
       .map((id) => state.players[id])
@@ -145,11 +150,11 @@ export function useMatch(matchId: string | undefined) {
       }));
 
     return { starters, bench };
-  }, [state.userTeam.lineup, state.players]);
+  }, [activeLineup, state.players]);
 
   // Get baseball lineup data
   const baseballLineup = useMemo(() => {
-    const { battingOrder, positions, startingPitcher } = state.userTeam.lineup.baseballLineup;
+    const { battingOrder, positions, startingPitcher } = activeLineup.baseballLineup;
 
     const battingOrderWithDetails = battingOrder
       .map((id) => {
@@ -179,11 +184,11 @@ export function useMatch(matchId: string | undefined) {
       positions,
       startingPitcher: pitcherData,
     };
-  }, [state.userTeam.lineup.baseballLineup, state.players]);
+  }, [activeLineup.baseballLineup, state.players]);
 
   // Get soccer lineup data
   const soccerLineup = useMemo(() => {
-    const { starters, formation, positions } = state.userTeam.lineup.soccerLineup;
+    const { starters, formation, positions } = activeLineup.soccerLineup;
     const formationPositions = FORMATION_POSITIONS[formation] || FORMATION_POSITIONS['4-4-2'];
 
     const startersWithDetails = starters
@@ -213,7 +218,7 @@ export function useMatch(matchId: string | undefined) {
       formation,
       positions,
     };
-  }, [state.userTeam.lineup.soccerLineup, state.players]);
+  }, [activeLineup.soccerLineup, state.players]);
 
   // Combined lineup (for backward compatibility) - returns sport-appropriate lineup
   const userLineup = useMemo(() => {

@@ -34,6 +34,7 @@ function createTestState(overrides: Partial<GameState> = {}): GameState {
         baseball: { battingOrder: [], startingPitcher: null, bullpen: [] },
         soccer: { formation: '4-3-3', starters: [], bench: [] },
         minutesAllocation: {},
+        soccerMinutesAllocation: {},
       },
       tactics: { offensiveStyle: 'balanced', defensiveStyle: 'balanced', tempo: 'normal' },
       shortlistIds: [],

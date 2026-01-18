@@ -51,8 +51,26 @@ export const FORMATION_POSITIONS: Record<SoccerFormation, string[]> = {
   '4-1-4-1': ['GK', 'LB', 'LCB', 'RCB', 'RB', 'CDM', 'LM', 'LCM', 'RCM', 'RM', 'ST'],
 };
 
-export function useLineup(sport: SportType = 'basketball') {
-  const { state, setLineup, getUserRoster } = useGame();
+export interface UseLineupOptions {
+  /**
+   * When true, edits go to gamedayLineup instead of the default lineup.
+   * Use this for pre-match lineup editing where changes shouldn't persist.
+   */
+  isGameday?: boolean;
+}
+
+export function useLineup(sport: SportType = 'basketball', options: UseLineupOptions = {}) {
+  const { state, setLineup, setGamedayLineup, getUserRoster } = useGame();
+  const { isGameday = false } = options;
+
+  // Determine which lineup to use based on gameday mode
+  // If gameday mode and gamedayLineup exists, use it; otherwise use default lineup
+  const activeLineup = isGameday && state.userTeam.gamedayLineup
+    ? state.userTeam.gamedayLineup
+    : state.userTeam.lineup;
+
+  // Use the appropriate setter based on mode
+  const activeSetLineup = isGameday ? setGamedayLineup : setLineup;
 
   // =========================================================================
   // BASKETBALL
@@ -60,8 +78,8 @@ export function useLineup(sport: SportType = 'basketball') {
 
   const basketballPlayers = useMemo((): LineupPlayer[] => {
     const roster = getUserRoster();
-    const starters = new Set(state.userTeam.lineup.basketballStarters);
-    const minutesAllocation = state.userTeam.lineup.minutesAllocation;
+    const starters = new Set(activeLineup.basketballStarters);
+    const minutesAllocation = activeLineup.minutesAllocation;
 
     return roster.map((player) => ({
       id: player.id,
@@ -76,31 +94,31 @@ export function useLineup(sport: SportType = 'basketball') {
       weight: player.weight,
       matchFitness: player.matchFitness ?? 100,
     }));
-  }, [getUserRoster, state.userTeam.lineup.basketballStarters, state.userTeam.lineup.minutesAllocation]);
+  }, [getUserRoster, activeLineup.basketballStarters, activeLineup.minutesAllocation]);
 
   const basketballStarters = useMemo((): (LineupPlayer | undefined)[] => {
     // Return starters in positional order (PG, SG, SF, PF, C)
     // Each index corresponds to a position slot (0=PG, 1=SG, 2=SF, 3=PF, 4=C)
     // Returns array of length 5, with undefined for empty slots
-    const starterIds = state.userTeam.lineup.basketballStarters;
+    const starterIds = activeLineup.basketballStarters;
     return starterIds.map((id) => {
       if (!id) return undefined;
       return basketballPlayers.find((p) => p.id === id);
     });
-  }, [basketballPlayers, state.userTeam.lineup.basketballStarters]);
+  }, [basketballPlayers, activeLineup.basketballStarters]);
 
   const basketballBench = useMemo(() => {
-    const benchSet = new Set(state.userTeam.lineup.bench);
+    const benchSet = new Set(activeLineup.bench);
     return basketballPlayers
       .filter((p) => !p.isStarter && benchSet.has(p.id))
       .slice(0, 9); // Ensure max 9
-  }, [basketballPlayers, state.userTeam.lineup.bench]);
+  }, [basketballPlayers, activeLineup.bench]);
 
   const basketballReserves = useMemo(() => {
-    const benchSet = new Set(state.userTeam.lineup.bench);
+    const benchSet = new Set(activeLineup.bench);
     // Exclude injured players from reserves - they go to injured section
     return basketballPlayers.filter((p) => !p.isStarter && !benchSet.has(p.id) && !p.isInjured);
-  }, [basketballPlayers, state.userTeam.lineup.bench]);
+  }, [basketballPlayers, activeLineup.bench]);
 
   const basketballInjured = useMemo(() => {
     return basketballPlayers.filter((p) => p.isInjured);
@@ -113,7 +131,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const player = roster.find(p => p.id === playerId);
       if (player?.injury !== null) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newStarters = [...currentLineup.basketballStarters];
       const newBench = [...currentLineup.bench];
 
@@ -134,18 +152,18 @@ export function useLineup(sport: SportType = 'basketball') {
 
       newStarters[position] = playerId;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         basketballStarters: newStarters as [string, string, string, string, string],
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   const moveBasketballToBench = useCallback(
     (playerId: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newStarters = [...currentLineup.basketballStarters];
       const newBench = [...currentLineup.bench];
 
@@ -158,13 +176,13 @@ export function useLineup(sport: SportType = 'basketball') {
         newBench.push(playerId);
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         basketballStarters: newStarters as [string, string, string, string, string],
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   // Add a player to the bench (from reserves) - respects 9 player limit
@@ -175,7 +193,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const player = roster.find(p => p.id === playerId);
       if (player?.injury !== null) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newBench = [...currentLineup.bench];
 
       // Check if already on bench or if bench is full
@@ -184,32 +202,32 @@ export function useLineup(sport: SportType = 'basketball') {
 
       newBench.push(playerId);
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   // Remove a player from the bench (to reserves)
   const removePlayerFromBench = useCallback(
     (playerId: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newBench = currentLineup.bench.filter((id) => id !== playerId);
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   // Swap a bench player with a reserve player atomically
   const swapBenchWithReserve = useCallback(
     (benchPlayerId: string, reservePlayerId: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const benchIndex = currentLineup.bench.indexOf(benchPlayerId);
 
       // Bench player must be on bench
@@ -222,17 +240,17 @@ export function useLineup(sport: SportType = 'basketball') {
       const newBench = [...currentLineup.bench];
       newBench[benchIndex] = reservePlayerId;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   const swapBasketballPlayers = useCallback(
     (player1Id: string, player2Id: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newStarters = [...currentLineup.basketballStarters];
       const newBench = [...currentLineup.bench];
 
@@ -252,13 +270,13 @@ export function useLineup(sport: SportType = 'basketball') {
         newBench[bench1Index] = player2Id;
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         basketballStarters: newStarters as [string, string, string, string, string],
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -267,7 +285,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const swapBasketballStarterPositions = useCallback(
     (slotIndexA: number, slotIndexB: number) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newStarters = [...currentLineup.basketballStarters];
 
       // Swap the player IDs at the two position slots
@@ -276,18 +294,18 @@ export function useLineup(sport: SportType = 'basketball') {
       newStarters[slotIndexA] = playerB;
       newStarters[slotIndexB] = playerA;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         basketballStarters: newStarters as [string, string, string, string, string],
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   const isValidBasketballLineup = useMemo(() => {
-    const validStarters = state.userTeam.lineup.basketballStarters.filter((id) => id !== '');
+    const validStarters = activeLineup.basketballStarters.filter((id) => id !== '');
     return validStarters.length === 5;
-  }, [state.userTeam.lineup.basketballStarters]);
+  }, [activeLineup.basketballStarters]);
 
   /**
    * Set the full basketball lineup at once (all 5 starters) with proper minutes allocation.
@@ -297,7 +315,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const setFullBasketballLineup = useCallback(
     (starterIds: [string, string, string, string, string]) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const roster = getUserRoster();
 
       // Build new starters array
@@ -353,14 +371,14 @@ export function useLineup(sport: SportType = 'basketball') {
         }
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         basketballStarters: newStarters,
         bench: newBench,
         minutesAllocation: newMinutesAllocation,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   /**
@@ -431,7 +449,7 @@ export function useLineup(sport: SportType = 'basketball') {
 
   const setBasketballTargetMinutes = useCallback(
     (playerId: string, minutes: number) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
 
       // Get the player's current minutes from the basketballPlayers array (which accounts for defaults)
       const playerData = basketballPlayers.find(p => p.id === playerId);
@@ -442,7 +460,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const maxAllowedForPlayer = Math.min(48, 240 - otherPlayersMinutes);
       const clampedMinutes = Math.max(0, Math.min(maxAllowedForPlayer, minutes));
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         minutesAllocation: {
           ...currentLineup.minutesAllocation,
@@ -450,7 +468,7 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup, basketballTotalMinutes, basketballPlayers]
+    [activeLineup, setLineup, basketballTotalMinutes, basketballPlayers]
   );
 
   // =========================================================================
@@ -459,9 +477,10 @@ export function useLineup(sport: SportType = 'basketball') {
 
   const soccerPlayers = useMemo((): LineupPlayer[] => {
     const roster = getUserRoster();
-    const soccerLineup = state.userTeam.lineup.soccerLineup;
+    const soccerLineup = activeLineup.soccerLineup;
     const starterSet = new Set(soccerLineup.starters);
-    const minutesAllocation = state.userTeam.lineup.minutesAllocation;
+    // Fallback to empty object for saves that haven't been migrated yet
+    const soccerMinutesAllocation = activeLineup.soccerMinutesAllocation ?? {};
 
     return roster.map((player) => ({
       id: player.id,
@@ -470,36 +489,36 @@ export function useLineup(sport: SportType = 'basketball') {
       overall: calculatePlayerOverall(player),
       isStarter: starterSet.has(player.id),
       isInjured: player.injury !== null,
-      targetMinutes: minutesAllocation[player.id] ?? (starterSet.has(player.id) ? 90 : 0),
+      targetMinutes: soccerMinutesAllocation[player.id] ?? (starterSet.has(player.id) ? 90 : 0),
       height: player.height,
       weight: player.weight,
       matchFitness: player.matchFitness ?? 100,
       slotIndex: soccerLineup.positions[player.id],
     }));
-  }, [getUserRoster, state.userTeam.lineup.soccerLineup, state.userTeam.lineup.minutesAllocation]);
+  }, [getUserRoster, activeLineup.soccerLineup, activeLineup.soccerMinutesAllocation]);
 
   const soccerStarters = useMemo(() => {
     return soccerPlayers.filter((p) => p.isStarter);
   }, [soccerPlayers]);
 
   const soccerBench = useMemo(() => {
-    const benchSet = new Set(state.userTeam.lineup.bench);
+    const benchSet = new Set(activeLineup.bench);
     return soccerPlayers
       .filter((p) => !p.isStarter && benchSet.has(p.id))
       .slice(0, 9); // Ensure max 9
-  }, [soccerPlayers, state.userTeam.lineup.bench]);
+  }, [soccerPlayers, activeLineup.bench]);
 
   const soccerReserves = useMemo(() => {
-    const benchSet = new Set(state.userTeam.lineup.bench);
+    const benchSet = new Set(activeLineup.bench);
     // Exclude injured players from reserves - they go to injured section
     return soccerPlayers.filter((p) => !p.isStarter && !benchSet.has(p.id) && !p.isInjured);
-  }, [soccerPlayers, state.userTeam.lineup.bench]);
+  }, [soccerPlayers, activeLineup.bench]);
 
   const soccerInjured = useMemo(() => {
     return soccerPlayers.filter((p) => p.isInjured);
   }, [soccerPlayers]);
 
-  const currentFormation = state.userTeam.lineup.soccerLineup.formation;
+  const currentFormation = activeLineup.soccerLineup.formation;
   const formationPositions = FORMATION_POSITIONS[currentFormation] || FORMATION_POSITIONS['4-4-2'];
 
   const setSoccerStarter = useCallback(
@@ -509,7 +528,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const player = roster.find(p => p.id === playerId);
       if (player?.injury !== null) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const soccerLineup = { ...currentLineup.soccerLineup };
       const newStarters = [...soccerLineup.starters];
       const newPositions: Record<string, number> = { ...soccerLineup.positions };
@@ -559,7 +578,7 @@ export function useLineup(sport: SportType = 'basketball') {
       newStarters.push(playerId);
       newPositions[playerId] = slotIndex;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         soccerLineup: {
           ...soccerLineup,
@@ -569,12 +588,12 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   const moveSoccerToBench = useCallback(
     (playerId: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const soccerLineup = { ...currentLineup.soccerLineup };
       const newStarters = soccerLineup.starters.filter((id) => id !== playerId);
       const newPositions = { ...soccerLineup.positions };
@@ -585,7 +604,7 @@ export function useLineup(sport: SportType = 'basketball') {
         newBench.push(playerId);
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         soccerLineup: {
           ...soccerLineup,
@@ -595,12 +614,12 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   const setSoccerFormation = useCallback(
     (formation: SoccerFormation) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const soccerLineup = currentLineup.soccerLineup;
 
       // Clear all position assignments when changing formation
@@ -611,7 +630,7 @@ export function useLineup(sport: SportType = 'basketball') {
         ...soccerLineup.starters.filter((id) => !currentLineup.bench.includes(id)),
       ];
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         soccerLineup: {
           starters: [],
@@ -621,7 +640,7 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -630,7 +649,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const setFullSoccerLineup = useCallback(
     (starterAssignments: Array<{ playerId: string; slotIndex: number }>) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const roster = getUserRoster();
 
       // Build new starters and positions from assignments
@@ -650,7 +669,7 @@ export function useLineup(sport: SportType = 'basketball') {
         .filter(p => !starterSet.has(p.id))
         .map(p => p.id);
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         soccerLineup: {
           ...currentLineup.soccerLineup,
@@ -660,7 +679,7 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   /**
@@ -669,7 +688,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const swapSoccerStarters = useCallback(
     (slotIndexA: number, slotIndexB: number) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const soccerLineup = currentLineup.soccerLineup;
       const newPositions: Record<string, number> = { ...soccerLineup.positions };
 
@@ -686,7 +705,7 @@ export function useLineup(sport: SportType = 'basketball') {
       if (playerAtA) newPositions[playerAtA] = slotIndexB;
       if (playerAtB) newPositions[playerAtB] = slotIndexA;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         soccerLineup: {
           ...soccerLineup,
@@ -694,11 +713,11 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   const isValidSoccerLineup = useMemo(() => {
-    const { starters, positions } = state.userTeam.lineup.soccerLineup;
+    const { starters, positions } = activeLineup.soccerLineup;
 
     // Need exactly 11 starters
     if (starters.length !== 11) return false;
@@ -720,7 +739,7 @@ export function useLineup(sport: SportType = 'basketball') {
     }
 
     return true;
-  }, [state.userTeam.lineup.soccerLineup]);
+  }, [activeLineup.soccerLineup]);
 
   const soccerTotalMinutes = useMemo(() => {
     return soccerPlayers.reduce((sum, p) => sum + p.targetMinutes, 0);
@@ -743,7 +762,7 @@ export function useLineup(sport: SportType = 'basketball') {
 
   const setSoccerTargetMinutes = useCallback(
     (playerId: string, minutes: number) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
 
       // Get the player's current minutes from the soccerPlayers array (which accounts for defaults)
       const playerData = soccerPlayers.find(p => p.id === playerId);
@@ -754,15 +773,15 @@ export function useLineup(sport: SportType = 'basketball') {
       const maxAllowedForPlayer = Math.min(90, 990 - otherPlayersMinutes);
       const clampedMinutes = Math.max(0, Math.min(maxAllowedForPlayer, minutes));
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
-        minutesAllocation: {
-          ...currentLineup.minutesAllocation,
+        soccerMinutesAllocation: {
+          ...(currentLineup.soccerMinutesAllocation ?? {}),
           [playerId]: clampedMinutes,
         },
       });
     },
-    [state.userTeam.lineup, setLineup, soccerTotalMinutes, soccerPlayers]
+    [activeLineup, setLineup, soccerTotalMinutes, soccerPlayers]
   );
 
   /**
@@ -870,7 +889,7 @@ export function useLineup(sport: SportType = 'basketball') {
 
       if (assignments.length === 0) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const roster = getUserRoster();
 
       // Build new starters and positions from assignments
@@ -913,7 +932,7 @@ export function useLineup(sport: SportType = 'basketball') {
       }
 
       // Single state update with formation, lineup, AND minutes
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         soccerLineup: {
           ...currentLineup.soccerLineup,
@@ -922,10 +941,10 @@ export function useLineup(sport: SportType = 'basketball') {
           positions: newPositions,
         },
         bench: newBench,
-        minutesAllocation: newMinutesAllocation,
+        soccerMinutesAllocation: newMinutesAllocation,
       });
     },
-    [state.userTeam.lineup, currentFormation, calculateOptimalLineupForFormation, setLineup, getUserRoster]
+    [activeLineup, currentFormation, calculateOptimalLineupForFormation, setLineup, getUserRoster]
   );
 
   // =========================================================================
@@ -934,7 +953,7 @@ export function useLineup(sport: SportType = 'basketball') {
 
   const baseballPlayers = useMemo((): LineupPlayer[] => {
     const roster = getUserRoster();
-    const baseballLineup = state.userTeam.lineup.baseballLineup;
+    const baseballLineup = activeLineup.baseballLineup;
     const battingOrderSet = new Set(baseballLineup.battingOrder);
     const pitcherId = baseballLineup.startingPitcher;
     const bullpen = baseballLineup.bullpen;
@@ -975,7 +994,7 @@ export function useLineup(sport: SportType = 'basketball') {
         bullpenRole,
       };
     });
-  }, [getUserRoster, state.userTeam.lineup.baseballLineup]);
+  }, [getUserRoster, activeLineup.baseballLineup]);
 
   const baseballBattingOrder = useMemo(() => {
     return baseballPlayers
@@ -988,7 +1007,7 @@ export function useLineup(sport: SportType = 'basketball') {
   }, [baseballPlayers]);
 
   const baseballBullpen = useMemo(() => {
-    const bullpen = state.userTeam.lineup.baseballLineup.bullpen;
+    const bullpen = activeLineup.baseballLineup.bullpen;
     if (!bullpen) return { longRelievers: [], shortRelievers: [], closer: null };
 
     const getPlayer = (id: string) => baseballPlayers.find((p) => p.id === id) ?? null;
@@ -998,22 +1017,22 @@ export function useLineup(sport: SportType = 'basketball') {
       shortRelievers: bullpen.shortRelievers.map(getPlayer),
       closer: getPlayer(bullpen.closer),
     };
-  }, [baseballPlayers, state.userTeam.lineup.baseballLineup.bullpen]);
+  }, [baseballPlayers, activeLineup.baseballLineup.bullpen]);
 
   const baseballBench = useMemo(() => {
-    const benchSet = new Set(state.userTeam.lineup.bench);
+    const benchSet = new Set(activeLineup.bench);
     return baseballPlayers
       .filter((p) => !p.isStarter && !p.isPitcher && !p.bullpenRole && benchSet.has(p.id))
       .slice(0, 9); // Ensure max 9
-  }, [baseballPlayers, state.userTeam.lineup.bench]);
+  }, [baseballPlayers, activeLineup.bench]);
 
   const baseballReserves = useMemo(() => {
-    const benchSet = new Set(state.userTeam.lineup.bench);
+    const benchSet = new Set(activeLineup.bench);
     // Exclude injured players from reserves - they go to injured section
     return baseballPlayers.filter(
       (p) => !p.isStarter && !p.isPitcher && !p.bullpenRole && !benchSet.has(p.id) && !p.isInjured
     );
-  }, [baseballPlayers, state.userTeam.lineup.bench]);
+  }, [baseballPlayers, activeLineup.bench]);
 
   const baseballInjured = useMemo(() => {
     return baseballPlayers.filter((p) => p.isInjured);
@@ -1021,7 +1040,7 @@ export function useLineup(sport: SportType = 'basketball') {
 
   const setBaseballBattingOrder = useCallback(
     (newBattingOrder: string[]) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const baseballLineup = { ...currentLineup.baseballLineup };
 
       // Update batting order (should be exactly 9 players)
@@ -1042,13 +1061,13 @@ export function useLineup(sport: SportType = 'basketball') {
         }
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup,
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   const setBaseballStartingPitcher = useCallback(
@@ -1058,7 +1077,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const player = roster.find(p => p.id === playerId);
       if (player?.injury !== null) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const newBench = [...currentLineup.bench];
       const newBattingOrder = [...currentLineup.baseballLineup.battingOrder];
       const newPositions = { ...currentLineup.baseballLineup.positions };
@@ -1089,7 +1108,7 @@ export function useLineup(sport: SportType = 'basketball') {
       // Set new pitcher
       newPositions[playerId] = 'P';
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         bench: newBench,
         baseballLineup: {
@@ -1100,12 +1119,12 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   const setBaseballPosition = useCallback(
     (playerId: string, position: BaseballPosition) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const baseballLineup = { ...currentLineup.baseballLineup };
       const newPositions = { ...baseballLineup.positions };
 
@@ -1136,7 +1155,7 @@ export function useLineup(sport: SportType = 'basketball') {
 
       newPositions[playerId] = position;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...baseballLineup,
@@ -1144,7 +1163,7 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup, setBaseballStartingPitcher]
+    [activeLineup, setLineup, setBaseballStartingPitcher]
   );
 
   const addToBattingOrder = useCallback(
@@ -1154,7 +1173,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const player = roster.find(p => p.id === playerId);
       if (player?.injury !== null) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const baseballLineup = { ...currentLineup.baseballLineup };
       const newBattingOrder = [...baseballLineup.battingOrder];
       const newBench = [...currentLineup.bench];
@@ -1215,7 +1234,7 @@ export function useLineup(sport: SportType = 'basketball') {
         newPositions[playerId] = defensivePosition;
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...baseballLineup,
@@ -1225,12 +1244,12 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   const removeFromBattingOrder = useCallback(
     (playerId: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const baseballLineup = { ...currentLineup.baseballLineup };
       const newBattingOrder = baseballLineup.battingOrder.map((id) =>
         id === playerId ? '' : id
@@ -1246,7 +1265,7 @@ export function useLineup(sport: SportType = 'basketball') {
         newBench.push(playerId);
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...baseballLineup,
@@ -1256,7 +1275,7 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -1265,7 +1284,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const swapBattingOrderPositions = useCallback(
     (slotIndexA: number, slotIndexB: number) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const baseballLineup = { ...currentLineup.baseballLineup };
       const newBattingOrder = [...baseballLineup.battingOrder];
 
@@ -1275,7 +1294,7 @@ export function useLineup(sport: SportType = 'basketball') {
       newBattingOrder[slotIndexA] = playerB;
       newBattingOrder[slotIndexB] = playerA;
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...baseballLineup,
@@ -1283,11 +1302,11 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   const isValidBaseballLineup = useMemo(() => {
-    const baseballLineup = state.userTeam.lineup.baseballLineup;
+    const baseballLineup = activeLineup.baseballLineup;
 
     // Must have a starting pitcher
     if (!baseballLineup.startingPitcher) return false;
@@ -1317,7 +1336,7 @@ export function useLineup(sport: SportType = 'basketball') {
     }
 
     return true;
-  }, [state.userTeam.lineup.baseballLineup]);
+  }, [activeLineup.baseballLineup]);
 
   /**
    * Calculate a player's overall rating for a specific baseball position
@@ -1363,7 +1382,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const setFullBaseballLineup = useCallback(
     (pitcherId: string, battingOrder: string[], positions: Record<string, BaseballPosition>) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const allInLineup = new Set([pitcherId, ...battingOrder.filter(id => id !== '')]);
 
       // Build new bench - everyone not in lineup (and not in bullpen)
@@ -1377,7 +1396,7 @@ export function useLineup(sport: SportType = 'basketball') {
         .filter(p => !allInLineup.has(p.id) && !bullpenIds.has(p.id))
         .map(p => p.id);
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...currentLineup.baseballLineup,
@@ -1388,7 +1407,7 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   /**
@@ -1401,7 +1420,7 @@ export function useLineup(sport: SportType = 'basketball') {
       const player = roster.find(p => p.id === playerId);
       if (player?.injury !== null) return;
 
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
         shortRelievers: ['', ''] as [string, string],
@@ -1490,7 +1509,7 @@ export function useLineup(sport: SportType = 'basketball') {
           break;
       }
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         bench: newBench,
         baseballLineup: {
@@ -1500,7 +1519,7 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup, getUserRoster]
+    [activeLineup, setLineup, getUserRoster]
   );
 
   /**
@@ -1508,7 +1527,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const removeFromBullpen = useCallback(
     (playerId: string) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen;
       if (!currentBullpen) return;
 
@@ -1522,7 +1541,7 @@ export function useLineup(sport: SportType = 'basketball') {
         closer: currentBullpen.closer === playerId ? '' : currentBullpen.closer,
       };
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...currentLineup.baseballLineup,
@@ -1530,7 +1549,7 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -1545,7 +1564,7 @@ export function useLineup(sport: SportType = 'basketball') {
       roleB: BullpenRole,
       slotB: number | undefined
     ) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
         shortRelievers: ['', ''] as [string, string],
@@ -1594,7 +1613,7 @@ export function useLineup(sport: SportType = 'basketball') {
       // Place player B in player A's old position
       placeInRole(playerBId, roleA, slotA);
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...currentLineup.baseballLineup,
@@ -1602,7 +1621,7 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -1618,7 +1637,7 @@ export function useLineup(sport: SportType = 'basketball') {
       batterSlotIndex: number,
       batterPosition: BaseballPosition
     ) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
         shortRelievers: ['', ''] as [string, string],
@@ -1665,7 +1684,7 @@ export function useLineup(sport: SportType = 'basketball') {
       // 4. Update bench - remove bullpen player if they were there
       const newBench = currentLineup.bench.filter((id) => id !== bullpenPlayerId);
 
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...currentLineup.baseballLineup,
@@ -1676,7 +1695,7 @@ export function useLineup(sport: SportType = 'basketball') {
         bench: newBench,
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -1689,7 +1708,7 @@ export function useLineup(sport: SportType = 'basketball') {
       bullpenRole: BullpenRole,
       bullpenSlotIndex: number | undefined
     ) => {
-      const currentLineup = state.userTeam.lineup;
+      const currentLineup = activeLineup;
       const currentPitcherId = currentLineup.baseballLineup.startingPitcher;
       if (!currentPitcherId) return;
 
@@ -1733,7 +1752,7 @@ export function useLineup(sport: SportType = 'basketball') {
       newPositions[bullpenPlayerId] = 'P'; // Assign 'P' to new pitcher
 
       // 3. Update in one state change
-      setLineup({
+      activeSetLineup({
         ...currentLineup,
         baseballLineup: {
           ...currentLineup.baseballLineup,
@@ -1743,7 +1762,7 @@ export function useLineup(sport: SportType = 'basketball') {
         },
       });
     },
-    [state.userTeam.lineup, setLineup]
+    [activeLineup, setLineup]
   );
 
   /**
@@ -1752,7 +1771,7 @@ export function useLineup(sport: SportType = 'basketball') {
    */
   const applyOptimalBaseballLineup = useCallback(() => {
     const roster = getUserRoster();
-    const currentLineup = state.userTeam.lineup;
+    const currentLineup = activeLineup;
 
     // Calculate each player's rating for each baseball position, weighted by stamina
     // Formula: overall * (0.6 + 0.4 * stamina/100)
@@ -1869,7 +1888,7 @@ export function useLineup(sport: SportType = 'basketball') {
     const newBench = benchCandidates.slice(0, 9).map((p) => p.id);
 
     // 5. Set the full lineup in one state update
-    setLineup({
+    activeSetLineup({
       ...currentLineup,
       baseballLineup: {
         ...currentLineup.baseballLineup,
@@ -1880,7 +1899,7 @@ export function useLineup(sport: SportType = 'basketball') {
       },
       bench: newBench,
     });
-  }, [state.userTeam.lineup, getUserRoster, setLineup]);
+  }, [activeLineup, getUserRoster, setLineup]);
 
   // =========================================================================
   // RETURN BASED ON SPORT
@@ -1893,10 +1912,10 @@ export function useLineup(sport: SportType = 'basketball') {
       bench: baseballBench,
       reserves: baseballReserves,
       injured: baseballInjured,
-      currentLineup: state.userTeam.lineup,
+      currentLineup: activeLineup,
       battingOrder: baseballBattingOrder,
       startingPitcher: baseballStartingPitcher,
-      positions: state.userTeam.lineup.baseballLineup.positions,
+      positions: activeLineup.baseballLineup.positions,
       bullpen: baseballBullpen,
       setBattingOrder: setBaseballBattingOrder,
       setStartingPitcher: setBaseballStartingPitcher,
@@ -1936,7 +1955,7 @@ export function useLineup(sport: SportType = 'basketball') {
       bench: soccerBench,
       reserves: soccerReserves,
       injured: soccerInjured,
-      currentLineup: state.userTeam.lineup,
+      currentLineup: activeLineup,
       formation: currentFormation,
       formationPositions,
       setStarter: setSoccerStarter,
@@ -1967,7 +1986,7 @@ export function useLineup(sport: SportType = 'basketball') {
     bench: basketballBench,
     reserves: basketballReserves,
     injured: basketballInjured,
-    currentLineup: state.userTeam.lineup,
+    currentLineup: activeLineup,
     formation: undefined,
     formationPositions: undefined,
     setStarter: setBasketballStarter,

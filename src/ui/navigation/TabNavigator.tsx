@@ -80,7 +80,7 @@ function tacticsToBasketballStrategy(tactics: {
 
 export function TabNavigator() {
   const colors = useColors();
-  const { state, addScoutingTarget, setOperationsBudget, confirmBudgetAllocation, setTactics, setBaseballStrategy } = useGame();
+  const { state, addScoutingTarget, setOperationsBudget, confirmBudgetAllocation, setTactics, setBaseballStrategy, initializeGamedayLineup, clearGamedayLineup } = useGame();
 
   // Modal state for player detail
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
@@ -196,8 +196,12 @@ export function TabNavigator() {
 
   // Handler for navigating to match preview
   const handleNavigateToMatch = useCallback((matchId: string) => {
+    const match = state.season.matches.find((m) => m.id === matchId);
+    if (match && match.status !== 'completed') {
+      initializeGamedayLineup();
+    }
     setSelectedMatchId(matchId);
-  }, []);
+  }, [state.season.matches, initializeGamedayLineup]);
 
   // Handler for starting live match simulation (Watch Match button)
   const handleStartMatch = useCallback((matchId: string) => {
@@ -228,8 +232,12 @@ export function TabNavigator() {
 
   // Handler for match press in schedule
   const handleMatchPress = useCallback((matchId: string) => {
+    const match = state.season.matches.find((m) => m.id === matchId);
+    if (match && match.status !== 'completed') {
+      initializeGamedayLineup();
+    }
     setSelectedMatchId(matchId);
-  }, []);
+  }, [state.season.matches, initializeGamedayLineup]);
 
   // Handler for scouting navigation
   const handleNavigateToScouting = useCallback(() => {
@@ -416,6 +424,8 @@ export function TabNavigator() {
             onBack={() => setSelectedMatchId(null)}
             onStartMatch={handleStartMatch}
             onQuickSimComplete={() => {
+              // Clear gameday lineup after match completes
+              clearGamedayLineup();
               // After quick sim, the match is completed - stay on modal to show result
               // Force re-render by setting match ID again
               const matchId = selectedMatchId;
@@ -578,6 +588,7 @@ export function TabNavigator() {
         </View>
         <ConnectedLineupEditorScreen
           sport={lineupEditorSport}
+          isGameday={true}
           onSave={() => {
             setShowLineupEditor(false);
             // Reopen match preview after saving
@@ -696,6 +707,8 @@ export function TabNavigator() {
               setSimulatingMatchId(null);
             }}
             onComplete={() => {
+              // Clear gameday lineup after match completes
+              clearGamedayLineup();
               setShowMatchSimulation(false);
               // Show the match result
               setSelectedMatchId(simulatingMatchId);

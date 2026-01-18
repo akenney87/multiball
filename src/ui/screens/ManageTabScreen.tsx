@@ -2,8 +2,9 @@
  * Manage Tab Screen Container
  *
  * Container for the MANAGE tab combining:
- * - Squad (Roster | Stats | Training)
+ * - Squad (Roster | Lineups | Stats | Training)
  * - Market (Transfers | Scouting)
+ * - Career (Trophy Case | Leaderboard)
  *
  * Part of the NEON PITCH UI overhaul.
  */
@@ -14,6 +15,7 @@ import { useColors, spacing } from '../theme';
 import { SegmentControl } from '../components/common';
 import { ConnectedRosterScreen } from './ConnectedRosterScreen';
 import { ConnectedStatsScreen } from './ConnectedStatsScreen';
+import { ConnectedLineupsScreen } from './ConnectedLineupsScreen';
 import { ConnectedTransferMarketScreen } from './ConnectedTransferMarketScreen';
 import { ConnectedScoutingScreen } from './ConnectedScoutingScreen';
 import { ConnectedTrainingScreen } from './ConnectedTrainingScreen';
@@ -21,7 +23,7 @@ import { ConnectedTrophyCaseScreen } from './ConnectedTrophyCaseScreen';
 import { ConnectedLeaderboardScreen } from './ConnectedLeaderboardScreen';
 
 type ManageSegment = 'squad' | 'market' | 'career';
-type SquadSubSegment = 'roster' | 'stats' | 'training';
+type SquadSubSegment = 'roster' | 'lineups' | 'stats' | 'training';
 type MarketSubSegment = 'transfers' | 'scouting';
 type CareerSubSegment = 'trophies' | 'leaderboard';
 
@@ -63,11 +65,12 @@ export function ManageTabScreen({
       {/* Squad View with Sub-segments */}
       {segment === 'squad' && (
         <View style={styles.contentContainer}>
-          {/* Sub-segment Control: Roster | Stats | Training */}
+          {/* Sub-segment Control: Roster | Lineups | Stats | Training */}
           <View style={styles.subSegmentContainer}>
             <SegmentControl
               segments={[
                 { key: 'roster', label: 'Roster' },
+                { key: 'lineups', label: 'Lineups' },
                 { key: 'stats', label: 'Stats' },
                 { key: 'training', label: 'Training' },
               ]}
@@ -80,6 +83,11 @@ export function ManageTabScreen({
           {/* Roster */}
           {squadSubSegment === 'roster' && (
             <ConnectedRosterScreen onPlayerPress={onPlayerPress} />
+          )}
+
+          {/* Lineups - Default lineup editor for all sports */}
+          {squadSubSegment === 'lineups' && (
+            <ConnectedLineupsScreen onPlayerPress={onPlayerPress} />
           )}
 
           {/* Stats */}

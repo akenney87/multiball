@@ -68,7 +68,7 @@ import {
   type SoccerTeamState,
   type SoccerPosition,
 } from '../../simulation/soccer';
-import { calculateMatchDrain } from '../../systems/matchFitnessSystem';
+import { calculateMatchDrain, applyFitnessDegradation } from '../../systems/matchFitnessSystem';
 import {
   processWeeklyAI,
   processBatchedWeeklyAI,
@@ -175,6 +175,14 @@ function getPlayerCondition(player: Player): number {
     return Math.max(0, baseCondition - penalty);
   }
   return baseCondition;
+}
+
+/**
+ * Apply fitness degradation to an entire roster for simulation
+ * Similar to applyMoraleToRoster - creates new player objects with degraded physical attributes
+ */
+function applyFitnessToRoster(roster: Player[]): Player[] {
+  return roster.map(applyFitnessDegradation);
 }
 
 /**
@@ -672,7 +680,15 @@ export function GameProvider({ children }: GameProviderProps) {
     saveTimeoutRef.current = setTimeout(async () => {
       try {
         // Use stateRef to get the latest state
-        await GameStorage.saveFullGameState(stateRef.current);
+        // Strip gamedayLineup before saving (it's temporary match-day data)
+        const stateToSave = {
+          ...stateRef.current,
+          userTeam: {
+            ...stateRef.current.userTeam,
+            gamedayLineup: null,
+          },
+        };
+        await GameStorage.saveFullGameState(stateToSave);
       } catch (err) {
         console.error('[AutoSave] Failed to save:', err);
       }
@@ -683,7 +699,7 @@ export function GameProvider({ children }: GameProviderProps) {
         clearTimeout(saveTimeoutRef.current);
       }
     };
-  }, [state.season.matches, state.season.standings, state.userTeam.rosterIds, state.userTeam.lineup, state.userTeam.tactics, state.initialized]);
+  }, [state.season.matches, state.season.standings, state.userTeam.rosterIds, state.userTeam.lineup, state.userTeam.tactics, state.userTeam.baseballStrategy, state.initialized]);
 
   // =========================================================================
   // GAME MANAGEMENT
@@ -1983,9 +1999,12 @@ export function GameProvider({ children }: GameProviderProps) {
       let awayScore: number;
       let boxScore: Record<string, unknown> = {};
 
-      // Apply morale effects to mental attributes before simulation (all sports)
-      const moraleAdjustedHomeRoster = applyMoraleToRoster(homeRoster);
-      const moraleAdjustedAwayRoster = applyMoraleToRoster(awayRoster);
+      // Apply fitness degradation to physical attributes before simulation (all sports)
+      // Then apply morale effects to mental attributes
+      const fitnessAdjustedHomeRoster = applyFitnessToRoster(homeRoster);
+      const fitnessAdjustedAwayRoster = applyFitnessToRoster(awayRoster);
+      const moraleAdjustedHomeRoster = applyMoraleToRoster(fitnessAdjustedHomeRoster);
+      const moraleAdjustedAwayRoster = applyMoraleToRoster(fitnessAdjustedAwayRoster);
 
       try {
         if (match.sport === 'basketball') {
@@ -2355,20 +2374,26 @@ export function GameProvider({ children }: GameProviderProps) {
     let soccerWinner: string | null = null;
     let soccerPenaltyShootout: { homeScore: number; awayScore: number } | undefined;
 
-    // Apply morale effects to mental attributes before simulation (all sports)
-    const moraleAdjustedHomeRoster = applyMoraleToRoster(homeRoster);
-    const moraleAdjustedAwayRoster = applyMoraleToRoster(awayRoster);
+    // Apply fitness degradation to physical attributes before simulation (all sports)
+    // Then apply morale effects to mental attributes
+    const fitnessAdjustedHomeRoster = applyFitnessToRoster(homeRoster);
+    const fitnessAdjustedAwayRoster = applyFitnessToRoster(awayRoster);
+    const moraleAdjustedHomeRoster = applyMoraleToRoster(fitnessAdjustedHomeRoster);
+    const moraleAdjustedAwayRoster = applyMoraleToRoster(fitnessAdjustedAwayRoster);
+
+    // Use gameday lineup if available, otherwise use default lineup
+    const effectiveLineup = state.userTeam.gamedayLineup || state.userTeam.lineup;
 
     try {
       if (match.sport === 'basketball') {
         // Determine effective starters and bench for user team
-        let effectiveUserStarters = state.userTeam.lineup.basketballStarters;
-        let effectiveUserBench = state.userTeam.lineup.bench;
+        let effectiveUserStarters = effectiveLineup.basketballStarters;
+        let effectiveUserBench = effectiveLineup.bench;
 
         if (isUserHome || isUserAway) {
           const userRoster = getUserRoster();
           const validation = validateBasketballLineup(
-            state.userTeam.lineup.basketballStarters,
+            effectiveLineup.basketballStarters,
             userRoster
           );
 
@@ -2437,8 +2462,8 @@ export function GameProvider({ children }: GameProviderProps) {
         const awayTacticsConverted = convertTacticsToSimulationFormat(effectiveAwayTactics);
 
         // Get user's minutes allocation if this is a user team match
-        const homeMinutesAllocation = isUserHome ? state.userTeam.lineup.minutesAllocation : null;
-        const awayMinutesAllocation = isUserAway ? state.userTeam.lineup.minutesAllocation : null;
+        const homeMinutesAllocation = isUserHome ? effectiveLineup.minutesAllocation : null;
+        const awayMinutesAllocation = isUserAway ? effectiveLineup.minutesAllocation : null;
 
         // Get user's starting lineup (convert IDs to Player objects)
         const userStartingLineup = effectiveUserStarters
@@ -2450,9 +2475,11 @@ export function GameProvider({ children }: GameProviderProps) {
         const homeStartingLineup = isUserHome ? validUserStarting : null;
         const awayStartingLineup = isUserAway ? validUserStarting : null;
 
-        // Apply morale effects to starters (rosters already adjusted above)
-        const moraleAdjustedHomeStarters = homeStartingLineup ? applyMoraleToRoster(homeStartingLineup) : null;
-        const moraleAdjustedAwayStarters = awayStartingLineup ? applyMoraleToRoster(awayStartingLineup) : null;
+        // Apply fitness and morale effects to starters (separate from roster adjustment)
+        const fitnessAdjustedHomeStarters = homeStartingLineup ? applyFitnessToRoster(homeStartingLineup) : null;
+        const fitnessAdjustedAwayStarters = awayStartingLineup ? applyFitnessToRoster(awayStartingLineup) : null;
+        const moraleAdjustedHomeStarters = fitnessAdjustedHomeStarters ? applyMoraleToRoster(fitnessAdjustedHomeStarters) : null;
+        const moraleAdjustedAwayStarters = fitnessAdjustedAwayStarters ? applyMoraleToRoster(fitnessAdjustedAwayStarters) : null;
 
         // Filter rosters to only eligible players (5 starters + 9 bench = 14 max)
         // User team: Uses effective starters and bench (may have been auto-replaced)
@@ -2504,13 +2531,13 @@ export function GameProvider({ children }: GameProviderProps) {
         if (isUserHome || isUserAway) {
           const userRoster = getUserRoster();
           const validation = validateBaseballLineup(
-            state.userTeam.lineup.baseballLineup,
+            effectiveLineup.baseballLineup,
             userRoster
           );
           if (validation.valid) {
             // Check if any starters have low condition
-            const battingOrder = state.userTeam.lineup.baseballLineup.battingOrder;
-            const pitcher = state.userTeam.lineup.baseballLineup.startingPitcher;
+            const battingOrder = effectiveLineup.baseballLineup.battingOrder;
+            const pitcher = effectiveLineup.baseballLineup.startingPitcher;
             const allStarters = [...battingOrder, pitcher].filter(id => id);
 
             const hasExhaustedStarter = allStarters.some(id => {
@@ -2533,20 +2560,20 @@ export function GameProvider({ children }: GameProviderProps) {
 
         // Baseball simulation - only use user config if valid
         const homeLineupConfig = (isUserHome && useUserLineup) ? {
-          battingOrder: state.userTeam.lineup.baseballLineup.battingOrder,
-          positions: state.userTeam.lineup.baseballLineup.positions,
-          startingPitcher: state.userTeam.lineup.baseballLineup.startingPitcher,
+          battingOrder: effectiveLineup.baseballLineup.battingOrder,
+          positions: effectiveLineup.baseballLineup.positions,
+          startingPitcher: effectiveLineup.baseballLineup.startingPitcher,
         } : undefined;
 
         const awayLineupConfig = (isUserAway && useUserLineup) ? {
-          battingOrder: state.userTeam.lineup.baseballLineup.battingOrder,
-          positions: state.userTeam.lineup.baseballLineup.positions,
-          startingPitcher: state.userTeam.lineup.baseballLineup.startingPitcher,
+          battingOrder: effectiveLineup.baseballLineup.battingOrder,
+          positions: effectiveLineup.baseballLineup.positions,
+          startingPitcher: effectiveLineup.baseballLineup.startingPitcher,
         } : undefined;
 
         // Pass bench array for user teams to filter out reserve players from bullpen
         // Use morale-adjusted rosters for mental attribute effects
-        const userBench = state.userTeam.lineup.bench;
+        const userBench = effectiveLineup.bench;
         const homeTeamState = buildBaseballTeamState(match.homeTeamId, homeTeamName, moraleAdjustedHomeRoster, homeLineupConfig, isUserHome ? userBench : null);
         const awayTeamState = buildBaseballTeamState(match.awayTeamId, awayTeamName, moraleAdjustedAwayRoster, awayLineupConfig, isUserAway ? userBench : null);
 
@@ -2637,7 +2664,7 @@ export function GameProvider({ children }: GameProviderProps) {
         // Check if user lineup has exhausted starters
         let useSoccerUserLineup = true;
         if (isUserHome || isUserAway) {
-          const soccerStarters = state.userTeam.lineup.soccerLineup.starters;
+          const soccerStarters = effectiveLineup.soccerLineup.starters;
           const hasExhaustedStarter = soccerStarters.some(id => {
             if (!id) return false;
             const player = state.players[id];
@@ -2652,15 +2679,15 @@ export function GameProvider({ children }: GameProviderProps) {
 
         // Build soccer team states - pass undefined to trigger auto-generation if exhausted
         const homeSoccerLineup = (isUserHome && useSoccerUserLineup) ? {
-          starters: state.userTeam.lineup.soccerLineup.starters,
-          formation: state.userTeam.lineup.soccerLineup.formation,
-          positions: state.userTeam.lineup.soccerLineup.positions,
+          starters: effectiveLineup.soccerLineup.starters,
+          formation: effectiveLineup.soccerLineup.formation,
+          positions: effectiveLineup.soccerLineup.positions,
         } : undefined;
 
         const awaySoccerLineup = (isUserAway && useSoccerUserLineup) ? {
-          starters: state.userTeam.lineup.soccerLineup.starters,
-          formation: state.userTeam.lineup.soccerLineup.formation,
-          positions: state.userTeam.lineup.soccerLineup.positions,
+          starters: effectiveLineup.soccerLineup.starters,
+          formation: effectiveLineup.soccerLineup.formation,
+          positions: effectiveLineup.soccerLineup.positions,
         } : undefined;
 
         // Get tactics for each team - user's from strategy param or global state, AI's from season-persistent strategies
@@ -3103,7 +3130,7 @@ export function GameProvider({ children }: GameProviderProps) {
       match,
       userRoster,
       opponentRoster,
-      userLineup: state.userTeam.lineup,
+      userLineup: state.userTeam.gamedayLineup || state.userTeam.lineup,
       isUserHome,
     };
   }, [state.season.matches, state.userTeam, state.league.teams, state.players]);
@@ -3114,6 +3141,24 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const setLineup = useCallback((lineup: LineupConfig) => {
     dispatch({ type: 'SET_LINEUP', payload: lineup });
+  }, []);
+
+  const setGamedayLineup = useCallback((lineup: LineupConfig) => {
+    dispatch({ type: 'SET_GAMEDAY_LINEUP', payload: lineup });
+  }, []);
+
+  const clearGamedayLineup = useCallback(() => {
+    dispatch({ type: 'CLEAR_GAMEDAY_LINEUP' });
+  }, []);
+
+  /**
+   * Initialize gameday lineup from default lineup.
+   * Call this when opening match preview to create a working copy.
+   */
+  const initializeGamedayLineup = useCallback(() => {
+    // Deep clone the default lineup
+    const defaultLineup = stateRef.current.userTeam.lineup;
+    dispatch({ type: 'SET_GAMEDAY_LINEUP', payload: JSON.parse(JSON.stringify(defaultLineup)) });
   }, []);
 
   const setTactics = useCallback((tactics: TacticalSettings) => {
@@ -3502,6 +3547,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
       // Roster Actions
       setLineup,
+      setGamedayLineup,
+      clearGamedayLineup,
+      initializeGamedayLineup,
       setTactics,
       setBaseballStrategy,
       releasePlayer,

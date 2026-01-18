@@ -209,45 +209,48 @@ export function ConnectedPlayerDetailScreen({
     const age = player.age;
     const salary = player.contract?.salary || 0;
 
-    // Base value tiers - grounded in realistic acquisition costs
-    // These represent what you'd pay to acquire a similar unproven player
+    // Base value tiers with exponential scaling for elite players
+    // Lower tiers reflect realistic acquisition costs, elite tiers reflect scarcity
     let baseValue: number;
     if (rating < 45) {
       baseValue = 10000; // Barely roster-worthy
     } else if (rating < 50) {
-      baseValue = 10000 + (rating - 45) * 3000; // $10k - $25k
+      baseValue = 10000 + (rating - 45) * 4000; // $10k - $30k
     } else if (rating < 55) {
-      baseValue = 25000 + (rating - 50) * 5000; // $25k - $50k (end of bench)
+      baseValue = 30000 + (rating - 50) * 14000; // $30k - $100k
     } else if (rating < 60) {
-      baseValue = 50000 + (rating - 55) * 10000; // $50k - $100k (rotation)
+      baseValue = 100000 + (rating - 55) * 40000; // $100k - $300k
     } else if (rating < 65) {
-      baseValue = 100000 + (rating - 60) * 20000; // $100k - $200k (contributor)
+      baseValue = 300000 + (rating - 60) * 100000; // $300k - $800k
     } else if (rating < 70) {
-      baseValue = 200000 + (rating - 65) * 40000; // $200k - $400k (starter)
+      baseValue = 800000 + (rating - 65) * 240000; // $800k - $2M
     } else if (rating < 75) {
-      baseValue = 400000 + (rating - 70) * 80000; // $400k - $800k (very good)
+      baseValue = 2000000 + (rating - 70) * 600000; // $2M - $5M
     } else if (rating < 80) {
-      baseValue = 800000 + (rating - 75) * 140000; // $800k - $1.5M (star)
+      baseValue = 5000000 + (rating - 75) * 1400000; // $5M - $12M
     } else if (rating < 85) {
-      baseValue = 1500000 + (rating - 80) * 300000; // $1.5M - $3M (superstar)
+      baseValue = 12000000 + (rating - 80) * 3600000; // $12M - $30M
     } else {
-      baseValue = 3000000 + (rating - 85) * 500000; // $3M+ (elite)
+      // Exponential scaling for elite players (85+)
+      // 85: $30M, 90: $53M, 95: $93M, 99: $147M
+      baseValue = 30000000 * Math.pow(1.12, rating - 85);
     }
 
     // Age factor - young players have upside, old players are depreciating assets
+    // But older players still have real value - don't be too aggressive
     let ageFactor: number;
     if (age < 22) {
-      ageFactor = 1.25; // Potential premium
-    } else if (age < 25) {
-      ageFactor = 1.1; // Young
-    } else if (age < 28) {
+      ageFactor = 1.3; // Potential premium
+    } else if (age < 26) {
+      ageFactor = 1.1; // Developing
+    } else if (age < 29) {
       ageFactor = 1.0; // Prime
-    } else if (age < 30) {
-      ageFactor = 0.6; // Declining
     } else if (age < 32) {
-      ageFactor = 0.3; // Past prime
+      ageFactor = 0.75; // Declining
+    } else if (age < 35) {
+      ageFactor = 0.5; // Veteran
     } else {
-      ageFactor = 0.15; // Near retirement
+      ageFactor = 0.3; // Near retirement
     }
 
     // Calculate base transfer value
@@ -256,19 +259,20 @@ export function ConnectedPlayerDetailScreen({
     // Cap transfer value relative to salary for unproven players
     // This prevents the free agent flip exploit
     // Philosophy: If you can sign someone for $40k in fees, you shouldn't flip them for $200k
-    if (salary > 0) {
+    // But elite players (85+) are worth their market rate regardless of salary
+    if (salary > 0 && rating < 85) {
       // Multiplier scales with rating - unproven players are worth less
       let maxMultiple: number;
       if (rating >= 80) {
-        maxMultiple = 2.0; // Elite proven talent
+        maxMultiple = 5.0; // Star talent - salary less relevant
       } else if (rating >= 75) {
-        maxMultiple = 1.5; // Star player
+        maxMultiple = 3.0; // Very good player
       } else if (rating >= 70) {
-        maxMultiple = 1.0; // Very good
+        maxMultiple = 2.0; // Good player
       } else if (rating >= 65) {
-        maxMultiple = 0.5; // Good starter
+        maxMultiple = 1.0; // Solid starter
       } else {
-        maxMultiple = 0.25; // Unproven - transfer value ~= signing cost
+        maxMultiple = 0.5; // Unproven - transfer value ~= signing cost
       }
       transferValue = Math.min(transferValue, salary * maxMultiple);
     }
@@ -276,8 +280,8 @@ export function ConnectedPlayerDetailScreen({
     // Apply performance multiplier (awards, games played boost value)
     transferValue *= performanceMultiplier;
 
-    // Round to nearest $10k, minimum $10k
-    return Math.max(10000, Math.round(transferValue / 10000) * 10000);
+    // Round to nearest $5k, minimum $5k
+    return Math.max(5000, Math.round(transferValue / 5000) * 5000);
   }, [player, overalls.overall, performanceMultiplier]);
 
   // Handle extending contract (start renewal negotiation)

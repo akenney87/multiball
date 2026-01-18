@@ -66,7 +66,9 @@ export const initialGameState: GameState = {
       },
       bench: [],
       minutesAllocation: {},
+      soccerMinutesAllocation: {},
     },
+    gamedayLineup: null,
     trainingFocus: DEFAULT_TRAINING_FOCUS,
     tactics: {
       pace: 'standard',
@@ -516,6 +518,26 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'SET_GAMEDAY_LINEUP': {
+      return {
+        ...state,
+        userTeam: {
+          ...state.userTeam,
+          gamedayLineup: action.payload,
+        },
+      };
+    }
+
+    case 'CLEAR_GAMEDAY_LINEUP': {
+      return {
+        ...state,
+        userTeam: {
+          ...state.userTeam,
+          gamedayLineup: null,
+        },
+      };
+    }
+
     case 'SET_TACTICS': {
       return {
         ...state,
@@ -586,9 +608,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ),
         },
         bench: currentLineup.bench.filter((id) => id !== playerId),
-        minutesAllocation: { ...currentLineup.minutesAllocation },
+        minutesAllocation: { ...(currentLineup.minutesAllocation ?? {}) },
+        soccerMinutesAllocation: { ...(currentLineup.soccerMinutesAllocation ?? {}) },
       };
       delete newLineup.minutesAllocation[playerId];
+      delete newLineup.soccerMinutesAllocation[playerId];
 
       // Calculate new salary commitment
       const releasedSalary = player.contract?.salary || 0;

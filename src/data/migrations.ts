@@ -121,6 +121,38 @@ const migrations: MigrationHandler[] = [
     },
   },
 
+  // Migration 0.2.0 -> 0.3.0: Separate soccer minutes allocation
+  {
+    fromVersion: '0.2.0',
+    toVersion: '0.3.0',
+    description: 'Separate soccer minutes allocation from basketball',
+    migrate: (old: any): GameSave => {
+      // Add soccerMinutesAllocation to lineup if not present
+      const migratedLineup = old.userTeam?.lineup ? {
+        ...old.userTeam.lineup,
+        soccerMinutesAllocation: old.userTeam.lineup.soccerMinutesAllocation ?? {},
+      } : old.userTeam?.lineup;
+
+      // Also migrate gamedayLineup if present
+      const migratedGamedayLineup = old.userTeam?.gamedayLineup ? {
+        ...old.userTeam.gamedayLineup,
+        soccerMinutesAllocation: old.userTeam.gamedayLineup.soccerMinutesAllocation ?? {},
+      } : old.userTeam?.gamedayLineup;
+
+      const migratedUserTeam = old.userTeam ? {
+        ...old.userTeam,
+        lineup: migratedLineup,
+        gamedayLineup: migratedGamedayLineup,
+      } : old.userTeam;
+
+      return {
+        ...old,
+        version: '0.3.0',
+        userTeam: migratedUserTeam,
+      };
+    },
+  },
+
   // Add future migrations here as game evolves
 ];
 
@@ -132,7 +164,7 @@ const migrations: MigrationHandler[] = [
  * Get current game version
  * This should match the version in package.json
  */
-export const CURRENT_VERSION = '0.2.0';
+export const CURRENT_VERSION = '0.3.0';
 
 /**
  * Check if migration is needed

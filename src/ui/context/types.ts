@@ -128,6 +128,9 @@ export interface LineupConfig {
 
   /** Minutes allocation for basketball (player ID -> target minutes) */
   minutesAllocation: Record<string, number>;
+
+  /** Minutes allocation for soccer (player ID -> target minutes) */
+  soccerMinutesAllocation: Record<string, number>;
 }
 
 /**
@@ -216,8 +219,15 @@ export interface UserTeamState {
   /** Roster player IDs */
   rosterIds: string[];
 
-  /** Current lineup configuration */
+  /** Current lineup configuration (the "default" lineup set via Squad > Lineups) */
   lineup: LineupConfig;
+
+  /**
+   * Gameday lineup (temporary, for match-day edits only)
+   * This is a working copy that doesn't persist to the default lineup.
+   * When null, matches use the default lineup.
+   */
+  gamedayLineup: LineupConfig | null;
 
   /** Team-wide training focus */
   trainingFocus: TrainingFocus;
@@ -493,6 +503,8 @@ export type GameAction =
 
   // Roster
   | { type: 'SET_LINEUP'; payload: LineupConfig }
+  | { type: 'SET_GAMEDAY_LINEUP'; payload: LineupConfig }
+  | { type: 'CLEAR_GAMEDAY_LINEUP' }
   | { type: 'SET_TACTICS'; payload: TacticalSettings }
   | { type: 'SET_BASEBALL_STRATEGY'; payload: BaseballGameStrategy }
   | { type: 'RELEASE_PLAYER'; payload: { playerId: string } }
@@ -785,9 +797,25 @@ export interface GameContextValue {
   // =========================================================================
 
   /**
-   * Set starting lineup and rotation
+   * Set starting lineup and rotation (the "default" lineup)
    */
   setLineup: (lineup: LineupConfig) => void;
+
+  /**
+   * Set gameday lineup (temporary, for match-day edits only)
+   */
+  setGamedayLineup: (lineup: LineupConfig) => void;
+
+  /**
+   * Clear gameday lineup (reset to null, use default lineup)
+   */
+  clearGamedayLineup: () => void;
+
+  /**
+   * Initialize gameday lineup from default lineup
+   * Call this when opening match preview to create a working copy
+   */
+  initializeGamedayLineup: () => void;
 
   /**
    * Set tactical settings (basketball)

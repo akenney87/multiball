@@ -268,6 +268,7 @@ describe('gameReducer', () => {
         },
         bench: ['p6', 'p7'],
         minutesAllocation: {},
+        soccerMinutesAllocation: {},
       };
 
       state = gameReducer(state, { type: 'SET_LINEUP', payload: newLineup });
