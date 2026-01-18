@@ -71,7 +71,11 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
     : state.userTeam.lineup;
 
   // Use the appropriate setter based on mode
-  const activeSetLineup = isGameday ? setGamedayLineup : setLineup;
+  // Memoized to ensure stable reference for callback dependencies
+  const activeSetLineup = useMemo(
+    () => isGameday ? setGamedayLineup : setLineup,
+    [isGameday, setGamedayLineup, setLineup]
+  );
 
   // =========================================================================
   // BASKETBALL
@@ -159,7 +163,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   const moveBasketballToBench = useCallback(
@@ -183,7 +187,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   // Add a player to the bench (from reserves) - respects 9 player limit
@@ -208,7 +212,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   // Remove a player from the bench (to reserves)
@@ -222,7 +226,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   // Swap a bench player with a reserve player atomically
@@ -246,7 +250,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   const swapBasketballPlayers = useCallback(
@@ -277,7 +281,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -300,7 +304,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         basketballStarters: newStarters as [string, string, string, string, string],
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   const isValidBasketballLineup = useMemo(() => {
@@ -379,7 +383,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         minutesAllocation: newMinutesAllocation,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   /**
@@ -465,7 +469,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup, basketballTotalMinutes, basketballPlayers]
+    [activeLineup, activeSetLineup, basketballTotalMinutes, basketballPlayers]
   );
 
   // =========================================================================
@@ -585,7 +589,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   const moveSoccerToBench = useCallback(
@@ -611,7 +615,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   const setSoccerFormation = useCallback(
@@ -637,7 +641,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -676,7 +680,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   /**
@@ -710,7 +714,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   const isValidSoccerLineup = useMemo(() => {
@@ -778,7 +782,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup, soccerTotalMinutes, soccerPlayers]
+    [activeLineup, activeSetLineup, soccerTotalMinutes, soccerPlayers]
   );
 
   /**
@@ -937,7 +941,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         soccerMinutesAllocation: newMinutesAllocation,
       });
     },
-    [activeLineup, currentFormation, calculateOptimalLineupForFormation, setLineup, getUserRoster]
+    [activeLineup, currentFormation, calculateOptimalLineupForFormation, activeSetLineup, getUserRoster]
   );
 
   // =========================================================================
@@ -1060,7 +1064,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   const setBaseballStartingPitcher = useCallback(
@@ -1112,7 +1116,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   const setBaseballPosition = useCallback(
@@ -1156,7 +1160,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup, setBaseballStartingPitcher]
+    [activeLineup, activeSetLineup, setBaseballStartingPitcher]
   );
 
   const addToBattingOrder = useCallback(
@@ -1237,7 +1241,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   const removeFromBattingOrder = useCallback(
@@ -1268,7 +1272,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -1295,7 +1299,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   const isValidBaseballLineup = useMemo(() => {
@@ -1400,7 +1404,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   /**
@@ -1512,7 +1516,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup, getUserRoster]
+    [activeLineup, activeSetLineup, getUserRoster]
   );
 
   /**
@@ -1542,7 +1546,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -1614,7 +1618,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -1688,7 +1692,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         bench: newBench,
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -1755,7 +1759,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         },
       });
     },
-    [activeLineup, setLineup]
+    [activeLineup, activeSetLineup]
   );
 
   /**
@@ -1886,7 +1890,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       },
       bench: newBench,
     });
-  }, [activeLineup, getUserRoster, setLineup]);
+  }, [activeLineup, getUserRoster, activeSetLineup]);
 
   // =========================================================================
   // RETURN BASED ON SPORT
