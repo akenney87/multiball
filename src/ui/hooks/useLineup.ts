@@ -10,6 +10,7 @@ import { useGame } from '../context/GameContext';
 import { calculatePlayerOverall, calculateSoccerPositionOverall } from '../integration/gameInitializer';
 import type { SoccerFormation, BaseballPosition, BullpenRole, BaseballBullpenConfig } from '../context/types';
 import { calculateBasketballOverall, calculateBaseballPositionOverall, type BaseballPositionType } from '../../utils/overallRating';
+import { applyFitnessDegradation } from '../../systems/matchFitnessSystem';
 import type { Player } from '../../data/types';
 
 export interface LineupPlayer {
@@ -383,42 +384,38 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
 
   /**
    * Calculate optimal basketball lineup and apply it.
-   * Selects top 5 players by overall weighted by stamina, allocates minutes properly.
+   * Uses the same fitness degradation formula as match simulations to calculate effective ratings.
    */
   const applyOptimalBasketballLineup = useCallback(() => {
     const roster = getUserRoster();
 
-    // Sort all healthy players by overall weighted by stamina (descending)
-    // Players with low stamina are ranked lower, but not drastically
-    // Formula: overall * (0.6 + 0.4 * stamina/100)
-    // At 100% stamina: 100% of overall
-    // At 50% stamina: 80% of overall
-    // At 0% stamina: 60% of overall
-    const sortedPlayers = roster
+    // Calculate effective overall for each player using the simulation formula
+    // applyFitnessDegradation reduces physical attributes based on matchFitness
+    const availablePlayers = roster
       .filter((p) => p.injury === null)
       .map((p) => {
-        const overall = calculatePlayerOverall(p);
-        const stamina = p.matchFitness ?? 100;
-        const staminaFactor = 0.6 + 0.4 * (stamina / 100);
-        const effectiveRating = overall * staminaFactor;
-        return { id: p.id, overall, effectiveRating };
+        // Apply fitness degradation to get effective attributes (same as in-match)
+        const degradedPlayer = applyFitnessDegradation(p);
+        return {
+          id: p.id,
+          effectiveOverall: calculatePlayerOverall(degradedPlayer),
+          rawOverall: calculatePlayerOverall(p),
+          height: p.height ?? 72,
+        };
       })
-      .sort((a, b) => b.effectiveRating - a.effectiveRating);
+      .sort((a, b) => b.effectiveOverall - a.effectiveOverall);
 
-    // Get top 5 players
-    const top5 = sortedPlayers.slice(0, 5);
+    // Select top 5 by effective overall
+    const top5 = availablePlayers.slice(0, 5);
 
-    // Sort top 5 by height (shortest to tallest) for position assignment
+    // Sort selected 5 by height (shortest to tallest) for position assignment
     // PG (slot 0) = shortest, SG (slot 1) = 2nd shortest, ..., C (slot 4) = tallest
-    const top5WithHeight = top5.map(p => {
-      const fullPlayer = roster.find(r => r.id === p.id);
-      return { ...p, height: fullPlayer?.height ?? 72 }; // Default 6'0" if missing
-    }).sort((a, b) => a.height - b.height);
+    const top5ByHeight = [...top5].sort((a, b) => a.height - b.height);
 
     // Build the 5-tuple of starter IDs arranged by height
     const starterIds: [string, string, string, string, string] = ['', '', '', '', ''];
-    for (let i = 0; i < 5 && i < top5WithHeight.length; i++) {
-      const player = top5WithHeight[i];
+    for (let i = 0; i < 5 && i < top5ByHeight.length; i++) {
+      const player = top5ByHeight[i];
       if (player) {
         starterIds[i] = player.id;
       }
@@ -787,7 +784,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
   /**
    * Calculate the optimal lineup and average overall for a given formation.
    * Returns the best player assignments and the average overall rating.
-   * Factors in player stamina when ranking players.
+   * Uses the same fitness degradation formula as match simulations to calculate effective ratings.
    */
   const calculateOptimalLineupForFormation = useCallback(
     (targetFormation: SoccerFormation): {
@@ -799,32 +796,28 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       const positions = FORMATION_POSITIONS[targetFormation];
       const assignments: Array<{ playerId: string; slotIndex: number }> = [];
       const assignedPlayerIds = new Set<string>();
-      let totalOverall = 0;
+      let totalEffectiveOverall = 0;
 
-      // For each slot (0-10), find the best unassigned, healthy player
-      // weighted by stamina using balanced formula
-      // Formula: overall * (0.6 + 0.4 * stamina/100)
-      // At 100% stamina: 100% of overall
-      // At 50% stamina: 80% of overall
-      // At 0% stamina: 60% of overall
+      // For each slot (0-10), find the best unassigned player by effective rating
       for (let slotIndex = 0; slotIndex < 11; slotIndex++) {
         const positionName = positions[slotIndex];
+
+        // Get available players for this position
+        const available = roster.filter(
+          (p) => !assignedPlayerIds.has(p.id) && p.injury === null
+        );
+
         let bestPlayer: Player | null = null;
-        let bestEffectiveRating = -1;
-        let bestRawOverall = 0;
+        let bestEffectiveOverall = -1;
 
-        for (const player of roster) {
-          if (assignedPlayerIds.has(player.id)) continue;
-          if (player.injury !== null) continue; // Skip injured players
+        // Find player with highest effective position rating (after fitness degradation)
+        for (const player of available) {
+          // Apply fitness degradation to get effective attributes (same as in-match)
+          const degradedPlayer = applyFitnessDegradation(player);
+          const effectiveOverall = calculateSoccerPositionOverall(degradedPlayer, positionName || 'CM');
 
-          const ovr = calculateSoccerPositionOverall(player, positionName || 'CM');
-          const stamina = player.matchFitness ?? 100;
-          const staminaFactor = 0.6 + 0.4 * (stamina / 100);
-          const effectiveRating = ovr * staminaFactor;
-
-          if (effectiveRating > bestEffectiveRating) {
-            bestEffectiveRating = effectiveRating;
-            bestRawOverall = ovr;
+          if (effectiveOverall > bestEffectiveOverall) {
+            bestEffectiveOverall = effectiveOverall;
             bestPlayer = player;
           }
         }
@@ -832,12 +825,12 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         if (bestPlayer) {
           assignedPlayerIds.add(bestPlayer.id);
           assignments.push({ playerId: bestPlayer.id, slotIndex });
-          totalOverall += bestRawOverall; // Use raw overall for display purposes
+          totalEffectiveOverall += bestEffectiveOverall;
         }
       }
 
-      const averageOverall = assignments.length > 0 ? Math.round(totalOverall / assignments.length) : 0;
-      return { assignments, averageOverall, totalOverall };
+      const averageOverall = assignments.length > 0 ? Math.round(totalEffectiveOverall / assignments.length) : 0;
+      return { assignments, averageOverall, totalOverall: totalEffectiveOverall };
     },
     [getUserRoster]
   );
@@ -1767,50 +1760,56 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
 
   /**
    * Apply optimal baseball lineup including batting order, pitcher, and bullpen.
-   * Uses position-specific ratings weighted by stamina to find the best player for each slot.
+   * Uses the same fitness degradation formula as match simulations to calculate effective ratings.
    */
   const applyOptimalBaseballLineup = useCallback(() => {
     const roster = getUserRoster();
     const currentLineup = activeLineup;
 
-    // Calculate each player's rating for each baseball position, weighted by stamina
-    // Formula: overall * (0.6 + 0.4 * stamina/100)
-    // At 100% stamina: 100% of overall
-    // At 50% stamina: 80% of overall
-    // At 0% stamina: 60% of overall
+    // Calculate each player's effective rating for each baseball position
+    // Uses fitness degradation to match in-match performance
     const playerScores: Array<{
       player: Player;
-      scores: Record<BaseballPosition, number>;
-      stamina: number;
+      effectiveScores: Record<BaseballPosition, number>;
     }> = roster
       .filter((p) => p.injury === null)
       .map((player) => {
-        const stamina = player.matchFitness ?? 100;
-        const staminaFactor = 0.6 + 0.4 * (stamina / 100);
+        // Apply fitness degradation to get effective attributes (same as in-match)
+        const degradedPlayer = applyFitnessDegradation(player);
         return {
           player,
-          stamina,
-          // Weight all scores by stamina for selection purposes
-          scores: {
-            P: calculateBaseballPositionOverall(player.attributes, 'P') * staminaFactor,
-            C: calculateBaseballPositionOverall(player.attributes, 'C') * staminaFactor,
-            '1B': calculateBaseballPositionOverall(player.attributes, '1B') * staminaFactor,
-            '2B': calculateBaseballPositionOverall(player.attributes, '2B') * staminaFactor,
-            SS: calculateBaseballPositionOverall(player.attributes, 'SS') * staminaFactor,
-            '3B': calculateBaseballPositionOverall(player.attributes, '3B') * staminaFactor,
-            LF: calculateBaseballPositionOverall(player.attributes, 'LF') * staminaFactor,
-            CF: calculateBaseballPositionOverall(player.attributes, 'CF') * staminaFactor,
-            RF: calculateBaseballPositionOverall(player.attributes, 'RF') * staminaFactor,
-            DH: calculateBaseballPositionOverall(player.attributes, 'DH') * staminaFactor,
+          effectiveScores: {
+            P: calculateBaseballPositionOverall(degradedPlayer.attributes, 'P'),
+            C: calculateBaseballPositionOverall(degradedPlayer.attributes, 'C'),
+            '1B': calculateBaseballPositionOverall(degradedPlayer.attributes, '1B'),
+            '2B': calculateBaseballPositionOverall(degradedPlayer.attributes, '2B'),
+            SS: calculateBaseballPositionOverall(degradedPlayer.attributes, 'SS'),
+            '3B': calculateBaseballPositionOverall(degradedPlayer.attributes, '3B'),
+            LF: calculateBaseballPositionOverall(degradedPlayer.attributes, 'LF'),
+            CF: calculateBaseballPositionOverall(degradedPlayer.attributes, 'CF'),
+            RF: calculateBaseballPositionOverall(degradedPlayer.attributes, 'RF'),
+            DH: calculateBaseballPositionOverall(degradedPlayer.attributes, 'DH'),
           },
         };
       });
 
-    // 1. Find best starting pitcher (weighted by stamina)
-    const sortedByPitching = [...playerScores].sort(
-      (a, b) => b.scores.P - a.scores.P
-    );
-    const startingPitcher = sortedByPitching[0]?.player;
+    // Helper: Select best player for a position by effective rating
+    const selectBestForPosition = (
+      candidates: typeof playerScores,
+      pos: BaseballPosition,
+      usedIds: Set<string>
+    ): typeof playerScores[0] | undefined => {
+      const available = candidates.filter((ps) => !usedIds.has(ps.player.id));
+      if (available.length === 0) return undefined;
+
+      // Sort by effective rating for this position
+      available.sort((a, b) => b.effectiveScores[pos] - a.effectiveScores[pos]);
+      return available[0];
+    };
+
+    // 1. Find best starting pitcher by effective rating
+    const startingPitcherData = selectBestForPosition(playerScores, 'P', new Set());
+    const startingPitcher = startingPitcherData?.player;
     if (!startingPitcher) return;
 
     // 2. Build optimal lineup for defensive positions (excluding pitcher)
@@ -1825,16 +1824,9 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH',
     ];
 
-    // Greedy assignment: for each position, pick the best available player
+    // Greedy assignment: for each position, pick best available by effective rating
     for (const pos of defensivePositions) {
-      const available = playerScores.filter(
-        (ps) => !usedPlayerIds.has(ps.player.id)
-      );
-      if (available.length === 0) break;
-
-      // Sort by score for this position
-      available.sort((a, b) => b.scores[pos] - a.scores[pos]);
-      const best = available[0];
+      const best = selectBestForPosition(playerScores, pos, usedPlayerIds);
       if (best) {
         battingOrder.push(best.player.id);
         positions[best.player.id] = pos;
@@ -1842,24 +1834,21 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       }
     }
 
-    // 3. Build optimal bullpen from remaining players
-    // Sort remaining players by pitching ability
+    // 3. Build optimal bullpen from remaining players by effective pitching rating
     const remainingForBullpen = playerScores
       .filter((ps) => !usedPlayerIds.has(ps.player.id))
-      .sort((a, b) => b.scores.P - a.scores.P);
+      .sort((a, b) => b.effectiveScores.P - a.effectiveScores.P);
 
-    // Closer: best remaining pitcher
-    const closer = remainingForBullpen[0]?.player.id ?? '';
-    // Long relievers: next 2 best
-    const longRelievers: [string, string] = [
-      remainingForBullpen[1]?.player.id ?? '',
-      remainingForBullpen[2]?.player.id ?? '',
-    ];
-    // Short relievers: next 2 best
-    const shortRelievers: [string, string] = [
-      remainingForBullpen[3]?.player.id ?? '',
-      remainingForBullpen[4]?.player.id ?? '',
-    ];
+    // Select top 5 pitchers for bullpen roles
+    const bullpenCandidates = remainingForBullpen.slice(0, 5);
+    const closer = bullpenCandidates[0]?.player.id ?? '';
+    const longReliever1 = bullpenCandidates[1]?.player.id ?? '';
+    const longReliever2 = bullpenCandidates[2]?.player.id ?? '';
+    const shortReliever1 = bullpenCandidates[3]?.player.id ?? '';
+    const shortReliever2 = bullpenCandidates[4]?.player.id ?? '';
+
+    const longRelievers: [string, string] = [longReliever1, longReliever2];
+    const shortRelievers: [string, string] = [shortReliever1, shortReliever2];
 
     const bullpen: BaseballBullpenConfig = {
       closer,
@@ -1867,7 +1856,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       shortRelievers,
     };
 
-    // 4. Build bench from anyone not assigned - top 9 by condition-adjusted rating
+    // 4. Build bench from anyone not assigned - sort by effective overall
     const allAssigned = new Set([
       startingPitcher.id,
       ...battingOrder,
@@ -1878,12 +1867,10 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
     const benchCandidates = roster
       .filter((p) => !allAssigned.has(p.id))
       .map((p) => {
-        const overall = calculatePlayerOverall(p);
-        const stamina = p.matchFitness ?? 100;
-        const staminaFactor = 0.6 + 0.4 * (stamina / 100);
-        return { id: p.id, effectiveRating: overall * staminaFactor };
+        const degradedPlayer = applyFitnessDegradation(p);
+        return { id: p.id, effectiveOverall: calculatePlayerOverall(degradedPlayer) };
       })
-      .sort((a, b) => b.effectiveRating - a.effectiveRating);
+      .sort((a, b) => b.effectiveOverall - a.effectiveOverall);
     // Limit bench to 9 players (rest are reserves)
     const newBench = benchCandidates.slice(0, 9).map((p) => p.id);
 
