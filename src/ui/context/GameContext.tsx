@@ -2382,7 +2382,8 @@ export function GameProvider({ children }: GameProviderProps) {
     const moraleAdjustedAwayRoster = applyMoraleToRoster(fitnessAdjustedAwayRoster);
 
     // Use gameday lineup if available, otherwise use default lineup
-    const effectiveLineup = state.userTeam.gamedayLineup || state.userTeam.lineup;
+    // Use stateRef.current to ensure we get the most up-to-date lineup (avoids stale closure issues)
+    const effectiveLineup = stateRef.current.userTeam.gamedayLineup || stateRef.current.userTeam.lineup;
 
     try {
       if (match.sport === 'basketball') {
