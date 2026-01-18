@@ -651,10 +651,10 @@ export function GameProvider({ children }: GameProviderProps) {
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stateRef = useRef(state);
 
-  // Keep stateRef updated with latest state
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
+  // Keep stateRef updated with latest state synchronously (not in useEffect)
+  // This ensures callbacks always read the most current state, avoiding race conditions
+  // where useEffect hasn't run yet after a state update
+  stateRef.current = state;
 
   // =========================================================================
   // AUTO-SAVE EFFECT
