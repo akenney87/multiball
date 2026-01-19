@@ -122,7 +122,10 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
   const basketballReserves = useMemo(() => {
     const benchSet = new Set(activeLineup.bench);
     // Exclude injured players from reserves - they go to injured section
-    return basketballPlayers.filter((p) => !p.isStarter && !benchSet.has(p.id) && !p.isInjured);
+    // Sort by overall descending for consistent display order after swaps
+    return basketballPlayers
+      .filter((p) => !p.isStarter && !benchSet.has(p.id) && !p.isInjured)
+      .sort((a, b) => b.overall - a.overall);
   }, [basketballPlayers, activeLineup.bench]);
 
   const basketballInjured = useMemo(() => {
@@ -512,7 +515,10 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
   const soccerReserves = useMemo(() => {
     const benchSet = new Set(activeLineup.bench);
     // Exclude injured players from reserves - they go to injured section
-    return soccerPlayers.filter((p) => !p.isStarter && !benchSet.has(p.id) && !p.isInjured);
+    // Sort by overall descending for consistent display order after swaps
+    return soccerPlayers
+      .filter((p) => !p.isStarter && !benchSet.has(p.id) && !p.isInjured)
+      .sort((a, b) => b.overall - a.overall);
   }, [soccerPlayers, activeLineup.bench]);
 
   const soccerInjured = useMemo(() => {
@@ -1026,9 +1032,10 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
   const baseballReserves = useMemo(() => {
     const benchSet = new Set(activeLineup.bench);
     // Exclude injured players from reserves - they go to injured section
-    return baseballPlayers.filter(
-      (p) => !p.isStarter && !p.isPitcher && !p.bullpenRole && !benchSet.has(p.id) && !p.isInjured
-    );
+    // Sort by overall descending for consistent display order after swaps
+    return baseballPlayers
+      .filter((p) => !p.isStarter && !p.isPitcher && !p.bullpenRole && !benchSet.has(p.id) && !p.isInjured)
+      .sort((a, b) => b.overall - a.overall);
   }, [baseballPlayers, activeLineup.bench]);
 
   const baseballInjured = useMemo(() => {
@@ -1420,7 +1427,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
-        shortRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', '', '', ''] as [string, string, string, string],
         closer: '',
       };
       const newBench = [...currentLineup.bench];
@@ -1469,7 +1476,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         ) as [string, string],
         shortRelievers: currentBullpen.shortRelievers.map((id) =>
           id === playerId ? '' : id
-        ) as [string, string],
+        ) as [string, string, string, string],
         closer: currentBullpen.closer === playerId ? '' : currentBullpen.closer,
       };
 
@@ -1534,7 +1541,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         ) as [string, string],
         shortRelievers: currentBullpen.shortRelievers.map((id) =>
           id === playerId ? '' : id
-        ) as [string, string],
+        ) as [string, string, string, string],
         closer: currentBullpen.closer === playerId ? '' : currentBullpen.closer,
       };
 
@@ -1564,14 +1571,14 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
-        shortRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', '', '', ''] as [string, string, string, string],
         closer: '',
       };
 
       // Start with empty bullpen slots for the affected positions
       const newBullpen: BaseballBullpenConfig = {
         longRelievers: [...currentBullpen.longRelievers] as [string, string],
-        shortRelievers: [...currentBullpen.shortRelievers] as [string, string],
+        shortRelievers: [...currentBullpen.shortRelievers] as [string, string, string, string],
         closer: currentBullpen.closer,
       };
 
@@ -1581,7 +1588,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       ) as [string, string];
       newBullpen.shortRelievers = newBullpen.shortRelievers.map((id) =>
         id === playerAId || id === playerBId ? '' : id
-      ) as [string, string];
+      ) as [string, string, string, string];
       if (newBullpen.closer === playerAId || newBullpen.closer === playerBId) {
         newBullpen.closer = '';
       }
@@ -1637,7 +1644,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       const currentLineup = activeLineup;
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
-        shortRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', '', '', ''] as [string, string, string, string],
         closer: '',
       };
 
@@ -1648,7 +1655,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         ) as [string, string],
         shortRelievers: currentBullpen.shortRelievers.map((id) =>
           id === bullpenPlayerId ? '' : id
-        ) as [string, string],
+        ) as [string, string, string, string],
         closer: currentBullpen.closer === bullpenPlayerId ? '' : currentBullpen.closer,
       };
 
@@ -1711,7 +1718,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
 
       const currentBullpen = currentLineup.baseballLineup.bullpen ?? {
         longRelievers: ['', ''] as [string, string],
-        shortRelievers: ['', ''] as [string, string],
+        shortRelievers: ['', '', '', ''] as [string, string, string, string],
         closer: '',
       };
 
@@ -1722,7 +1729,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
         ) as [string, string],
         shortRelievers: currentBullpen.shortRelievers.map((id) =>
           id === bullpenPlayerId ? '' : id
-        ) as [string, string],
+        ) as [string, string, string, string],
         closer: currentBullpen.closer === bullpenPlayerId ? '' : currentBullpen.closer,
       };
 
@@ -1891,16 +1898,18 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       .filter((ps) => !usedPlayerIds.has(ps.player.id))
       .sort((a, b) => b.effectiveScores.P - a.effectiveScores.P);
 
-    // Select top 5 pitchers for bullpen roles
-    const bullpenCandidates = remainingForBullpen.slice(0, 5);
+    // Select top 7 pitchers for bullpen roles (1 closer + 4 short relievers + 2 long relievers)
+    const bullpenCandidates = remainingForBullpen.slice(0, 7);
     const closer = bullpenCandidates[0]?.player.id ?? '';
-    const longReliever1 = bullpenCandidates[1]?.player.id ?? '';
-    const longReliever2 = bullpenCandidates[2]?.player.id ?? '';
-    const shortReliever1 = bullpenCandidates[3]?.player.id ?? '';
-    const shortReliever2 = bullpenCandidates[4]?.player.id ?? '';
+    const shortReliever1 = bullpenCandidates[1]?.player.id ?? '';
+    const shortReliever2 = bullpenCandidates[2]?.player.id ?? '';
+    const shortReliever3 = bullpenCandidates[3]?.player.id ?? '';
+    const shortReliever4 = bullpenCandidates[4]?.player.id ?? '';
+    const longReliever1 = bullpenCandidates[5]?.player.id ?? '';
+    const longReliever2 = bullpenCandidates[6]?.player.id ?? '';
 
     const longRelievers: [string, string] = [longReliever1, longReliever2];
-    const shortRelievers: [string, string] = [shortReliever1, shortReliever2];
+    const shortRelievers: [string, string, string, string] = [shortReliever1, shortReliever2, shortReliever3, shortReliever4];
 
     const bullpen: BaseballBullpenConfig = {
       closer,

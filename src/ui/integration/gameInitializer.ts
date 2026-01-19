@@ -887,17 +887,19 @@ function generateBaseballLineup(
     }))
     .sort((a, b) => b.pitchingScore - a.pitchingScore);
 
-  // Assign bullpen roles: 2 long relievers, 2 short relievers, 1 closer
-  // Best pitching score goes to closer, next 2 to short relievers, next 2 to long relievers
+  // Assign bullpen roles: 2 long relievers, 4 short relievers, 1 closer
+  // Best pitching score goes to closer, next 4 to short relievers, next 2 to long relievers
   const bullpen = {
     longRelievers: [
-      bullpenCandidates[3]?.player.id ?? '',
-      bullpenCandidates[4]?.player.id ?? '',
+      bullpenCandidates[5]?.player.id ?? '',
+      bullpenCandidates[6]?.player.id ?? '',
     ] as [string, string],
     shortRelievers: [
       bullpenCandidates[1]?.player.id ?? '',
       bullpenCandidates[2]?.player.id ?? '',
-    ] as [string, string],
+      bullpenCandidates[3]?.player.id ?? '',
+      bullpenCandidates[4]?.player.id ?? '',
+    ] as [string, string, string, string],
     closer: bullpenCandidates[0]?.player.id ?? '',
   };
 

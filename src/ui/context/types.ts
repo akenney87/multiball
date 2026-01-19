@@ -62,8 +62,8 @@ export type BullpenRole = 'longReliever' | 'shortReliever' | 'closer';
 export interface BaseballBullpenConfig {
   /** Long relievers (2 slots) - can pitch multiple innings */
   longRelievers: [string, string];
-  /** Short relievers (2 slots) - typically 1-2 innings */
-  shortRelievers: [string, string];
+  /** Short relievers (4 slots) - typically 1-2 innings */
+  shortRelievers: [string, string, string, string];
   /** Closer (1 slot) - finishes games */
   closer: string;
 }

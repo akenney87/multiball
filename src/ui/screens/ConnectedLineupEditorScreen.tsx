@@ -23,8 +23,10 @@ import {
   aggregateSoccerGoalkeeperStats,
   aggregatePlayerStats,
   aggregateBaseballBattingStats,
+  aggregateBaseballPitchingStats,
   type AggregatedPlayerStats,
   type AggregatedBaseballBattingStats,
+  type AggregatedBaseballPitchingStats,
 } from '../../systems/statsAggregator';
 import {
   calculateContactComposite,
@@ -1216,12 +1218,10 @@ function BasketballLineupEditor({
               title="Reserves"
               count={String(reserves.length)}
               colors={colors}
-              validationHint={bench.length < 9 ? 'Tap + to add' : undefined}
             />
             {reserves.map((player) => {
               const isSelected = selectedBenchReserve?.id === player.id;
               const isSwapTarget = selectedBenchReserve !== null && selectedBenchReserve.isBench;
-              const canAddToBench = bench.length < 9;
               return (
                 <TouchableOpacity
                   key={player.id}
@@ -1286,17 +1286,6 @@ function BasketballLineupEditor({
                       )}
                     </View>
                   </TouchableOpacity>
-                  {canAddToBench && (
-                    <TouchableOpacity
-                      style={[styles.addToBenchButton, { backgroundColor: colors.success + '20' }]}
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        addToBench?.(player.id);
-                      }}
-                    >
-                      <Text style={[styles.addToBenchButtonText, { color: colors.success }]}>+</Text>
-                    </TouchableOpacity>
-                  )}
                 </TouchableOpacity>
               );
             })}
@@ -2084,13 +2073,11 @@ function SoccerLineupEditor({
               colors={colors}
               statLabel={getSoccerStatLabel(reservesStatSelection)}
               onStatPress={() => setShowStatPicker('reserves')}
-              validationHint={bench.length < 9 ? 'Tap + to add' : undefined}
             />
             {reserves.map((player) => {
               const bestFit = getBenchPlayerBestOverall(player.id);
               const isSelected = selectedBenchReserve?.id === player.id;
               const isSwapTarget = selectedBenchReserve !== null && selectedBenchReserve.isBench;
-              const canAddToBench = bench.length < 9;
 
               return (
                 <TouchableOpacity
@@ -2168,17 +2155,6 @@ function SoccerLineupEditor({
                       {getSoccerStatValue(player, reservesStatSelection, state.players)}
                     </Text>
                   </View>
-                  {canAddToBench && (
-                    <TouchableOpacity
-                      style={[styles.addToBenchButton, { backgroundColor: colors.success + '20' }]}
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        addToBench?.(player.id);
-                      }}
-                    >
-                      <Text style={[styles.addToBenchButtonText, { color: colors.success }]}>+</Text>
-                    </TouchableOpacity>
-                  )}
                 </TouchableOpacity>
               );
             })}
@@ -2407,7 +2383,8 @@ type BaseballStatOption =
   | 'contact' | 'power' | 'discipline' | 'speed'
   | 'pitching' | 'velocity' | 'control' | 'movement'
   | 'fielding' | 'arm'
-  | 'avg' | 'obp' | 'slg' | 'ops';
+  | 'avg' | 'obp' | 'slg' | 'ops'
+  | 'era';
 
 const BATTING_STAT_OPTIONS: { value: BaseballStatOption; label: string }[] = [
   { value: 'contact', label: 'Contact' },
@@ -2427,6 +2404,7 @@ const PITCHING_STAT_OPTIONS: { value: BaseballStatOption; label: string }[] = [
   { value: 'velocity', label: 'Velocity' },
   { value: 'control', label: 'Control' },
   { value: 'movement', label: 'Movement' },
+  { value: 'era', label: 'ERA' },
 ];
 
 // Combined options for bench (includes both batting and pitching stats)
@@ -2440,7 +2418,8 @@ function getBaseballStatValue(
   player: LineupPlayer | Player | null | undefined,
   stat: BaseballStatOption,
   playersRecord?: Record<string, Player>,
-  aggregatedStatsMap?: Map<string, AggregatedBaseballBattingStats>
+  aggregatedBattingStatsMap?: Map<string, AggregatedBaseballBattingStats>,
+  aggregatedPitchingStatsMap?: Map<string, AggregatedBaseballPitchingStats>
 ): string {
   if (!player) return '-';
 
@@ -2483,7 +2462,7 @@ function getBaseballStatValue(
     case 'ops': {
       // Use aggregated stats from completed matches
       const playerId = player.id;
-      const aggregatedStats = aggregatedStatsMap?.get(playerId);
+      const aggregatedStats = aggregatedBattingStatsMap?.get(playerId);
       if (!aggregatedStats || aggregatedStats.atBats === 0) return '-';
 
       if (stat === 'avg') return aggregatedStats.battingAvg.toFixed(3).replace('0.', '.');
@@ -2491,6 +2470,13 @@ function getBaseballStatValue(
       if (stat === 'slg') return aggregatedStats.slg.toFixed(3).replace('0.', '.');
       if (stat === 'ops') return aggregatedStats.ops.toFixed(3);
       return '-';
+    }
+    case 'era': {
+      // Use aggregated pitching stats from completed matches
+      const playerId = player.id;
+      const pitchingStats = aggregatedPitchingStatsMap?.get(playerId);
+      if (!pitchingStats || pitchingStats.inningsPitched === 0) return '-';
+      return pitchingStats.era.toFixed(2);
     }
     default:
       return '-';
@@ -2559,6 +2545,23 @@ function BaseballLineupEditor({
     );
     // Build a map for fast lookups by player ID
     const map = new Map<string, AggregatedBaseballBattingStats>();
+    for (const stats of aggregatedStats) {
+      map.set(stats.playerId, stats);
+    }
+    return map;
+  }, [state.season.matches, state.players, state.userTeam.name, state.league.teams]);
+
+  // Compute aggregated baseball pitching stats from completed matches
+  const aggregatedPitchingStatsMap = useMemo(() => {
+    const baseballMatches = state.season.matches.filter(m => m.sport === 'baseball');
+    const aggregatedStats = aggregateBaseballPitchingStats(
+      baseballMatches,
+      state.players,
+      state.userTeam.name,
+      state.league.teams
+    );
+    // Build a map for fast lookups by player ID
+    const map = new Map<string, AggregatedBaseballPitchingStats>();
     for (const stats of aggregatedStats) {
       map.set(stats.playerId, stats);
     }
@@ -2915,7 +2918,7 @@ function BaseballLineupEditor({
                 </TouchableOpacity>
                 <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                   <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                    {getBaseballStatValue(startingPitcher, pitcherStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                    {getBaseballStatValue(startingPitcher, pitcherStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                   </Text>
                 </View>
               </View>
@@ -3012,7 +3015,7 @@ function BaseballLineupEditor({
 
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, battingStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                        {getBaseballStatValue(player, battingStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -3083,7 +3086,7 @@ function BaseballLineupEditor({
                     </TouchableOpacity>
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -3100,7 +3103,7 @@ function BaseballLineupEditor({
 
           {/* Short Relievers */}
           <Text style={[styles.bullpenRoleLabel, { color: colors.textMuted, marginTop: spacing.sm }]}>Short Relievers</Text>
-          {[0, 1].map((slotIndex) => {
+          {[0, 1, 2, 3].map((slotIndex) => {
             const player = bullpen?.shortRelievers?.[slotIndex];
             const isSelected = selectingBullpenRole?.role === 'shortReliever' && selectingBullpenRole?.slotIndex === slotIndex;
             return (
@@ -3142,7 +3145,7 @@ function BaseballLineupEditor({
                     </TouchableOpacity>
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -3200,7 +3203,7 @@ function BaseballLineupEditor({
                     </TouchableOpacity>
                     <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                       <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                        {getBaseballStatValue(player, bullpenStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                       </Text>
                     </View>
                   </View>
@@ -3310,7 +3313,7 @@ function BaseballLineupEditor({
                       </TouchableOpacity>
                       <View style={[styles.statValueBadge, { backgroundColor: colors.baseball + '20' }]}>
                         <Text style={[styles.statValueText, { color: colors.baseball }]}>
-                          {getBaseballStatValue(player, benchStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                          {getBaseballStatValue(player, benchStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                         </Text>
                       </View>
                     </View>
@@ -3331,7 +3334,6 @@ function BaseballLineupEditor({
               colors={colors}
               statLabel={getStatLabel(reservesStatSelection)}
               onStatPress={() => setShowStatPicker('reserves')}
-              validationHint={(bench?.length || 0) < 9 ? 'Tap + to add' : undefined}
             />
             {reserves.map((player) => {
               const best = getBestPosition?.(player.id);
@@ -3339,7 +3341,6 @@ function BaseballLineupEditor({
               const displayOverall = best?.overall || player.overall;
               const isSelected = selectedBenchReserve?.id === player.id;
               const isSwapTarget = selectedBenchReserve !== null && selectedBenchReserve.isBench;
-              const canAddToBench = (bench?.length || 0) < 9;
 
               return (
                 <TouchableOpacity
@@ -3411,20 +3412,9 @@ function BaseballLineupEditor({
                       </TouchableOpacity>
                       <View style={[styles.statValueBadge, { backgroundColor: colors.textMuted + '20' }]}>
                         <Text style={[styles.statValueText, { color: colors.textMuted }]}>
-                          {getBaseballStatValue(player, reservesStatSelection, allPlayers, aggregatedBattingStatsMap)}
+                          {getBaseballStatValue(player, reservesStatSelection, allPlayers, aggregatedBattingStatsMap, aggregatedPitchingStatsMap)}
                         </Text>
                       </View>
-                      {canAddToBench && (
-                        <TouchableOpacity
-                          style={[styles.addToBenchButton, { backgroundColor: colors.success + '20' }]}
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            addToBench?.(player.id);
-                          }}
-                        >
-                          <Text style={[styles.addToBenchButtonText, { color: colors.success }]}>+</Text>
-                        </TouchableOpacity>
-                      )}
                     </View>
                   </View>
                 </TouchableOpacity>

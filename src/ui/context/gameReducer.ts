@@ -55,7 +55,7 @@ export const initialGameState: GameState = {
         startingPitcher: '',
         bullpen: {
           longRelievers: ['', ''],
-          shortRelievers: ['', ''],
+          shortRelievers: ['', '', '', ''],
           closer: '',
         },
       },
@@ -596,7 +596,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             ) as [string, string],
             shortRelievers: currentLineup.baseballLineup.bullpen.shortRelievers.map((id) =>
               id === playerId ? '' : id
-            ) as [string, string],
+            ) as [string, string, string, string],
             closer: currentLineup.baseballLineup.bullpen.closer === playerId ? '' : currentLineup.baseballLineup.bullpen.closer,
           },
         },
@@ -1780,7 +1780,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...newLineup.baseballLineup,
           bullpen: {
             longRelievers: bullpen.longRelievers.map(id => id === playerId ? '' : id) as [string, string],
-            shortRelievers: bullpen.shortRelievers.map(id => id === playerId ? '' : id) as [string, string],
+            shortRelievers: bullpen.shortRelievers.map(id => id === playerId ? '' : id) as [string, string, string, string],
             closer: bullpen.closer === playerId ? '' : bullpen.closer,
           },
         };

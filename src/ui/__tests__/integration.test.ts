@@ -257,7 +257,7 @@ describe('gameReducer', () => {
           startingPitcher: 'p1',
           bullpen: {
             longRelievers: ['', ''] as [string, string],
-            shortRelievers: ['', ''] as [string, string],
+            shortRelievers: ['', '', '', ''] as [string, string, string, string],
             closer: '',
           },
         },
