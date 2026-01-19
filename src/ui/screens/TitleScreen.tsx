@@ -23,6 +23,7 @@ interface TitleScreenProps {
   onNewGame: () => void;
   hasSaveData: boolean;
   isLoading?: boolean;
+  loadingProgress?: number;
 }
 
 export function TitleScreen({
@@ -30,9 +31,10 @@ export function TitleScreen({
   onNewGame,
   hasSaveData,
   isLoading = false,
+  loadingProgress: externalProgress = 0,
 }: TitleScreenProps) {
   const colors = useColors();
-  const loadingProgress = useRef(new Animated.Value(0)).current;
+  const animatedProgress = useRef(new Animated.Value(0)).current;
 
   // Animated values
   const titleOpacity = useRef(new Animated.Value(0)).current;
@@ -118,17 +120,14 @@ export function TitleScreen({
     ).start();
   }, []);
 
-  // Loading bar animation
+  // Loading bar animation - animate smoothly to external progress value
   useEffect(() => {
-    if (isLoading) {
-      loadingProgress.setValue(0);
-      Animated.timing(loadingProgress, {
-        toValue: 1,
-        duration: 2000,
-        useNativeDriver: false,
-      }).start();
-    }
-  }, [isLoading, loadingProgress]);
+    Animated.timing(animatedProgress, {
+      toValue: externalProgress,
+      duration: 150,
+      useNativeDriver: false,
+    }).start();
+  }, [externalProgress, animatedProgress]);
 
   // Interpolate floating animations
   const ball1TranslateY = ballFloat1.interpolate({
@@ -145,7 +144,7 @@ export function TitleScreen({
   });
 
   // Loading bar width interpolation
-  const loadingBarWidth = loadingProgress.interpolate({
+  const loadingBarWidth = animatedProgress.interpolate({
     inputRange: [0, 1],
     outputRange: ['0%', '100%'],
   });

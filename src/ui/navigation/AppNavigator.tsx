@@ -35,6 +35,7 @@ export function AppNavigator() {
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   // Check for saved game on mount
   useEffect(() => {
@@ -55,10 +56,26 @@ export function AppNavigator() {
   // Handle continue - load saved game
   const handleContinue = useCallback(async () => {
     setIsLoadingGame(true);
+    setLoadingProgress(0);
+
+    // Simulate progress during load - quickly go to 30%, then slow down
+    const progressInterval = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev < 0.3) return prev + 0.05;      // Fast to 30%
+        if (prev < 0.7) return prev + 0.02;      // Medium to 70%
+        if (prev < 0.9) return prev + 0.005;     // Slow to 90%
+        return prev;                              // Hold at 90% until done
+      });
+    }, 50);
+
     await loadGame();
+
+    clearInterval(progressInterval);
+    setLoadingProgress(1);  // Complete!
+
+    // Brief delay to show 100% before transitioning
+    await new Promise(resolve => setTimeout(resolve, 200));
     setIsLoadingGame(false);
-    // After load completes, state.initialized will be true,
-    // so the navigator will show MainTabs automatically
   }, [loadGame]);
 
   // Handle new game - go to onboarding
@@ -87,6 +104,7 @@ export function AppNavigator() {
                 onNewGame={handleNewGame}
                 hasSaveData={hasSavedGame}
                 isLoading={isLoadingGame}
+                loadingProgress={loadingProgress}
               />
             )}
           </Stack.Screen>
