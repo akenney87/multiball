@@ -842,13 +842,27 @@ export function shouldMakeTransferBid(
 
   // Check position need
   const positionNeed = needs.positionGaps.find(g => g.position === target.position);
-  if (!positionNeed || positionNeed.urgency === 'low') {
-    return null; // Only pursue if we need the position
+
+  // For transfer-listed players, be more opportunistic since they're discounted
+  // For regular players, only pursue if we have a real position need
+  if (!positionNeed) {
+    return null;
   }
 
-  // Must be an upgrade
-  if (target.overallRating <= positionNeed.avgRating + 3) {
-    return null; // Not enough of an upgrade
+  if (target.isOnTransferList) {
+    // Transfer-listed players: bid if they're at least as good as our average
+    // This is opportunistic buying - we're getting a discount on a motivated seller
+    if (target.overallRating < positionNeed.avgRating) {
+      return null; // Must be at least as good as what we have
+    }
+  } else {
+    // Regular players: only pursue if we need the position AND they're a clear upgrade
+    if (positionNeed.urgency === 'low') {
+      return null; // Only pursue if we need the position
+    }
+    if (target.overallRating <= positionNeed.avgRating + 3) {
+      return null; // Not enough of an upgrade
+    }
   }
 
   // Calculate bid based on spending aggression
@@ -907,6 +921,12 @@ export function shouldMakeTransferBid(
     urgency = 'reluctant';
   }
 
+  // Build reason string
+  const reasonParts = [`${positionNeed.urgency} need at ${target.position}`, `${target.overallRating} rating`];
+  if (target.isOnTransferList) {
+    reasonParts.push('transfer-listed (discounted)');
+  }
+
   return {
     playerId: target.id,
     playerName: target.name,
@@ -914,7 +934,7 @@ export function shouldMakeTransferBid(
     bidAmount,
     maxBid,
     urgency,
-    reason: `${positionNeed.urgency} need at ${target.position}, ${target.overallRating} rating`,
+    reason: reasonParts.join(', '),
   };
 }
 

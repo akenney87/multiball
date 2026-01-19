@@ -54,6 +54,8 @@ export interface AITeam {
   id: string;
   name: string;
   rosterIds: string[];
+  /** Team's division (1-10) */
+  division?: number;
   /** Either aiConfig (from AITeamState) or aiPersonality (from Franchise) */
   aiConfig?: AIConfig;
   aiPersonality?: AIPersonality | null;
@@ -314,6 +316,7 @@ function buildDecisionContext(
     salaryCommitment,
     week: currentWeek,
     transferWindowOpen: isTransferWindowOpen,
+    division: team.division || 5, // Default to middle division if not set
     finance: {
       available: team.budget?.available || 1000000,
       total: team.budget?.total || 5000000,
@@ -606,6 +609,9 @@ export function processBatchedWeeklyAI(input: ExtendedWeeklyProcessorInput): Bat
     currentWeek,
     isTransferWindowOpen,
     incomingOffersByTeam,
+    // Pass through transfer-listed players so batch processing sees them too
+    transferListedPlayerIds: input.transferListedPlayerIds,
+    bidBlockedPlayers: input.bidBlockedPlayers,
   };
 
   // Process the batch
