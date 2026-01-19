@@ -804,6 +804,146 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return newState;
     }
 
+    case 'COUNTER_TRANSFER_OFFER': {
+      // User counters an AI's offer (user is the seller)
+      const { offerId, counterAmount } = action.payload;
+
+      const updateOffer = (offer: TransferOffer): TransferOffer => {
+        if (offer.id !== offerId) return offer;
+
+        // Add counter to negotiation history
+        const historyEntry = {
+          amount: counterAmount,
+          from: 'user',
+          timestamp: new Date(),
+        };
+
+        return {
+          ...offer,
+          status: 'countered' as const,
+          counterOffer: {
+            amount: counterAmount,
+            counteredBy: 'user',
+            counteredDate: new Date(),
+          },
+          negotiationHistory: [...(offer.negotiationHistory || []), historyEntry],
+          negotiationRound: (offer.negotiationRound || 1) + 1,
+        };
+      };
+
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          transferOffers: state.market.transferOffers.map(updateOffer),
+          incomingOffers: state.market.incomingOffers.map(updateOffer),
+        },
+      };
+    }
+
+    case 'AI_RESPOND_TO_COUNTER': {
+      // AI responds to user's counter-offer
+      const { offerId, decision, newAmount } = action.payload;
+
+      const updateOffer = (offer: TransferOffer): TransferOffer => {
+        if (offer.id !== offerId) return offer;
+
+        if (decision === 'accept') {
+          // AI accepts user's counter - use the counter amount
+          return {
+            ...offer,
+            status: 'accepted' as const,
+            transferFee: offer.counterOffer?.amount || offer.transferFee,
+          };
+        } else if (decision === 'walk_away') {
+          return {
+            ...offer,
+            status: 'walked_away' as const,
+          };
+        } else {
+          // AI counters back
+          const historyEntry = {
+            amount: newAmount || offer.transferFee,
+            from: offer.offeringTeamId,
+            timestamp: new Date(),
+          };
+
+          return {
+            ...offer,
+            status: 'pending' as const, // Back to pending, waiting for user response
+            transferFee: newAmount || offer.transferFee,
+            counterOffer: undefined, // Clear user's counter since AI responded
+            negotiationHistory: [...(offer.negotiationHistory || []), historyEntry],
+            negotiationRound: (offer.negotiationRound || 1) + 1,
+          };
+        }
+      };
+
+      const updatedOffers = state.market.transferOffers.map(updateOffer);
+      const acceptedOffer = updatedOffers.find(
+        (o) => o.id === offerId && o.status === 'accepted'
+      );
+
+      let newState = {
+        ...state,
+        market: {
+          ...state.market,
+          transferOffers: updatedOffers,
+          incomingOffers: state.market.incomingOffers.map(updateOffer),
+        },
+      };
+
+      // If AI accepted, process the transfer (same as RESPOND_TO_OFFER accept)
+      if (acceptedOffer) {
+        const player = state.players[acceptedOffer.playerId];
+        if (player) {
+          // Remove from user team
+          newState = {
+            ...newState,
+            players: {
+              ...newState.players,
+              [acceptedOffer.playerId]: {
+                ...player,
+                teamId: acceptedOffer.offeringTeamId,
+              },
+            },
+            userTeam: {
+              ...newState.userTeam,
+              rosterIds: newState.userTeam.rosterIds.filter(
+                (id) => id !== acceptedOffer.playerId
+              ),
+              // Remove from transfer list
+              transferListPlayerIds: newState.userTeam.transferListPlayerIds?.filter(
+                (id: string) => id !== acceptedOffer.playerId
+              ),
+              availableBudget:
+                newState.userTeam.availableBudget + acceptedOffer.transferFee,
+            },
+          };
+
+          // Add to AI team roster
+          const aiTeam = newState.league.teams.find(
+            (t) => t.id === acceptedOffer.offeringTeamId
+          );
+          if (aiTeam) {
+            newState = {
+              ...newState,
+              league: {
+                ...newState.league,
+                teams: newState.league.teams.map((t) =>
+                  t.id === acceptedOffer.offeringTeamId
+                    ? { ...t, rosterIds: [...t.rosterIds, acceptedOffer.playerId] }
+                    : t
+                ),
+              },
+            };
+          }
+        }
+      }
+
+      return newState;
+    }
+
     case 'EXPIRE_OFFERS': {
       const now = new Date();
       const expireOffer = (offer: TransferOffer): TransferOffer => {

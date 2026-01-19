@@ -514,6 +514,8 @@ export type GameAction =
   // Market
   | { type: 'MAKE_OFFER'; payload: { playerId: string; amount: number } }
   | { type: 'RESPOND_TO_OFFER'; payload: { offerId: string; accept: boolean } }
+  | { type: 'COUNTER_TRANSFER_OFFER'; payload: { offerId: string; counterAmount: number } }
+  | { type: 'AI_RESPOND_TO_COUNTER'; payload: { offerId: string; decision: 'accept' | 'counter' | 'walk_away'; newAmount?: number; reason: string } }
   | { type: 'EXPIRE_OFFERS' }
   | { type: 'PROCESS_TRANSFER_RESPONSES'; payload: { currentWeek: number } }
   | { type: 'COMPLETE_TRANSFER'; payload: { offerId: string; playerId: string; fromTeamId: string; toTeamId: string; fee: number } }
@@ -888,6 +890,11 @@ export interface GameContextValue {
    * Respond to an incoming offer
    */
   respondToOffer: (offerId: string, accept: boolean) => void;
+
+  /**
+   * Counter an incoming transfer offer with a new amount
+   */
+  counterTransferOffer: (offerId: string, counterAmount: number) => void;
 
   /**
    * Sign a free agent

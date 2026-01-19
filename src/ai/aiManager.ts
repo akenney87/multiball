@@ -1006,6 +1006,153 @@ export function evaluateIncomingOffer(
 }
 
 /**
+ * Counter-offer response from AI buyer
+ */
+export interface BuyerCounterResponse {
+  offerId: string;
+  playerId: string;
+  decision: 'accept' | 'counter' | 'walk_away';
+  counterAmount?: number;
+  reason: string;
+}
+
+/**
+ * Evaluate a counter-offer from the seller (user) when AI is the buyer
+ *
+ * AI buyer personality affects:
+ * - spending_aggression: How much above initial bid they're willing to go
+ * - risk_tolerance: Whether they'll counter or walk away when price is high
+ *
+ * Returns accept, counter, or walk_away based on:
+ * - How the counter compares to their maxBid
+ * - Their personality (aggressive spenders are more flexible)
+ * - The negotiation round (AI gets less patient over time)
+ */
+export function evaluateBuyerCounterResponse(
+  offer: {
+    offerId: string;
+    playerId: string;
+    counterAmount: number;       // What the seller is asking
+    originalBid: number;         // AI's original bid
+    maxBid: number;              // AI's maximum they were willing to pay
+    marketValue: number;         // Player's market value
+    negotiationRound: number;    // How many back-and-forths (1 = first counter)
+    isTransferListed: boolean;   // Was player on transfer list?
+  },
+  personality: AIPersonality
+): BuyerCounterResponse {
+  const { counterAmount, originalBid, maxBid, marketValue, negotiationRound, isTransferListed } = offer;
+
+  // Get personality traits (0-1 scale)
+  const spendingAggression = personality.traits.spending_aggression / 100;
+  const riskTolerance = personality.traits.risk_tolerance / 100;
+
+  // Counter as percentage of market value
+  const counterRatio = counterAmount / marketValue;
+
+  // AI patience decreases with each round
+  // Round 1: full patience, Round 2: 80%, Round 3: 60%, etc.
+  const patienceMultiplier = Math.max(0.4, 1 - (negotiationRound - 1) * 0.2);
+
+  // Aggressive spenders have higher effective maxBid
+  // Conservative ones have lower effective maxBid
+  const effectiveMaxBid = maxBid * (0.8 + spendingAggression * 0.4); // 0.8x to 1.2x
+
+  // ==========================================================================
+  // DECISION LOGIC
+  // ==========================================================================
+
+  // ACCEPT: Counter is at or below effective max bid
+  if (counterAmount <= effectiveMaxBid) {
+    return {
+      offerId: offer.offerId,
+      playerId: offer.playerId,
+      decision: 'accept',
+      reason: `Counter of $${counterAmount.toLocaleString()} is acceptable (within budget)`,
+    };
+  }
+
+  // For transfer-listed players, AI is less willing to overpay
+  // (They expected a discount, so they're less patient)
+  if (isTransferListed && counterRatio > 1.0) {
+    // Player is listed but asking above market value
+    const walkAwayChance = 0.4 + (counterRatio - 1.0) * 2; // Higher counter = more likely to walk
+
+    // Risk-tolerant AIs might still try to counter
+    if (Math.random() > walkAwayChance * (1 - riskTolerance * 0.5)) {
+      // Make one more counter at market value
+      const newCounter = Math.round(marketValue * (0.95 + spendingAggression * 0.1));
+      return {
+        offerId: offer.offerId,
+        playerId: offer.playerId,
+        decision: 'counter',
+        counterAmount: Math.min(newCounter, Math.round(effectiveMaxBid)),
+        reason: `Listed player asking above market - countering at $${newCounter.toLocaleString()}`,
+      };
+    } else {
+      return {
+        offerId: offer.offerId,
+        playerId: offer.playerId,
+        decision: 'walk_away',
+        reason: `Listed player asking ${(counterRatio * 100).toFixed(0)}% of market value - walking away`,
+      };
+    }
+  }
+
+  // COUNTER: If we still have room to negotiate
+  if (negotiationRound < 3 * patienceMultiplier) {
+    // Calculate our counter offer
+    // Start from our original bid and move toward their counter based on personality
+    const moveAmount = (counterAmount - originalBid) * (0.3 + spendingAggression * 0.4);
+    let newOffer = Math.round(originalBid + moveAmount);
+
+    // Don't exceed our effective max
+    newOffer = Math.min(newOffer, Math.round(effectiveMaxBid));
+
+    // Don't go backwards
+    newOffer = Math.max(newOffer, originalBid);
+
+    // If our new offer is basically the same as our original (< 5% increase), walk away
+    if (newOffer < originalBid * 1.05) {
+      return {
+        offerId: offer.offerId,
+        playerId: offer.playerId,
+        decision: 'walk_away',
+        reason: `Cannot meet seller's price - too far above our valuation`,
+      };
+    }
+
+    return {
+      offerId: offer.offerId,
+      playerId: offer.playerId,
+      decision: 'counter',
+      counterAmount: newOffer,
+      reason: `Countering with $${newOffer.toLocaleString()} (round ${negotiationRound + 1})`,
+    };
+  }
+
+  // WALK AWAY: Out of patience or counter is way too high
+  // Risk-tolerant AIs have a small chance to make one final "take it or leave it" offer
+  if (riskTolerance > 0.7 && Math.random() < riskTolerance * 0.3) {
+    const finalOffer = Math.round(effectiveMaxBid);
+    return {
+      offerId: offer.offerId,
+      playerId: offer.playerId,
+      decision: 'counter',
+      counterAmount: finalOffer,
+      reason: `Final offer: $${finalOffer.toLocaleString()} - take it or leave it`,
+    };
+  }
+
+  return {
+    offerId: offer.offerId,
+    playerId: offer.playerId,
+    decision: 'walk_away',
+    reason: `Negotiations stalled after ${negotiationRound} rounds - walking away`,
+  };
+}
+
+/**
  * Determine if AI should release a player
  */
 export function shouldReleasePlayer(

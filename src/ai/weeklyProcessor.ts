@@ -227,7 +227,7 @@ function convertToTransferTarget(
  * Convert AIConfig to AIPersonality for decision context
  * Maps old-style personality types to new trait-based personality
  */
-function configToPersonality(config: AIConfig): AIPersonality {
+export function configToPersonality(config: AIConfig): AIPersonality {
   // Default balanced personality
   const balancedPersonality: AIPersonality = {
     name: 'Balanced',

@@ -1812,7 +1812,7 @@ export interface TransferOffer {
   transferFee: number;
 
   /** Current status */
-  status: 'pending' | 'accepted' | 'rejected' | 'countered' | 'expired';
+  status: 'pending' | 'accepted' | 'rejected' | 'countered' | 'expired' | 'walked_away';
 
   /** Creation date */
   createdDate: Date;
@@ -1825,6 +1825,25 @@ export interface TransferOffer {
 
   /** Negotiation history */
   negotiationHistory: TransferNegotiationEntry[];
+
+  // ==========================================================================
+  // NEGOTIATION TRACKING (for AI buyer counter-response)
+  // ==========================================================================
+
+  /** Original bid amount (AI's first offer) */
+  originalBid?: number;
+
+  /** Maximum the AI buyer is willing to pay */
+  maxBid?: number;
+
+  /** Player's market value at time of offer */
+  marketValue?: number;
+
+  /** Current negotiation round (1 = initial offer, 2+ = after counter) */
+  negotiationRound?: number;
+
+  /** Was the player on transfer list when offer was made? */
+  isTransferListed?: boolean;
 }
 
 // =============================================================================

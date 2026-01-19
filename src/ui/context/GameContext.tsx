@@ -72,6 +72,7 @@ import { calculateMatchDrain, applyFitnessDegradation } from '../../systems/matc
 import {
   processWeeklyAI,
   processBatchedWeeklyAI,
+  configToPersonality,
   type WeeklyProcessorInput,
   type ExtendedWeeklyProcessorInput,
   type AITeam,
@@ -80,6 +81,8 @@ import {
   getDivisionManager,
   type TeamReference,
 } from '../../ai/divisionManager';
+import { evaluateBuyerCounterResponse } from '../../ai/aiManager';
+import { calculateOverallRating } from '../../ai/evaluation';
 import {
   processWeeklyAwards,
   processMonthlyAwards,
@@ -760,6 +763,103 @@ export function GameProvider({ children }: GameProviderProps) {
   const advanceWeek = useCallback(async () => {
     // Process AI responses to user's transfer offers
     dispatch({ type: 'PROCESS_TRANSFER_RESPONSES', payload: { currentWeek: state.season.currentWeek } });
+
+    // Process AI responses to user's counter-offers on incoming offers
+    // (When AI made an offer on user's player and user countered back)
+    const preState = stateRef.current;
+    const counteredIncomingOffers = preState.market.incomingOffers.filter(
+      (o) => o.status === 'countered' && o.counterOffer
+    );
+
+    for (const offer of counteredIncomingOffers) {
+      // Find the AI team that made the offer
+      const aiTeam = preState.league.teams.find((t) => t.id === offer.offeringTeamId);
+      if (!aiTeam?.aiConfig) continue;
+
+      // Convert aiConfig to AIPersonality for the evaluation function
+      const aiPersonality = configToPersonality(aiTeam.aiConfig);
+
+      // Get market value for the player
+      const player = preState.players[offer.playerId];
+      if (!player) continue;
+
+      const marketValue = offer.marketValue || (calculateOverallRating(player) * 50000 * (player.age < 25 ? 1.5 : player.age > 30 ? 0.7 : 1.0));
+
+      // Use AI evaluation function
+      const response = evaluateBuyerCounterResponse(
+        {
+          offerId: offer.id,
+          playerId: offer.playerId,
+          counterAmount: offer.counterOffer?.amount || offer.transferFee,
+          originalBid: offer.originalBid || offer.transferFee,
+          maxBid: offer.maxBid || offer.transferFee * 1.3,
+          marketValue,
+          negotiationRound: offer.negotiationRound || 1,
+          isTransferListed: offer.isTransferListed || false,
+        },
+        aiPersonality
+      );
+
+      // Dispatch AI response
+      dispatch({
+        type: 'AI_RESPOND_TO_COUNTER',
+        payload: {
+          offerId: offer.id,
+          decision: response.decision,
+          newAmount: response.counterAmount,
+          reason: response.reason,
+        },
+      });
+
+      // Create news event based on AI response
+      const playerName = player.name;
+      const teamName = aiTeam.name;
+      let event: NewsItem;
+
+      if (response.decision === 'accept') {
+        event = {
+          id: `event-${Date.now()}-${offer.id}`,
+          type: 'transfer',
+          priority: 'important',
+          title: 'Transfer Complete!',
+          message: `${teamName} has accepted your counter-offer of $${((offer.counterOffer?.amount || offer.transferFee) / 1000000).toFixed(1)}M for ${playerName}!`,
+          timestamp: new Date(),
+          read: false,
+          relatedEntityId: offer.playerId,
+          scope: 'team',
+          teamId: 'user',
+        };
+      } else if (response.decision === 'walk_away') {
+        event = {
+          id: `event-${Date.now()}-${offer.id}`,
+          type: 'transfer',
+          priority: 'info',
+          title: 'Negotiations Collapsed',
+          message: `${teamName} has walked away from negotiations for ${playerName}. They felt your asking price was too high.`,
+          timestamp: new Date(),
+          read: false,
+          relatedEntityId: offer.playerId,
+          scope: 'team',
+          teamId: 'user',
+        };
+      } else {
+        // AI countered back
+        event = {
+          id: `event-${Date.now()}-${offer.id}`,
+          type: 'transfer',
+          priority: 'important',
+          title: 'New Counter Offer',
+          message: `${teamName} has countered with $${((response.counterAmount || offer.transferFee) / 1000000).toFixed(1)}M for ${playerName}. Check your incoming offers to respond.`,
+          timestamp: new Date(),
+          read: false,
+          relatedEntityId: offer.playerId,
+          scope: 'team',
+          teamId: 'user',
+        };
+      }
+
+      dispatch({ type: 'ADD_EVENT', payload: event });
+    }
 
     // Use a short delay to let the state update, then process accepted offers
     await new Promise(resolve => setTimeout(resolve, 50));
@@ -3190,6 +3290,13 @@ export function GameProvider({ children }: GameProviderProps) {
     dispatch({ type: 'RESPOND_TO_OFFER', payload: { offerId, accept } });
   }, []);
 
+  /**
+   * Counter an incoming transfer offer with a new amount
+   */
+  const counterTransferOffer = useCallback((offerId: string, counterAmount: number) => {
+    dispatch({ type: 'COUNTER_TRANSFER_OFFER', payload: { offerId, counterAmount } });
+  }, []);
+
   const signFreeAgent = useCallback((playerId: string, salary: number) => {
     const player = state.players[playerId];
     if (!player || player.teamId !== 'free_agent') return;
@@ -3469,6 +3576,7 @@ export function GameProvider({ children }: GameProviderProps) {
       // Market Actions
       makeTransferOffer,
       respondToOffer,
+      counterTransferOffer,
       signFreeAgent,
       getTransferTargets,
       getFreeAgents,
@@ -3534,6 +3642,7 @@ export function GameProvider({ children }: GameProviderProps) {
       getPlayer,
       makeTransferOffer,
       respondToOffer,
+      counterTransferOffer,
       signFreeAgent,
       getTransferTargets,
       getFreeAgents,
