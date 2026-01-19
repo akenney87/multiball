@@ -22,14 +22,17 @@ interface TitleScreenProps {
   onContinue: () => void;
   onNewGame: () => void;
   hasSaveData: boolean;
+  isLoading?: boolean;
 }
 
 export function TitleScreen({
   onContinue,
   onNewGame,
   hasSaveData,
+  isLoading = false,
 }: TitleScreenProps) {
   const colors = useColors();
+  const loadingProgress = useRef(new Animated.Value(0)).current;
 
   // Animated values
   const titleOpacity = useRef(new Animated.Value(0)).current;
@@ -115,6 +118,18 @@ export function TitleScreen({
     ).start();
   }, []);
 
+  // Loading bar animation
+  useEffect(() => {
+    if (isLoading) {
+      loadingProgress.setValue(0);
+      Animated.timing(loadingProgress, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [isLoading, loadingProgress]);
+
   // Interpolate floating animations
   const ball1TranslateY = ballFloat1.interpolate({
     inputRange: [0, 1],
@@ -127,6 +142,12 @@ export function TitleScreen({
   const ball3TranslateY = ballFloat3.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -12],
+  });
+
+  // Loading bar width interpolation
+  const loadingBarWidth = loadingProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
   });
 
   return (
@@ -223,36 +244,53 @@ export function TitleScreen({
             },
           ]}
         >
-          {hasSaveData && (
-            <TouchableOpacity
-              style={[styles.button, styles.primaryButton, { backgroundColor: colors.primary }]}
-              onPress={onContinue}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.buttonText, styles.primaryButtonText]}>CONTINUE</Text>
-            </TouchableOpacity>
-          )}
+          {isLoading ? (
+            // Loading bar
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>LOADING...</Text>
+              <View style={styles.loadingBarBackground}>
+                <Animated.View
+                  style={[
+                    styles.loadingBarFill,
+                    { width: loadingBarWidth, backgroundColor: colors.primary },
+                  ]}
+                />
+              </View>
+            </View>
+          ) : (
+            <>
+              {hasSaveData && (
+                <TouchableOpacity
+                  style={[styles.button, styles.primaryButton, { backgroundColor: colors.primary }]}
+                  onPress={onContinue}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[styles.buttonText, styles.primaryButtonText]}>CONTINUE</Text>
+                </TouchableOpacity>
+              )}
 
-          <TouchableOpacity
-            style={[
-              styles.button,
-              hasSaveData ? styles.secondaryButton : styles.primaryButton,
-              hasSaveData
-                ? { borderColor: 'rgba(255,255,255,0.3)' }
-                : { backgroundColor: colors.primary },
-            ]}
-            onPress={onNewGame}
-            activeOpacity={0.8}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                hasSaveData ? styles.secondaryButtonText : styles.primaryButtonText,
-              ]}
-            >
-              NEW GAME
-            </Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  hasSaveData ? styles.secondaryButton : styles.primaryButton,
+                  hasSaveData
+                    ? { borderColor: 'rgba(255,255,255,0.3)' }
+                    : { backgroundColor: colors.primary },
+                ]}
+                onPress={onNewGame}
+                activeOpacity={0.8}
+              >
+                <Text
+                  style={[
+                    styles.buttonText,
+                    hasSaveData ? styles.secondaryButtonText : styles.primaryButtonText,
+                  ]}
+                >
+                  NEW GAME
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
         </Animated.View>
       </View>
 
@@ -387,6 +425,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'rgba(255,255,255,0.2)',
     fontWeight: '500',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  loadingText: {
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 4,
+    color: 'rgba(255,255,255,0.6)',
+  },
+  loadingBarBackground: {
+    width: '100%',
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  loadingBarFill: {
+    height: '100%',
+    borderRadius: 3,
   },
 });
 

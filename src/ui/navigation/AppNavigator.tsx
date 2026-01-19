@@ -66,8 +66,8 @@ export function AppNavigator() {
     setShowTitle(false);
   }, []);
 
-  // Show loading while checking for saved game or loading a saved game
-  if (isCheckingGame || isLoadingGame) {
+  // Show loading while checking for saved game (initial check only)
+  if (isCheckingGame) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
         <ActivityIndicator size="large" color={colors.primary} />
@@ -79,13 +79,14 @@ export function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* Show title screen first if not initialized and hasn't been dismissed */}
-        {showTitle && !state.initialized ? (
+        {(showTitle || isLoadingGame) && !state.initialized ? (
           <Stack.Screen name="Title">
             {() => (
               <TitleScreen
                 onContinue={handleContinue}
                 onNewGame={handleNewGame}
                 hasSaveData={hasSavedGame}
+                isLoading={isLoadingGame}
               />
             )}
           </Stack.Screen>
