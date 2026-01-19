@@ -34,6 +34,7 @@ export function AppNavigator() {
   const [isCheckingGame, setIsCheckingGame] = useState(true);
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
+  const [isLoadingGame, setIsLoadingGame] = useState(false);
 
   // Check for saved game on mount
   useEffect(() => {
@@ -52,9 +53,12 @@ export function AppNavigator() {
   }, []);
 
   // Handle continue - load saved game
-  const handleContinue = useCallback(() => {
-    loadGame();
-    setShowTitle(false);
+  const handleContinue = useCallback(async () => {
+    setIsLoadingGame(true);
+    await loadGame();
+    setIsLoadingGame(false);
+    // After load completes, state.initialized will be true,
+    // so the navigator will show MainTabs automatically
   }, [loadGame]);
 
   // Handle new game - go to onboarding
@@ -62,8 +66,8 @@ export function AppNavigator() {
     setShowTitle(false);
   }, []);
 
-  // Show loading while checking for saved game
-  if (isCheckingGame) {
+  // Show loading while checking for saved game or loading a saved game
+  if (isCheckingGame || isLoadingGame) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
         <ActivityIndicator size="large" color={colors.primary} />
