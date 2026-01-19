@@ -116,10 +116,12 @@ function attemptShotWithContext(
   }
 
   // Return unified result with pointsScored calculated
+  // For rim shots, debugInfo.shotType contains 'dunk' or 'layup', while shotType is just 'rim'
+  // debugInfo.shotDetail is only set for blocked shots
   return {
     made,
     pointsScored,
-    shotDetail: debugInfo.shotDetail || shotType,
+    shotDetail: debugInfo.shotDetail || debugInfo.shotType || shotType,
     foulEvent,
     contestDistance,
     defenseType,
@@ -1268,6 +1270,12 @@ function generatePlayByPlay(
             distance = 0; // At the rim
             const dunkTypes = ['dunk', 'slam dunk', 'one-handed dunk', 'two-handed dunk'];
             action = dunkTypes[Math.floor(Math.random() * dunkTypes.length)] || 'dunk';
+            break;
+          case 'rim':
+            // Fallback for generic rim attempts - treat as layup
+            distance = Math.floor(2 + Math.random() * 4); // 2-5 feet
+            const rimTypes = ['driving layup', 'layup', 'shot at the rim'];
+            action = rimTypes[Math.floor(Math.random() * rimTypes.length)] || 'layup';
             break;
           default:
             distance = 10;
