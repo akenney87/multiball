@@ -96,7 +96,8 @@ export function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* Show title screen first if not initialized and hasn't been dismissed */}
-        {(showTitle || isLoadingGame) && !state.initialized ? (
+        {/* Keep showing title during loading even after state.initialized becomes true */}
+        {(showTitle && !state.initialized) || isLoadingGame ? (
           <Stack.Screen name="Title">
             {() => (
               <TitleScreen
