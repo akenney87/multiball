@@ -1838,6 +1838,54 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       }
     }
 
+    // 2b. Reorder batting order: slots 1-2 by Contact, slots 3-9 by Power
+    // Contact skill weights (from skillComposites.ts)
+    const getContactScore = (p: Player): number => {
+      const a = p.attributes;
+      return (
+        (a.hand_eye_coordination ?? 0) * 0.30 +
+        (a.form_technique ?? 0) * 0.15 +
+        (a.reactions ?? 0) * 0.15 +
+        (a.composure ?? 0) * 0.15 +
+        (a.patience ?? 0) * 0.10 +
+        (a.consistency ?? 0) * 0.10 +
+        (a.awareness ?? 0) * 0.05
+      );
+    };
+
+    // Power skill weights (from skillComposites.ts)
+    const getPowerScore = (p: Player): number => {
+      const a = p.attributes;
+      return (
+        (a.core_strength ?? 0) * 0.35 +
+        (a.arm_strength ?? 0) * 0.15 +
+        (a.grip_strength ?? 0) * 0.15 +
+        (a.form_technique ?? 0) * 0.15 +
+        (a.balance ?? 0) * 0.10 +
+        (a.height ?? 0) * 0.10
+      );
+    };
+
+    // Get player objects for batting order
+    const battingPlayers = battingOrder
+      .map((id) => roster.find((p) => p.id === id))
+      .filter((p): p is Player => p !== undefined);
+
+    // Sort all by Contact first to get top 2
+    const sortedByContact = [...battingPlayers].sort(
+      (a, b) => getContactScore(b) - getContactScore(a)
+    );
+    const top2Contact = sortedByContact.slice(0, 2);
+    const remaining = sortedByContact.slice(2);
+
+    // Sort remaining by Power for slots 3-9
+    const sortedByPower = [...remaining].sort(
+      (a, b) => getPowerScore(b) - getPowerScore(a)
+    );
+
+    // Combine: top 2 by contact, then rest by power
+    const reorderedBatting = [...top2Contact, ...sortedByPower].map((p) => p.id);
+
     // 3. Build optimal bullpen from remaining players by effective pitching rating
     const remainingForBullpen = playerScores
       .filter((ps) => !usedPlayerIds.has(ps.player.id))
@@ -1884,7 +1932,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       baseballLineup: {
         ...currentLineup.baseballLineup,
         startingPitcher: startingPitcher.id,
-        battingOrder: battingOrder.slice(0, 9),
+        battingOrder: reorderedBatting.slice(0, 9),
         positions,
         bullpen,
       },
