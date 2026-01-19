@@ -423,12 +423,8 @@ export function TabNavigator() {
             onQuickSimComplete={() => {
               // Clear gameday lineup after match completes
               clearGamedayLineup();
-              // After quick sim, the match is completed - stay on modal to show result
-              // Force re-render by setting match ID again
-              const matchId = selectedMatchId;
-              setSelectedMatchId(null);
-              setTimeout(() => setSelectedMatchId(matchId), 50);
-              // Note: All strategies (baseball, soccer, basketball) persist in global state
+              // The modal automatically shows ConnectedMatchResultScreen when
+              // match.status becomes 'completed' - no need to close and reopen
             }}
             onEditLineup={() => {
               const match = state.season.matches.find((m) => m.id === selectedMatchId);
