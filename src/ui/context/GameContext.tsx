@@ -230,62 +230,6 @@ function generateAutoBasketballLineup(
   };
 }
 
-/**
- * Replace low-condition starters with higher-condition bench players
- * Returns new starters and bench arrays
- */
-function replaceExhaustedPlayers(
-  starterIds: string[],
-  benchIds: string[],
-  players: Record<string, Player>,
-  conditionThreshold: number = LOW_CONDITION_THRESHOLD
-): { starters: string[]; bench: string[] } {
-  const newStarters: string[] = [...starterIds];
-  const newBench: string[] = [...benchIds];
-
-  // Check each starter
-  for (let i = 0; i < newStarters.length; i++) {
-    const starterId = newStarters[i];
-    if (!starterId) continue;
-
-    const starter = players[starterId];
-    if (!starter) continue;
-
-    const starterCondition = getPlayerCondition(starter);
-
-    // If starter is below threshold, try to find a bench replacement
-    if (starterCondition < conditionThreshold) {
-      // Find best bench player with better condition
-      let bestBenchIdx = -1;
-      let bestBenchCondition = starterCondition;
-
-      for (let j = 0; j < newBench.length; j++) {
-        const benchId = newBench[j];
-        if (!benchId) continue;
-
-        const benchPlayer = players[benchId];
-        if (!benchPlayer) continue;
-
-        const benchCondition = getPlayerCondition(benchPlayer);
-        if (benchCondition > bestBenchCondition && benchCondition >= conditionThreshold) {
-          bestBenchIdx = j;
-          bestBenchCondition = benchCondition;
-        }
-      }
-
-      // Swap if we found a better player
-      if (bestBenchIdx >= 0) {
-        const benchReplacement = newBench[bestBenchIdx];
-        if (benchReplacement) {
-          newBench[bestBenchIdx] = starterId;
-          newStarters[i] = benchReplacement;
-        }
-      }
-    }
-  }
-
-  return { starters: newStarters, bench: newBench };
-}
 
 /**
  * Build BaseballTeamState from roster for baseball simulation
@@ -2388,6 +2332,7 @@ export function GameProvider({ children }: GameProviderProps) {
     try {
       if (match.sport === 'basketball') {
         // Determine effective starters and bench for user team
+        // Note: We allow exhausted starters - user's choice to field tired players
         let effectiveUserStarters = effectiveLineup.basketballStarters;
         let effectiveUserBench = effectiveLineup.bench;
 
@@ -2399,26 +2344,13 @@ export function GameProvider({ children }: GameProviderProps) {
           );
 
           if (!validation.valid) {
-            // Auto-generate lineup if invalid (like baseball does)
+            // Auto-generate lineup if invalid
             console.warn('Basketball lineup invalid, auto-generating:', validation.error);
             const autoLineup = generateAutoBasketballLineup(userRoster);
             effectiveUserStarters = autoLineup.starters;
             effectiveUserBench = autoLineup.bench;
-          } else {
-            // Lineup is valid - check for low-condition starters and replace them
-            const replaced = replaceExhaustedPlayers(
-              effectiveUserStarters.filter(id => id !== ''),
-              effectiveUserBench,
-              state.players
-            );
-            // Ensure we have exactly 5 starters (pad with empty if needed)
-            const paddedStarters = [...replaced.starters];
-            while (paddedStarters.length < 5) {
-              paddedStarters.push('');
-            }
-            effectiveUserStarters = paddedStarters.slice(0, 5) as [string, string, string, string, string];
-            effectiveUserBench = replaced.bench;
           }
+          // If valid, use user's lineup as-is (no auto-replacement of tired players)
         }
 
         // Apply user's basketball strategy if provided
@@ -2528,6 +2460,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
       } else if (match.sport === 'baseball') {
         // Validate user lineup - if invalid, auto-generate a new one
+        // Note: We allow exhausted starters - user's choice to field tired players
         let useUserLineup = false;
         if (isUserHome || isUserAway) {
           const userRoster = getUserRoster();
@@ -2536,23 +2469,7 @@ export function GameProvider({ children }: GameProviderProps) {
             userRoster
           );
           if (validation.valid) {
-            // Check if any starters have low condition
-            const battingOrder = effectiveLineup.baseballLineup.battingOrder;
-            const pitcher = effectiveLineup.baseballLineup.startingPitcher;
-            const allStarters = [...battingOrder, pitcher].filter(id => id);
-
-            const hasExhaustedStarter = allStarters.some(id => {
-              const player = state.players[id];
-              return player && getPlayerCondition(player) < LOW_CONDITION_THRESHOLD;
-            });
-
-            if (hasExhaustedStarter) {
-              // Trigger auto-generation to replace tired players with fresh ones
-              console.warn('Baseball lineup has exhausted starters, auto-generating');
-              useUserLineup = false;
-            } else {
-              useUserLineup = true;
-            }
+            useUserLineup = true;
           } else {
             // Old lineup format or invalid - will auto-generate
             console.warn('Baseball lineup invalid, auto-generating:', validation.error);
@@ -2662,30 +2579,16 @@ export function GameProvider({ children }: GameProviderProps) {
 
       } else if (match.sport === 'soccer') {
         // Soccer simulation
-        // Check if user lineup has exhausted starters
-        let useSoccerUserLineup = true;
-        if (isUserHome || isUserAway) {
-          const soccerStarters = effectiveLineup.soccerLineup.starters;
-          const hasExhaustedStarter = soccerStarters.some(id => {
-            if (!id) return false;
-            const player = state.players[id];
-            return player && getPlayerCondition(player) < LOW_CONDITION_THRESHOLD;
-          });
+        // Note: We allow exhausted starters - user's choice to field tired players
 
-          if (hasExhaustedStarter) {
-            console.warn('Soccer lineup has exhausted starters, auto-generating');
-            useSoccerUserLineup = false;
-          }
-        }
-
-        // Build soccer team states - pass undefined to trigger auto-generation if exhausted
-        const homeSoccerLineup = (isUserHome && useSoccerUserLineup) ? {
+        // Build soccer team states
+        const homeSoccerLineup = isUserHome ? {
           starters: effectiveLineup.soccerLineup.starters,
           formation: effectiveLineup.soccerLineup.formation,
           positions: effectiveLineup.soccerLineup.positions,
         } : undefined;
 
-        const awaySoccerLineup = (isUserAway && useSoccerUserLineup) ? {
+        const awaySoccerLineup = isUserAway ? {
           starters: effectiveLineup.soccerLineup.starters,
           formation: effectiveLineup.soccerLineup.formation,
           positions: effectiveLineup.soccerLineup.positions,
