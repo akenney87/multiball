@@ -1,7 +1,7 @@
 # Multiball - Living Project Context
 
-**Last Updated:** 2026-01-05
-**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅
+**Last Updated:** 2026-01-19
+**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅
 
 ---
 
@@ -398,7 +398,13 @@ Corners and free kicks now lead to shot opportunities:
 - **Behavior Variation:** Different teams prioritize different strategies (budget allocation, tactical preferences, transfer targets)
 
 ### AI Decision-Making
-- **Transfers:** AI evaluates player value, makes offers, counters user offers, trades with other AI teams
+- **Transfers:** Sport-based player evaluation (2026-01-19 overhaul):
+  1. Identify player's best sport (basketball/baseball/soccer)
+  2. Compare player rating to team's strength in that sport (avg/median/max)
+  3. Determine rotation fit (starter/rotation/depth/no-fit)
+  4. Check salary affordability before bidding
+  5. Factor in asking price when determining bid amount
+  6. Apply personality-based adjustments (aggressive/conservative spending)
 - **Contracts:** AI has wage demands, contract preferences based on team personality
 - **Tactics:** AI chooses pace, defensive schemes, scoring options based on personality
 - **Roster Management:** AI manages lineups, substitutions, playing time
@@ -2802,3 +2808,50 @@ Stats page now supports all three sports with sport-specific statistics:
     - Replace `any` types in stat row components with proper unions
     - Add type guards for sport-specific stat access
     - Consolidate stat type definitions
+
+---
+
+## Recent Changes
+
+### 2026-01-19: AI Transfer Bidding Overhaul & Training System Fixes
+
+**Phase 1 - AI Transfer Bidding Overhaul:**
+Completely rewrote the AI transfer bidding logic to use sport-based player evaluation instead of position-based.
+
+New Evaluation Flow:
+1. `getPlayerBestSport()` - Identifies player's strongest sport
+2. `getPlayerSportRatings()` - Gets all three sport ratings
+3. `calculateTeamSportStrength()` - Calculates team's avg/median/max in each sport
+4. `determineRotationFit()` - Determines if player would be starter/rotation/depth/no-fit
+5. `calculateRotationValueMultiplier()` - Adjusts value based on roster need
+6. Salary affordability check before submitting any bid
+7. Asking price consideration (responds to over/underpriced listings)
+8. Personality-based bid adjustments
+
+Files Modified:
+- `src/ai/aiManager.ts` - New evaluation functions, rewritten `shouldMakeTransferBid()`
+- `src/ai/weeklyProcessor.ts` - Updated `convertToTransferTarget()` with sport ratings
+
+**Phase 2 - Budget Validation & State Protection:**
+Added validation to state reducers to prevent invalid data.
+
+- `SET_OPERATIONS_BUDGET`: Validates percentages sum to 100, rejects negative values
+- `SET_LINEUP`: Validates all player IDs exist on roster, warns about injured players
+
+Files Modified:
+- `src/ui/context/gameReducer.ts` - Added validation logic
+
+**Phase 3 - Training System Fixes:**
+Fixed playing time bonus (was always 0) and clarified parameter naming.
+
+- Renamed misleading `trainingBudgetPct` to `trainingBudgetDollars` (code was already passing dollars)
+- Added `weeklyMinutesPlayed` parameter to `processWeeklyProgression()`
+- GameContext now calculates weekly minutes based on:
+  - Basketball: target minutes from `minutesAllocation` × games played
+  - Soccer: target minutes from `soccerMinutesAllocation` × games played
+  - Baseball: ~27 min for starters, ~5 min for bench × games played
+- Playing time bonus now actually applies (+0-50% XP based on weekly minutes)
+
+Files Modified:
+- `src/systems/weeklyProgressionProcessor.ts` - Fixed parameter naming, added weekly minutes
+- `src/ui/context/GameContext.tsx` - Weekly minutes calculation
