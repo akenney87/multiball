@@ -21,7 +21,9 @@ import {
   AIWeeklyActions,
   AIDecisionContext,
   TransferBid,
+  TransferTargetInput,
   processAIWeek,
+  getPlayerSportRatings,
 } from './aiManager';
 import { calculateOverallRating } from './evaluation';
 import {
@@ -80,6 +82,8 @@ export interface WeeklyProcessorInput {
   bidBlockedPlayers?: Record<string, number>;
   /** Player IDs that are on the transfer list (motivated sellers - AI will bid lower) */
   transferListedPlayerIds?: string[];
+  /** Asking prices for transfer-listed players (playerId -> askingPrice) */
+  transferListAskingPrices?: Record<string, number>;
 }
 
 /**
@@ -195,29 +199,32 @@ function convertFreeAgent(agent: SimpleFreeAgent): {
 
 /**
  * Convert Player to transfer target format
- * Includes release clause from contract for AI awareness
+ * Includes all data needed for AI transfer bid evaluation
  */
 function convertToTransferTarget(
   player: Player,
   teamId: string,
   bidBlockedUntilWeek?: number,
-  isOnTransferList?: boolean
-): {
-  id: string;
-  name: string;
-  teamId: string;
-  position: string;
-  overallRating: number;
-  age: number;
-  marketValue: number;
-  releaseClause?: number;
-  bidBlockedUntilWeek?: number;
-  isOnTransferList?: boolean;
-} {
+  isOnTransferList?: boolean,
+  askingPrice?: number
+): TransferTargetInput {
   const overallRating = calculateOverallRating(player);
-  // Simple market value calculation (overall * age factor * base)
+  const sportRatings = getPlayerSportRatings(player);
+
+  // Market value calculation (overall * age factor * base)
   const ageFactor = player.age < 25 ? 1.5 : player.age > 30 ? 0.7 : 1.0;
   const marketValue = Math.round(overallRating * 50000 * ageFactor);
+
+  // Salary expectation: use current salary or estimate from rating
+  const salaryExpectation = player.contract?.salary ?? Math.round(overallRating * 15000 * ageFactor);
+
+  // Contract years remaining (calculate from contractLength and startDate)
+  let contractYearsRemaining: number | undefined;
+  if (player.contract?.contractLength && player.contract?.startDate) {
+    const startDate = new Date(player.contract.startDate);
+    const yearsElapsed = (Date.now() - startDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+    contractYearsRemaining = Math.max(0, Math.ceil(player.contract.contractLength - yearsElapsed));
+  }
 
   return {
     id: player.id,
@@ -225,8 +232,12 @@ function convertToTransferTarget(
     teamId,
     position: player.position,
     overallRating,
+    sportRatings,
     age: player.age,
     marketValue,
+    salaryExpectation,
+    askingPrice: isOnTransferList ? (askingPrice ?? marketValue) : undefined,
+    contractYearsRemaining,
     releaseClause: player.contract?.releaseClause ?? undefined,
     bidBlockedUntilWeek,
     isOnTransferList,
@@ -344,7 +355,7 @@ function buildDecisionContext(
  * Process all AI teams for the week
  */
 export function processAllAITeams(input: WeeklyProcessorInput): AIWeeklyActions[] {
-  const { teams, players, freeAgentPool, currentWeek, isTransferWindowOpen, incomingOffersByTeam, bidBlockedPlayers, transferListedPlayerIds } = input;
+  const { teams, players, freeAgentPool, currentWeek, isTransferWindowOpen, incomingOffersByTeam, bidBlockedPlayers, transferListedPlayerIds, transferListAskingPrices } = input;
 
   const allActions: AIWeeklyActions[] = [];
 
@@ -353,6 +364,7 @@ export function processAllAITeams(input: WeeklyProcessorInput): AIWeeklyActions[
 
   // Convert transfer listed player IDs to a Set for fast lookup
   const transferListedSet = new Set(transferListedPlayerIds || []);
+  const askingPrices = transferListAskingPrices || {};
 
   // Build list of transfer targets (players from other teams)
   const transferTargetsByTeam: Map<string, ReturnType<typeof convertToTransferTarget>[]> = new Map();
@@ -373,7 +385,9 @@ export function processAllAITeams(input: WeeklyProcessorInput): AIWeeklyActions[
           const bidBlockedUntilWeek = bidBlockedPlayers?.[playerId];
           // Check if player is on the transfer list (motivated seller)
           const isOnTransferList = transferListedSet.has(playerId);
-          targets.push(convertToTransferTarget(player, otherTeam.id, bidBlockedUntilWeek, isOnTransferList));
+          // Get asking price if transfer-listed
+          const askingPrice = isOnTransferList ? askingPrices[playerId] : undefined;
+          targets.push(convertToTransferTarget(player, otherTeam.id, bidBlockedUntilWeek, isOnTransferList, askingPrice));
         }
       }
     }

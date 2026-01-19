@@ -9,6 +9,7 @@ import type { Player, AIPersonality } from '../data/types';
 import type { DecisionContext, Position, AIConfig } from './types';
 import { calculateOverallRating } from './evaluation';
 import { getDecisionThresholds } from './personality';
+import { calculateAllOveralls } from '../utils/overallRating';
 
 // =============================================================================
 // AI PERCEPTION & RATE LIMITING
@@ -303,6 +304,171 @@ export function personalityToConfig(personality: AIPersonality): AIConfig {
     defensivePreference: personality.traits.defensive_preference,
     riskTolerance: personality.traits.risk_tolerance,
   };
+}
+
+// =============================================================================
+// SPORT-BASED PLAYER EVALUATION
+// =============================================================================
+
+export type SportType = 'basketball' | 'baseball' | 'soccer';
+
+export interface SportRatings {
+  basketball: number;
+  baseball: number;
+  soccer: number;
+}
+
+export interface TeamSportStrength {
+  sport: SportType;
+  average: number;
+  median: number;
+  max: number;
+  playerCount: number;
+}
+
+export type RotationFit = 'starter' | 'rotation' | 'depth' | 'no-fit';
+
+/**
+ * Get a player's best sport and their rating in it
+ */
+export function getPlayerBestSport(player: Player): { sport: SportType; rating: number } {
+  const overalls = calculateAllOveralls(player);
+
+  if (overalls.basketball >= overalls.baseball && overalls.basketball >= overalls.soccer) {
+    return { sport: 'basketball', rating: overalls.basketball };
+  } else if (overalls.baseball >= overalls.soccer) {
+    return { sport: 'baseball', rating: overalls.baseball };
+  } else {
+    return { sport: 'soccer', rating: overalls.soccer };
+  }
+}
+
+/**
+ * Get sport-specific ratings for a player
+ */
+export function getPlayerSportRatings(player: Player): SportRatings {
+  const overalls = calculateAllOveralls(player);
+  return {
+    basketball: overalls.basketball,
+    baseball: overalls.baseball,
+    soccer: overalls.soccer,
+  };
+}
+
+/**
+ * Calculate team's strength in a specific sport
+ * Uses players' ratings in that sport to determine avg/median/max
+ */
+export function calculateTeamSportStrength(
+  roster: Player[],
+  sport: SportType
+): TeamSportStrength {
+  if (roster.length === 0) {
+    return { sport, average: 0, median: 0, max: 0, playerCount: 0 };
+  }
+
+  // Get each player's rating in the specified sport
+  const ratings = roster.map(player => {
+    const overalls = calculateAllOveralls(player);
+    return overalls[sport];
+  }).sort((a, b) => b - a); // Sort descending
+
+  const sum = ratings.reduce((acc, r) => acc + r, 0);
+  const average = sum / ratings.length;
+
+  // Median calculation (safe access with fallback)
+  const mid = Math.floor(ratings.length / 2);
+  let median: number;
+  if (ratings.length % 2 === 0) {
+    const left = ratings[mid - 1] ?? 0;
+    const right = ratings[mid] ?? 0;
+    median = (left + right) / 2;
+  } else {
+    median = ratings[mid] ?? 0;
+  }
+
+  const max = ratings[0] ?? 0;
+
+  return {
+    sport,
+    average: Math.round(average * 10) / 10,
+    median: Math.round(median * 10) / 10,
+    max,
+    playerCount: ratings.length,
+  };
+}
+
+/**
+ * Determine how a player would fit into a team's rotation for their best sport
+ *
+ * - starter: Better than team average (would crack starting lineup)
+ * - rotation: Between median and average (solid rotation piece)
+ * - depth: Below median but provides backup value
+ * - no-fit: Too far below team level to contribute
+ */
+export function determineRotationFit(
+  playerRating: number,
+  teamStrength: TeamSportStrength,
+  personality: AIPersonality
+): RotationFit {
+  const { average, median } = teamStrength;
+
+  // If team has no players, any player is a starter
+  if (teamStrength.playerCount === 0) {
+    return 'starter';
+  }
+
+  // Get personality factors (risk tolerance affects depth threshold)
+  const riskTolerance = getTraitValue(personality, 'risk_tolerance');
+
+  // Above average = starter material
+  if (playerRating >= average) {
+    return 'starter';
+  }
+
+  // Above median but below average = rotation piece
+  if (playerRating >= median) {
+    return 'rotation';
+  }
+
+  // Below median - depth or no-fit depending on how far below
+  // Risk-tolerant teams might take on more depth players
+  const depthThreshold = median - 10 - (riskTolerance * 5); // Risk-tolerant teams accept weaker depth
+
+  if (playerRating >= depthThreshold) {
+    return 'depth';
+  }
+
+  return 'no-fit';
+}
+
+/**
+ * Calculate how much AI values a player based on their rotation fit
+ * Returns a multiplier to apply to market value
+ *
+ * - starter: 1.0 - 1.3x (willing to pay market or above)
+ * - rotation: 0.8 - 1.0x (fair value)
+ * - depth: 0.6 - 0.8x (discount expected)
+ */
+export function calculateRotationValueMultiplier(
+  rotationFit: RotationFit,
+  personality: AIPersonality
+): number {
+  const spending = getTraitValue(personality, 'spending_aggression');
+
+  switch (rotationFit) {
+    case 'starter':
+      // Aggressive spenders pay up to 1.3x for starters
+      return 1.0 + (spending * 0.3);
+    case 'rotation':
+      // 0.8 to 1.0x for rotation pieces
+      return 0.8 + (spending * 0.2);
+    case 'depth':
+      // 0.6 to 0.8x for depth
+      return 0.6 + (spending * 0.2);
+    case 'no-fit':
+      return 0;
+  }
 }
 
 // =============================================================================
@@ -819,9 +985,13 @@ export interface TransferTargetInfo {
   name: string;
   teamId: string;
   position: string;
-  overallRating: number;
+  overallRating: number;          // Legacy: single overall rating
+  sportRatings: SportRatings;     // Sport-specific ratings (basketball, baseball, soccer)
   age: number;
   marketValue: number;
+  askingPrice?: number;           // Asking price if transfer-listed (seller's desired price)
+  salaryExpectation: number;      // Player's expected annual salary
+  contractYearsRemaining?: number; // Years left on current contract
   releaseClause?: number;         // Optional release clause
   bidBlockedUntilWeek?: number;   // User can block bids for 4 weeks
   isOnTransferList?: boolean;     // Player is listed for transfer (motivated seller)
@@ -830,130 +1000,235 @@ export interface TransferTargetInfo {
 /**
  * Determine if AI should make a transfer bid
  *
- * IMPORTANT: AI is aware of release clauses and will NEVER bid above them.
- * If a release clause exists, it triggers auto-accept at that value.
- * AI will bid below the clause if the player is worth pursuing.
+ * Evaluation flow:
+ * 1. Get player's best sport rating
+ * 2. Compare to team's roster for that sport (avg/median/max)
+ * 3. Determine rotation fit (starter/rotation/depth/no-fit)
+ * 4. If no fit → skip
+ * 5. Check salary affordability
+ * 6. If can't afford salary → skip
+ * 7. Calculate bid based on rotation value, market value, asking price, personality
+ * 8. Validate transfer fee is affordable
+ * 9. Submit bid
  */
 export function shouldMakeTransferBid(
   target: TransferTargetInfo,
-  needs: TeamNeeds,
+  _needs: TeamNeeds, // Kept for API compatibility, evaluation is now sport-based
   context: AIDecisionContext
 ): TransferBid | null {
-  const { personality, budget, roster } = context;
+  const { personality, budget, salaryCommitment, roster } = context;
 
-  // Check if bids are blocked for this player (user blocked for 4 weeks)
+  // =========================================================================
+  // STEP 0: Pre-checks (blocked bids, roster space)
+  // =========================================================================
+
   if (target.bidBlockedUntilWeek && context.week < target.bidBlockedUntilWeek) {
     return null;
   }
 
-  // Check roster space
   if (roster.length >= MAX_ROSTER_SIZE) {
     return null;
   }
 
-  // Check position need
-  const positionNeed = needs.positionGaps.find(g => g.position === target.position);
+  // =========================================================================
+  // STEP 1: Identify player's best sport and get AI's perceived rating
+  // =========================================================================
 
-  // For transfer-listed players, be MUCH more opportunistic
-  // They're motivated sellers at a discount - AI should actively look for bargains
-  if (target.isOnTransferList) {
-    // Find the worst player at this position in our roster
-    const playersAtPosition = roster.filter(p => p.position === target.position);
-    const worstRating = playersAtPosition.length > 0
-      ? Math.min(...playersAtPosition.map(p => calculateOverallRating(p)))
-      : 0;
+  const { basketball, baseball, soccer } = target.sportRatings;
+  let bestSport: SportType;
+  let bestRating: number;
 
-    // For transfer-listed players, bid if:
-    // 1. We have no players at this position (always good to fill gaps), OR
-    // 2. They're better than our worst player at that position (roster upgrade), OR
-    // 3. They're close to our team's overall strength and we have roster space (depth acquisition)
-    const isRosterUpgrade = target.overallRating > worstRating;
-    const isUsefulDepth = target.overallRating >= needs.overallStrength - 5 && roster.length < IDEAL_ROSTER_SIZE;
-    const fillsGap = playersAtPosition.length === 0;
-
-    if (!fillsGap && !isRosterUpgrade && !isUsefulDepth) {
-      return null;
-    }
+  if (basketball >= baseball && basketball >= soccer) {
+    bestSport = 'basketball';
+    bestRating = basketball;
+  } else if (baseball >= soccer) {
+    bestSport = 'baseball';
+    bestRating = baseball;
   } else {
-    // Regular players (not on transfer list): only pursue if we have a real position need
-    if (!positionNeed) {
+    bestSport = 'soccer';
+    bestRating = soccer;
+  }
+
+  // Apply AI perception variance (±8 points based on team+player hash)
+  const perceivedRating = getPerceivedRating(bestRating, target.id, context.teamId);
+
+  // =========================================================================
+  // STEP 2: Compare to team's strength in that sport
+  // =========================================================================
+
+  const teamStrength = calculateTeamSportStrength(roster, bestSport);
+
+  // =========================================================================
+  // STEP 3: Determine rotation fit
+  // =========================================================================
+
+  const rotationFit = determineRotationFit(perceivedRating, teamStrength, personality);
+
+  // =========================================================================
+  // STEP 4: If no fit, skip (unless transfer-listed and we have room for depth)
+  // =========================================================================
+
+  if (rotationFit === 'no-fit') {
+    // Transfer-listed players at a discount might still be worth it for depth
+    if (target.isOnTransferList && roster.length < IDEAL_ROSTER_SIZE) {
+      // Check if they're at least within 15 points of team median
+      if (perceivedRating < teamStrength.median - 15) {
+        return null; // Too weak even for opportunistic buy
+      }
+      // Continue with evaluation as 'depth' fit
+    } else {
       return null;
-    }
-    if (positionNeed.urgency === 'low') {
-      return null; // Only pursue if we need the position
-    }
-    if (target.overallRating <= positionNeed.avgRating + 3) {
-      return null; // Not enough of an upgrade
     }
   }
 
-  // Calculate bid based on spending aggression
+  // =========================================================================
+  // STEP 5: Check salary affordability
+  // =========================================================================
+
+  const availableBudget = budget - salaryCommitment;
+  const maxAffordableSalary = availableBudget * 0.25; // Max 25% of remaining budget on one player's salary
+
+  if (target.salaryExpectation > maxAffordableSalary) {
+    return null; // Can't afford player's salary expectations
+  }
+
+  // =========================================================================
+  // STEP 6: Calculate how much AI values this player
+  // =========================================================================
+
+  const actualFit = rotationFit === 'no-fit' ? 'depth' : rotationFit;
+  const rotationMultiplier = calculateRotationValueMultiplier(actualFit, personality);
   const spendingMultiplier = getSpendingMultiplier(personality);
 
-  // TRANSFER LIST DISCOUNT: Players on transfer list are motivated sellers
-  // AI knows they can bid at or below market value and likely get accepted
-  const transferListDiscount = target.isOnTransferList ? 0.85 : 1.0; // 15% discount for listed players
+  // Base value: market value adjusted by rotation fit
+  const perceivedValue = Math.round(target.marketValue * rotationMultiplier);
 
-  // Base bid: normally 1.5x market value, but much lower for transfer-listed players
-  const baseBidMultiplier = target.isOnTransferList ? 0.9 : 1.5; // Start at 90% of market for listed players
-  const baseBid = target.marketValue * baseBidMultiplier * transferListDiscount;
-  let bidAmount = Math.round(baseBid * spendingMultiplier);
+  // Age adjustment: younger players worth more, older worth less
+  const agingThreshold = getAgingThreshold(personality);
+  let ageMultiplier = 1.0;
+  if (target.age < 25) {
+    ageMultiplier = 1.1; // 10% premium for young players
+  } else if (target.age >= agingThreshold) {
+    ageMultiplier = 0.8; // 20% discount for aging players
+  } else if (target.age >= agingThreshold - 2) {
+    ageMultiplier = 0.9; // 10% discount for players approaching decline
+  }
 
-  // Max bid is also capped lower for transfer-listed players (they're motivated to sell)
-  const maxBidMultiplier = target.isOnTransferList ? 1.1 : 2.5; // Max 110% of market for listed players
-  let maxBid = Math.round(target.marketValue * maxBidMultiplier * spendingMultiplier);
+  // Contract length adjustment: longer contracts = more expensive
+  const contractMultiplier = target.contractYearsRemaining
+    ? 0.9 + (Math.min(target.contractYearsRemaining, 4) * 0.05) // 0.95x for 1yr, 1.1x for 4yr+
+    : 1.0;
 
-  // CRITICAL: If release clause exists, NEVER bid above it
-  // Bidding at or above release clause triggers auto-accept
-  // AI should bid BELOW the clause to try to negotiate
+  // Final calculated value
+  const calculatedValue = Math.round(perceivedValue * ageMultiplier * contractMultiplier);
+
+  // =========================================================================
+  // STEP 7: Determine bid based on calculated value vs asking price
+  // =========================================================================
+
+  let bidAmount: number;
+  let maxBid: number;
+  let bidStrategy: string;
+
+  if (target.isOnTransferList && target.askingPrice) {
+    // Transfer-listed player with asking price
+    const askingRatio = target.askingPrice / calculatedValue;
+
+    if (askingRatio <= 0.9) {
+      // Asking price is a bargain! Bid the asking price directly
+      bidAmount = target.askingPrice;
+      maxBid = Math.round(target.askingPrice * 1.1);
+      bidStrategy = 'bargain-asking-price';
+    } else if (askingRatio <= 1.2) {
+      // Asking price is reasonable - bid calculated value, willing to go to asking
+      bidAmount = Math.round(calculatedValue * (0.85 + Math.random() * 0.1)); // 85-95% of our value
+      maxBid = Math.round(Math.min(target.askingPrice, calculatedValue * 1.15));
+      bidStrategy = 'reasonable-negotiation';
+    } else if (askingRatio <= 1.5) {
+      // Asking price is high but might be negotiable
+      bidAmount = Math.round(calculatedValue * 0.8); // Lowball to start
+      maxBid = calculatedValue; // Won't pay more than our calculated value
+      bidStrategy = 'high-asking-lowball';
+    } else {
+      // Asking price is way too high - skip unless desperate
+      if (actualFit === 'starter' && roster.length < 30) {
+        bidAmount = Math.round(calculatedValue * 0.7);
+        maxBid = Math.round(calculatedValue * 0.9);
+        bidStrategy = 'overpriced-lowball';
+      } else {
+        return null; // Not worth pursuing at this price
+      }
+    }
+  } else {
+    // Non-listed player or no asking price - bid based on market value and fit
+    bidAmount = Math.round(calculatedValue * spendingMultiplier * (0.9 + Math.random() * 0.1));
+    maxBid = Math.round(calculatedValue * spendingMultiplier * 1.3);
+    bidStrategy = 'standard-pursuit';
+  }
+
+  // =========================================================================
+  // STEP 8: Release clause handling
+  // =========================================================================
+
   if (target.releaseClause && target.releaseClause > 0) {
-    // Cap our max bid just below the release clause (95% of it)
-    // We don't want to trigger auto-accept, we want to negotiate
-    const maxBeforeClause = Math.floor(target.releaseClause * 0.95);
-    maxBid = Math.min(maxBid, maxBeforeClause);
-
-    // If our calculated bid would exceed clause, cap it
-    if (bidAmount >= target.releaseClause) {
-      bidAmount = maxBeforeClause;
-    }
-
-    // If even 95% of release clause is too expensive, skip
-    if (maxBeforeClause > budget * 0.5) {
-      return null;
+    // If asking price > release clause, just bid at release clause
+    if (target.askingPrice && target.askingPrice > target.releaseClause) {
+      bidAmount = target.releaseClause;
+      maxBid = target.releaseClause;
+      bidStrategy = 'release-clause-trigger';
+    } else {
+      // Cap bids at release clause (no point going higher)
+      maxBid = Math.min(maxBid, target.releaseClause);
+      bidAmount = Math.min(bidAmount, target.releaseClause);
     }
   }
 
-  // Check if we can afford it
-  if (bidAmount > budget * 0.5) {
-    return null; // Too expensive (max 50% of budget on one player)
+  // =========================================================================
+  // STEP 9: Final affordability check for transfer fee
+  // =========================================================================
+
+  const maxTransferBudget = budget * 0.5; // Max 50% of total budget on one transfer
+
+  if (bidAmount > maxTransferBudget) {
+    // Try to lower bid if possible
+    if (maxTransferBudget >= target.marketValue * 0.6) {
+      bidAmount = Math.round(maxTransferBudget * 0.9);
+      maxBid = Math.round(maxTransferBudget);
+    } else {
+      return null; // Can't afford this player
+    }
   }
 
-  // If our max bid is too low to be competitive, skip
-  if (maxBid < target.marketValue * 0.75) {
-    return null;
+  // Ensure max bid doesn't exceed what we can spend
+  maxBid = Math.min(maxBid, maxTransferBudget);
+
+  // Minimum viable bid check
+  if (bidAmount < target.marketValue * 0.5) {
+    return null; // Bid would be insultingly low
   }
 
-  // Determine urgency
+  // =========================================================================
+  // STEP 10: Determine urgency and build response
+  // =========================================================================
+
   let urgency: 'reluctant' | 'neutral' | 'desperate';
-  if (positionNeed?.urgency === 'critical') {
+  if (actualFit === 'starter' && teamStrength.playerCount < 15) {
     urgency = 'desperate';
-  } else if (positionNeed?.urgency === 'moderate') {
+  } else if (actualFit === 'starter') {
+    urgency = 'neutral';
+  } else if (actualFit === 'rotation') {
     urgency = 'neutral';
   } else {
-    // For transfer-listed opportunistic buys, use neutral urgency
-    urgency = target.isOnTransferList ? 'neutral' : 'reluctant';
+    urgency = 'reluctant';
   }
 
   // Build reason string
   const reasonParts: string[] = [];
-  if (positionNeed) {
-    reasonParts.push(`${positionNeed.urgency} need at ${target.position}`);
-  } else {
-    reasonParts.push(`opportunistic ${target.position} acquisition`);
-  }
-  reasonParts.push(`${target.overallRating} rating`);
+  reasonParts.push(`${actualFit} for ${bestSport}`);
+  reasonParts.push(`${perceivedRating} perceived rating`);
+  reasonParts.push(`${bidStrategy}`);
   if (target.isOnTransferList) {
-    reasonParts.push('transfer-listed (discounted)');
+    reasonParts.push('transfer-listed');
   }
 
   return {
@@ -1244,12 +1519,32 @@ export function shouldReleasePlayer(
 // =============================================================================
 
 /**
+ * Input transfer target with required sport-specific data
+ */
+export interface TransferTargetInput {
+  id: string;
+  name: string;
+  teamId: string;
+  position: string;
+  overallRating: number;
+  sportRatings: SportRatings;
+  age: number;
+  marketValue: number;
+  salaryExpectation: number;
+  askingPrice?: number;
+  contractYearsRemaining?: number;
+  releaseClause?: number;
+  bidBlockedUntilWeek?: number;
+  isOnTransferList?: boolean;
+}
+
+/**
  * Process all AI decisions for a team for this week
  */
 export function processAIWeek(
   context: AIDecisionContext,
   availableFreeAgents: Array<{ id: string; name: string; position: string; overallRating: number; age: number; annualSalary: number }>,
-  availableTransferTargets: Array<{ id: string; name: string; teamId: string; position: string; overallRating: number; age: number; marketValue: number }>,
+  availableTransferTargets: TransferTargetInput[],
   incomingOffers: Array<{ offerId: string; playerId: string; offerAmount: number }>,
   getPlayerMarketValue: (playerId: string) => number
 ): AIWeeklyActions {
@@ -1295,13 +1590,35 @@ export function processAIWeek(
     overallRating: getPerceivedRating(agent.overallRating, agent.id, context.teamId),
   }));
 
-  // Convert transfer targets to perceived ratings
-  const perceivedTransferTargets = availableTransferTargets.map(target => ({
-    ...target,
-    overallRating: getPerceivedRating(target.overallRating, target.id, context.teamId),
-    // Market value also affected by perceived rating
-    marketValue: Math.round(target.marketValue * (getPerceivedRating(target.overallRating, target.id, context.teamId) / target.overallRating)),
-  }));
+  // Convert transfer targets to perceived ratings with sport-specific data
+  const perceivedTransferTargets: TransferTargetInfo[] = availableTransferTargets.map(target => {
+    const perceivedOverall = getPerceivedRating(target.overallRating, target.id, context.teamId);
+    const ratingRatio = perceivedOverall / Math.max(target.overallRating, 1);
+
+    // Apply perception to sport-specific ratings too
+    const perceivedSportRatings: SportRatings = {
+      basketball: Math.round(target.sportRatings.basketball * ratingRatio),
+      baseball: Math.round(target.sportRatings.baseball * ratingRatio),
+      soccer: Math.round(target.sportRatings.soccer * ratingRatio),
+    };
+
+    return {
+      id: target.id,
+      name: target.name,
+      teamId: target.teamId,
+      position: target.position,
+      overallRating: perceivedOverall,
+      sportRatings: perceivedSportRatings,
+      age: target.age,
+      marketValue: Math.round(target.marketValue * ratingRatio),
+      salaryExpectation: target.salaryExpectation,
+      askingPrice: target.askingPrice,
+      contractYearsRemaining: target.contractYearsRemaining,
+      releaseClause: target.releaseClause,
+      bidBlockedUntilWeek: target.bidBlockedUntilWeek,
+      isOnTransferList: target.isOnTransferList,
+    };
+  });
 
   // Consider releases if roster is bloated (max 1 per week)
   if (needs.rosterSize > needs.idealRosterSize + 5) { // Only release if significantly over

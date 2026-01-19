@@ -235,21 +235,25 @@ export function processPlayerProgression(
  * @param players - All players in the game
  * @param rosterIds - IDs of players on user's roster
  * @param teamTrainingFocus - Team-wide training focus
- * @param trainingBudgetPct - Training budget percentage (0-100)
+ * @param trainingBudgetDollars - Training budget in actual dollars (NOT percentage)
  * @param weekNumber - Current week number
+ * @param gameDay - Current game day (for snapshots)
+ * @param season - Current season number (for snapshots)
+ * @param weeklyMinutesPlayed - Optional: minutes played this week per player (player ID -> total minutes)
  * @returns Array of progression results for each roster player
  */
 export function processWeeklyProgression(
   players: Record<string, Player>,
   rosterIds: string[],
   teamTrainingFocus: TrainingFocus | null,
-  trainingBudgetPct: number,
+  trainingBudgetDollars: number,
   weekNumber: number,
   gameDay: number = 0,
-  season: number = 1
+  season: number = 1,
+  weeklyMinutesPlayed: Record<string, number> = {}
 ): PlayerProgressionResult[] {
   const results: PlayerProgressionResult[] = [];
-  const qualityMultiplier = calculateTrainingQualityMultiplier(trainingBudgetPct);
+  const qualityMultiplier = calculateTrainingQualityMultiplier(trainingBudgetDollars);
   const focus = teamTrainingFocus || DEFAULT_TRAINING_FOCUS;
 
   for (const playerId of rosterIds) {
@@ -259,12 +263,15 @@ export function processWeeklyProgression(
     // Skip injured players (they don't train)
     if (player.injury) continue;
 
+    // Get weekly minutes played (defaults to 0 if not tracked)
+    const minutesPlayed = weeklyMinutesPlayed[playerId] ?? 0;
+
     const result = processPlayerProgression(
       player,
       focus,
       qualityMultiplier,
       weekNumber,
-      0 // TODO: Pass actual minutes played when match stats are tracked
+      minutesPlayed
     );
 
     // Generate attribute snapshot for growth chart
@@ -329,10 +336,14 @@ const ACADEMY_TRAINING_FOCUS: LegacyTrainingFocus = {
 /**
  * Processes weekly training for a single academy prospect
  * Academy prospects train faster than main squad (focused development)
+ *
+ * @param prospect - The academy prospect to train
+ * @param youthBudgetDollars - Youth development budget in actual dollars (NOT percentage)
+ * @param weekNumber - Current week number
  */
 export function processAcademyProspectProgression(
   prospect: AcademyProspect,
-  youthBudgetPct: number,
+  youthBudgetDollars: number,
   weekNumber: number
 ): AcademyProgressionResult {
   // weekNumber reserved for future use (e.g., seeding)
@@ -348,7 +359,7 @@ export function processAcademyProspectProgression(
   const currentXP = prospect.weeklyXP || { physical: 0, mental: 0, technical: 0 };
 
   // Calculate budget multiplier (youth development budget)
-  const budgetMultiplier = calculateTrainingQualityMultiplier(youthBudgetPct);
+  const budgetMultiplier = calculateTrainingQualityMultiplier(youthBudgetDollars);
 
   // Academy prospects are young, so they get the young age multiplier (1.5x)
   // Plus the academy training bonus
@@ -390,10 +401,14 @@ export function processAcademyProspectProgression(
 
 /**
  * Processes weekly training for all academy prospects
+ *
+ * @param prospects - Array of academy prospects
+ * @param youthBudgetDollars - Youth development budget in actual dollars (NOT percentage)
+ * @param weekNumber - Current week number
  */
 export function processAcademyTraining(
   prospects: AcademyProspect[],
-  youthBudgetPct: number,
+  youthBudgetDollars: number,
   weekNumber: number
 ): AcademyProgressionResult[] {
   const results: AcademyProgressionResult[] = [];
@@ -404,7 +419,7 @@ export function processAcademyTraining(
 
     const result = processAcademyProspectProgression(
       prospect,
-      youthBudgetPct,
+      youthBudgetDollars,
       weekNumber
     );
 

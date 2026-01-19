@@ -1136,12 +1136,59 @@ export function GameProvider({ children }: GameProviderProps) {
     const trainingOpsPool = Math.max(0, progressionState.userTeam.totalBudget - progressionState.userTeam.salaryCommitment);
     const trainingDollars = trainingOpsPool * (trainingBudgetPct / 100);
 
+    // Calculate weekly minutes played per player (for playing time bonus)
+    // Count completed user matches by sport for this week
+    const weeklyUserMatches = progressionState.season.matches.filter(
+      m => (m.homeTeamId === 'user' || m.awayTeamId === 'user') &&
+           m.week === progressionState.season.currentWeek &&
+           m.status === 'completed'
+    );
+    const basketballGames = weeklyUserMatches.filter(m => m.sport === 'basketball').length;
+    const baseballGames = weeklyUserMatches.filter(m => m.sport === 'baseball').length;
+    const soccerGames = weeklyUserMatches.filter(m => m.sport === 'soccer').length;
+
+    // Estimate weekly minutes based on lineup target minutes
+    const lineup = progressionState.userTeam.lineup;
+    const weeklyMinutesPlayed: Record<string, number> = {};
+
+    for (const playerId of progressionState.userTeam.rosterIds) {
+      let totalMinutes = 0;
+
+      // Basketball: use target minutes from minutesAllocation
+      if (basketballGames > 0) {
+        const targetMinutes = lineup.minutesAllocation[playerId] ?? 0;
+        totalMinutes += targetMinutes * basketballGames;
+      }
+
+      // Soccer: use target minutes from soccerMinutesAllocation
+      if (soccerGames > 0) {
+        const targetMinutes = lineup.soccerMinutesAllocation[playerId] ?? 0;
+        totalMinutes += targetMinutes * soccerGames;
+      }
+
+      // Baseball: estimate ~27 minutes per game for starters (3 at-bats × 3 min + 6 innings fielding × 3 min)
+      // Bench players get less
+      if (baseballGames > 0) {
+        const isBasballStarter = lineup.baseballLineup.battingOrder.includes(playerId) ||
+                                  playerId === lineup.baseballLineup.startingPitcher;
+        const baseballMinutes = isBasballStarter ? 27 : 5; // Bench players might pinch hit
+        totalMinutes += baseballMinutes * baseballGames;
+      }
+
+      if (totalMinutes > 0) {
+        weeklyMinutesPlayed[playerId] = totalMinutes;
+      }
+    }
+
     const progressionResults = processWeeklyProgression(
       progressionState.players,
       progressionState.userTeam.rosterIds,
       progressionState.userTeam.trainingFocus,
       trainingDollars, // Pass dollars, not percentage
-      progressionState.season.currentWeek
+      progressionState.season.currentWeek,
+      0, // gameDay (will use default)
+      progressionState.season.number,
+      weeklyMinutesPlayed // Pass estimated weekly minutes
     );
 
     // Apply progression results
@@ -1530,6 +1577,8 @@ export function GameProvider({ children }: GameProviderProps) {
         divisionManager: dm,
         // Pass transfer-listed players so AI knows they're motivated sellers
         transferListedPlayerIds: aiState.userTeam.transferListPlayerIds || [],
+        // Pass asking prices for transfer-listed players
+        transferListAskingPrices: aiState.userTeam.transferListAskingPrices || {},
       };
 
       const batchResult = processBatchedWeeklyAI(extendedInput);
@@ -1546,6 +1595,8 @@ export function GameProvider({ children }: GameProviderProps) {
         incomingOffersByTeam,
         // Pass transfer-listed players so AI knows they're motivated sellers
         transferListedPlayerIds: aiState.userTeam.transferListPlayerIds || [],
+        // Pass asking prices for transfer-listed players
+        transferListAskingPrices: aiState.userTeam.transferListAskingPrices || {},
       };
 
       aiResolvedActions = processWeeklyAI(aiInput);

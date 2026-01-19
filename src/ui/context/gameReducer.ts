@@ -41,6 +41,9 @@ export const initialGameState: GameState = {
     id: 'user',
     name: '',
     colors: { primary: '#3B82F6', secondary: '#FFFFFF' },
+    country: 'US',
+    city: '',
+    startingDivision: 5,
     division: 5,
     totalBudget: 0,
     salaryCommitment: 0,
@@ -92,6 +95,7 @@ export const initialGameState: GameState = {
   players: {},
 
   league: {
+    country: 'US',
     teams: [],
     freeAgentIds: [],
   },
@@ -509,11 +513,69 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     // =========================================================================
 
     case 'SET_LINEUP': {
+      const lineup = action.payload;
+      const rosterSet = new Set(state.userTeam.rosterIds);
+
+      // Helper to validate player IDs
+      const validatePlayerIds = (ids: string[], context: string): boolean => {
+        for (const id of ids) {
+          if (id === '') continue; // Empty slots are valid
+          if (!rosterSet.has(id)) {
+            console.warn(`[SET_LINEUP] Invalid player ID in ${context}: ${id} not on roster`);
+            return false;
+          }
+          // Check if player is injured (warning only, still allow)
+          const player = state.players[id];
+          if (player && player.injury !== null) {
+            console.warn(`[SET_LINEUP] Warning: Injured player ${player.name} in ${context}`);
+          }
+        }
+        return true;
+      };
+
+      // Validate basketball starters
+      if (!validatePlayerIds(lineup.basketballStarters, 'basketballStarters')) {
+        return state;
+      }
+
+      // Validate baseball lineup
+      if (!validatePlayerIds(lineup.baseballLineup.battingOrder, 'baseballLineup.battingOrder')) {
+        return state;
+      }
+      const baseballPositionIds = Object.keys(lineup.baseballLineup.positions);
+      if (!validatePlayerIds(baseballPositionIds, 'baseballLineup.positions')) {
+        return state;
+      }
+      if (lineup.baseballLineup.startingPitcher && !rosterSet.has(lineup.baseballLineup.startingPitcher)) {
+        console.warn(`[SET_LINEUP] Invalid player ID in startingPitcher: ${lineup.baseballLineup.startingPitcher}`);
+        return state;
+      }
+      // Validate bullpen
+      const bullpen = lineup.baseballLineup.bullpen;
+      const bullpenIds = [...bullpen.longRelievers, ...bullpen.shortRelievers, bullpen.closer];
+      if (!validatePlayerIds(bullpenIds, 'baseballLineup.bullpen')) {
+        return state;
+      }
+
+      // Validate soccer lineup
+      if (!validatePlayerIds(lineup.soccerLineup.starters, 'soccerLineup.starters')) {
+        return state;
+      }
+      const soccerPositionIds = Object.keys(lineup.soccerLineup.positions);
+      if (!validatePlayerIds(soccerPositionIds, 'soccerLineup.positions')) {
+        return state;
+      }
+
+      // Validate bench
+      if (!validatePlayerIds(lineup.bench, 'bench')) {
+        return state;
+      }
+
       return {
         ...state,
         userTeam: {
           ...state.userTeam,
-          lineup: action.payload,
+          lineup,
         },
       };
     }
@@ -1407,11 +1469,28 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     // =========================================================================
 
     case 'SET_OPERATIONS_BUDGET': {
+      const budget = action.payload;
+
+      // Validate: all values must be non-negative
+      const values = [budget.training, budget.scouting, budget.medical, budget.youthDevelopment];
+      const hasNegative = values.some(v => v < 0);
+      if (hasNegative) {
+        console.warn('[SET_OPERATIONS_BUDGET] Invalid budget: negative values not allowed', budget);
+        return state; // Reject invalid budget
+      }
+
+      // Validate: percentages must sum to 100
+      const sum = values.reduce((acc, v) => acc + v, 0);
+      if (Math.abs(sum - 100) > 0.01) { // Allow small floating point tolerance
+        console.warn(`[SET_OPERATIONS_BUDGET] Invalid budget: percentages sum to ${sum}, expected 100`, budget);
+        return state; // Reject invalid budget
+      }
+
       return {
         ...state,
         userTeam: {
           ...state.userTeam,
-          operationsBudget: action.payload,
+          operationsBudget: budget,
         },
       };
     }
