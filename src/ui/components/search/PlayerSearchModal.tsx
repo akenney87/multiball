@@ -40,6 +40,7 @@ interface PlayerSearchModalProps {
   scoutingReports?: ScoutingReport[];
   scoutedPlayerIds?: string[];
   scoutingTargetIds?: string[];  // Players currently being scouted
+  transferListPlayerIds?: string[];  // Players on the transfer list
 }
 
 type SortOption = 'overall' | 'age' | 'height' | 'weight' | 'name' | 'salary';
@@ -104,6 +105,7 @@ export function PlayerSearchModal({
   scoutingReports = [],
   scoutedPlayerIds = [],
   scoutingTargetIds = [],
+  transferListPlayerIds = [],
 }: PlayerSearchModalProps) {
   const colors = useColors();
 
@@ -198,11 +200,15 @@ export function PlayerSearchModal({
     return annualSalary;
   }, []);
 
+  // Create a set for fast transfer list lookup
+  const transferListSet = useMemo(() => new Set(transferListPlayerIds), [transferListPlayerIds]);
+
   // Build team options including all teams
   const teamOptions = useMemo(() => {
     const options: Array<{ id: string; name: string }> = [
       { id: 'all', name: 'All Teams' },
       { id: 'free_agent', name: 'Free Agents' },
+      { id: 'transfer_listed', name: 'Transfer Listed' },
     ];
     // Add user team first
     const userTeam = teams.find((t) => t.id === userTeamId);
@@ -269,7 +275,12 @@ export function PlayerSearchModal({
 
       // Team filter
       if (selectedTeamId !== 'all') {
-        if (player.teamId !== selectedTeamId) return false;
+        if (selectedTeamId === 'transfer_listed') {
+          // Show only transfer-listed players
+          if (!transferListSet.has(player.id)) return false;
+        } else if (player.teamId !== selectedTeamId) {
+          return false;
+        }
       }
 
       // Age filter
@@ -386,6 +397,7 @@ export function PlayerSearchModal({
     userTeamId,
     scoutedPlayerIds,
     scoutingReports,
+    transferListSet,
     getPlayerSalary,
   ]);
 

@@ -631,6 +631,7 @@ export function TabNavigator() {
       scoutingReports={state.scoutingReports || []}
       scoutedPlayerIds={state.scoutedPlayerIds || []}
       scoutingTargetIds={state.scoutingTargetIds || []}
+      transferListPlayerIds={state.userTeam.transferListPlayerIds || []}
     />
 
     {/* Player Detail Modal - rendered last to appear on top of everything */}

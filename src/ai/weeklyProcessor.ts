@@ -140,6 +140,15 @@ export interface ResolvedRelease {
   playerName: string;
 }
 
+export interface ResolvedTransferListing {
+  teamId: string;
+  teamName: string;
+  playerId: string;
+  playerName: string;
+  askingPrice: number;
+  reason: string;
+}
+
 /**
  * All resolved actions after conflict resolution
  */
@@ -148,6 +157,7 @@ export interface ResolvedActions {
   transferBids: ResolvedTransferBid[];
   offerResponses: ResolvedOfferResponse[];
   releases: ResolvedRelease[];
+  transferListings: ResolvedTransferListing[];
   /** Actions that were blocked due to conflicts */
   blockedActions: {
     type: 'signing' | 'transfer';
@@ -419,6 +429,7 @@ export function resolveConflicts(allActions: AIWeeklyActions[]): ResolvedActions
     transferBids: [],
     offerResponses: [],
     releases: [],
+    transferListings: [],
     blockedActions: [],
   };
 
@@ -528,6 +539,18 @@ export function resolveConflicts(allActions: AIWeeklyActions[]): ResolvedActions
         teamId: teamActions.teamId,
         playerId: release.playerId,
         playerName: release.playerName,
+      });
+    }
+
+    // Handle transfer listings - no conflicts possible (each team lists their own players)
+    for (const listing of teamActions.transferListings || []) {
+      resolved.transferListings.push({
+        teamId: teamActions.teamId,
+        teamName: teamActions.teamName,
+        playerId: listing.playerId,
+        playerName: listing.playerName,
+        askingPrice: listing.askingPrice,
+        reason: listing.reason,
       });
     }
   }

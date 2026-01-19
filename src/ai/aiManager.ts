@@ -146,6 +146,16 @@ export interface PlayerRelease {
 }
 
 /**
+ * Intent to transfer list a player (make available for sale)
+ */
+export interface TransferListing {
+  playerId: string;
+  playerName: string;
+  askingPrice: number;  // AI's asking price based on market value
+  reason: string;
+}
+
+/**
  * All actions an AI team wants to take this week
  */
 export interface AIWeeklyActions {
@@ -155,6 +165,7 @@ export interface AIWeeklyActions {
   transferBids: TransferBid[];
   offerResponses: OfferResponse[];
   releases: PlayerRelease[];
+  transferListings: TransferListing[];
 }
 
 /**
@@ -843,20 +854,31 @@ export function shouldMakeTransferBid(
   // Check position need
   const positionNeed = needs.positionGaps.find(g => g.position === target.position);
 
-  // For transfer-listed players, be more opportunistic since they're discounted
-  // For regular players, only pursue if we have a real position need
-  if (!positionNeed) {
-    return null;
-  }
-
+  // For transfer-listed players, be MUCH more opportunistic
+  // They're motivated sellers at a discount - AI should actively look for bargains
   if (target.isOnTransferList) {
-    // Transfer-listed players: bid if they're at least as good as our average
-    // This is opportunistic buying - we're getting a discount on a motivated seller
-    if (target.overallRating < positionNeed.avgRating) {
-      return null; // Must be at least as good as what we have
+    // Find the worst player at this position in our roster
+    const playersAtPosition = roster.filter(p => p.position === target.position);
+    const worstRating = playersAtPosition.length > 0
+      ? Math.min(...playersAtPosition.map(p => calculateOverallRating(p)))
+      : 0;
+
+    // For transfer-listed players, bid if:
+    // 1. We have no players at this position (always good to fill gaps), OR
+    // 2. They're better than our worst player at that position (roster upgrade), OR
+    // 3. They're close to our team's overall strength and we have roster space (depth acquisition)
+    const isRosterUpgrade = target.overallRating > worstRating;
+    const isUsefulDepth = target.overallRating >= needs.overallStrength - 5 && roster.length < IDEAL_ROSTER_SIZE;
+    const fillsGap = playersAtPosition.length === 0;
+
+    if (!fillsGap && !isRosterUpgrade && !isUsefulDepth) {
+      return null;
     }
   } else {
-    // Regular players: only pursue if we need the position AND they're a clear upgrade
+    // Regular players (not on transfer list): only pursue if we have a real position need
+    if (!positionNeed) {
+      return null;
+    }
     if (positionNeed.urgency === 'low') {
       return null; // Only pursue if we need the position
     }
@@ -913,16 +935,23 @@ export function shouldMakeTransferBid(
 
   // Determine urgency
   let urgency: 'reluctant' | 'neutral' | 'desperate';
-  if (positionNeed.urgency === 'critical') {
+  if (positionNeed?.urgency === 'critical') {
     urgency = 'desperate';
-  } else if (positionNeed.urgency === 'moderate') {
+  } else if (positionNeed?.urgency === 'moderate') {
     urgency = 'neutral';
   } else {
-    urgency = 'reluctant';
+    // For transfer-listed opportunistic buys, use neutral urgency
+    urgency = target.isOnTransferList ? 'neutral' : 'reluctant';
   }
 
   // Build reason string
-  const reasonParts = [`${positionNeed.urgency} need at ${target.position}`, `${target.overallRating} rating`];
+  const reasonParts: string[] = [];
+  if (positionNeed) {
+    reasonParts.push(`${positionNeed.urgency} need at ${target.position}`);
+  } else {
+    reasonParts.push(`opportunistic ${target.position} acquisition`);
+  }
+  reasonParts.push(`${target.overallRating} rating`);
   if (target.isOnTransferList) {
     reasonParts.push('transfer-listed (discounted)');
   }
@@ -1233,6 +1262,7 @@ export function processAIWeek(
     transferBids: [],
     offerResponses: [],
     releases: [],
+    transferListings: [],
   };
 
   // Always respond to incoming offers (can't ignore them)
@@ -1342,7 +1372,124 @@ export function processAIWeek(
     }
   }
 
+  // Consider transfer listing players (max 1 per week, only if transfer window is open)
+  if (context.transferWindowOpen) {
+    const listingCandidates = evaluateTransferListCandidates(context, needs, getPlayerMarketValue);
+    if (listingCandidates.length > 0) {
+      // Pick the best candidate (highest priority reason)
+      actions.transferListings = listingCandidates.slice(0, 1);
+    }
+  }
+
   return actions;
+}
+
+/**
+ * Evaluate which players should be transfer listed
+ * AI teams consider listing players when:
+ * 1. Excess depth at a position (3+ players, lowest rated gets listed)
+ * 2. Aging players past peak (age > 31 with declining value)
+ * 3. Overpaid players (salary much higher than market value)
+ * 4. Budget pressure (need to free up funds)
+ */
+function evaluateTransferListCandidates(
+  context: AIDecisionContext,
+  needs: TeamNeeds,
+  getPlayerMarketValue: (playerId: string) => number
+): TransferListing[] {
+  const { roster, personality, budget, salaryCommitment } = context;
+  const candidates: TransferListing[] = [];
+
+  // Calculate team's average overall
+  const avgOverall = needs.overallStrength;
+
+  // Track players by position to find excess depth
+  const playersByPosition = new Map<string, Player[]>();
+  for (const player of roster) {
+    const pos = player.position;
+    if (!playersByPosition.has(pos)) {
+      playersByPosition.set(pos, []);
+    }
+    playersByPosition.get(pos)!.push(player);
+  }
+
+  // Budget pressure check - if salary commitment is > 80% of budget, more likely to sell
+  const budgetPressure = salaryCommitment / Math.max(budget, 1);
+  const underBudgetPressure = budgetPressure > 0.8;
+
+  for (const player of roster) {
+    // Skip players without contracts (shouldn't happen, but safety check)
+    if (!player.contract) continue;
+
+    const overallRating = calculateOverallRating(player);
+    const marketValue = getPlayerMarketValue(player.id);
+    const salary = player.contract.salary;
+
+    // Skip key players (top 50% of roster by overall)
+    if (overallRating >= avgOverall) continue;
+
+    // Check for excess depth (3+ players at same position)
+    const positionPlayers = playersByPosition.get(player.position) || [];
+    if (positionPlayers.length >= 3) {
+      // Sort by overall to find lowest
+      const sortedByRating = [...positionPlayers].sort(
+        (a, b) => calculateOverallRating(a) - calculateOverallRating(b)
+      );
+      const lowestRated = sortedByRating[0];
+
+      if (lowestRated && lowestRated.id === player.id) {
+        candidates.push({
+          playerId: player.id,
+          playerName: player.name,
+          askingPrice: Math.round(marketValue * 1.1), // Ask slightly above market
+          reason: `Excess depth at ${player.position}`,
+        });
+        continue;
+      }
+    }
+
+    // Check for aging players (31+ and in bottom half of roster)
+    if (player.age >= 31 && overallRating < avgOverall - 3) {
+      candidates.push({
+        playerId: player.id,
+        playerName: player.name,
+        askingPrice: Math.round(marketValue * 0.95), // Slightly below market for aging
+        reason: `Aging player (${player.age}) with declining value`,
+      });
+      continue;
+    }
+
+    // Check for overpaid players (salary > 150% of expected for their rating)
+    const expectedSalary = overallRating * 40000; // Rough estimate: 40k per overall point
+    if (salary > expectedSalary * 1.5 && underBudgetPressure) {
+      candidates.push({
+        playerId: player.id,
+        playerName: player.name,
+        askingPrice: Math.round(marketValue * 1.0), // At market value
+        reason: `Overpaid relative to performance ($${(salary / 1000000).toFixed(1)}M)`,
+      });
+      continue;
+    }
+
+    // Budget pressure: list bottom performers if we need funds
+    if (underBudgetPressure && overallRating < avgOverall - 5) {
+      // Only aggressive spenders resist selling under budget pressure
+      const spendingAggression = getTraitValue(personality, 'spending_aggression');
+      if (spendingAggression < 0.7) {
+        candidates.push({
+          playerId: player.id,
+          playerName: player.name,
+          askingPrice: Math.round(marketValue * 0.9), // Discount for quick sale
+          reason: 'Budget pressure - need to free up funds',
+        });
+      }
+    }
+  }
+
+  // Sort by asking price descending (prioritize selling higher value players)
+  candidates.sort((a, b) => b.askingPrice - a.askingPrice);
+
+  return candidates;
 }
 
 // =============================================================================
