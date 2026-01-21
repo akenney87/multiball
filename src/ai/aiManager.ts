@@ -1366,9 +1366,28 @@ export function evaluateIncomingOffer(
   offer: { offerId: string; playerId: string; offerAmount: number },
   player: Player,
   marketValue: number,
-  context: AIDecisionContext
+  context: AIDecisionContext,
+  askingPrice?: number  // If player is transfer-listed, this is their asking price
 ): OfferResponse {
   const { personality, roster } = context;
+
+  // Debug: Log offer evaluation
+  console.log(`[Offer Eval] ${context.teamName} evaluating offer for ${player.name}:`);
+  console.log(`  - Offer: $${offer.offerAmount.toLocaleString()}`);
+  console.log(`  - Market Value: $${marketValue.toLocaleString()}`);
+  console.log(`  - Asking Price: ${askingPrice !== undefined ? `$${askingPrice.toLocaleString()}` : 'NOT SET (player not transfer-listed)'}`);
+
+  // CRITICAL: If player is transfer-listed with an asking price, and offer meets it, AUTO-ACCEPT
+  // The whole point of listing a player is to sell at that price!
+  if (askingPrice !== undefined && offer.offerAmount >= askingPrice) {
+    console.log(`  => AUTO-ACCEPT: Offer meets asking price`);
+    return {
+      offerId: offer.offerId,
+      playerId: offer.playerId,
+      decision: 'accept',
+      reason: `Offer of $${offer.offerAmount.toLocaleString()} meets asking price of $${askingPrice.toLocaleString()}`,
+    };
+  }
 
   // Check if this is a star player
   const sortedByRating = [...roster].sort((a, b) =>
@@ -1380,12 +1399,20 @@ export function evaluateIncomingOffer(
   // Calculate minimum acceptable offer using selling multiplier
   // Conservative = sells easier (lower multiplier), Aggressive = holds (higher multiplier)
   const sellingMultiplier = getSellingMultiplier(personality, isStarPlayer);
-  const minAcceptable = Math.round(marketValue * sellingMultiplier);
+  let minAcceptable = Math.round(marketValue * sellingMultiplier);
+
+  // If player is transfer-listed, they're motivated sellers - use asking price as minimum if lower
+  if (askingPrice !== undefined) {
+    minAcceptable = Math.min(minAcceptable, askingPrice);
+  }
 
   // Is this a lowball offer?
   const offerRatio = offer.offerAmount / marketValue;
 
-  if (offerRatio < 0.75) {
+  // For transfer-listed players, be more lenient with "lowball" threshold
+  const lowballThreshold = askingPrice !== undefined ? 0.5 : 0.75;
+
+  if (offerRatio < lowballThreshold) {
     // Lowball - reject outright
     return {
       offerId: offer.offerId,
@@ -1405,9 +1432,13 @@ export function evaluateIncomingOffer(
     };
   }
 
-  // Counter if within 30% of acceptable
-  if (offer.offerAmount >= minAcceptable * 0.7) {
-    const counterAmount = Math.round(minAcceptable * 1.1); // Ask for 10% above minimum
+  // Counter if within 30% of acceptable (40% for listed players - more willing to negotiate)
+  const counterThreshold = askingPrice !== undefined ? 0.6 : 0.7;
+  if (offer.offerAmount >= minAcceptable * counterThreshold) {
+    // For listed players, counter closer to asking price; for others, ask 10% above minimum
+    const counterAmount = askingPrice !== undefined
+      ? askingPrice  // Just ask for the asking price
+      : Math.round(minAcceptable * 1.1);
     return {
       offerId: offer.offerId,
       playerId: offer.playerId,
@@ -1687,7 +1718,8 @@ export function processAIWeek(
   availableFreeAgents: Array<{ id: string; name: string; position: string; overallRating: number; age: number; annualSalary: number }>,
   availableTransferTargets: TransferTargetInput[],
   incomingOffers: Array<{ offerId: string; playerId: string; offerAmount: number }>,
-  getPlayerMarketValue: (playerId: string) => number
+  getPlayerMarketValue: (playerId: string) => number,
+  teamTransferListAskingPrices?: Record<string, number>  // This team's asking prices for their listed players
 ): AIWeeklyActions {
   const needs = analyzeTeamNeeds(context.roster, context.personality);
 
@@ -1702,12 +1734,20 @@ export function processAIWeek(
   };
 
   // Always respond to incoming offers (can't ignore them)
+  console.log(`[processAIWeek] ${context.teamName} (${context.teamId}) processing ${incomingOffers.length} incoming offers`);
+  console.log(`[processAIWeek] Team roster has ${context.roster.length} players`);
   for (const offer of incomingOffers) {
     const player = context.roster.find(p => p.id === offer.playerId);
+    console.log(`[processAIWeek] Looking for player ${offer.playerId} in roster: ${player ? `FOUND (${player.name})` : 'NOT FOUND'}`);
     if (player) {
       const marketValue = getPlayerMarketValue(player.id);
-      const response = evaluateIncomingOffer(offer, player, marketValue, context);
+      // Get asking price if player is on this team's transfer list
+      const askingPrice = teamTransferListAskingPrices?.[player.id];
+      console.log(`[processAIWeek] Asking price for ${player.name}: ${askingPrice !== undefined ? `$${askingPrice}` : 'NOT IN MAP'}`);
+      const response = evaluateIncomingOffer(offer, player, marketValue, context, askingPrice);
       actions.offerResponses.push(response);
+    } else {
+      console.log(`[processAIWeek] WARNING: Player ${offer.playerId} not found in ${context.teamName}'s roster! Offer ignored.`);
     }
   }
 

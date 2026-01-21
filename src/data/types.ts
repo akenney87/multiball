@@ -1812,7 +1812,7 @@ export interface TransferOffer {
   transferFee: number;
 
   /** Current status */
-  status: 'pending' | 'accepted' | 'rejected' | 'countered' | 'expired' | 'walked_away' | 'pending_player_decision';
+  status: 'pending' | 'accepted' | 'rejected' | 'countered' | 'expired' | 'walked_away' | 'pending_player_decision' | 'negotiating';
 
   /** Creation date */
   createdDate: Date;

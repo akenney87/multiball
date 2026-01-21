@@ -1534,17 +1534,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         state.userTeam.division
       );
 
-      // Clean up accepted offer from outgoingOffers if this is a transfer
-      const cleanedOutgoingOffers = state.market.outgoingOffers.filter(
-        (offer) => !(offer.playerId === playerId && offer.status === 'accepted')
-      );
+      // Update offer status to 'negotiating' if this is a transfer (keeps offer visible in My Offers)
+      // The offer stays in the list until the transfer is completed or expires
+      const updatedOutgoingOffers = negotiationType === 'transfer'
+        ? state.market.outgoingOffers.map((offer) =>
+            offer.playerId === playerId && offer.status === 'accepted'
+              ? { ...offer, status: 'negotiating' as const }
+              : offer
+          )
+        : state.market.outgoingOffers;
 
       return {
         ...state,
         market: {
           ...state.market,
           activeNegotiation: negotiation,
-          outgoingOffers: cleanedOutgoingOffers,
+          outgoingOffers: updatedOutgoingOffers,
         },
       };
     }
@@ -1602,12 +1607,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         status: 'rejected',
       };
 
+      // If this was a transfer negotiation, revert the offer back to 'accepted' status
+      // so the user can re-start negotiations later
+      const revertedOutgoingOffers = negotiation.negotiationType === 'transfer'
+        ? state.market.outgoingOffers.map((offer) =>
+            offer.playerId === negotiation.playerId && offer.status === 'negotiating'
+              ? { ...offer, status: 'accepted' as const }
+              : offer
+          )
+        : state.market.outgoingOffers;
+
       return {
         ...state,
         market: {
           ...state.market,
           activeNegotiation: null,
           negotiationHistory: [cancelledNegotiation, ...state.market.negotiationHistory],
+          outgoingOffers: revertedOutgoingOffers,
         },
       };
     }
@@ -2443,6 +2459,52 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...state.league,
           teams: updatedTeams,
           freeAgentIds: [...state.league.freeAgentIds, playerId],
+        },
+      };
+    }
+
+    case 'UPDATE_AI_TRANSFER_LISTS': {
+      // Update AI team transfer lists based on their weekly decisions
+      const { listings } = action.payload;
+
+      // Group listings and asking prices by team
+      const listingsByTeam = new Map<string, string[]>();
+      const pricesByTeam = new Map<string, Record<string, number>>();
+      for (const listing of listings) {
+        // Player IDs
+        const existingIds = listingsByTeam.get(listing.teamId) || [];
+        existingIds.push(listing.playerId);
+        listingsByTeam.set(listing.teamId, existingIds);
+
+        // Asking prices
+        const existingPrices = pricesByTeam.get(listing.teamId) || {};
+        existingPrices[listing.playerId] = listing.askingPrice;
+        pricesByTeam.set(listing.teamId, existingPrices);
+      }
+
+      // Update each team's transfer list and asking prices
+      const updatedTeams = state.league.teams.map(team => {
+        const teamListings = listingsByTeam.get(team.id);
+        const teamPrices = pricesByTeam.get(team.id);
+        if (teamListings) {
+          // Combine with existing listings (avoid duplicates)
+          const existingListings = team.transferListPlayerIds || [];
+          const existingPrices = team.transferListAskingPrices || {};
+          const combined = [...new Set([...existingListings, ...teamListings])];
+          return {
+            ...team,
+            transferListPlayerIds: combined,
+            transferListAskingPrices: { ...existingPrices, ...teamPrices },
+          };
+        }
+        return team;
+      });
+
+      return {
+        ...state,
+        league: {
+          ...state.league,
+          teams: updatedTeams,
         },
       };
     }

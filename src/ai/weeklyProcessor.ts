@@ -471,7 +471,8 @@ export function processAllAITeams(input: WeeklyProcessorInput): AIWeeklyActions[
       availableFreeAgents,
       transferTargets,
       incomingOffers,
-      getPlayerMarketValue
+      getPlayerMarketValue,
+      askingPrices  // Pass asking prices so AI can auto-accept offers at asking price
     );
 
     allActions.push(actions);

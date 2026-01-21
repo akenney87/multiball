@@ -123,6 +123,7 @@ export function ConnectedTransferMarketScreen({
         uiStatus = 'pending';
         break;
       case 'accepted':
+      case 'negotiating':  // Show negotiating offers as accepted (user can continue)
         uiStatus = 'accepted';
         break;
       case 'countered':
@@ -152,35 +153,45 @@ export function ConnectedTransferMarketScreen({
     };
   }, [state.players, state.league.teams]);
 
-  // Get incoming offers
+  // Get incoming offers (newest first)
   const incomingOffers = useMemo((): IncomingOffer[] => {
     if (!state.initialized) return [];
-    return state.market.incomingOffers
+    // Sort by createdDate descending (newest first) before converting
+    const sorted = [...state.market.incomingOffers].sort(
+      (a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+    );
+    return sorted
       .map(convertToIncomingOffer)
       .filter((offer): offer is IncomingOffer => offer !== null);
   }, [state.initialized, state.market.incomingOffers, convertToIncomingOffer]);
 
-  // Get outgoing offers
+  // Get outgoing offers (newest first)
   const outgoingOffers = useMemo((): OutgoingOffer[] => {
     if (!state.initialized) return [];
-    return state.market.outgoingOffers
+    // Sort by createdDate descending (newest first) before converting
+    const sorted = [...state.market.outgoingOffers].sort(
+      (a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+    );
+    return sorted
       .map(convertToOutgoingOffer)
       .filter((offer): offer is OutgoingOffer => offer !== null);
   }, [state.initialized, state.market.outgoingOffers, convertToOutgoingOffer]);
 
-  // Get shortlisted players (converted to TransferTarget format)
+  // Get shortlisted players (converted to TransferTarget format, newest first)
   const shortlistedPlayers = useMemo((): TransferTarget[] => {
     if (!state.initialized) return [];
     const players = getShortlistedPlayers();
-    return players.map(convertToTarget);
+    // Reverse to show newest additions first (items are added to end of array)
+    return [...players].reverse().map(convertToTarget);
   }, [state.initialized, getShortlistedPlayers, convertToTarget]);
 
-  // Get transfer listed players (user's own players)
+  // Get transfer listed players (user's own players, newest first)
   const transferListedPlayers = useMemo((): TransferListPlayer[] => {
     if (!state.initialized) return [];
     const players = getTransferListedPlayers();
     const askingPrices = state.userTeam.transferListAskingPrices || {};
-    return players.map((player): TransferListPlayer => {
+    // Reverse to show newest additions first (items are added to end of array)
+    return [...players].reverse().map((player): TransferListPlayer => {
       const overall = calculatePlayerOverall(player);
       const salary = player.contract?.salary || 0;
       // Use stored asking price, fall back to calculated value for backward compatibility

@@ -11,7 +11,7 @@
  * - Attribute filters with comparison operators (>=, <=, =)
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -27,7 +27,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors, spacing, borderRadius, shadows } from '../../theme';
 import type { Player, PlayerAttributes, ScoutingReport } from '../../../data/types';
 import { calculatePlayerOverall } from '../../integration/gameInitializer';
-import { calculatePlayerValuation } from '../../../systems/contractSystem';
+import { calculatePlayerValuation, calculatePlayerMarketValue } from '../../../systems/contractSystem';
 
 interface PlayerSearchModalProps {
   visible: boolean;
@@ -41,9 +41,10 @@ interface PlayerSearchModalProps {
   scoutedPlayerIds?: string[];
   scoutingTargetIds?: string[];  // Players currently being scouted
   transferListPlayerIds?: string[];  // Players on the transfer list
+  transferListAskingPrices?: Record<string, number>;  // Asking prices for transfer-listed players
 }
 
-type SortOption = 'overall' | 'age' | 'height' | 'weight' | 'name' | 'salary';
+type SortOption = 'overall' | 'age' | 'height' | 'weight' | 'name' | 'salary' | 'askingPrice';
 
 const SORT_OPTIONS: Array<{ key: SortOption; label: string }> = [
   { key: 'overall', label: 'Overall' },
@@ -52,6 +53,7 @@ const SORT_OPTIONS: Array<{ key: SortOption; label: string }> = [
   { key: 'weight', label: 'Weight' },
   { key: 'name', label: 'Name' },
   { key: 'salary', label: 'Salary' },
+  { key: 'askingPrice', label: 'Asking Price' },
 ];
 
 type ComparisonOperator = '>=' | '<=' | '=';
@@ -106,8 +108,22 @@ export function PlayerSearchModal({
   scoutedPlayerIds = [],
   scoutingTargetIds = [],
   transferListPlayerIds = [],
+  transferListAskingPrices = {},
 }: PlayerSearchModalProps) {
   const colors = useColors();
+
+  // Debug: Log transfer list data when it changes
+  useEffect(() => {
+    const listedCount = transferListPlayerIds.length;
+    const priceCount = Object.keys(transferListAskingPrices).length;
+    if (listedCount > 0 || priceCount > 0) {
+      console.log(`[PlayerSearch] Transfer Listed: ${listedCount} players, ${priceCount} with asking prices`);
+      for (const [playerId, price] of Object.entries(transferListAskingPrices)) {
+        const player = players.find(p => p.id === playerId);
+        console.log(`  - ${player?.name || playerId}: $${price.toLocaleString()}`);
+      }
+    }
+  }, [transferListPlayerIds, transferListAskingPrices, players]);
 
   // Sort state
   const [sortBy, setSortBy] = useState<SortOption>('overall');
@@ -173,6 +189,10 @@ export function PlayerSearchModal({
   const [maxSalary, setMaxSalary] = useState('');
   const [attributeFilters, setAttributeFilters] = useState<AttributeFilter[]>([]);
 
+  // Special filter checkboxes
+  const [showFreeAgentsOnly, setShowFreeAgentsOnly] = useState(false);
+  const [showTransferListedOnly, setShowTransferListedOnly] = useState(false);
+
   // UI state
   const [showFilters, setShowFilters] = useState(false);
   const [showTeamPicker, setShowTeamPicker] = useState(false);
@@ -203,12 +223,10 @@ export function PlayerSearchModal({
   // Create a set for fast transfer list lookup
   const transferListSet = useMemo(() => new Set(transferListPlayerIds), [transferListPlayerIds]);
 
-  // Build team options including all teams
+  // Build team options (only actual teams, not special filters)
   const teamOptions = useMemo(() => {
     const options: Array<{ id: string; name: string }> = [
       { id: 'all', name: 'All Teams' },
-      { id: 'free_agent', name: 'Free Agents' },
-      { id: 'transfer_listed', name: 'Transfer Listed' },
     ];
     // Add user team first
     const userTeam = teams.find((t) => t.id === userTeamId);
@@ -239,6 +257,8 @@ export function PlayerSearchModal({
     setMinSalary('');
     setMaxSalary('');
     setAttributeFilters([]);
+    setShowFreeAgentsOnly(false);
+    setShowTransferListedOnly(false);
   }, []);
 
   // Add attribute filter
@@ -273,14 +293,19 @@ export function PlayerSearchModal({
         return false;
       }
 
-      // Team filter
-      if (selectedTeamId !== 'all') {
-        if (selectedTeamId === 'transfer_listed') {
-          // Show only transfer-listed players
-          if (!transferListSet.has(player.id)) return false;
-        } else if (player.teamId !== selectedTeamId) {
-          return false;
-        }
+      // Free agents filter (checkbox)
+      if (showFreeAgentsOnly && player.teamId !== 'free_agent') {
+        return false;
+      }
+
+      // Transfer listed filter (checkbox)
+      if (showTransferListedOnly && !transferListSet.has(player.id)) {
+        return false;
+      }
+
+      // Team filter (dropdown - only applies to non-free-agent filtering)
+      if (selectedTeamId !== 'all' && player.teamId !== selectedTeamId) {
+        return false;
       }
 
       // Age filter
@@ -399,6 +424,8 @@ export function PlayerSearchModal({
     scoutingReports,
     transferListSet,
     getPlayerSalary,
+    showFreeAgentsOnly,
+    showTransferListedOnly,
   ]);
 
   // Sort players by selected criteria
@@ -470,10 +497,23 @@ export function PlayerSearchModal({
         case 'salary':
           comparison = getPlayerSalary(a) - getPlayerSalary(b);
           break;
+        case 'askingPrice': {
+          // Sort by asking price - use market value as fallback for listed players, Infinity for unlisted
+          const isListedA = transferListSet.has(a.id);
+          const isListedB = transferListSet.has(b.id);
+          const priceA = isListedA
+            ? (transferListAskingPrices[a.id] ?? calculatePlayerMarketValue(a))
+            : Infinity;
+          const priceB = isListedB
+            ? (transferListAskingPrices[b.id] ?? calculatePlayerMarketValue(b))
+            : Infinity;
+          comparison = priceA - priceB;
+          break;
+        }
       }
       return sortAscending ? comparison : -comparison;
     });
-  }, [filteredPlayers, sortBy, sortAscending, getScoutingInfo, getPlayerSalary]);
+  }, [filteredPlayers, sortBy, sortAscending, getScoutingInfo, getPlayerSalary, transferListAskingPrices]);
 
   // Get team name for display
   const getTeamName = useCallback(
@@ -544,6 +584,12 @@ export function PlayerSearchModal({
     const isOnScoutList = scoutingTargetIds.includes(player.id);
     const isOwnPlayer = player.teamId === userTeamId;
     const canScout = canScoutPlayer(player.id);
+    const isOnTransferList = transferListSet.has(player.id);
+    // Get asking price - use stored value or calculate from market value as fallback
+    const storedAskingPrice = transferListAskingPrices[player.id];
+    const askingPrice = isOnTransferList
+      ? (storedAskingPrice ?? calculatePlayerMarketValue(player))
+      : undefined;
 
     // Determine what to show for overall rating
     let overallDisplay: string;
@@ -582,13 +628,19 @@ export function PlayerSearchModal({
             <View style={styles.playerHeader}>
               <Text style={[styles.playerName, { color: colors.text }]}>{player.name}</Text>
               <View style={styles.badgeRow}>
+                {/* Transfer listed indicator */}
+                {isOnTransferList && !isOwnPlayer && (
+                  <View style={[styles.scoutingBadge, { backgroundColor: colors.success + '30' }]}>
+                    <Text style={[styles.scoutingBadgeText, { color: colors.success }]}>For Sale</Text>
+                  </View>
+                )}
                 {/* Scouting status indicator */}
                 {isOnScoutList && (
                   <View style={[styles.scoutingBadge, { backgroundColor: colors.warning + '30' }]}>
                     <Text style={[styles.scoutingBadgeText, { color: colors.warning }]}>Scouting</Text>
                   </View>
                 )}
-                {scoutingInfo.isFullyKnown && !isOwnPlayer && (
+                {scoutingInfo.isFullyKnown && !isOwnPlayer && !isOnTransferList && (
                   <View style={[styles.scoutingBadge, { backgroundColor: colors.success + '30' }]}>
                     <Text style={[styles.scoutingBadgeText, { color: colors.success }]}>Scouted</Text>
                   </View>
@@ -607,6 +659,15 @@ export function PlayerSearchModal({
               {getTeamName(player.teamId)}
               {player.contract && ` | ${formatSalary(player.contract.salary)}/yr`}
             </Text>
+            {/* Asking price shown prominently for transfer-listed players - always visible regardless of scouting */}
+            {isOnTransferList && askingPrice !== undefined && (
+              <View style={styles.askingPriceRow}>
+                <Text style={[styles.askingPriceLabel, { color: colors.textMuted }]}>Asking:</Text>
+                <Text style={[styles.askingPriceValue, { color: colors.success }]}>
+                  {formatSalary(askingPrice)}
+                </Text>
+              </View>
+            )}
           </View>
         </Pressable>
 
@@ -683,6 +744,38 @@ export function PlayerSearchModal({
         {/* Expandable Filters */}
         {showFilters && (
           <ScrollView style={[styles.filtersContainer, { backgroundColor: colors.card }]}>
+            {/* Quick Filters (Checkboxes) */}
+            <View style={styles.checkboxRow}>
+              <TouchableOpacity
+                style={[
+                  styles.checkboxButton,
+                  {
+                    backgroundColor: showFreeAgentsOnly ? colors.primary : colors.surface,
+                    borderColor: showFreeAgentsOnly ? colors.primary : colors.border,
+                  },
+                ]}
+                onPress={() => setShowFreeAgentsOnly(!showFreeAgentsOnly)}
+              >
+                <Text style={[styles.checkboxText, { color: showFreeAgentsOnly ? '#FFFFFF' : colors.text }]}>
+                  Free Agents Only
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.checkboxButton,
+                  {
+                    backgroundColor: showTransferListedOnly ? colors.success : colors.surface,
+                    borderColor: showTransferListedOnly ? colors.success : colors.border,
+                  },
+                ]}
+                onPress={() => setShowTransferListedOnly(!showTransferListedOnly)}
+              >
+                <Text style={[styles.checkboxText, { color: showTransferListedOnly ? '#FFFFFF' : colors.text }]}>
+                  Transfer Listed Only
+                </Text>
+              </TouchableOpacity>
+            </View>
+
             {/* Team Picker */}
             <View style={styles.filterRow}>
               <Text style={[styles.filterLabel, { color: colors.textMuted }]}>Team</Text>
@@ -1165,6 +1258,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: spacing.sm,
   },
+  checkboxRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  checkboxButton: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+  },
+  checkboxText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
   filterLabel: {
     fontSize: 13,
     fontWeight: '500',
@@ -1367,6 +1476,20 @@ const styles = StyleSheet.create({
   },
   playerTeam: {
     fontSize: 11,
+  },
+  askingPriceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    gap: 4,
+  },
+  askingPriceLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+  },
+  askingPriceValue: {
+    fontSize: 13,
+    fontWeight: '700',
   },
   scoutButton: {
     paddingVertical: spacing.sm,

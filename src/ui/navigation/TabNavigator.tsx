@@ -631,7 +631,18 @@ export function TabNavigator() {
       scoutingReports={state.scoutingReports || []}
       scoutedPlayerIds={state.scoutedPlayerIds || []}
       scoutingTargetIds={state.scoutingTargetIds || []}
-      transferListPlayerIds={state.userTeam.transferListPlayerIds || []}
+      transferListPlayerIds={[
+        // User's transfer list
+        ...(state.userTeam.transferListPlayerIds || []),
+        // AI teams' transfer lists (excluding user's own players)
+        ...(state.league?.teams?.flatMap(t => t.transferListPlayerIds || []) || []),
+      ]}
+      transferListAskingPrices={{
+        // User's asking prices
+        ...(state.userTeam.transferListAskingPrices || {}),
+        // AI teams' asking prices
+        ...(state.league?.teams?.reduce((acc, t) => ({ ...acc, ...(t.transferListAskingPrices || {}) }), {}) || {}),
+      }}
     />
 
     {/* Player Detail Modal - rendered last to appear on top of everything */}

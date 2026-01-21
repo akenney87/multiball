@@ -284,6 +284,12 @@ export interface AITeamState {
     total: number;
     available: number;
   };
+
+  /** Players listed for transfer by AI (surplus/unwanted players) */
+  transferListPlayerIds?: string[];
+
+  /** Asking prices for AI transfer-listed players */
+  transferListAskingPrices?: Record<string, number>;
 }
 
 /**
@@ -640,6 +646,16 @@ export type GameAction =
       payload: {
         teamId: string;
         playerId: string;
+      };
+    }
+  | {
+      type: 'UPDATE_AI_TRANSFER_LISTS';
+      payload: {
+        listings: Array<{
+          teamId: string;
+          playerId: string;
+          askingPrice: number;
+        }>;
       };
     }
   | {

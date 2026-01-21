@@ -125,6 +125,13 @@ export function ConnectedPlayerDetailScreen({
     );
   }, [playerId, state.market.outgoingOffers]);
 
+  // Check if there's an accepted offer for this player (ready to negotiate contract)
+  const acceptedOffer = useMemo(() => {
+    return state.market.outgoingOffers.find(
+      (offer) => offer.playerId === playerId && offer.status === 'accepted'
+    );
+  }, [playerId, state.market.outgoingOffers]);
+
   // Check if player is a scouting target
   const isScoutingTarget = useMemo(
     () => (state.scoutingTargetIds || []).includes(playerId),
@@ -170,6 +177,16 @@ export function ConnectedPlayerDetailScreen({
     // Navigate to negotiation screen
     onNavigateToNegotiation?.();
   }, [playerId, startNegotiation, onNavigateToNegotiation]);
+
+  // Handle negotiating contract after transfer is accepted
+  const handleNegotiateTransfer = useCallback(() => {
+    if (acceptedOffer) {
+      // Start a transfer negotiation with the accepted transfer fee
+      startNegotiation(playerId, 'transfer', acceptedOffer.transferFee);
+      // Navigate to negotiation screen
+      onNavigateToNegotiation?.();
+    }
+  }, [playerId, acceptedOffer, startNegotiation, onNavigateToNegotiation]);
 
   // Handle making a transfer offer (for players on other teams)
   const handleMakeTransferOffer = useCallback(() => {
@@ -1040,7 +1057,39 @@ export function ConnectedPlayerDetailScreen({
         ) : (
           // Actions for players on other teams - transfer offers
           <>
-            {existingOffer ? (
+            {existingNegotiation && existingNegotiation.negotiationType === 'transfer' ? (
+              // Active transfer negotiation in progress
+              <TouchableOpacity
+                style={[styles.negotiationPendingCard, { backgroundColor: colors.card, borderColor: colors.info }]}
+                onPress={onNavigateToNegotiation}
+              >
+                <Text style={[styles.negotiationPendingTitle, { color: colors.info }]}>
+                  Contract Negotiation In Progress
+                </Text>
+                <Text style={[styles.negotiationPendingNote, { color: colors.textMuted }]}>
+                  Tap to continue negotiating with the player
+                </Text>
+              </TouchableOpacity>
+            ) : acceptedOffer ? (
+              // Transfer accepted - ready to negotiate contract with player
+              <View style={[styles.offerAcceptedCard, { backgroundColor: colors.card, borderColor: colors.success }]}>
+                <Text style={[styles.offerAcceptedTitle, { color: colors.success }]}>
+                  Transfer Bid Accepted!
+                </Text>
+                <Text style={[styles.offerAcceptedAmount, { color: colors.text }]}>
+                  {formatCurrency(acceptedOffer.transferFee)}
+                </Text>
+                <Text style={[styles.offerAcceptedNote, { color: colors.textMuted }]}>
+                  Their team has agreed to the fee. Now negotiate a contract with the player.
+                </Text>
+                <TouchableOpacity
+                  style={[styles.negotiateContractButton, { backgroundColor: colors.success }]}
+                  onPress={handleNegotiateTransfer}
+                >
+                  <Text style={styles.negotiateContractText}>Negotiate Contract</Text>
+                </TouchableOpacity>
+              </View>
+            ) : existingOffer ? (
               <View style={[styles.offerPendingCard, { backgroundColor: colors.card, borderColor: colors.warning }]}>
                 <Text style={[styles.offerPendingTitle, { color: colors.warning }]}>
                   Transfer Offer Pending
@@ -1589,6 +1638,39 @@ const styles = StyleSheet.create({
   },
   offerPendingNote: {
     fontSize: 12,
+  },
+  offerAcceptedCard: {
+    padding: spacing.lg,
+    borderRadius: borderRadius.md,
+    borderWidth: 2,
+    alignItems: 'center',
+  },
+  offerAcceptedTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    marginBottom: spacing.xs,
+  },
+  offerAcceptedAmount: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: spacing.xs,
+  },
+  offerAcceptedNote: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: spacing.md,
+  },
+  negotiateContractButton: {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+  },
+  negotiateContractText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#000000',
   },
   modalOverlay: {
     flex: 1,

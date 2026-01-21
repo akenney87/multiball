@@ -762,8 +762,9 @@ export function GameProvider({ children }: GameProviderProps) {
   // =========================================================================
 
   const advanceWeek = useCallback(async () => {
-    // Process AI responses to user's transfer offers
-    dispatch({ type: 'PROCESS_TRANSFER_RESPONSES', payload: { currentWeek: state.season.currentWeek } });
+    // NOTE: AI responses to user's transfer offers are now handled by the AI weekly processing
+    // (aiResolvedActions.offerResponses) which properly uses asking prices and AI personality.
+    // The old PROCESS_TRANSFER_RESPONSES action has been removed.
 
     // Process AI responses to user's counter-offers on incoming offers
     // (When AI made an offer on user's player and user countered back)
@@ -1528,7 +1529,9 @@ export function GameProvider({ children }: GameProviderProps) {
 
     // Build incoming offers by AI team (user's outgoing offers to AI teams)
     const incomingOffersByTeam: Record<string, Array<{ offerId: string; playerId: string; offerAmount: number }>> = {};
+    console.log(`[AI Processing] Building incoming offers from ${aiState.market.outgoingOffers.length} outgoing offers`);
     for (const offer of aiState.market.outgoingOffers) {
+      console.log(`  - Offer ${offer.id}: player=${offer.playerId}, to=${offer.receivingTeamId}, amount=$${offer.transferFee}, status=${offer.status}`);
       if (offer.status === 'pending' && offer.receivingTeamId !== 'user') {
         const teamId = offer.receivingTeamId;
         if (!incomingOffersByTeam[teamId]) {
@@ -1539,6 +1542,7 @@ export function GameProvider({ children }: GameProviderProps) {
           playerId: offer.playerId,
           offerAmount: offer.transferFee,
         });
+        console.log(`    => Added to team ${teamId}'s incoming offers`);
       }
     }
 
@@ -1576,6 +1580,24 @@ export function GameProvider({ children }: GameProviderProps) {
         allTeamsById[team.id] = team;
       }
 
+      // Combine ALL teams' transfer lists (user + AI) so AI can evaluate offers correctly
+      const allTransferListedPlayerIds: string[] = [
+        ...(aiState.userTeam.transferListPlayerIds || []),
+        ...aiState.league.teams.flatMap(t => t.transferListPlayerIds || []),
+      ];
+      const allTransferListAskingPrices: Record<string, number> = {
+        ...(aiState.userTeam.transferListAskingPrices || {}),
+        ...aiState.league.teams.reduce((acc, t) => ({ ...acc, ...(t.transferListAskingPrices || {}) }), {} as Record<string, number>),
+      };
+
+      // Debug: Log all asking prices being passed to AI
+      console.log(`[AI Processing] Transfer-listed players: ${allTransferListedPlayerIds.length}`);
+      console.log(`[AI Processing] Asking prices available for ${Object.keys(allTransferListAskingPrices).length} players:`);
+      for (const [playerId, price] of Object.entries(allTransferListAskingPrices)) {
+        const player = aiState.players[playerId];
+        console.log(`  - ${player?.name || playerId}: $${price.toLocaleString()}`);
+      }
+
       const extendedInput: ExtendedWeeklyProcessorInput = {
         teams: aiState.league.teams, // Still needed for basic input
         allTeamsById,
@@ -1586,10 +1608,10 @@ export function GameProvider({ children }: GameProviderProps) {
         incomingOffersByTeam,
         userDivision: aiState.userTeam.division,
         divisionManager: dm,
-        // Pass transfer-listed players so AI knows they're motivated sellers
-        transferListedPlayerIds: aiState.userTeam.transferListPlayerIds || [],
-        // Pass asking prices for transfer-listed players
-        transferListAskingPrices: aiState.userTeam.transferListAskingPrices || {},
+        // Pass ALL transfer-listed players (user + AI) so AI knows they're motivated sellers
+        transferListedPlayerIds: allTransferListedPlayerIds,
+        // Pass ALL asking prices so AI teams can honor their own asking prices
+        transferListAskingPrices: allTransferListAskingPrices,
       };
 
       const batchResult = processBatchedWeeklyAI(extendedInput);
@@ -1597,6 +1619,24 @@ export function GameProvider({ children }: GameProviderProps) {
       // Batch processing stats: batchResult.teamsProcessed teams processed
     } else {
       // Standard processing for small leagues (backwards compatible)
+      // Combine ALL teams' transfer lists (user + AI) so AI can evaluate offers correctly
+      const allTransferListedPlayerIds: string[] = [
+        ...(aiState.userTeam.transferListPlayerIds || []),
+        ...aiState.league.teams.flatMap(t => t.transferListPlayerIds || []),
+      ];
+      const allTransferListAskingPrices: Record<string, number> = {
+        ...(aiState.userTeam.transferListAskingPrices || {}),
+        ...aiState.league.teams.reduce((acc, t) => ({ ...acc, ...(t.transferListAskingPrices || {}) }), {} as Record<string, number>),
+      };
+
+      // Debug: Log all asking prices being passed to AI
+      console.log(`[AI Processing] Transfer-listed players: ${allTransferListedPlayerIds.length}`);
+      console.log(`[AI Processing] Asking prices available for ${Object.keys(allTransferListAskingPrices).length} players:`);
+      for (const [playerId, price] of Object.entries(allTransferListAskingPrices)) {
+        const player = aiState.players[playerId];
+        console.log(`  - ${player?.name || playerId}: $${price.toLocaleString()}`);
+      }
+
       const aiInput: WeeklyProcessorInput = {
         teams: aiState.league.teams,
         players: aiState.players,
@@ -1604,10 +1644,10 @@ export function GameProvider({ children }: GameProviderProps) {
         currentWeek: aiState.season.currentWeek,
         isTransferWindowOpen: aiState.season.transferWindowOpen,
         incomingOffersByTeam,
-        // Pass transfer-listed players so AI knows they're motivated sellers
-        transferListedPlayerIds: aiState.userTeam.transferListPlayerIds || [],
-        // Pass asking prices for transfer-listed players
-        transferListAskingPrices: aiState.userTeam.transferListAskingPrices || {},
+        // Pass ALL transfer-listed players (user + AI) so AI knows they're motivated sellers
+        transferListedPlayerIds: allTransferListedPlayerIds,
+        // Pass ALL asking prices so AI teams can honor their own asking prices
+        transferListAskingPrices: allTransferListAskingPrices,
       };
 
       aiResolvedActions = processWeeklyAI(aiInput);
@@ -1701,7 +1741,9 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     // Execute AI responses to user's transfer offers
+    console.log(`[AI Offer Responses] Processing ${aiResolvedActions.offerResponses.length} responses`);
     for (const response of aiResolvedActions.offerResponses) {
+      console.log(`  - Offer ${response.offerId}: ${response.decision}${response.counterAmount ? ` (counter: $${response.counterAmount})` : ''}`);
       dispatch({
         type: 'AI_RESPOND_TO_TRANSFER',
         payload: {
@@ -1710,6 +1752,56 @@ export function GameProvider({ children }: GameProviderProps) {
           counterAmount: response.counterAmount,
         },
       });
+
+      // Find the offer to get player details for news event
+      const offer = aiState.market.outgoingOffers.find(o => o.id === response.offerId);
+      if (offer) {
+        const player = aiState.players[offer.playerId];
+        const sellerTeam = aiState.league.teams.find(t => t.id === offer.receivingTeamId);
+        const playerName = player?.name || 'Unknown Player';
+        const teamName = sellerTeam?.name || 'Unknown Team';
+
+        // Create news event based on decision
+        let event: NewsItem;
+        if (response.decision === 'accept') {
+          event = {
+            id: `event-offer-accepted-${Date.now()}-${offer.playerId}`,
+            type: 'transfer',
+            priority: 'critical',  // Accepted offers are important - user action needed
+            title: 'Transfer Bid Accepted!',
+            message: `${teamName} have accepted your $${offer.transferFee.toLocaleString()} bid for ${playerName}. You can now negotiate a contract with the player.`,
+            timestamp: new Date(),
+            read: false,
+            relatedEntityId: offer.playerId,
+            scope: 'team',
+          };
+        } else if (response.decision === 'counter') {
+          event = {
+            id: `event-offer-countered-${Date.now()}-${offer.playerId}`,
+            type: 'transfer',
+            priority: 'important',  // Counter-offers need attention
+            title: 'Transfer Counter-Offer',
+            message: `${teamName} have countered your bid for ${playerName} with a demand of $${(response.counterAmount || 0).toLocaleString()}.`,
+            timestamp: new Date(),
+            read: false,
+            relatedEntityId: offer.playerId,
+            scope: 'team',
+          };
+        } else {
+          event = {
+            id: `event-offer-rejected-${Date.now()}-${offer.playerId}`,
+            type: 'transfer',
+            priority: 'info',  // Rejections are just FYI
+            title: 'Transfer Bid Rejected',
+            message: `${teamName} have rejected your bid of $${offer.transferFee.toLocaleString()} for ${playerName}.`,
+            timestamp: new Date(),
+            read: false,
+            relatedEntityId: offer.playerId,
+            scope: 'team',
+          };
+        }
+        dispatch({ type: 'ADD_EVENT', payload: event });
+      }
     }
 
     // Execute AI releases
@@ -1738,6 +1830,23 @@ export function GameProvider({ children }: GameProviderProps) {
       dispatch({ type: 'ADD_EVENT', payload: event });
     }
 
+    // Update AI team transfer lists (players they want to sell)
+    console.log(`[AI Transfer Lists] ${aiResolvedActions.transferListings.length} new listings this week`);
+    if (aiResolvedActions.transferListings.length > 0) {
+      for (const listing of aiResolvedActions.transferListings) {
+        console.log(`  - ${listing.playerName} (${listing.teamName}): asking $${listing.askingPrice.toLocaleString()} - ${listing.reason}`);
+      }
+      dispatch({
+        type: 'UPDATE_AI_TRANSFER_LISTS',
+        payload: {
+          listings: aiResolvedActions.transferListings.map(listing => ({
+            teamId: listing.teamId,
+            playerId: listing.playerId,
+            askingPrice: listing.askingPrice,
+          })),
+        },
+      });
+    }
 
     // =========================================================================
     // PLAYER AWARDS
