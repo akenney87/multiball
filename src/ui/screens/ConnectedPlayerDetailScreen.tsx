@@ -25,6 +25,7 @@ import { useGame } from '../context/GameContext';
 import { createBalancedFocus } from '../../utils/trainingFocusMapper';
 import { isNewTrainingFocus } from '../../data/types';
 import { calculateAllOveralls } from '../../utils/overallRating';
+import { calculatePlayerMarketValue } from '../../systems/contractSystem';
 import { getVisibleAttributesForUnscouted } from '../utils/scoutingUtils';
 import type { ScoutReport } from '../../systems/scoutingSystem';
 
@@ -148,141 +149,12 @@ export function ConnectedPlayerDetailScreen({
     [playerId, state.market.activeNegotiation]
   );
 
-  // Calculate performance multiplier based on awards and stats
-  // This allows proven players to exceed the salary cap on transfer value
-  const performanceMultiplier = useMemo(() => {
-    if (!player) return 1.0;
-
-    let multiplier = 1.0;
-
-    // Awards add significant value - these are proven accomplishments
-    const awards = player.awards;
-
-    if (awards) {
-      // playerOfTheWeek and playerOfTheMonth are objects with per-sport counts
-      const weeklyAwards = awards.playerOfTheWeek;
-      const monthlyAwards = awards.playerOfTheMonth;
-
-      // Sum up sport-specific awards
-      const totalWeekly = typeof weeklyAwards === 'object' && weeklyAwards
-        ? (weeklyAwards.basketball ?? 0) + (weeklyAwards.baseball ?? 0) + (weeklyAwards.soccer ?? 0)
-        : (weeklyAwards ?? 0);
-      const totalMonthly = typeof monthlyAwards === 'object' && monthlyAwards
-        ? (monthlyAwards.basketball ?? 0) + (monthlyAwards.baseball ?? 0) + (monthlyAwards.soccer ?? 0)
-        : (monthlyAwards ?? 0);
-
-      multiplier += totalWeekly * 0.05;              // +5% per weekly award
-      multiplier += totalMonthly * 0.15;             // +15% per monthly award
-      multiplier += (awards.basketballPlayerOfTheYear ?? 0) * 0.50;
-      multiplier += (awards.baseballPlayerOfTheYear ?? 0) * 0.50;
-      multiplier += (awards.soccerPlayerOfTheYear ?? 0) * 0.50;
-      multiplier += (awards.rookieOfTheYear ?? 0) * 0.30;
-      multiplier += (awards.championships ?? 0) * 0.35;
-    }
-
-    // Games played adds confidence in value (player is proven, not just potential)
-    const gamesPlayed = player.careerStats?.gamesPlayed || { basketball: 0, baseball: 0, soccer: 0 };
-    const totalGames = (gamesPlayed.basketball ?? 0) + (gamesPlayed.baseball ?? 0) + (gamesPlayed.soccer ?? 0);
-
-    if (totalGames >= 100) {
-      multiplier += 0.30; // Veteran bonus
-    } else if (totalGames >= 50) {
-      multiplier += 0.15; // Experienced bonus
-    } else if (totalGames >= 20) {
-      multiplier += 0.05; // Some experience
-    }
-
-    // Cap the multiplier at 3x to prevent runaway values
-    return Math.min(3.0, multiplier);
-  }, [player]);
-
-  // Estimate player transfer value based on overall, age, salary, and performance
-  // Philosophy: Transfer value should reflect acquisition cost, not arbitrary inflation
-  // A free agent costing $40k in fees shouldn't have a $900k transfer value
-  // BUT proven performers (awards, games played) can exceed this cap
-  // Free agents show $0 until signed to avoid tipping off their quality
+  // Use the shared market value calculation from contractSystem.ts for consistency
+  // This ensures UI and AI see the exact same market values
   const estimatedTransferValue = useMemo(() => {
     if (!player) return 0;
-    // Free agents show $0 market value
-    if (player.teamId === 'free_agent') return 0;
-    const rating = overalls.overall;
-    const age = player.age;
-    const salary = player.contract?.salary || 0;
-
-    // Base value tiers with exponential scaling for elite players
-    // Lower tiers reflect realistic acquisition costs, elite tiers reflect scarcity
-    let baseValue: number;
-    if (rating < 45) {
-      baseValue = 10000; // Barely roster-worthy
-    } else if (rating < 50) {
-      baseValue = 10000 + (rating - 45) * 4000; // $10k - $30k
-    } else if (rating < 55) {
-      baseValue = 30000 + (rating - 50) * 14000; // $30k - $100k
-    } else if (rating < 60) {
-      baseValue = 100000 + (rating - 55) * 40000; // $100k - $300k
-    } else if (rating < 65) {
-      baseValue = 300000 + (rating - 60) * 100000; // $300k - $800k
-    } else if (rating < 70) {
-      baseValue = 800000 + (rating - 65) * 240000; // $800k - $2M
-    } else if (rating < 75) {
-      baseValue = 2000000 + (rating - 70) * 600000; // $2M - $5M
-    } else if (rating < 80) {
-      baseValue = 5000000 + (rating - 75) * 1400000; // $5M - $12M
-    } else if (rating < 85) {
-      baseValue = 12000000 + (rating - 80) * 3600000; // $12M - $30M
-    } else {
-      // Exponential scaling for elite players (85+)
-      // 85: $30M, 90: $53M, 95: $93M, 99: $147M
-      baseValue = 30000000 * Math.pow(1.12, rating - 85);
-    }
-
-    // Age factor - young players have upside, old players are depreciating assets
-    // But older players still have real value - don't be too aggressive
-    let ageFactor: number;
-    if (age < 22) {
-      ageFactor = 1.3; // Potential premium
-    } else if (age < 26) {
-      ageFactor = 1.1; // Developing
-    } else if (age < 29) {
-      ageFactor = 1.0; // Prime
-    } else if (age < 32) {
-      ageFactor = 0.75; // Declining
-    } else if (age < 35) {
-      ageFactor = 0.5; // Veteran
-    } else {
-      ageFactor = 0.3; // Near retirement
-    }
-
-    // Calculate base transfer value
-    let transferValue = baseValue * ageFactor;
-
-    // Cap transfer value relative to salary for unproven players
-    // This prevents the free agent flip exploit
-    // Philosophy: If you can sign someone for $40k in fees, you shouldn't flip them for $200k
-    // But elite players (85+) are worth their market rate regardless of salary
-    if (salary > 0 && rating < 85) {
-      // Multiplier scales with rating - unproven players are worth less
-      let maxMultiple: number;
-      if (rating >= 80) {
-        maxMultiple = 5.0; // Star talent - salary less relevant
-      } else if (rating >= 75) {
-        maxMultiple = 3.0; // Very good player
-      } else if (rating >= 70) {
-        maxMultiple = 2.0; // Good player
-      } else if (rating >= 65) {
-        maxMultiple = 1.0; // Solid starter
-      } else {
-        maxMultiple = 0.5; // Unproven - transfer value ~= signing cost
-      }
-      transferValue = Math.min(transferValue, salary * maxMultiple);
-    }
-
-    // Apply performance multiplier (awards, games played boost value)
-    transferValue *= performanceMultiplier;
-
-    // Round to nearest $5k, minimum $5k
-    return Math.max(5000, Math.round(transferValue / 5000) * 5000);
-  }, [player, overalls.overall, performanceMultiplier]);
+    return calculatePlayerMarketValue(player);
+  }, [player]);
 
   // Handle extending contract (start renewal negotiation)
   const handleExtendContract = useCallback(() => {

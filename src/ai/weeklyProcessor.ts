@@ -32,6 +32,7 @@ import {
   WeeklyProcessingBatch,
   getDivisionManager,
 } from './divisionManager';
+import { calculatePlayerMarketValue } from '../systems/contractSystem';
 
 // =============================================================================
 // TYPES
@@ -211,12 +212,11 @@ function convertToTransferTarget(
   const overallRating = calculateOverallRating(player);
   const sportRatings = getPlayerSportRatings(player);
 
-  // Market value calculation (overall * age factor * base)
-  const ageFactor = player.age < 25 ? 1.5 : player.age > 30 ? 0.7 : 1.0;
-  const marketValue = Math.round(overallRating * 50000 * ageFactor);
+  // Use the proper tiered market value calculation from contractSystem
+  const marketValue = calculatePlayerMarketValue(player);
 
-  // Salary expectation: use current salary or estimate from rating
-  const salaryExpectation = player.contract?.salary ?? Math.round(overallRating * 15000 * ageFactor);
+  // Salary expectation: use current salary or estimate from market value (15% of market value)
+  const salaryExpectation = player.contract?.salary ?? Math.round(marketValue * 0.15);
 
   // Contract years remaining (calculate from contractLength and startDate)
   let contractYearsRemaining: number | undefined;
@@ -366,34 +366,81 @@ export function processAllAITeams(input: WeeklyProcessorInput): AIWeeklyActions[
   const transferListedSet = new Set(transferListedPlayerIds || []);
   const askingPrices = transferListAskingPrices || {};
 
-  // Build list of transfer targets (players from other teams)
-  const transferTargetsByTeam: Map<string, ReturnType<typeof convertToTransferTarget>[]> = new Map();
+  // Brief summary log for transfer processing
+  if (transferListedSet.size > 0) {
+    console.log(`[AI Weekly] Processing ${teams.length} teams, ${transferListedSet.size} transfer-listed players`);
+  }
+
+  // PERFORMANCE OPTIMIZATION: Pre-compute ALL player data ONCE
+  // Previously we computed transfer targets per-team, causing O(teams² × players) conversions
+  // Now we compute once per player: O(teams × players), then filter per team
+
+  // Pre-compute transfer target data for ALL players across all teams
+  const allTransferTargets: Map<string, TransferTargetInput> = new Map();
+  const playerTeamMap: Map<string, string> = new Map(); // playerId -> teamId
 
   for (const team of teams) {
-    if (team.id === 'user') continue;
+    for (const playerId of team.rosterIds) {
+      const player = players[playerId];
+      if (player && !allTransferTargets.has(playerId)) {
+        const bidBlockedUntilWeek = bidBlockedPlayers?.[playerId];
+        const isOnTransferList = transferListedSet.has(playerId);
+        const askingPrice = isOnTransferList ? askingPrices[playerId] : undefined;
+        allTransferTargets.set(playerId, convertToTransferTarget(player, team.id, bidBlockedUntilWeek, isOnTransferList, askingPrice));
+        playerTeamMap.set(playerId, team.id);
+      }
+    }
+  }
 
-    // Each AI team can only target players from OTHER teams
-    const targets: ReturnType<typeof convertToTransferTarget>[] = [];
+  // Add user's transfer-listed players (if user team is not in the teams array)
+  const userTeamInList = teams.some(t => t.id === 'user');
+  console.log(`[AI Weekly] User team in teams array: ${userTeamInList}, Transfer-listed count: ${transferListedSet.size}`);
 
-    for (const otherTeam of teams) {
-      if (otherTeam.id === team.id) continue; // Skip own team
+  if (transferListedSet.size > 0 && !userTeamInList) {
+    console.log(`[AI Weekly] Adding user's transfer-listed players...`);
+    for (const playerId of transferListedSet) {
+      const player = players[playerId];
+      console.log(`[AI Weekly] Player ${playerId}: found=${!!player}, teamId=${player?.teamId}, alreadyInTargets=${allTransferTargets.has(playerId)}`);
+      if (player && player.teamId === 'user' && !allTransferTargets.has(playerId)) {
+        const askingPrice = askingPrices[playerId];
+        const bidBlockedUntilWeek = bidBlockedPlayers?.[playerId];
+        // Debug: log detailed market value calculation for user's players
+        calculatePlayerMarketValue(player, true);
+        const target = convertToTransferTarget(player, 'user', bidBlockedUntilWeek, true, askingPrice);
+        allTransferTargets.set(playerId, target);
+        playerTeamMap.set(playerId, 'user');
+        console.log(`[AI Weekly] Added user player ${player.name}: askingPrice=${askingPrice}, marketValue=${target.marketValue}, isOnTransferList=${target.isOnTransferList}`);
+      }
+    }
+  }
 
-      for (const playerId of otherTeam.rosterIds) {
-        const player = players[playerId];
+  // Log all user transfer targets for debugging
+  const userTargets = Array.from(allTransferTargets.values()).filter(t => t.teamId === 'user');
+  console.log(`[AI Weekly] Total user transfer targets: ${userTargets.length}`);
+  userTargets.forEach(t => console.log(`  - ${t.name}: asking=${t.askingPrice}, market=${t.marketValue}, ratio=${t.askingPrice ? (t.askingPrice / t.marketValue).toFixed(2) : 'N/A'}`));
+
+  // Pre-compute market values for all players (used in offer responses)
+  const marketValueCache: Map<string, number> = new Map();
+  for (const [playerId] of allTransferTargets) {
+    const player = players[playerId];
+    if (player) {
+      marketValueCache.set(playerId, calculatePlayerMarketValue(player));
+    }
+  }
+  // Also cache market values for players in incoming offers who might not be in transfer targets
+  for (const teamOffers of Object.values(incomingOffersByTeam)) {
+    for (const offer of teamOffers) {
+      if (!marketValueCache.has(offer.playerId)) {
+        const player = players[offer.playerId];
         if (player) {
-          // Include bid blocking week if player has bids blocked
-          const bidBlockedUntilWeek = bidBlockedPlayers?.[playerId];
-          // Check if player is on the transfer list (motivated seller)
-          const isOnTransferList = transferListedSet.has(playerId);
-          // Get asking price if transfer-listed
-          const askingPrice = isOnTransferList ? askingPrices[playerId] : undefined;
-          targets.push(convertToTransferTarget(player, otherTeam.id, bidBlockedUntilWeek, isOnTransferList, askingPrice));
+          marketValueCache.set(offer.playerId, calculatePlayerMarketValue(player));
         }
       }
     }
-
-    transferTargetsByTeam.set(team.id, targets);
   }
+
+  // Convert to array for filtering
+  const allTargetsArray = Array.from(allTransferTargets.values());
 
   // Process each AI team
   for (const team of teams) {
@@ -406,18 +453,17 @@ export function processAllAITeams(input: WeeklyProcessorInput): AIWeeklyActions[
       teams.length
     );
 
-    if (!context) continue; // Skip user team or teams without AI personality
+    if (!context) {
+      continue;
+    }
 
-    const transferTargets = transferTargetsByTeam.get(team.id) || [];
+    // Filter targets: AI team can only bid on players from OTHER teams
+    const transferTargets = allTargetsArray.filter(target => target.teamId !== team.id);
     const incomingOffers = incomingOffersByTeam[team.id] || [];
 
-    // Create market value lookup
+    // Use cached market values instead of recalculating
     const getPlayerMarketValue = (playerId: string): number => {
-      const player = players[playerId];
-      if (!player) return 0;
-      const overall = calculateOverallRating(player);
-      const ageFactor = player.age < 25 ? 1.5 : player.age > 30 ? 0.7 : 1.0;
-      return Math.round(overall * 50000 * ageFactor);
+      return marketValueCache.get(playerId) ?? 0;
     };
 
     const actions = processAIWeek(
@@ -570,7 +616,9 @@ export function resolveConflicts(allActions: AIWeeklyActions[]): ResolvedActions
   }
 
   // Finalize transfer bids (highest bidder wins)
+  console.log(`[Conflict Resolution] Transfer bids by player: ${transferBidsByPlayer.size}`);
   for (const [playerId, bid] of transferBidsByPlayer) {
+    console.log(`  - ${bid.playerName} (${playerId}): winner=${bid.teamName}, amount=$${bid.bidAmount}, seller=${bid.targetTeamId}`);
     resolved.transferBids.push({
       buyerTeamId: bid.teamId,
       buyerTeamName: bid.teamName,
@@ -648,6 +696,7 @@ export function processBatchedWeeklyAI(input: ExtendedWeeklyProcessorInput): Bat
     incomingOffersByTeam,
     // Pass through transfer-listed players so batch processing sees them too
     transferListedPlayerIds: input.transferListedPlayerIds,
+    transferListAskingPrices: input.transferListAskingPrices,
     bidBlockedPlayers: input.bidBlockedPlayers,
   };
 

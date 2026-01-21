@@ -19,13 +19,13 @@ import {
   BuyerUrgency,
   createTransferOffer,
   processTransferOffer,
-  calculatePlayerMarketValue,
   suggestAskingPrice,
   expireOldOffers,
   filterOffersByStatus,
   getOffersForTeam,
   getOffersForPlayer,
 } from '../systems/transferSystem';
+import { calculatePlayerMarketValue } from '../systems/contractSystem';
 import { calculateOverallRating } from '../ai/evaluation';
 import {
   GameEventEmitter,
@@ -169,14 +169,8 @@ export function closeTransferWindow(
  * Calculate player's transfer market value
  */
 export function getPlayerMarketValue(player: Player): number {
-  const rating = calculateOverallRating(player);
-  const avgPotential =
-    (player.potentials.physical + player.potentials.mental + player.potentials.technical) / 3;
-
-  // Count sports with rating above 50 (placeholder - would need sport-specific ratings)
-  const sportsAbove50 = 1; // Default to 1 for now
-
-  return calculatePlayerMarketValue(rating, player.age, avgPotential, sportsAbove50);
+  // Use the shared calculation from contractSystem.ts for consistency
+  return calculatePlayerMarketValue(player);
 }
 
 /**

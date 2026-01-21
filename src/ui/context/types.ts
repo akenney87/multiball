@@ -278,6 +278,12 @@ export interface AITeamState {
 
   /** AI configuration */
   aiConfig: AIConfig;
+
+  /** Team budget (for transfer/signing affordability) */
+  budget?: {
+    total: number;
+    available: number;
+  };
 }
 
 /**
@@ -519,6 +525,7 @@ export type GameAction =
   | { type: 'EXPIRE_OFFERS' }
   | { type: 'PROCESS_TRANSFER_RESPONSES'; payload: { currentWeek: number } }
   | { type: 'COMPLETE_TRANSFER'; payload: { offerId: string; playerId: string; fromTeamId: string; toTeamId: string; fee: number } }
+  | { type: 'PROCESS_PENDING_PLAYER_DECISIONS'; payload: { currentWeek: number; isTransferWindowOpen: boolean } }
 
   // Contract Negotiation (FM-style)
   | { type: 'START_NEGOTIATION'; payload: { playerId: string; transferFee?: number; negotiationType: 'new_signing' | 'renewal' | 'transfer' } }
@@ -633,6 +640,15 @@ export type GameAction =
       payload: {
         teamId: string;
         playerId: string;
+      };
+    }
+  | {
+      type: 'AI_EXECUTE_TRANSFER';
+      payload: {
+        buyerTeamId: string;
+        sellerTeamId: string;
+        playerId: string;
+        transferFee: number;
       };
     }
   | {

@@ -18,7 +18,7 @@ import {
   DEFAULT_YOUTH_ACADEMY_STATE,
   SAVE_VERSION,
 } from './types';
-import type { Player, TransferOffer, ContractNegotiation } from '../../data/types';
+import type { Player, TransferOffer, ContractNegotiation, Contract, NewsItem } from '../../data/types';
 import {
   createNegotiation,
   processNegotiationRound,
@@ -815,20 +815,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'RESPOND_TO_OFFER': {
       const { offerId, accept } = action.payload;
 
+      // When accepting, set to 'pending_player_decision' - the player needs to negotiate
+      // a contract with the buying team before the transfer is finalized.
+      // The user can accept multiple offers - the player will choose the best one.
       const updateOffer = (offer: TransferOffer): TransferOffer => {
         if (offer.id !== offerId) return offer;
         return {
           ...offer,
-          status: accept ? 'accepted' : 'rejected',
+          status: accept ? 'pending_player_decision' : 'rejected',
         };
       };
 
       const updatedOffers = state.market.transferOffers.map(updateOffer);
-      const acceptedOffer = updatedOffers.find(
-        (o) => o.id === offerId && o.status === 'accepted'
-      );
 
-      let newState = {
+      // Don't transfer the player immediately when accepting!
+      // The transfer will be finalized during weekly progression after the player
+      // negotiates a contract with the buying team(s).
+      return {
         ...state,
         market: {
           ...state.market,
@@ -836,34 +839,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           incomingOffers: state.market.incomingOffers.map(updateOffer),
         },
       };
-
-      // If accepted, process the transfer
-      if (acceptedOffer) {
-        const player = state.players[acceptedOffer.playerId];
-        if (player) {
-          // Remove from user team
-          newState = {
-            ...newState,
-            players: {
-              ...newState.players,
-              [acceptedOffer.playerId]: {
-                ...player,
-                teamId: acceptedOffer.offeringTeamId,
-              },
-            },
-            userTeam: {
-              ...newState.userTeam,
-              rosterIds: newState.userTeam.rosterIds.filter(
-                (id) => id !== acceptedOffer.playerId
-              ),
-              availableBudget:
-                newState.userTeam.availableBudget + acceptedOffer.transferFee,
-            },
-          };
-        }
-      }
-
-      return newState;
     }
 
     case 'COUNTER_TRANSFER_OFFER': {
@@ -1258,6 +1233,277 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
               return team;
             }),
           },
+        };
+      }
+
+      return newState;
+    }
+
+    case 'PROCESS_PENDING_PLAYER_DECISIONS': {
+      // Process offers where the user has accepted the bid but the player
+      // hasn't decided yet (needs to negotiate contract with buying team)
+      const { currentWeek: _currentWeek, isTransferWindowOpen } = action.payload;
+
+      // Find all offers pending player decision
+      const pendingOffers = state.market.incomingOffers.filter(
+        (offer) => offer.status === 'pending_player_decision'
+      );
+
+      if (pendingOffers.length === 0) {
+        return state;
+      }
+
+      // Group offers by player
+      const offersByPlayer = new Map<string, TransferOffer[]>();
+      for (const offer of pendingOffers) {
+        const existing = offersByPlayer.get(offer.playerId) || [];
+        existing.push(offer);
+        offersByPlayer.set(offer.playerId, existing);
+      }
+
+      let newState = { ...state };
+      const completedTransfers: Array<{
+        playerId: string;
+        toTeamId: string;
+        toTeamName: string;
+        fee: number;
+        offerId: string;
+        playerName: string;
+      }> = [];
+      const failedNegotiations: string[] = []; // offer IDs
+      const failedTransferNews: Array<{ playerName: string; toTeamName: string }> = [];
+
+      // For each player with pending offers, simulate their decision
+      for (const [playerId, playerOffers] of offersByPlayer) {
+        const player = newState.players[playerId];
+        if (!player) continue;
+
+        // Sort offers by transfer fee (player prefers higher-paying teams typically)
+        const sortedOffers = [...playerOffers].sort((a, b) => b.transferFee - a.transferFee);
+
+        // Simulate contract negotiation success probability
+        // Higher chance of success if: multiple offers (competition), good transfer fee, player on transfer list
+        const baseSuccessRate = 0.75; // 75% base success rate
+        const competitionBonus = sortedOffers.length > 1 ? 0.15 : 0; // +15% if multiple suitors
+        const successRate = Math.min(0.95, baseSuccessRate + competitionBonus);
+
+        // Random check to see if negotiations succeed
+        const negotiationSucceeds = Math.random() < successRate;
+
+        // sortedOffers always has at least one entry since we're iterating over playerOffers
+        const bestOffer = sortedOffers[0]!;
+
+        if (negotiationSucceeds) {
+          // Player accepts the best offer (highest fee)
+          const toTeam = newState.league.teams.find((t) => t.id === bestOffer.offeringTeamId);
+          completedTransfers.push({
+            playerId,
+            toTeamId: bestOffer.offeringTeamId,
+            toTeamName: toTeam?.name || 'Unknown Team',
+            fee: bestOffer.transferFee,
+            offerId: bestOffer.id,
+            playerName: player.name,
+          });
+
+          // Mark other offers for this player as rejected (player chose different team)
+          for (const offer of sortedOffers.slice(1)) {
+            failedNegotiations.push(offer.id);
+          }
+        } else {
+          // All negotiations for this player failed - add to failed list and create news event
+          for (const offer of sortedOffers) {
+            failedNegotiations.push(offer.id);
+          }
+          const toTeam = newState.league.teams.find((t) => t.id === bestOffer.offeringTeamId);
+          failedTransferNews.push({
+            playerName: player.name,
+            toTeamName: toTeam?.name || 'Unknown Team',
+          });
+          console.log(`[Transfer] Contract negotiations failed for ${player.name} - player stays with current team`);
+        }
+      }
+
+      // Update offer statuses
+      const updateOfferStatus = (offer: TransferOffer): TransferOffer => {
+        const completedTransfer = completedTransfers.find((t) => t.offerId === offer.id);
+        if (completedTransfer) {
+          return { ...offer, status: 'accepted' };
+        }
+        if (failedNegotiations.includes(offer.id)) {
+          return { ...offer, status: 'rejected' };
+        }
+        return offer;
+      };
+
+      newState = {
+        ...newState,
+        market: {
+          ...newState.market,
+          transferOffers: newState.market.transferOffers.map(updateOfferStatus),
+          incomingOffers: newState.market.incomingOffers.map(updateOfferStatus),
+        },
+      };
+
+      // Process completed transfers
+      const newsEvents: NewsItem[] = [];
+
+      for (const transfer of completedTransfers) {
+        const { playerId, toTeamId, toTeamName, fee, playerName } = transfer;
+        const player = newState.players[playerId];
+
+        if (!player) continue;
+
+        // If transfer window is closed, we can't complete the transfer yet
+        // In the future, we could add a "pending_window" status
+        if (!isTransferWindowOpen) {
+          console.log(`[Transfer] ${player.name} agreed to join ${toTeamId} but transfer window is closed - will complete when it opens`);
+          // For now, we still complete it - proper window handling would need more state
+        }
+
+        // Create a contract for the player - use existing salary as baseline with raise
+        const baseSalary = player.contract?.salary || 100000;
+        const newSalary = Math.round(baseSalary * 1.15); // 15% raise for moving teams
+
+        const newContract = {
+          id: `contract-${Date.now()}-${playerId}`,
+          playerId,
+          teamId: toTeamId,
+          salary: newSalary,
+          signingBonus: 0,
+          contractLength: 3,
+          startDate: new Date(),
+          expiryDate: new Date(Date.now() + 3 * 365 * 24 * 60 * 60 * 1000),
+          performanceBonuses: {},
+          releaseClause: null,
+          salaryIncreases: [],
+          agentFee: 0,
+          clauses: [],
+          squadRole: 'rotation_player' as const,
+          loyaltyBonus: 0,
+        };
+
+        // Update player
+        const updatedPlayer: Player = {
+          ...player,
+          teamId: toTeamId,
+          contract: newContract,
+          acquisitionType: 'trade',
+          acquisitionDate: new Date(),
+        };
+
+        // Build updated asking prices without the sold player
+        const updatedAskingPrices = { ...newState.userTeam.transferListAskingPrices };
+        delete updatedAskingPrices[playerId];
+
+        // Remove sold player from lineup (all sports)
+        const currentLineup = newState.userTeam.lineup;
+        const cleanedLineup: LineupConfig = {
+          basketballStarters: currentLineup.basketballStarters.map((id) =>
+            id === playerId ? '' : id
+          ) as [string, string, string, string, string],
+          baseballLineup: {
+            battingOrder: currentLineup.baseballLineup.battingOrder.map((id) =>
+              id === playerId ? '' : id
+            ) as [string, string, string, string, string, string, string, string, string, string],
+            positions: Object.fromEntries(
+              Object.entries(currentLineup.baseballLineup.positions).filter(([id]) => id !== playerId)
+            ),
+            startingPitcher: currentLineup.baseballLineup.startingPitcher === playerId ? '' : currentLineup.baseballLineup.startingPitcher,
+            bullpen: {
+              longRelievers: currentLineup.baseballLineup.bullpen.longRelievers.map((id) =>
+                id === playerId ? '' : id
+              ) as [string, string],
+              shortRelievers: currentLineup.baseballLineup.bullpen.shortRelievers.map((id) =>
+                id === playerId ? '' : id
+              ) as [string, string, string, string],
+              closer: currentLineup.baseballLineup.bullpen.closer === playerId ? '' : currentLineup.baseballLineup.bullpen.closer,
+            },
+          },
+          soccerLineup: {
+            starters: currentLineup.soccerLineup.starters.filter((id) => id !== playerId),
+            formation: currentLineup.soccerLineup.formation,
+            positions: Object.fromEntries(
+              Object.entries(currentLineup.soccerLineup.positions).filter(([id]) => id !== playerId)
+            ),
+          },
+          bench: currentLineup.bench.filter((id) => id !== playerId),
+          minutesAllocation: { ...(currentLineup.minutesAllocation ?? {}) },
+          soccerMinutesAllocation: { ...(currentLineup.soccerMinutesAllocation ?? {}) },
+        };
+        delete cleanedLineup.minutesAllocation[playerId];
+        delete cleanedLineup.soccerMinutesAllocation[playerId];
+
+        newState = {
+          ...newState,
+          players: {
+            ...newState.players,
+            [playerId]: updatedPlayer,
+          },
+          userTeam: {
+            ...newState.userTeam,
+            rosterIds: newState.userTeam.rosterIds.filter((id) => id !== playerId),
+            lineup: cleanedLineup,
+            availableBudget: newState.userTeam.availableBudget + fee,
+            salaryCommitment: newState.userTeam.salaryCommitment - (player.contract?.salary || 0),
+            transferListPlayerIds: (newState.userTeam.transferListPlayerIds || []).filter(
+              (id: string) => id !== playerId
+            ),
+            transferListAskingPrices: updatedAskingPrices,
+          },
+          league: {
+            ...newState.league,
+            teams: newState.league.teams.map((team) => {
+              if (team.id === toTeamId) {
+                // Add player to AI team roster
+                // Note: AI team budget tracking would require adding budget field to AITeamState
+                return {
+                  ...team,
+                  rosterIds: [...team.rosterIds, playerId],
+                };
+              }
+              return team;
+            }),
+          },
+        };
+
+        // Add news event for completed transfer
+        newsEvents.push({
+          id: `event-transfer-complete-${Date.now()}-${playerId}`,
+          type: 'transfer',
+          priority: 'important',
+          title: 'Transfer Complete',
+          message: `${playerName} has completed his move to ${toTeamName} for $${(fee / 1000).toFixed(0)}K.`,
+          timestamp: new Date(),
+          read: false,
+          relatedEntityId: playerId,
+          scope: 'team',
+          teamId: 'user',
+        });
+
+        console.log(`[Transfer] ${player.name} completed transfer to ${toTeamId} for $${fee.toLocaleString()}`);
+      }
+
+      // Add news events for failed negotiations
+      for (let i = 0; i < failedTransferNews.length; i++) {
+        const failed = failedTransferNews[i]!; // Index always valid in this loop
+        newsEvents.push({
+          id: `event-transfer-failed-${Date.now()}-${i}-${failed.playerName}`,
+          type: 'transfer',
+          priority: 'important',
+          title: 'Transfer Collapsed',
+          message: `${failed.playerName} could not agree personal terms with ${failed.toTeamName}. The transfer has fallen through.`,
+          timestamp: new Date(),
+          read: false,
+          scope: 'team',
+          teamId: 'user',
+        });
+      }
+
+      // Add all news events to state
+      if (newsEvents.length > 0) {
+        newState = {
+          ...newState,
+          events: [...newState.events, ...newsEvents],
         };
       }
 
@@ -2113,6 +2359,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       // If selling to user, add to incoming offers
       if (sellerTeamId === 'user') {
+        // Check if there's already an active offer from this team for this player
+        const existingOffer = state.market.incomingOffers.find(
+          o => o.offeringTeamId === buyerTeamId &&
+               o.playerId === playerId &&
+               (o.status === 'pending' || o.status === 'countered')
+        );
+
+        // If there's already an offer in progress, skip the new one
+        if (existingOffer) {
+          console.log(`[Transfer] Skipping duplicate offer from ${buyerTeamId} for player ${playerId}`);
+          return state;
+        }
+
         const newOffer: TransferOffer = {
           id: `offer-ai-${Date.now()}-${playerId}`,
           offeringTeamId: buyerTeamId,
@@ -2184,6 +2443,99 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...state.league,
           teams: updatedTeams,
           freeAgentIds: [...state.league.freeAgentIds, playerId],
+        },
+      };
+    }
+
+    case 'AI_EXECUTE_TRANSFER': {
+      // Execute an AI-to-AI transfer
+      const { buyerTeamId, sellerTeamId, playerId, transferFee } = action.payload;
+      const player = state.players[playerId];
+
+      if (!player) {
+        console.log(`[AI Transfer] Player ${playerId} not found`);
+        return state;
+      }
+
+      // Find buyer and seller teams
+      const buyerTeamIndex = state.league.teams.findIndex(t => t.id === buyerTeamId);
+      const sellerTeamIndex = state.league.teams.findIndex(t => t.id === sellerTeamId);
+
+      if (buyerTeamIndex === -1 || sellerTeamIndex === -1) {
+        console.log(`[AI Transfer] Team not found: buyer=${buyerTeamId}, seller=${sellerTeamId}`);
+        return state;
+      }
+
+      const buyerTeam = state.league.teams[buyerTeamIndex];
+
+      // Check buyer can afford it
+      if (!buyerTeam || !buyerTeam.budget || buyerTeam.budget.available < transferFee) {
+        console.log(`[AI Transfer] Buyer ${buyerTeamId} can't afford $${transferFee}`);
+        return state;
+      }
+
+      // Create new contract for the player
+      const newContract: Contract = {
+        id: `contract-${Date.now()}-${playerId}`,
+        playerId,
+        teamId: buyerTeamId,
+        salary: player.contract?.salary || 50000,
+        signingBonus: 0,
+        contractLength: 2,
+        startDate: new Date(),
+        expiryDate: new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000),
+        performanceBonuses: {},
+        releaseClause: null,
+        salaryIncreases: [],
+        agentFee: 0,
+        clauses: [],
+        squadRole: 'rotation_player',
+        loyaltyBonus: 0,
+      };
+
+      // Update player
+      const updatedPlayer: Player = {
+        ...player,
+        teamId: buyerTeamId,
+        contract: newContract,
+        acquisitionType: 'trade',
+        acquisitionDate: new Date(),
+      };
+
+      // Update teams
+      const updatedTeams = state.league.teams.map((team, index) => {
+        if (index === buyerTeamIndex) {
+          return {
+            ...team,
+            rosterIds: [...team.rosterIds, playerId],
+            budget: {
+              ...team.budget!,
+              available: team.budget!.available - transferFee,
+            },
+          };
+        }
+        if (index === sellerTeamIndex) {
+          return {
+            ...team,
+            rosterIds: team.rosterIds.filter(id => id !== playerId),
+            budget: team.budget ? {
+              ...team.budget,
+              available: team.budget.available + transferFee,
+            } : undefined,
+          };
+        }
+        return team;
+      });
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [playerId]: updatedPlayer,
+        },
+        league: {
+          ...state.league,
+          teams: updatedTeams,
         },
       };
     }

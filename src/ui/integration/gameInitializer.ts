@@ -13,7 +13,7 @@ function uuidv4(): string {
     return v.toString(16);
   });
 }
-import type { Player, Contract, YouthPhysicalDevelopment } from '../../data/types';
+import type { Player, Contract, YouthPhysicalDevelopment, PlayerAttributes } from '../../data/types';
 import type {
   UserTeamState,
   LeagueState,
@@ -66,11 +66,13 @@ import { generateCareerHistory, assignCareerStartAge } from '../../systems/caree
 // CONSTANTS
 // =============================================================================
 
-import { BASE_BUDGET, DIFFICULTY_BUDGET_MULTIPLIER } from '../../data/constants';
+import {
+  BASE_BUDGET,
+  DIFFICULTY_BUDGET_MULTIPLIER,
+  DIVISION_COUNT,
+  TEAMS_PER_DIVISION,
+} from '../../data/constants';
 import { getDivisionBudgetMultiplier } from '../../ai/divisionManager';
-
-/** Number of AI teams (plus user = 20 total) */
-const AI_TEAM_COUNT = 19;
 
 /** Number of free agents to generate */
 const FREE_AGENT_COUNT = 500;
@@ -1176,9 +1178,16 @@ function generateTeamColors(): { primary: string; secondary: string } {
 function createAITeam(
   teamAssignment: TeamAssignment,
   rosterIds: string[],
+  salaryCommitment: number,
   index: number
 ): AITeamState {
   const personalities = ['conservative', 'balanced', 'aggressive'] as const;
+
+  // Calculate budget based on division
+  const divisionMultiplier = getDivisionBudgetMultiplier(teamAssignment.division);
+  const totalBudget = Math.round(BASE_BUDGET * divisionMultiplier);
+  // Available = total minus actual salary commitment
+  const availableBudget = Math.max(0, totalBudget - salaryCommitment);
 
   return {
     id: `ai-team-${index}`,
@@ -1189,6 +1198,10 @@ function createAITeam(
     division: teamAssignment.division as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
     rosterIds,
     aiConfig: createAIConfig(randomElement(personalities)),
+    budget: {
+      total: totalBudget,
+      available: availableBudget,
+    },
   };
 }
 
@@ -1338,31 +1351,34 @@ function getDivisionAttrRange(division: number): { min: number; max: number } {
  * @returns Initial game state payload
  */
 export function initializeNewGame(config: NewGameConfig): InitializeGamePayload {
+  console.time('initializeNewGame');
   const usedNames = new Set<string>();
   const players: Record<string, Player> = {};
 
   // Get user's starting division
   const userDivision = config.startingDivision || 7;
 
-  // Calculate division budget for salary scaling
-  const divisionMultiplier = getDivisionBudgetMultiplier(userDivision);
+  // Calculate division budget for salary scaling (user gets difficulty modifier)
+  const userDivisionMultiplier = getDivisionBudgetMultiplier(userDivision);
   const difficultyMultiplier = DIFFICULTY_BUDGET_MULTIPLIER[config.difficulty];
-  const userTeamBudget = Math.round(BASE_BUDGET * divisionMultiplier * difficultyMultiplier);
+  const userTeamBudget = Math.round(BASE_BUDGET * userDivisionMultiplier * difficultyMultiplier);
 
-  // Generate all league teams from the country's cities
+  // Generate all league teams from the country's cities (200 teams across 10 divisions)
+  console.time('generateLeagueTeams');
   const allTeamAssignments = generateLeagueTeams(config.country);
+  console.timeEnd('generateLeagueTeams');
 
-  // Filter to get teams in the user's division (20 teams per division)
-  const divisionTeams = allTeamAssignments.filter(t => t.division === userDivision);
-
-  // Remove the user's city from the AI team pool
-  const aiTeamAssignments = divisionTeams.filter(
-    t => !(t.city.name === config.city && t.city.region === config.cityRegion)
-  );
+  // Validate we have the expected number of teams
+  const expectedTeams = DIVISION_COUNT * TEAMS_PER_DIVISION;
+  if (allTeamAssignments.length !== expectedTeams) {
+    console.warn(`Expected ${expectedTeams} team assignments, got ${allTeamAssignments.length}`);
+  }
 
   // Generate user team roster with division-appropriate attributes and budget-scaled salaries
   const userAttrRange = getDivisionAttrRange(userDivision);
+  console.time('generateUserRoster');
   const userPlayers = generateRoster('user', userAttrRange, usedNames, userTeamBudget);
+  console.timeEnd('generateUserRoster');
   const userRosterIds = userPlayers.map((p) => p.id);
 
   // Calculate user team salary
@@ -1375,43 +1391,80 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
   // Create user team (passing players for lineup generation)
   const userTeam = createUserTeam(config, userRosterIds, players, userTotalSalary);
 
-  // Generate AI teams from the remaining city assignments in the division
+  // Generate ALL AI teams across ALL divisions (199 AI teams total)
   const aiTeams: AITeamState[] = [];
   const teamIds = ['user'];
+  let globalTeamIndex = 0;
 
-  // AI teams use base budget without difficulty modifier (they're at "normal" difficulty)
-  const aiTeamBudget = Math.round(BASE_BUDGET * divisionMultiplier);
+  console.time('generateAllAITeams');
+  for (let division = 1; division <= DIVISION_COUNT; division++) {
+    // Get teams for this division
+    const divisionTeams = allTeamAssignments.filter(t => t.division === division);
 
-  // Take 19 AI teams (for 20 total teams in the division)
-  const aiTeamsToCreate = aiTeamAssignments.slice(0, AI_TEAM_COUNT);
+    // For user's division, exclude the user's city
+    const aiTeamAssignments = division === userDivision
+      ? divisionTeams.filter(
+          t => !(t.city.name === config.city && t.city.region === config.cityRegion)
+        )
+      : divisionTeams;
 
-  aiTeamsToCreate.forEach((teamAssignment, i) => {
-    const teamId = `ai-team-${i}`;
+    // Calculate budget for this division (no difficulty modifier for AI)
+    const divisionMultiplier = getDivisionBudgetMultiplier(division);
+    const aiTeamBudget = Math.round(BASE_BUDGET * divisionMultiplier);
 
-    // Generate roster with division-appropriate attributes and budget-scaled salaries
-    const aiPlayers = generateRoster(teamId, userAttrRange, usedNames, aiTeamBudget);
-    const aiRosterIds = aiPlayers.map((p) => p.id);
+    // Get attribute range for this division
+    const divisionAttrRange = getDivisionAttrRange(division);
 
-    for (const player of aiPlayers) {
-      // Update player's teamId reference
-      player.teamId = teamId;
-      player.contract = player.contract
-        ? { ...player.contract, teamId }
-        : null;
-      players[player.id] = player;
+    // Create teams for this division
+    // User's division gets 19 AI teams (user is the 20th), others get 20
+    const teamsToCreate = division === userDivision
+      ? TEAMS_PER_DIVISION - 1
+      : TEAMS_PER_DIVISION;
+
+    for (let i = 0; i < teamsToCreate && i < aiTeamAssignments.length; i++) {
+      const teamAssignment = aiTeamAssignments[i];
+      if (!teamAssignment) continue; // Safety check for TypeScript
+
+      // Use global index for unique team IDs across all divisions
+      const teamId = `ai-team-${globalTeamIndex}`;
+
+      // Generate roster with division-appropriate attributes and budget-scaled salaries
+      const aiPlayers = generateRoster(teamId, divisionAttrRange, usedNames, aiTeamBudget);
+      const aiRosterIds = aiPlayers.map((p) => p.id);
+
+      // Calculate salary commitment for this team
+      let aiTeamSalary = 0;
+      for (const player of aiPlayers) {
+        // Update player's teamId reference
+        player.teamId = teamId;
+        player.contract = player.contract
+          ? { ...player.contract, teamId }
+          : null;
+        players[player.id] = player;
+        aiTeamSalary += player.contract?.salary || 0;
+      }
+
+      // Create AI team with correct division and actual salary commitment
+      const aiTeam = createAITeam(teamAssignment, aiRosterIds, aiTeamSalary, globalTeamIndex);
+      aiTeams.push(aiTeam);
+      teamIds.push(teamId);
+      globalTeamIndex++;
     }
+  }
+  console.timeEnd('generateAllAITeams');
 
-    aiTeams.push(createAITeam(teamAssignment, aiRosterIds, i));
-    teamIds.push(teamId);
-  });
+  console.log(`Created ${aiTeams.length} AI teams across ${DIVISION_COUNT} divisions`);
+  console.log(`Total players: ${Object.keys(players).length}`);
 
   // Generate free agents
+  console.time('generateFreeAgents');
   const freeAgents = generateFreeAgents(FREE_AGENT_COUNT, usedNames);
   const freeAgentIds: string[] = [];
   for (const player of freeAgents) {
     players[player.id] = player;
     freeAgentIds.push(player.id);
   }
+  console.timeEnd('generateFreeAgents');
 
   // Create league state
   const league: LeagueState = {
@@ -1420,8 +1473,18 @@ export function initializeNewGame(config: NewGameConfig): InitializeGamePayload 
     freeAgentIds,
   };
 
-  // Create season with schedule
-  const season = createSeasonState(teamIds);
+  // Create season with schedule (only teams in user's division play each other)
+  // Other divisions simulate in background
+  const userDivisionTeamIds = teamIds.filter(id => {
+    if (id === 'user') return true;
+    const team = aiTeams.find(t => t.id === id);
+    return team?.division === userDivision;
+  });
+  console.time('createSeasonState');
+  const season = createSeasonState(userDivisionTeamIds);
+  console.timeEnd('createSeasonState');
+
+  console.timeEnd('initializeNewGame');
 
   return {
     config,

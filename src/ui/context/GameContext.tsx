@@ -104,6 +104,7 @@ import {
   calculateSeasonRating,
   updateManagerCareer,
 } from '../../systems/managerRatingSystem';
+import { calculatePlayerMarketValue } from '../../systems/contractSystem';
 import type { TrophyRecord } from '../../data/types';
 
 /**
@@ -936,6 +937,16 @@ export function GameProvider({ children }: GameProviderProps) {
     // Expire old offers
     dispatch({ type: 'EXPIRE_OFFERS' });
 
+    // Process pending player decisions (contract negotiations after user accepts bid)
+    const pendingState = stateRef.current;
+    dispatch({
+      type: 'PROCESS_PENDING_PLAYER_DECISIONS',
+      payload: {
+        currentWeek: pendingState.season.currentWeek,
+        isTransferWindowOpen: pendingState.season.transferWindowOpen,
+      },
+    });
+
     // =========================================================================
     // SCOUTING SYSTEM - New priority-based approach
     // =========================================================================
@@ -1631,8 +1642,14 @@ export function GameProvider({ children }: GameProviderProps) {
     }
 
     // Execute AI transfer bids (against user)
+    console.log(`[AI Transfer Bids] Total resolved bids: ${aiResolvedActions.transferBids.length}`);
+    const userBids = aiResolvedActions.transferBids.filter(b => b.sellerTeamId === 'user');
+    console.log(`[AI Transfer Bids] Bids for user's players: ${userBids.length}`);
+    userBids.forEach(b => console.log(`  - ${b.playerName}: $${b.bidAmount} from ${b.buyerTeamName}`));
+
     for (const bid of aiResolvedActions.transferBids) {
       if (bid.sellerTeamId === 'user') {
+        // Bid for user's player - create incoming offer for user to respond to
         dispatch({
           type: 'AI_MAKE_TRANSFER_BID',
           payload: {
@@ -1657,6 +1674,29 @@ export function GameProvider({ children }: GameProviderProps) {
           teamId: 'user',
         };
         dispatch({ type: 'ADD_EVENT', payload: event });
+      } else {
+        // AI-to-AI transfer - auto-execute if bid is reasonable
+        // Get the player to calculate market value
+        const player = aiState.players[bid.playerId];
+        if (player) {
+          const marketValue = calculatePlayerMarketValue(player);
+          // AI accepts if bid >= 70% of market value (they're motivated to sell)
+          // This is slightly lower than user threshold since AI teams are less attached
+          if (bid.bidAmount >= marketValue * 0.70) {
+            dispatch({
+              type: 'AI_EXECUTE_TRANSFER',
+              payload: {
+                buyerTeamId: bid.buyerTeamId,
+                sellerTeamId: bid.sellerTeamId,
+                playerId: bid.playerId,
+                transferFee: bid.bidAmount,
+              },
+            });
+            console.log(`[AI Transfer] ${bid.playerName} transferred from ${bid.sellerTeamId} to ${bid.buyerTeamName} for $${bid.bidAmount.toLocaleString()}`);
+          } else {
+            console.log(`[AI Transfer] ${bid.sellerTeamId} rejected bid of $${bid.bidAmount.toLocaleString()} for ${bid.playerName} (market value: $${marketValue.toLocaleString()})`);
+          }
+        }
       }
     }
 

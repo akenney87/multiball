@@ -28,6 +28,8 @@ import type {
 } from '../data/types';
 import { getExpectedRole } from './roleExpectationSystem';
 import { calculateAllOveralls } from '../utils/overallRating';
+// Import the EXACT same overall calculation that the UI uses
+import { calculatePlayerOverall } from '../ui/integration/gameInitializer';
 
 // =============================================================================
 // CONSTANTS
@@ -145,23 +147,141 @@ export function calculateMarketValue(
 }
 
 /**
- * Calculates market value from a Player object
+ * Calculate performance multiplier based on awards and career stats
+ * Must match the UI's calculatePerformanceMultiplier in ConnectedTransferMarketScreen.tsx
  */
-export function calculatePlayerMarketValue(player: Player): number {
+function calculatePerformanceMultiplier(player: Player): number {
+  let multiplier = 1.0;
+
+  const awards = player.awards;
+  if (awards) {
+    // Sum up weekly awards across all sports
+    const weeklyTotal = awards.playerOfTheWeek.basketball +
+                        awards.playerOfTheWeek.baseball +
+                        awards.playerOfTheWeek.soccer;
+    // Sum up monthly awards across all sports
+    const monthlyTotal = awards.playerOfTheMonth.basketball +
+                         awards.playerOfTheMonth.baseball +
+                         awards.playerOfTheMonth.soccer;
+
+    multiplier += weeklyTotal * 0.05;                         // +5% per weekly award
+    multiplier += monthlyTotal * 0.15;                        // +15% per monthly award
+    multiplier += awards.basketballPlayerOfTheYear * 0.50;    // +50% per Basketball POY
+    multiplier += awards.baseballPlayerOfTheYear * 0.50;      // +50% per Baseball POY
+    multiplier += awards.soccerPlayerOfTheYear * 0.50;        // +50% per Soccer POY
+    multiplier += awards.rookieOfTheYear * 0.30;              // +30% for ROY
+    multiplier += awards.championships * 0.35;                // +35% per championship
+  }
+
+  const gamesPlayed = player.careerStats?.gamesPlayed || { basketball: 0, baseball: 0, soccer: 0 };
+  const totalGames = gamesPlayed.basketball + gamesPlayed.baseball + gamesPlayed.soccer;
+  if (totalGames >= 100) {
+    multiplier += 0.30;
+  } else if (totalGames >= 50) {
+    multiplier += 0.15;
+  } else if (totalGames >= 20) {
+    multiplier += 0.05;
+  }
+
+  return Math.min(3.0, multiplier);
+}
+
+/**
+ * Calculates market value from a Player object
+ * Uses the EXACT same logic as ConnectedPlayerDetailScreen.tsx to ensure consistency
+ */
+export function calculatePlayerMarketValue(player: Player, debug = false): number {
   const attrs = player.attributes;
-  if (!attrs) return 500000; // Default minimum
+  if (!attrs) return 5000; // Minimum market value
 
-  // Calculate overall as average of key attributes
-  const attrValues = Object.values(attrs).filter(v => typeof v === 'number') as number[];
-  const overall = attrValues.reduce((a, b) => a + b, 0) / attrValues.length;
+  // Free agents show $0 market value
+  if (player.teamId === 'free_agent') return 0;
 
-  // Get potentials
-  const potentials = player.potentials;
-  const avgPotential = potentials
-    ? (potentials.physical + potentials.mental + potentials.technical) / 3
-    : overall;
+  // Use the EXACT same overall calculation as the UI
+  const overall = calculatePlayerOverall(player);
 
-  return calculateMarketValue(overall, player.age, avgPotential, 1);
+  // Calculate performance multiplier (awards + career games)
+  const perfMultiplier = calculatePerformanceMultiplier(player);
+
+  if (debug) console.log(`[MV Debug] ${player.name}: overall=${overall}, perfMultiplier=${perfMultiplier.toFixed(2)}`);
+
+  // Base value tiers - MUST MATCH ConnectedPlayerDetailScreen.tsx exactly
+  let baseValue: number;
+  if (overall < 45) {
+    baseValue = 10000; // Barely roster-worthy
+  } else if (overall < 50) {
+    baseValue = 10000 + (overall - 45) * 4000; // $10k - $30k
+  } else if (overall < 55) {
+    baseValue = 30000 + (overall - 50) * 14000; // $30k - $100k
+  } else if (overall < 60) {
+    baseValue = 100000 + (overall - 55) * 40000; // $100k - $300k
+  } else if (overall < 65) {
+    baseValue = 300000 + (overall - 60) * 100000; // $300k - $800k
+  } else if (overall < 70) {
+    baseValue = 800000 + (overall - 65) * 240000; // $800k - $2M
+  } else if (overall < 75) {
+    baseValue = 2000000 + (overall - 70) * 600000; // $2M - $5M
+  } else if (overall < 80) {
+    baseValue = 5000000 + (overall - 75) * 1400000; // $5M - $12M
+  } else if (overall < 85) {
+    baseValue = 12000000 + (overall - 80) * 3600000; // $12M - $30M
+  } else {
+    // Exponential scaling for elite players (85+)
+    // 85: $30M, 90: $53M, 95: $93M, 99: $147M
+    baseValue = 30000000 * Math.pow(1.12, overall - 85);
+  }
+
+  // Age factor - MUST MATCH ConnectedPlayerDetailScreen.tsx exactly
+  let ageFactor: number;
+  if (player.age < 22) {
+    ageFactor = 1.3; // Potential premium
+  } else if (player.age < 26) {
+    ageFactor = 1.1; // Developing
+  } else if (player.age < 29) {
+    ageFactor = 1.0; // Prime
+  } else if (player.age < 32) {
+    ageFactor = 0.75; // Declining
+  } else if (player.age < 35) {
+    ageFactor = 0.5; // Veteran
+  } else {
+    ageFactor = 0.3; // Near retirement
+  }
+
+  let transferValue = baseValue * ageFactor;
+  if (debug) console.log(`[MV Debug] ${player.name}: baseValue=${baseValue}, ageFactor=${ageFactor}, beforeCap=${transferValue}`);
+
+  // Cap transfer value relative to salary for unproven players
+  // This prevents the free agent flip exploit
+  // Elite players (85+) are worth their market rate regardless of salary
+  const salary = player.contract?.salary || 0;
+  if (salary > 0 && overall < 85) {
+    // Multiplier scales with rating - MUST MATCH ConnectedPlayerDetailScreen.tsx exactly
+    let maxMultiple: number;
+    if (overall >= 80) {
+      maxMultiple = 5.0; // Star talent - salary less relevant
+    } else if (overall >= 75) {
+      maxMultiple = 3.0; // Very good player
+    } else if (overall >= 70) {
+      maxMultiple = 2.0; // Good player
+    } else if (overall >= 65) {
+      maxMultiple = 1.0; // Solid starter
+    } else {
+      maxMultiple = 0.5; // Unproven - transfer value ~= signing cost
+    }
+    const capValue = salary * maxMultiple;
+    if (debug) console.log(`[MV Debug] ${player.name}: salary=${salary}, maxMultiple=${maxMultiple}, cap=${capValue}`);
+    transferValue = Math.min(transferValue, capValue);
+  }
+
+  if (debug) console.log(`[MV Debug] ${player.name}: afterCap=${transferValue}, withPerf=${transferValue * perfMultiplier}`);
+
+  // Apply performance multiplier (awards + career games)
+  transferValue *= perfMultiplier;
+
+  // Round to nearest $5k, minimum $5k - MUST MATCH ConnectedPlayerDetailScreen.tsx exactly
+  const result = Math.max(5000, Math.round(transferValue / 5000) * 5000);
+  if (debug) console.log(`[MV Debug] ${player.name}: FINAL=${result}`);
+  return result;
 }
 
 /**

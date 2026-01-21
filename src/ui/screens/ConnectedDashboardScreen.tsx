@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import { useColors, spacing, borderRadius, glowShadows, cardStyles } from '../theme';
 import { useGame } from '../context/GameContext';
+import { WeekAdvanceControl } from '../components/season/WeekAdvanceControl';
 import type { NewsItem } from '../../data/types';
 
 interface ConnectedDashboardScreenProps {
@@ -321,7 +322,7 @@ export function ConnectedDashboardScreen({
       <View style={styles.quickActions}>
         <TouchableOpacity
           style={[
-            styles.quickButton,
+            styles.simMatchButton,
             {
               backgroundColor: colors.surface,
               borderColor: nextMatch && !isSimulating && !isAdvancing ? colors.primary : colors.border,
@@ -341,28 +342,13 @@ export function ConnectedDashboardScreen({
             </>
           )}
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.quickButton,
-            {
-              backgroundColor: colors.surface,
-              borderColor: !isSimulating && !isAdvancing ? colors.secondary : colors.border,
-              opacity: isSimulating || isAdvancing ? 0.5 : 1,
-            },
-          ]}
-          activeOpacity={0.8}
-          onPress={handleAdvanceWeek}
-          disabled={isSimulating || isAdvancing}
-        >
-          {isAdvancing ? (
-            <ActivityIndicator color={colors.secondary} size="small" />
-          ) : (
-            <>
-              <Text style={[styles.quickButtonIcon, { color: colors.secondary }]}>{'⏩'}</Text>
-              <Text style={[styles.quickButtonText, { color: colors.text }]}>Advance Week</Text>
-            </>
-          )}
-        </TouchableOpacity>
+
+        <WeekAdvanceControl
+          currentWeek={state.season.currentWeek}
+          totalWeeks={40}
+          isAdvancing={isAdvancing}
+          onAdvanceWeek={handleAdvanceWeek}
+        />
       </View>
 
       {/* Alerts Section */}
@@ -765,23 +751,23 @@ const styles = StyleSheet.create({
   // Quick Actions
   quickActions: {
     flexDirection: 'row',
-    gap: spacing.md,
+    gap: spacing.sm,
   },
-  quickButton: {
-    flex: 1,
+  simMatchButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: spacing.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
     borderRadius: borderRadius.md,
     borderWidth: 1,
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   quickButtonIcon: {
-    fontSize: 18,
+    fontSize: 16,
   },
   quickButtonText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
   },
   // Alerts

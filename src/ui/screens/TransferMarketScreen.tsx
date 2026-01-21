@@ -15,6 +15,8 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  TextInput,
+  Modal,
 } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../theme';
 import { PlayerCard, PlayerCardData } from '../components/roster/PlayerCard';
@@ -34,7 +36,7 @@ export interface IncomingOffer {
   player: PlayerCardData;
   fromTeam: string;
   offerAmount: number;
-  status: 'pending' | 'accepted' | 'rejected';
+  status: 'pending' | 'accepted' | 'rejected' | 'pending_player_decision';
   expiresIn: number; // days
 }
 
@@ -65,6 +67,7 @@ interface TransferMarketScreenProps {
   onMakeOffer?: (player: TransferTarget, amount: number) => void;
   onAcceptOffer?: (offer: IncomingOffer) => void;
   onRejectOffer?: (offer: IncomingOffer) => void;
+  onCounterOffer?: (offer: IncomingOffer, counterAmount: number) => void;
   onAcceptCounter?: (offer: OutgoingOffer) => void;
   onWithdrawOffer?: (offer: OutgoingOffer) => void;
   onRemoveFromShortlist?: (playerId: string) => void;
@@ -98,6 +101,7 @@ export function TransferMarketScreen({
   onMakeOffer,
   onAcceptOffer,
   onRejectOffer,
+  onCounterOffer,
   onAcceptCounter,
   onWithdrawOffer,
   onRemoveFromShortlist,
@@ -108,6 +112,8 @@ export function TransferMarketScreen({
   const [activeTab, setActiveTab] = useState<TabType>('shortlist');
   const [selectedTarget, setSelectedTarget] = useState<TransferTarget | null>(null);
   const [selectedOffer, setSelectedOffer] = useState<IncomingOffer | null>(null);
+  const [counterInputVisible, setCounterInputVisible] = useState(false);
+  const [counterAmount, setCounterAmount] = useState('');
   const [selectedOutgoingOffer, setSelectedOutgoingOffer] = useState<OutgoingOffer | null>(null);
   const [offerAction, setOfferAction] = useState<'accept' | 'reject' | 'accept_counter' | 'withdraw' | null>(null);
 
@@ -117,7 +123,7 @@ export function TransferMarketScreen({
   const displayOffers = offers || mockOffers;
   const displayOutgoingOffers = outgoingOffers || [];
 
-  const pendingOffers = displayOffers.filter((o) => o.status === 'pending');
+  const pendingOffers = displayOffers.filter((o) => o.status === 'pending' || o.status === 'pending_player_decision');
   const activeOutgoingOffers = displayOutgoingOffers.filter(
     (o) => o.status === 'pending' || o.status === 'countered'
   );
@@ -311,63 +317,97 @@ export function TransferMarketScreen({
     </View>
   );
 
-  const renderOfferCard = ({ item }: { item: IncomingOffer }) => (
-    <View style={[styles.offerCard, { backgroundColor: colors.card }, shadows.sm]}>
-      <View style={styles.offerHeader}>
-        <Text style={[styles.offerFrom, { color: colors.textMuted }]}>
-          Offer from {item.fromTeam}
-        </Text>
-        <View
-          style={[
-            styles.expiresBadge,
-            { backgroundColor: item.expiresIn <= 1 ? colors.error + '20' : colors.surface },
-          ]}
-        >
-          <Text
+  const renderOfferCard = ({ item }: { item: IncomingOffer }) => {
+    const isPendingNegotiation = item.status === 'pending_player_decision';
+
+    return (
+      <View style={[styles.offerCard, { backgroundColor: colors.card }, shadows.sm]}>
+        <View style={styles.offerHeader}>
+          <Text style={[styles.offerFrom, { color: colors.textMuted }]}>
+            Offer from {item.fromTeam}
+          </Text>
+          <View
             style={[
-              styles.expiresText,
-              { color: item.expiresIn <= 1 ? colors.error : colors.textMuted },
+              styles.expiresBadge,
+              {
+                backgroundColor: isPendingNegotiation
+                  ? colors.primary + '20'
+                  : item.expiresIn <= 1
+                    ? colors.error + '20'
+                    : colors.surface,
+              },
             ]}
           >
-            {item.expiresIn}d left
-          </Text>
+            <Text
+              style={[
+                styles.expiresText,
+                {
+                  color: isPendingNegotiation
+                    ? colors.primary
+                    : item.expiresIn <= 1
+                      ? colors.error
+                      : colors.textMuted,
+                },
+              ]}
+            >
+              {isPendingNegotiation ? 'Negotiating' : `${item.expiresIn}d left`}
+            </Text>
+          </View>
+        </View>
+        <TouchableOpacity onPress={() => onPlayerPress?.(item.player.id)}>
+          <PlayerCard player={item.player} showSalary />
+        </TouchableOpacity>
+        <View style={[styles.offerFooter, { borderTopColor: colors.border }]}>
+          <View style={styles.offerAmount}>
+            <Text style={[styles.amountLabel, { color: colors.textMuted }]}>
+              Offer Amount
+            </Text>
+            <Text style={[styles.amountValue, { color: colors.success }]}>
+              {formatPrice(item.offerAmount)}
+            </Text>
+          </View>
+          {isPendingNegotiation ? (
+            <View style={[styles.pendingNegotiationBadge, { backgroundColor: colors.primary + '15' }]}>
+              <Text style={[styles.pendingNegotiationText, { color: colors.primary }]}>
+                Pending contract negotiations
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.offerActions}>
+              <TouchableOpacity
+                style={[styles.acceptButton, { backgroundColor: colors.success }]}
+                onPress={() => {
+                  setSelectedOffer(item);
+                  setOfferAction('accept');
+                }}
+              >
+                <Text style={styles.buttonText}>Accept</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.counterButton, { backgroundColor: colors.primary }]}
+                onPress={() => {
+                  setSelectedOffer(item);
+                  setCounterAmount(Math.round(item.offerAmount * 1.2).toString());
+                  setCounterInputVisible(true);
+                }}
+              >
+                <Text style={styles.buttonText}>Counter</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.rejectButton, { borderColor: colors.error }]}
+                onPress={() => {
+                  setSelectedOffer(item);
+                  setOfferAction('reject');
+                }}
+              >
+                <Text style={[styles.rejectText, { color: colors.error }]}>Reject</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
-      <TouchableOpacity onPress={() => onPlayerPress?.(item.player.id)}>
-        <PlayerCard player={item.player} showSalary />
-      </TouchableOpacity>
-      <View style={[styles.offerFooter, { borderTopColor: colors.border }]}>
-        <View style={styles.offerAmount}>
-          <Text style={[styles.amountLabel, { color: colors.textMuted }]}>
-            Offer Amount
-          </Text>
-          <Text style={[styles.amountValue, { color: colors.success }]}>
-            {formatPrice(item.offerAmount)}
-          </Text>
-        </View>
-        <View style={styles.offerActions}>
-          <TouchableOpacity
-            style={[styles.acceptButton, { backgroundColor: colors.success }]}
-            onPress={() => {
-              setSelectedOffer(item);
-              setOfferAction('accept');
-            }}
-          >
-            <Text style={styles.buttonText}>Accept</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.rejectButton, { borderColor: colors.error }]}
-            onPress={() => {
-              setSelectedOffer(item);
-              setOfferAction('reject');
-            }}
-          >
-            <Text style={[styles.rejectText, { color: colors.error }]}>Reject</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
+    );
+  };
 
   const renderOutgoingOfferCard = ({ item }: { item: OutgoingOffer }) => (
     <View style={[styles.offerCard, { backgroundColor: colors.card }, shadows.sm]}>
@@ -634,7 +674,7 @@ export function TransferMarketScreen({
 
       {/* Accept/Reject Offer Modal */}
       <ConfirmationModal
-        visible={selectedOffer !== null}
+        visible={selectedOffer !== null && !counterInputVisible && offerAction !== null}
         title={offerAction === 'accept' ? 'Accept Offer?' : 'Reject Offer?'}
         message={
           offerAction === 'accept'
@@ -650,6 +690,65 @@ export function TransferMarketScreen({
           setOfferAction(null);
         }}
       />
+
+      {/* Counter Offer Input Modal */}
+      <Modal
+        visible={counterInputVisible}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+      >
+        <View style={styles.counterModalOverlay}>
+          <View style={[styles.counterModalContent, { backgroundColor: colors.card }]}>
+            <Text style={[styles.counterModalTitle, { color: colors.text }]}>
+              Counter Offer for {selectedOffer?.player.name}
+            </Text>
+            <Text style={[styles.counterModalSubtitle, { color: colors.textMuted }]}>
+              Their offer: {selectedOffer ? formatPrice(selectedOffer.offerAmount) : ''}
+            </Text>
+            <View style={styles.counterInputContainer}>
+              <Text style={[styles.counterCurrency, { color: colors.text }]}>$</Text>
+              <TextInput
+                style={[
+                  styles.counterInput,
+                  { backgroundColor: colors.surface, color: colors.text, borderColor: colors.border },
+                ]}
+                value={counterAmount}
+                onChangeText={setCounterAmount}
+                keyboardType="numeric"
+                placeholder="Enter amount"
+                placeholderTextColor={colors.textMuted}
+              />
+            </View>
+            <View style={styles.counterModalButtons}>
+              <TouchableOpacity
+                style={[styles.counterCancelButton, { borderColor: colors.border }]}
+                onPress={() => {
+                  setCounterInputVisible(false);
+                  setSelectedOffer(null);
+                  setCounterAmount('');
+                }}
+              >
+                <Text style={[styles.counterCancelText, { color: colors.textMuted }]}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.counterSubmitButton, { backgroundColor: colors.primary }]}
+                onPress={() => {
+                  const amount = parseInt(counterAmount, 10);
+                  if (selectedOffer && amount > 0) {
+                    onCounterOffer?.(selectedOffer, amount);
+                    setCounterInputVisible(false);
+                    setSelectedOffer(null);
+                    setCounterAmount('');
+                  }
+                }}
+              >
+                <Text style={styles.counterSubmitText}>Submit Counter</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Counter/Withdraw Outgoing Offer Modal */}
       <ConfirmationModal
@@ -876,6 +975,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
   },
+  pendingNegotiationBadge: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pendingNegotiationText: {
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
   acceptButton: {
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.lg,
@@ -886,6 +997,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderRadius: borderRadius.md,
     borderWidth: 1,
+  },
+  counterButton: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.md,
   },
   buttonText: {
     color: '#000000',
@@ -907,6 +1023,75 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: spacing.sm,
     textAlign: 'center',
+  },
+  // Counter modal styles
+  counterModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.xl,
+  },
+  counterModalContent: {
+    width: '100%',
+    maxWidth: 340,
+    borderRadius: borderRadius.lg,
+    padding: spacing.xl,
+  },
+  counterModalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: spacing.xs,
+  },
+  counterModalSubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: spacing.lg,
+  },
+  counterInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+  },
+  counterCurrency: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginRight: spacing.sm,
+  },
+  counterInput: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '600',
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+  },
+  counterModalButtons: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  counterCancelButton: {
+    flex: 1,
+    paddingVertical: spacing.md,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  counterCancelText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  counterSubmitButton: {
+    flex: 1,
+    paddingVertical: spacing.md,
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+  },
+  counterSubmitText: {
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
 

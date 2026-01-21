@@ -10,6 +10,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useGame } from '../context/GameContext';
 import { TransferMarketScreen, TransferTarget, TransferListPlayer, IncomingOffer, OutgoingOffer } from './TransferMarketScreen';
 import { calculatePlayerOverall } from '../integration/gameInitializer';
+import { calculatePlayerMarketValue } from '../../systems/contractSystem';
 import { useColors, spacing } from '../theme';
 import type { Player } from '../../data/types';
 
@@ -29,125 +30,21 @@ export function ConnectedTransferMarketScreen({
     state,
     makeTransferOffer,
     respondToOffer,
+    counterTransferOffer,
     getShortlistedPlayers,
     getTransferListedPlayers,
     removeFromShortlist,
     removeFromTransferList,
   } = useGame();
 
-  // Calculate performance multiplier based on awards and stats
-  const calculatePerformanceMultiplier = useCallback((player: Player): number => {
-    let multiplier = 1.0;
-
-    const awards = player.awards;
-    if (awards) {
-      // Sum up weekly awards across all sports
-      const weeklyTotal = awards.playerOfTheWeek.basketball +
-                          awards.playerOfTheWeek.baseball +
-                          awards.playerOfTheWeek.soccer;
-      // Sum up monthly awards across all sports
-      const monthlyTotal = awards.playerOfTheMonth.basketball +
-                           awards.playerOfTheMonth.baseball +
-                           awards.playerOfTheMonth.soccer;
-
-      multiplier += weeklyTotal * 0.05;                         // +5% per weekly award
-      multiplier += monthlyTotal * 0.15;                        // +15% per monthly award
-      multiplier += awards.basketballPlayerOfTheYear * 0.50;    // +50% per Basketball POY
-      multiplier += awards.baseballPlayerOfTheYear * 0.50;      // +50% per Baseball POY
-      multiplier += awards.soccerPlayerOfTheYear * 0.50;        // +50% per Soccer POY
-      multiplier += awards.rookieOfTheYear * 0.30;              // +30% for ROY
-      multiplier += awards.championships * 0.35;                // +35% per championship
-    }
-
-    const gamesPlayed = player.careerStats?.gamesPlayed || { basketball: 0, baseball: 0, soccer: 0 };
-    const totalGames = gamesPlayed.basketball + gamesPlayed.baseball + gamesPlayed.soccer;
-    if (totalGames >= 100) {
-      multiplier += 0.30;
-    } else if (totalGames >= 50) {
-      multiplier += 0.15;
-    } else if (totalGames >= 20) {
-      multiplier += 0.05;
-    }
-
-    return Math.min(3.0, multiplier);
-  }, []);
-
-  // Calculate market value - grounded in acquisition cost to prevent exploits
-  const calculateMarketValue = useCallback((rating: number, age: number, salary: number = 0, performanceMultiplier: number = 1.0): number => {
-    // Base value tiers - what you'd pay to acquire a similar unproven player
-    let baseValue: number;
-    if (rating < 45) {
-      baseValue = 10000;
-    } else if (rating < 50) {
-      baseValue = 10000 + (rating - 45) * 3000;
-    } else if (rating < 55) {
-      baseValue = 25000 + (rating - 50) * 5000;
-    } else if (rating < 60) {
-      baseValue = 50000 + (rating - 55) * 10000;
-    } else if (rating < 65) {
-      baseValue = 100000 + (rating - 60) * 20000;
-    } else if (rating < 70) {
-      baseValue = 200000 + (rating - 65) * 40000;
-    } else if (rating < 75) {
-      baseValue = 400000 + (rating - 70) * 80000;
-    } else if (rating < 80) {
-      baseValue = 800000 + (rating - 75) * 140000;
-    } else if (rating < 85) {
-      baseValue = 1500000 + (rating - 80) * 300000;
-    } else {
-      baseValue = 3000000 + (rating - 85) * 500000;
-    }
-
-    // Age factor
-    let ageFactor: number;
-    if (age < 22) {
-      ageFactor = 1.25;
-    } else if (age < 25) {
-      ageFactor = 1.1;
-    } else if (age < 28) {
-      ageFactor = 1.0;
-    } else if (age < 30) {
-      ageFactor = 0.6;
-    } else if (age < 32) {
-      ageFactor = 0.3;
-    } else {
-      ageFactor = 0.15;
-    }
-
-    let transferValue = baseValue * ageFactor;
-
-    // Cap relative to salary to prevent free agent flip exploit
-    if (salary > 0) {
-      let maxMultiple: number;
-      if (rating >= 80) {
-        maxMultiple = 2.0;
-      } else if (rating >= 75) {
-        maxMultiple = 1.5;
-      } else if (rating >= 70) {
-        maxMultiple = 1.0;
-      } else if (rating >= 65) {
-        maxMultiple = 0.5;
-      } else {
-        maxMultiple = 0.25;
-      }
-      transferValue = Math.min(transferValue, salary * maxMultiple);
-    }
-
-    // Apply performance multiplier
-    transferValue *= performanceMultiplier;
-
-    return Math.max(10000, Math.round(transferValue / 10000) * 10000);
-  }, []);
-
   // Convert Player to TransferTarget
+  // Uses the shared calculatePlayerMarketValue from contractSystem.ts
   const convertToTarget = useCallback((player: Player): TransferTarget => {
     const overall = calculatePlayerOverall(player);
-    const salary = player.contract?.salary || 0;
-    const perfMultiplier = calculatePerformanceMultiplier(player);
 
     // Free agents show $0 market value to avoid tipping off their quality
     const isFreeAgent = player.teamId === 'free_agent';
-    const askingPrice = isFreeAgent ? 0 : calculateMarketValue(overall, player.age, salary, perfMultiplier);
+    const askingPrice = isFreeAgent ? 0 : calculatePlayerMarketValue(player);
 
     // Find which team the player is on
     const team = state.league.teams.find((t) => t.rosterIds.includes(player.id));
@@ -162,7 +59,7 @@ export function ConnectedTransferMarketScreen({
       askingPrice,
       status: 'available',
     };
-  }, [state.league.teams, calculateMarketValue, calculatePerformanceMultiplier]);
+  }, [state.league.teams]);
 
   // Convert incoming offers to UI format
   const convertToIncomingOffer = useCallback((offer: typeof state.market.incomingOffers[0]): IncomingOffer | null => {
@@ -170,6 +67,22 @@ export function ConnectedTransferMarketScreen({
     if (!player) return null;
 
     const fromTeam = state.league.teams.find((t) => t.id === offer.offeringTeamId);
+
+    // Map offer status to UI status
+    let uiStatus: IncomingOffer['status'];
+    switch (offer.status) {
+      case 'pending':
+        uiStatus = 'pending';
+        break;
+      case 'pending_player_decision':
+        uiStatus = 'pending_player_decision';
+        break;
+      case 'accepted':
+        uiStatus = 'accepted';
+        break;
+      default:
+        uiStatus = 'rejected';
+    }
 
     return {
       id: offer.id,
@@ -182,7 +95,7 @@ export function ConnectedTransferMarketScreen({
       },
       fromTeam: fromTeam?.name || 'Unknown Team',
       offerAmount: offer.transferFee,
-      status: offer.status === 'pending' ? 'pending' : offer.status === 'accepted' ? 'accepted' : 'rejected',
+      status: uiStatus,
       expiresIn: 3, // Default expiry
     };
   }, [state.players, state.league.teams]);
@@ -203,6 +116,26 @@ export function ConnectedTransferMarketScreen({
       }
     }
 
+    // Map offer status to UI status
+    let uiStatus: OutgoingOffer['status'];
+    switch (offer.status) {
+      case 'pending':
+        uiStatus = 'pending';
+        break;
+      case 'accepted':
+        uiStatus = 'accepted';
+        break;
+      case 'countered':
+        uiStatus = 'countered';
+        break;
+      case 'expired':
+        uiStatus = 'expired';
+        break;
+      default:
+        // 'rejected', 'walked_away', 'pending_player_decision' all map to rejected
+        uiStatus = 'rejected';
+    }
+
     return {
       id: offer.id,
       player: {
@@ -214,7 +147,7 @@ export function ConnectedTransferMarketScreen({
       },
       toTeam: toTeam?.name || 'Unknown Team',
       offerAmount: offer.transferFee,
-      status: offer.status,
+      status: uiStatus,
       counterAmount,
     };
   }, [state.players, state.league.teams]);
@@ -250,12 +183,11 @@ export function ConnectedTransferMarketScreen({
     return players.map((player): TransferListPlayer => {
       const overall = calculatePlayerOverall(player);
       const salary = player.contract?.salary || 0;
-      const perfMultiplier = calculatePerformanceMultiplier(player);
       // Use stored asking price, fall back to calculated value for backward compatibility
       const storedAskingPrice = askingPrices[player.id];
       const askingPrice = storedAskingPrice !== undefined
         ? storedAskingPrice
-        : calculateMarketValue(overall, player.age, salary, perfMultiplier);
+        : calculatePlayerMarketValue(player);
 
       return {
         id: player.id,
@@ -266,7 +198,7 @@ export function ConnectedTransferMarketScreen({
         askingPrice,
       };
     });
-  }, [state.initialized, getTransferListedPlayers, state.userTeam.transferListAskingPrices, calculateMarketValue, calculatePerformanceMultiplier]);
+  }, [state.initialized, getTransferListedPlayers, state.userTeam.transferListAskingPrices]);
 
   // Handle making a transfer offer (free agents are handled via contract negotiation)
   const handleMakeOffer = useCallback((target: TransferTarget, amount: number) => {
@@ -283,6 +215,11 @@ export function ConnectedTransferMarketScreen({
   const handleRejectOffer = useCallback((offer: IncomingOffer) => {
     respondToOffer(offer.id, false);
   }, [respondToOffer]);
+
+  // Handle counter offer on incoming offer
+  const handleCounterOffer = useCallback((offer: IncomingOffer, counterAmount: number) => {
+    counterTransferOffer(offer.id, counterAmount);
+  }, [counterTransferOffer]);
 
   // Handle accepting a counter offer (make new offer at counter amount)
   const handleAcceptCounter = useCallback((offer: OutgoingOffer) => {
@@ -334,6 +271,7 @@ export function ConnectedTransferMarketScreen({
       onMakeOffer={handleMakeOffer}
       onAcceptOffer={handleAcceptOffer}
       onRejectOffer={handleRejectOffer}
+      onCounterOffer={handleCounterOffer}
       onAcceptCounter={handleAcceptCounter}
       onWithdrawOffer={handleWithdrawOffer}
       onRemoveFromShortlist={handleRemoveFromShortlist}

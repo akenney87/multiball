@@ -5,12 +5,13 @@
  * - Current week indicator
  * - Season phase (pre/regular/post/off)
  * - Progress bar
- * - Quick actions
+ * - Quick actions with multi-week advance
  */
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useColors, spacing, borderRadius, shadows } from '../../theme';
+import { WeekAdvanceControl } from './WeekAdvanceControl';
 
 export type SeasonPhase = 'pre_season' | 'regular_season' | 'post_season' | 'off_season';
 
@@ -26,8 +27,11 @@ export interface SeasonProgressData {
 
 interface SeasonProgressWidgetProps {
   data: SeasonProgressData;
-  onAdvanceWeek?: () => void;
+  /** Async callback to advance a single week */
+  onAdvanceWeek?: () => Promise<void>;
   onViewSchedule?: () => void;
+  /** Whether currently advancing (external state) */
+  isAdvancing?: boolean;
 }
 
 const phaseLabels: Record<SeasonPhase, string> = {
@@ -48,6 +52,7 @@ export function SeasonProgressWidget({
   data,
   onAdvanceWeek,
   onViewSchedule,
+  isAdvancing,
 }: SeasonProgressWidgetProps) {
   const colors = useColors();
 
@@ -147,21 +152,22 @@ export function SeasonProgressWidget({
 
       {/* Actions */}
       <View style={styles.actions}>
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: colors.primary }]}
-          onPress={onAdvanceWeek}
-        >
-          <Text style={styles.actionButtonText}>Advance Week</Text>
-        </TouchableOpacity>
+        {onAdvanceWeek && (
+          <WeekAdvanceControl
+            currentWeek={data.currentWeek}
+            totalWeeks={data.totalWeeks}
+            isAdvancing={isAdvancing}
+            onAdvanceWeek={onAdvanceWeek}
+          />
+        )}
         <TouchableOpacity
           style={[
-            styles.actionButton,
-            styles.secondaryButton,
+            styles.scheduleButton,
             { borderColor: colors.border },
           ]}
           onPress={onViewSchedule}
         >
-          <Text style={[styles.actionButtonText, { color: colors.text }]}>
+          <Text style={[styles.scheduleButtonText, { color: colors.text }]}>
             View Schedule
           </Text>
         </TouchableOpacity>
@@ -247,21 +253,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   actions: {
-    flexDirection: 'row',
     gap: spacing.sm,
   },
-  actionButton: {
-    flex: 1,
+  scheduleButton: {
     paddingVertical: spacing.sm,
     borderRadius: borderRadius.md,
     alignItems: 'center',
-  },
-  secondaryButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
   },
-  actionButtonText: {
-    color: '#FFFFFF',
+  scheduleButtonText: {
     fontSize: 14,
     fontWeight: '600',
   },

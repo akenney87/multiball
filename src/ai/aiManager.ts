@@ -57,7 +57,7 @@ function simpleHash(str: string): number {
  * Chance that an AI team takes action this week
  * Not every team is actively looking every single week
  */
-const BASE_ACTION_CHANCE = 0.3; // 30% base chance to act
+const BASE_ACTION_CHANCE = 0.5; // 50% base chance to act
 
 /**
  * Determine if AI team will be active this week
@@ -67,7 +67,8 @@ export function willTeamActThisWeek(
   teamId: string,
   week: number,
   hasCriticalNeed: boolean,
-  personality: AIPersonality
+  personality: AIPersonality,
+  hasTransferListedTargets: boolean = false
 ): boolean {
   // Use deterministic randomness based on team+week
   const hash = simpleHash(teamId + week.toString());
@@ -78,15 +79,21 @@ export function willTeamActThisWeek(
 
   // Critical needs increase action chance significantly
   if (hasCriticalNeed) {
-    chance += 0.4; // 70% total if critical
+    chance += 0.3; // 80% total if critical
+  }
+
+  // Transfer-listed players available = bargain hunting opportunity
+  // All teams are more active when there are deals to be found
+  if (hasTransferListedTargets) {
+    chance += 0.25; // 75% base when players are on the market
   }
 
   // Aggressive spenders are more active
   const spending = personality.traits.spending_aggression / 100;
   chance += spending * 0.2; // Up to +20% for aggressive teams
 
-  // Cap at 75% max action chance
-  chance = Math.min(0.75, chance);
+  // Cap at 95% max action chance
+  chance = Math.min(0.95, chance);
 
   return roll < chance;
 }
@@ -124,6 +131,7 @@ export interface TransferBid {
   maxBid: number;
   urgency: 'reluctant' | 'neutral' | 'desperate';
   reason: string;
+  isOnTransferList: boolean;
 }
 
 /**
@@ -356,8 +364,66 @@ export function getPlayerSportRatings(player: Player): SportRatings {
 }
 
 /**
+ * Cache for all three sport strengths for a team
+ * Pre-calculated once per team per week for performance
+ */
+export interface TeamSportStrengthCache {
+  basketball: TeamSportStrength;
+  baseball: TeamSportStrength;
+  soccer: TeamSportStrength;
+}
+
+/**
+ * Pre-calculate team strengths for all three sports
+ * Call this once per team to avoid recalculating for every transfer target
+ */
+export function calculateAllTeamSportStrengths(roster: Player[]): TeamSportStrengthCache {
+  if (roster.length === 0) {
+    return {
+      basketball: { sport: 'basketball', average: 0, median: 0, max: 0, playerCount: 0 },
+      baseball: { sport: 'baseball', average: 0, median: 0, max: 0, playerCount: 0 },
+      soccer: { sport: 'soccer', average: 0, median: 0, max: 0, playerCount: 0 },
+    };
+  }
+
+  // Calculate all player overalls ONCE
+  const playerOveralls = roster.map(player => calculateAllOveralls(player));
+
+  // Extract ratings for each sport
+  const basketballRatings = playerOveralls.map(o => o.basketball).sort((a, b) => b - a);
+  const baseballRatings = playerOveralls.map(o => o.baseball).sort((a, b) => b - a);
+  const soccerRatings = playerOveralls.map(o => o.soccer).sort((a, b) => b - a);
+
+  const calculateStats = (ratings: number[], sport: SportType): TeamSportStrength => {
+    const sum = ratings.reduce((acc, r) => acc + r, 0);
+    const average = sum / ratings.length;
+    const mid = Math.floor(ratings.length / 2);
+    let median: number;
+    if (ratings.length % 2 === 0) {
+      median = ((ratings[mid - 1] ?? 0) + (ratings[mid] ?? 0)) / 2;
+    } else {
+      median = ratings[mid] ?? 0;
+    }
+    return {
+      sport,
+      average: Math.round(average * 10) / 10,
+      median: Math.round(median * 10) / 10,
+      max: ratings[0] ?? 0,
+      playerCount: ratings.length,
+    };
+  };
+
+  return {
+    basketball: calculateStats(basketballRatings, 'basketball'),
+    baseball: calculateStats(baseballRatings, 'baseball'),
+    soccer: calculateStats(soccerRatings, 'soccer'),
+  };
+}
+
+/**
  * Calculate team's strength in a specific sport
  * Uses players' ratings in that sport to determine avg/median/max
+ * @deprecated Use calculateAllTeamSportStrengths for better performance
  */
 export function calculateTeamSportStrength(
   roster: Player[],
@@ -900,7 +966,7 @@ export function shouldPursueFreeAgent(
   needs: TeamNeeds,
   context: AIDecisionContext
 ): SigningIntent | null {
-  const { personality, budget, salaryCommitment, roster } = context;
+  const { personality, budget, roster } = context;
   const config = personalityToConfig(personality);
   const thresholds = getDecisionThresholds(config);
 
@@ -910,7 +976,8 @@ export function shouldPursueFreeAgent(
   }
 
   // Check budget (can we afford 2 years of salary?)
-  const affordableYearlySalary = (budget - salaryCommitment) * 0.3; // Max 30% of available for one player
+  // NOTE: `budget` is ALREADY the available budget, don't subtract salaryCommitment again
+  const affordableYearlySalary = budget * 0.3; // Max 30% of available for one player
   if (agent.annualSalary > affordableYearlySalary) {
     return null;
   }
@@ -1014,19 +1081,26 @@ export interface TransferTargetInfo {
 export function shouldMakeTransferBid(
   target: TransferTargetInfo,
   _needs: TeamNeeds, // Kept for API compatibility, evaluation is now sport-based
-  context: AIDecisionContext
+  context: AIDecisionContext,
+  teamStrengthCache?: TeamSportStrengthCache
 ): TransferBid | null {
-  const { personality, budget, salaryCommitment, roster } = context;
+  const { personality, budget, roster } = context;
+
+  // Debug logging for user's transfer-listed players
+  const isUserPlayer = target.teamId === 'user';
+  const logPrefix = isUserPlayer ? `[AI Bid Debug - ${context.teamName}]` : null;
 
   // =========================================================================
   // STEP 0: Pre-checks (blocked bids, roster space)
   // =========================================================================
 
   if (target.bidBlockedUntilWeek && context.week < target.bidBlockedUntilWeek) {
+    if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: bid blocked until week ${target.bidBlockedUntilWeek}`);
     return null;
   }
 
   if (roster.length >= MAX_ROSTER_SIZE) {
+    if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: roster full (${roster.length}/${MAX_ROSTER_SIZE})`);
     return null;
   }
 
@@ -1056,7 +1130,10 @@ export function shouldMakeTransferBid(
   // STEP 2: Compare to team's strength in that sport
   // =========================================================================
 
-  const teamStrength = calculateTeamSportStrength(roster, bestSport);
+  // Use cached team strengths if provided (much faster), otherwise calculate
+  const teamStrength = teamStrengthCache
+    ? teamStrengthCache[bestSport]
+    : calculateTeamSportStrength(roster, bestSport);
 
   // =========================================================================
   // STEP 3: Determine rotation fit
@@ -1070,13 +1147,19 @@ export function shouldMakeTransferBid(
 
   if (rotationFit === 'no-fit') {
     // Transfer-listed players at a discount might still be worth it for depth
-    if (target.isOnTransferList && roster.length < IDEAL_ROSTER_SIZE) {
-      // Check if they're at least within 15 points of team median
-      if (perceivedRating < teamStrength.median - 15) {
-        return null; // Too weak even for opportunistic buy
+    // Be VERY lenient: accept if within 35 points of median AND roster has room
+    // This allows lower division teams to buy bargain players from higher divisions
+    if (target.isOnTransferList && roster.length < MAX_ROSTER_SIZE) {
+      // Check if they're at least within 35 points of team median
+      // This allows a div 8 team (median ~30) to consider a div 5 player (rating ~55)
+      if (perceivedRating < teamStrength.median - 35) {
+        if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: no rotation fit, perceived ${perceivedRating.toFixed(1)} < median ${teamStrength.median.toFixed(1)} - 35`);
+        return null;
       }
+      if (logPrefix) console.log(`${logPrefix} ${target.name}: no-fit but accepting for depth (perceived ${perceivedRating.toFixed(1)}, median ${teamStrength.median.toFixed(1)})`);
       // Continue with evaluation as 'depth' fit
     } else {
+      if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: no rotation fit (perceived ${perceivedRating.toFixed(1)} vs team median ${teamStrength.median.toFixed(1)})`);
       return null;
     }
   }
@@ -1085,11 +1168,24 @@ export function shouldMakeTransferBid(
   // STEP 5: Check salary affordability
   // =========================================================================
 
-  const availableBudget = budget - salaryCommitment;
-  const maxAffordableSalary = availableBudget * 0.25; // Max 25% of remaining budget on one player's salary
+  // NOTE: `budget` from context is ALREADY the available budget (total - salaryCommitment)
+  // Do NOT subtract salaryCommitment again - that was the bug causing negative budgets!
+  const availableBudget = budget;
+  // Transfer-listed players:
+  // - AI willing to spend up to 50% of budget (motivated to buy deals)
+  // - Player is ALSO more desperate (willing to take pay cut)
+  // Non-listed players: more conservative at 25%
+  const salaryBudgetRatio = target.isOnTransferList ? 0.50 : 0.25;
+  const maxAffordableSalary = availableBudget * salaryBudgetRatio;
 
-  if (target.salaryExpectation > maxAffordableSalary) {
-    return null; // Can't afford player's salary expectations
+  // Transfer-listed players are motivated to move - they accept 70% of their expectation
+  const effectiveSalaryExpectation = target.isOnTransferList
+    ? target.salaryExpectation * 0.70
+    : target.salaryExpectation;
+
+  if (effectiveSalaryExpectation > maxAffordableSalary) {
+    if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: salary ${effectiveSalaryExpectation.toLocaleString()} > max affordable ${maxAffordableSalary.toLocaleString()} (budget: ${availableBudget.toLocaleString()})`);
+    return null;
   }
 
   // =========================================================================
@@ -1131,13 +1227,22 @@ export function shouldMakeTransferBid(
   let bidStrategy: string;
 
   if (target.isOnTransferList && target.askingPrice) {
+    // SANITY CHECK: If asking price is way above market value, skip entirely
+    // No matter how good we think the player is, paying 3x+ market value is unreasonable
+    const marketRatio = target.askingPrice / Math.max(target.marketValue, 1000);
+    if (marketRatio > 3.0) {
+      if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: asking price ${target.askingPrice.toLocaleString()} is ${marketRatio.toFixed(1)}x market value ${target.marketValue.toLocaleString()}`);
+      return null; // Asking price is unrealistic - seller is dreaming
+    }
+
     // Transfer-listed player with asking price
     const askingRatio = target.askingPrice / calculatedValue;
 
     if (askingRatio <= 0.9) {
       // Asking price is a bargain! Bid the asking price directly
-      bidAmount = target.askingPrice;
-      maxBid = Math.round(target.askingPrice * 1.1);
+      // But cap at 2x market value to avoid overpaying due to perception errors
+      bidAmount = Math.min(target.askingPrice, target.marketValue * 2);
+      maxBid = Math.round(bidAmount * 1.1);
       bidStrategy = 'bargain-asking-price';
     } else if (askingRatio <= 1.2) {
       // Asking price is reasonable - bid calculated value, willing to go to asking
@@ -1156,6 +1261,7 @@ export function shouldMakeTransferBid(
         maxBid = Math.round(calculatedValue * 0.9);
         bidStrategy = 'overpriced-lowball';
       } else {
+        if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: asking ratio ${askingRatio.toFixed(2)} too high (asking ${target.askingPrice?.toLocaleString()} vs calculated value ${calculatedValue.toLocaleString()}, fit=${actualFit})`);
         return null; // Not worth pursuing at this price
       }
     }
@@ -1195,6 +1301,7 @@ export function shouldMakeTransferBid(
       bidAmount = Math.round(maxTransferBudget * 0.9);
       maxBid = Math.round(maxTransferBudget);
     } else {
+      if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: can't afford transfer fee (bid ${bidAmount.toLocaleString()} > max ${maxTransferBudget.toLocaleString()}, market ${target.marketValue.toLocaleString()})`);
       return null; // Can't afford this player
     }
   }
@@ -1203,7 +1310,14 @@ export function shouldMakeTransferBid(
   maxBid = Math.min(maxBid, maxTransferBudget);
 
   // Minimum viable bid check
-  if (bidAmount < target.marketValue * 0.5) {
+  // Transfer-listed players can receive lower bids (motivated seller)
+  // EXCEPTION: If player is listed with an asking price and we meet it, skip this check
+  // (the seller has already said they'll accept that price)
+  const minBidRatio = target.isOnTransferList ? 0.35 : 0.5;
+  const meetsAskingPrice = target.isOnTransferList && target.askingPrice && bidAmount >= target.askingPrice;
+
+  if (!meetsAskingPrice && bidAmount < target.marketValue * minBidRatio) {
+    if (logPrefix) console.log(`${logPrefix} SKIP ${target.name}: bid ${bidAmount.toLocaleString()} < min ${(target.marketValue * minBidRatio).toLocaleString()} (${minBidRatio * 100}% of market)`);
     return null; // Bid would be insultingly low
   }
 
@@ -1231,6 +1345,8 @@ export function shouldMakeTransferBid(
     reasonParts.push('transfer-listed');
   }
 
+  if (logPrefix) console.log(`${logPrefix} BID on ${target.name}: $${bidAmount.toLocaleString()} (max $${maxBid.toLocaleString()}) - ${reasonParts.join(', ')}`);
+
   return {
     playerId: target.id,
     playerName: target.name,
@@ -1239,6 +1355,7 @@ export function shouldMakeTransferBid(
     maxBid,
     urgency,
     reason: reasonParts.join(', '),
+    isOnTransferList: target.isOnTransferList ?? false,
   };
 }
 
@@ -1346,6 +1463,30 @@ export function evaluateBuyerCounterResponse(
   personality: AIPersonality
 ): BuyerCounterResponse {
   const { counterAmount, originalBid, maxBid, marketValue, negotiationRound, isTransferListed } = offer;
+
+  // ==========================================================================
+  // SANITY CHECK: Walk away immediately from unreasonable counters
+  // ==========================================================================
+
+  // If counter is more than 2x our original bid, they're not serious
+  if (counterAmount > originalBid * 2) {
+    return {
+      offerId: offer.offerId,
+      playerId: offer.playerId,
+      decision: 'walk_away',
+      reason: `Counter of $${counterAmount.toLocaleString()} is unreasonable (>2x our bid of $${originalBid.toLocaleString()})`,
+    };
+  }
+
+  // If counter is more than 3x market value, walk away
+  if (counterAmount > marketValue * 3) {
+    return {
+      offerId: offer.offerId,
+      playerId: offer.playerId,
+      decision: 'walk_away',
+      reason: `Counter of $${counterAmount.toLocaleString()} is way above market value of $${marketValue.toLocaleString()}`,
+    };
+  }
 
   // Get personality traits (0-1 scale)
   const spendingAggression = personality.traits.spending_aggression / 100;
@@ -1572,17 +1713,23 @@ export function processAIWeek(
 
   // Check if team will be proactively active this week
   const hasCriticalNeed = needs.positionGaps.some(g => g.urgency === 'critical');
+  const hasTransferListedTargets = availableTransferTargets.some(t => t.isOnTransferList);
   const isActiveThisWeek = willTeamActThisWeek(
     context.teamId,
     context.week,
     hasCriticalNeed,
-    context.personality
+    context.personality,
+    hasTransferListedTargets
   );
 
   // If not active this week, only respond to offers (no proactive moves)
   if (!isActiveThisWeek) {
     return actions;
   }
+
+  // Pre-calculate team strength for all sports ONCE (major performance optimization)
+  // This avoids recalculating for every single transfer target
+  const teamStrengthCache = calculateAllTeamSportStrengths(context.roster);
 
   // Convert free agents to perceived ratings (AI doesn't have perfect knowledge)
   const perceivedFreeAgents = availableFreeAgents.map(agent => ({
@@ -1649,44 +1796,87 @@ export function processAIWeek(
     actions.signings = freeAgentIntents.slice(0, MAX_SIGNINGS_PER_WEEK);
   }
 
-  // Consider transfer bids (max 1 per week, and only if no signing this week)
-  // AI teams don't try to do everything at once
-  // IMPORTANT: Only make transfer bids if there's no suitable free agent available
+  // Consider transfer bids
+  // Transfer-listed players get special consideration (motivated sellers, potential bargains)
+  // Non-listed players only considered if no free agent options
+  const transferListedTargets = perceivedTransferTargets.filter(t => t.isOnTransferList);
+  const nonListedTargets = perceivedTransferTargets.filter(t => !t.isOnTransferList);
+
+  const transferIntents: TransferBid[] = [];
+
+  // ALWAYS evaluate transfer-listed players - these are active opportunities
+  // Even if we signed a free agent, a good deal on a listed player is worth pursuing
+  for (const target of transferListedTargets) {
+    const bid = shouldMakeTransferBid(target, needs, context, teamStrengthCache);
+    if (bid) {
+      transferIntents.push(bid);
+    }
+  }
+
+  // Only consider non-listed players if no signing this week and conditions favor transfers
   if (actions.signings.length === 0) {
-    // Check if there's a free agent who could fill our critical needs
-    // If so, we should wait and pursue them rather than making expensive transfer bids
     const criticalNeeds = needs.positionGaps.filter(g => g.urgency === 'critical');
     const hasFreeAgentForCriticalNeed = criticalNeeds.some(need => {
       return perceivedFreeAgents.some(agent =>
         agent.position === need.position &&
-        agent.overallRating >= need.targetRating - 10 // Within 10 points of target
+        agent.overallRating >= need.targetRating - 10
       );
     });
 
-    // Only pursue transfers if:
-    // 1. No free agents available for critical needs, OR
-    // 2. We have moderate (not critical) needs but high spending aggression
-    const shouldConsiderTransfers =
+    const shouldConsiderNonListed =
       !hasFreeAgentForCriticalNeed ||
       (criticalNeeds.length === 0 && getTraitValue(context.personality, 'spending_aggression') > 0.7);
 
-    if (shouldConsiderTransfers) {
-      const transferIntents: TransferBid[] = [];
-      for (const target of perceivedTransferTargets) {
-        const bid = shouldMakeTransferBid(target, needs, context);
+    if (shouldConsiderNonListed) {
+      for (const target of nonListedTargets) {
+        const bid = shouldMakeTransferBid(target, needs, context, teamStrengthCache);
         if (bid) {
           transferIntents.push(bid);
         }
       }
+    }
+  }
 
-      if (transferIntents.length > 0) {
-        transferIntents.sort((a, b) => {
-          const urgencyOrder = { desperate: 0, neutral: 1, reluctant: 2 };
-          return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
-        });
-        actions.transferBids = transferIntents.slice(0, MAX_TRANSFER_BIDS_PER_WEEK);
+  // Sort and take best bids
+  // Priority: 1) Transfer-listed players (active sellers), 2) Urgency within each group
+  if (transferIntents.length > 0) {
+    // Separate bids on transfer-listed vs non-listed players
+    const listedBids = transferIntents.filter(b => b.isOnTransferList);
+    const nonListedBids = transferIntents.filter(b => !b.isOnTransferList);
+
+    // Sort each group by urgency
+    const urgencyOrder = { desperate: 0, neutral: 1, reluctant: 2 };
+    const sortByUrgency = (a: TransferBid, b: TransferBid) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
+    listedBids.sort(sortByUrgency);
+    nonListedBids.sort(sortByUrgency);
+
+    // Prioritize transfer-listed players (active sellers should get bids)
+    // Take up to MAX_TRANSFER_BIDS_PER_WEEK, preferring listed players
+    const selectedBids: TransferBid[] = [];
+
+    // First, take bids on listed players
+    for (const bid of listedBids) {
+      if (selectedBids.length >= MAX_TRANSFER_BIDS_PER_WEEK) break;
+      selectedBids.push(bid);
+    }
+
+    // Then fill remaining slots with non-listed players
+    for (const bid of nonListedBids) {
+      if (selectedBids.length >= MAX_TRANSFER_BIDS_PER_WEEK) break;
+      selectedBids.push(bid);
+    }
+
+    // Debug: log which bids were selected vs dropped
+    if (transferIntents.length > selectedBids.length) {
+      const droppedBids = transferIntents.filter(b => !selectedBids.includes(b));
+      for (const dropped of droppedBids) {
+        if (dropped.targetTeamId === 'user') {
+          console.log(`[AI Bid] ${context.teamName} dropped bid on ${dropped.playerName} (urgency: ${dropped.urgency}, listed: ${dropped.isOnTransferList}) - ${selectedBids.length} bids already selected`);
+        }
       }
     }
+
+    actions.transferBids = selectedBids;
   }
 
   // Consider transfer listing players (max 1 per week, only if transfer window is open)
