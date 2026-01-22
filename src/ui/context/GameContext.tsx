@@ -766,6 +766,32 @@ export function GameProvider({ children }: GameProviderProps) {
     // (aiResolvedActions.offerResponses) which properly uses asking prices and AI personality.
     // The old PROCESS_TRANSFER_RESPONSES action has been removed.
 
+    // Check if active negotiation has expired (player withdraws after 2 weeks)
+    const negotiationState = stateRef.current;
+    const activeNeg = negotiationState.market.activeNegotiation;
+    if (activeNeg && activeNeg.deadlineWeek <= negotiationState.season.currentWeek) {
+      // Player withdraws from negotiations
+      const player = negotiationState.players[activeNeg.playerId];
+      const playerName = player?.name || 'The player';
+
+      dispatch({ type: 'EXPIRE_NEGOTIATION' });
+
+      // Add news event
+      const event: NewsItem = {
+        id: `event-neg-expired-${Date.now()}`,
+        type: 'transfer',
+        priority: 'important',
+        title: 'Negotiations Collapsed',
+        message: `${playerName} has withdrawn from contract negotiations. They felt talks were taking too long without progress.`,
+        timestamp: new Date(),
+        read: false,
+        relatedEntityId: activeNeg.playerId,
+        scope: 'team',
+        teamId: 'user',
+      };
+      dispatch({ type: 'ADD_EVENT', payload: event });
+    }
+
     // Process AI responses to user's counter-offers on incoming offers
     // (When AI made an offer on user's player and user countered back)
     const preState = stateRef.current;

@@ -1628,6 +1628,38 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'EXPIRE_NEGOTIATION': {
+      // Called when negotiation deadline passes without a deal being reached
+      // Player withdraws from negotiations
+      const negotiation = state.market.activeNegotiation;
+
+      if (!negotiation) return state;
+
+      // Move to history as expired
+      const expiredNegotiation: ContractNegotiation = {
+        ...negotiation,
+        status: 'rejected', // Player walked away
+      };
+
+      // If this was a transfer negotiation, remove the offer entirely
+      // (unlike cancel where we revert to 'accepted', here the deal is dead)
+      const cleanedOutgoingOffers = negotiation.negotiationType === 'transfer'
+        ? state.market.outgoingOffers.filter(
+            (offer) => !(offer.playerId === negotiation.playerId && offer.status === 'negotiating')
+          )
+        : state.market.outgoingOffers;
+
+      return {
+        ...state,
+        market: {
+          ...state.market,
+          activeNegotiation: null,
+          negotiationHistory: [expiredNegotiation, ...state.market.negotiationHistory],
+          outgoingOffers: cleanedOutgoingOffers,
+        },
+      };
+    }
+
     case 'COMPLETE_SIGNING': {
       const negotiation = state.market.activeNegotiation;
 

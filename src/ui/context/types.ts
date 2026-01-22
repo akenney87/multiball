@@ -538,6 +538,7 @@ export type GameAction =
   | { type: 'SUBMIT_CONTRACT_OFFER'; payload: { offer: ContractOffer } }
   | { type: 'ACCEPT_PLAYER_COUNTER' }
   | { type: 'CANCEL_NEGOTIATION' }
+  | { type: 'EXPIRE_NEGOTIATION' }
   | { type: 'COMPLETE_SIGNING' }
 
   // Budget

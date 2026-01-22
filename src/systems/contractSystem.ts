@@ -62,7 +62,7 @@ export const MULTI_SPORT_BONUS = 0.2; // +20% per sport above 50 rating
 
 // Negotiation limits
 export const DEFAULT_MAX_ROUNDS = 5;
-export const NEGOTIATION_DEADLINE_WEEKS = 4;
+export const NEGOTIATION_DEADLINE_WEEKS = 2;
 
 // Strategy flexibility modifiers
 export const STRATEGY_FLEXIBILITY = {
