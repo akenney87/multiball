@@ -1,8 +1,8 @@
 /**
- * NEON PITCH Spacing System
+ * TROPHY ROOM Spacing System
  *
  * Consistent spacing values for margins, paddings, and gaps.
- * Based on 4px grid with neon glow shadow effects.
+ * Refined shadows and sharper edges for luxury editorial aesthetic.
  */
 
 export const spacing = {
@@ -18,212 +18,236 @@ export const spacing = {
   '6xl': 64,
 };
 
-// Border radius - slightly larger for that modern gaming look
+// Border radius - sharper edges for editorial feel, with options
 export const borderRadius = {
   none: 0,
-  sm: 6,
-  md: 10,
-  lg: 14,
-  xl: 18,
-  '2xl': 24,
+  xs: 2,
+  sm: 4,
+  md: 6,
+  lg: 8,
+  xl: 12,
+  '2xl': 16,
   full: 9999,
 };
 
 // ============================================================================
-// NEON GLOW SHADOW SYSTEM
-// These shadows create the signature glowing effect of NEON PITCH
+// REFINED SHADOW SYSTEM
+// Subtle, sophisticated shadows for depth without being heavy
 // ============================================================================
 
-// Standard shadows (subtle, for depth without glow)
+// Standard shadows (warm-tinted for cohesion)
 export const shadows = {
   none: {},
 
   // Subtle depth shadow
   sm: {
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowColor: '#0C0B09',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 1,
   },
 
   // Medium depth shadow
   md: {
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowColor: '#0C0B09',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 2,
   },
 
   // Large depth shadow
   lg: {
-    shadowColor: '#000000',
+    shadowColor: '#0C0B09',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Extra large for modals and overlays
+  xl: {
+    shadowColor: '#0C0B09',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.35,
     shadowRadius: 16,
     elevation: 8,
   },
 };
 
 // ============================================================================
-// NEON GLOW EFFECTS
-// Use these for that signature cyberpunk stadium-lights aesthetic
+// ACCENT GLOW EFFECTS
+// Subtle gold accents for premium feel - much more restrained than neon
 // ============================================================================
 
 export const glowShadows = {
-  // Primary cyan glow - for cards, buttons, active states
+  // Primary gold glow - subtle, for active states
   primary: {
-    shadowColor: '#00F5FF',
+    shadowColor: '#C9A962',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  // Intense primary glow - for hover/press states
-  primaryIntense: {
-    shadowColor: '#00F5FF',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
-    elevation: 12,
-  },
-
-  // Secondary pink glow - for accents, alerts
-  secondary: {
-    shadowColor: '#FF00AA',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  // Success neon green glow
-  success: {
-    shadowColor: '#00FF88',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  // Warning amber glow
-  warning: {
-    shadowColor: '#FFB800',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  // Error red glow
-  error: {
-    shadowColor: '#FF3366',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  // Sport-specific glows
-  basketball: {
-    shadowColor: '#FF6600',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  baseball: {
-    shadowColor: '#FF2244',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  soccer: {
-    shadowColor: '#00FF66',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-
-  // Subtle card border glow
-  cardSubtle: {
-    shadowColor: '#00F5FF',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 4,
   },
 
-  // Text glow effect (for headlines)
-  text: {
-    textShadowColor: '#00F5FF',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
+  // Intense primary glow - for press states
+  primaryIntense: {
+    shadowColor: '#C9A962',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 6,
   },
 
-  // Score/stat number glow
-  stat: {
-    textShadowColor: '#00F5FF',
+  // Secondary rust glow - for secondary accents
+  secondary: {
+    shadowColor: '#B87A5E',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Success green glow
+  success: {
+    shadowColor: '#7BAD7B',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Warning amber glow
+  warning: {
+    shadowColor: '#D4A54A',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Error red glow
+  error: {
+    shadowColor: '#C75B5B',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Sport-specific glows
+  basketball: {
+    shadowColor: '#D4915C',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  baseball: {
+    shadowColor: '#C75B5B',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  soccer: {
+    shadowColor: '#7BAD7B',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Subtle card accent - barely visible glow
+  cardSubtle: {
+    shadowColor: '#C9A962',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+
+  // Text glow effect (for special headlines)
+  text: {
+    textShadowColor: '#C9A962',
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 15,
+    textShadowRadius: 6,
+  },
+
+  // Score/stat number glow - subtle gold highlight
+  stat: {
+    textShadowColor: '#C9A962',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
   },
 };
 
 // ============================================================================
 // CARD STYLES
-// Pre-built card styles with neon borders and glows
+// Sharp, sophisticated cards with subtle borders
 // ============================================================================
 
 export const cardStyles = {
-  // Default card with subtle glow border
+  // Default card - clean with subtle border
   default: {
     borderWidth: 1,
-    borderColor: '#1E1E2E',
-    borderRadius: borderRadius.lg,
+    borderColor: '#2A2824',
+    borderRadius: borderRadius.sm,
   },
 
-  // Highlighted card with primary glow
+  // Highlighted card with subtle gold border
   highlighted: {
     borderWidth: 1,
-    borderColor: '#00F5FF40', // 40 = 25% opacity
-    borderRadius: borderRadius.lg,
+    borderColor: 'rgba(201, 169, 98, 0.3)', // Gold at 30%
+    borderRadius: borderRadius.sm,
     ...glowShadows.cardSubtle,
   },
 
-  // Active/selected card with intense glow
+  // Active/selected card with gold border
   active: {
     borderWidth: 1,
-    borderColor: '#00F5FF',
-    borderRadius: borderRadius.lg,
+    borderColor: '#C9A962',
+    borderRadius: borderRadius.sm,
     ...glowShadows.primary,
   },
 
   // Sport-specific cards
   basketball: {
     borderWidth: 1,
-    borderColor: '#FF660040',
-    borderRadius: borderRadius.lg,
+    borderColor: 'rgba(212, 145, 92, 0.3)',
+    borderRadius: borderRadius.sm,
     ...glowShadows.basketball,
   },
 
   baseball: {
     borderWidth: 1,
-    borderColor: '#FF224440',
-    borderRadius: borderRadius.lg,
+    borderColor: 'rgba(199, 91, 91, 0.3)',
+    borderRadius: borderRadius.sm,
     ...glowShadows.baseball,
   },
 
   soccer: {
     borderWidth: 1,
-    borderColor: '#00FF6640',
-    borderRadius: borderRadius.lg,
+    borderColor: 'rgba(123, 173, 123, 0.3)',
+    borderRadius: borderRadius.sm,
     ...glowShadows.soccer,
+  },
+
+  // Sharp card - no radius, editorial feel
+  sharp: {
+    borderWidth: 1,
+    borderColor: '#2A2824',
+    borderRadius: 0,
+  },
+
+  // Sharp active - for buttons and CTAs
+  sharpActive: {
+    borderWidth: 1,
+    borderColor: '#C9A962',
+    borderRadius: 0,
   },
 };
 
@@ -242,11 +266,11 @@ export const layout = {
   listItemPaddingHorizontal: spacing.lg,
   listItemGap: spacing.sm,
 
-  // Buttons
+  // Buttons - editorial feel with generous padding
   buttonPaddingHorizontal: spacing.xl,
-  buttonPaddingVertical: spacing.md,
-  buttonHeight: 48,
-  buttonHeightSmall: 36,
+  buttonPaddingVertical: spacing.lg,
+  buttonHeight: 52,
+  buttonHeightSmall: 40,
 
   // Input fields
   inputHeight: 48,

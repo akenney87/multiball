@@ -1,39 +1,39 @@
 /**
- * NEON PITCH Color Theme
+ * TROPHY ROOM Color Theme
  *
- * A bold, gaming-forward aesthetic inspired by FIFA meets Cyberpunk.
- * Electric neon accents on deep dark backgrounds with glowing effects.
+ * A refined, luxury editorial aesthetic inspired by high-fashion sports magazines.
+ * Warm monochrome palette with gold accents. Prestigious and timeless.
  *
  * Design Philosophy:
- * - Pure black backgrounds for maximum contrast and OLED optimization
- * - Electric cyan (#00F5FF) as the dominant primary for that stadium-lights feel
- * - Hot pink/magenta (#FF00AA) as accent for high-impact moments
- * - Sport-specific neon colors for visual differentiation
- * - All UI elements should feel like they're glowing in the dark
+ * - Warm black backgrounds for an intimate, club-like atmosphere
+ * - Cream text for softer contrast that's easier on the eyes
+ * - Gold (#C9A962) as the signature accent for elegance and prestige
+ * - Muted, sophisticated sport colors that feel classic, not garish
+ * - All UI elements should feel like premium print design
  */
 
 export interface ColorTheme {
-  // Primary colors (electric cyan - the signature neon)
+  // Primary colors (refined gold - the signature accent)
   primary: string;
   primaryDark: string;
   primaryLight: string;
 
-  // Secondary accent (hot pink for highlights)
+  // Secondary accent (warm rust for highlights)
   secondary: string;
   secondaryDark: string;
 
-  // Background (pure black to near-black gradient)
+  // Background (warm black to charcoal gradient)
   background: string;
   surface: string;
   card: string;
 
-  // Text (high contrast whites and grays)
+  // Text (warm cream hierarchy)
   text: string;
   textSecondary: string;
   textMuted: string;
   textInverse: string;
 
-  // Status colors (neon variants)
+  // Status colors (muted, sophisticated variants)
   success: string;
   warning: string;
   error: string;
@@ -44,13 +44,13 @@ export interface ColorTheme {
   divider: string;
   disabled: string;
 
-  // Sport-specific neon colors
+  // Sport-specific colors (refined, not neon)
   basketball: string;
   baseball: string;
   soccer: string;
 
-  // === NEON PITCH EXCLUSIVE ===
-  // Glow colors for shadow effects
+  // === TROPHY ROOM EXCLUSIVE ===
+  // Accent colors for subtle highlight effects
   glowPrimary: string;
   glowSecondary: string;
   glowSuccess: string;
@@ -66,119 +66,119 @@ export interface ColorTheme {
 }
 
 // ============================================================================
-// NEON PITCH - DARK MODE (Primary Experience)
-// The full cyberpunk stadium experience
+// TROPHY ROOM - DARK MODE (Primary Experience)
+// The luxury editorial experience - like reading a premium sports magazine
 // ============================================================================
 export const darkColors: ColorTheme = {
-  // Primary - Electric Cyan (the signature neon blue)
-  primary: '#00F5FF',
-  primaryDark: '#00C4CC',
-  primaryLight: '#66F9FF',
+  // Primary - Refined Gold (the signature luxury accent)
+  primary: '#C9A962',
+  primaryDark: '#A68B4B',
+  primaryLight: '#D9C08A',
 
-  // Secondary - Hot Pink (for accents and highlights)
-  secondary: '#FF00AA',
-  secondaryDark: '#CC0088',
+  // Secondary - Warm Rust (for secondary accents)
+  secondary: '#B87A5E',
+  secondaryDark: '#96604A',
 
-  // Background - Pure black to deep purple-black
-  background: '#000000',
-  surface: '#0A0A0F',
-  card: '#14141F',
+  // Background - Warm blacks (not pure black)
+  background: '#0C0B09',
+  surface: '#161513',
+  card: '#1E1C19',
 
-  // Text - Crisp whites with gray hierarchy
-  text: '#FFFFFF',
-  textSecondary: '#A0A0B0',
-  textMuted: '#505060',
-  textInverse: '#000000',
+  // Text - Warm cream hierarchy
+  text: '#F5F0E8',
+  textSecondary: '#B8B2A6',
+  textMuted: '#6B665C',
+  textInverse: '#0C0B09',
 
-  // Status - Neon variants for maximum visibility
-  success: '#00FF88',
-  warning: '#FFB800',
-  error: '#FF3366',
-  info: '#00F5FF',
+  // Status - Sophisticated, muted variants
+  success: '#7BAD7B',
+  warning: '#D4A54A',
+  error: '#C75B5B',
+  info: '#7A9BC7',
 
   // UI Elements
-  border: '#1E1E2E',
-  divider: '#14141F',
-  disabled: '#303040',
+  border: '#2A2824',
+  divider: '#1E1C19',
+  disabled: '#3D3A35',
 
-  // Sports - Neon sport colors
-  basketball: '#FF6600',
-  baseball: '#FF2244',
-  soccer: '#00FF66',
+  // Sports - Classic, refined sport colors
+  basketball: '#D4915C',
+  baseball: '#C75B5B',
+  soccer: '#7BAD7B',
 
-  // Glow effects
-  glowPrimary: '#00F5FF',
-  glowSecondary: '#FF00AA',
-  glowSuccess: '#00FF88',
-  glowError: '#FF3366',
+  // Accent effects (subtle gold glow)
+  glowPrimary: '#C9A962',
+  glowSecondary: '#B87A5E',
+  glowSuccess: '#7BAD7B',
+  glowError: '#C75B5B',
 
   // Card styling
-  cardBorder: '#1E1E2E',
-  cardGlow: '#00F5FF',
+  cardBorder: '#2A2824',
+  cardGlow: '#C9A962',
 
   // Gradients
-  gradientStart: '#00F5FF',
-  gradientEnd: '#FF00AA',
+  gradientStart: '#C9A962',
+  gradientEnd: '#B87A5E',
 };
 
 // ============================================================================
-// NEON PITCH - LIGHT MODE (Softer Neon Variant)
-// A lighter take that's still distinctly neon - think daytime stadium
+// TROPHY ROOM - LIGHT MODE (Alternative Experience)
+// A lighter take - think daytime luxury lounge
 // ============================================================================
 export const lightColors: ColorTheme = {
-  // Primary - Deeper cyan for light backgrounds
-  primary: '#00D4E0',
-  primaryDark: '#00A8B3',
-  primaryLight: '#33E0EA',
+  // Primary - Deeper gold for light backgrounds
+  primary: '#A68B4B',
+  primaryDark: '#8A7340',
+  primaryLight: '#C9A962',
 
-  // Secondary - Magenta
-  secondary: '#E6009A',
-  secondaryDark: '#B30078',
+  // Secondary - Deeper rust
+  secondary: '#96604A',
+  secondaryDark: '#7A4E3D',
 
-  // Background - Soft dark grays (not true light - stays gaming)
-  background: '#0F0F14',
-  surface: '#18181F',
-  card: '#1E1E28',
+  // Background - Warm off-whites and creams
+  background: '#F5F2ED',
+  surface: '#EBE7E0',
+  card: '#FFFFFF',
 
-  // Text - Slightly softer whites
-  text: '#F0F0F5',
-  textSecondary: '#9090A0',
-  textMuted: '#606070',
-  textInverse: '#0F0F14',
+  // Text - Warm dark browns
+  text: '#1E1C19',
+  textSecondary: '#4A463E',
+  textMuted: '#8A8478',
+  textInverse: '#F5F0E8',
 
-  // Status - Slightly muted neons
-  success: '#00E07A',
-  warning: '#E6A600',
-  error: '#E62E5C',
-  info: '#00D4E0',
+  // Status - Slightly more saturated for visibility
+  success: '#5E8A5E',
+  warning: '#C4952A',
+  error: '#B54545',
+  info: '#5A7BA7',
 
   // UI Elements
-  border: '#2A2A38',
-  divider: '#1E1E28',
-  disabled: '#404050',
+  border: '#D9D5CC',
+  divider: '#EBE7E0',
+  disabled: '#C9C5BC',
 
   // Sports
-  basketball: '#E65C00',
-  baseball: '#E62040',
-  soccer: '#00E05C',
+  basketball: '#C47A42',
+  baseball: '#B54545',
+  soccer: '#5E8A5E',
 
-  // Glow effects
-  glowPrimary: '#00D4E0',
-  glowSecondary: '#E6009A',
-  glowSuccess: '#00E07A',
-  glowError: '#E62E5C',
+  // Accent effects
+  glowPrimary: '#A68B4B',
+  glowSecondary: '#96604A',
+  glowSuccess: '#5E8A5E',
+  glowError: '#B54545',
 
   // Card styling
-  cardBorder: '#2A2A38',
-  cardGlow: '#00D4E0',
+  cardBorder: '#D9D5CC',
+  cardGlow: '#A68B4B',
 
   // Gradients
-  gradientStart: '#00D4E0',
-  gradientEnd: '#E6009A',
+  gradientStart: '#A68B4B',
+  gradientEnd: '#96604A',
 };
 
 /**
- * Create a custom theme with team colors while preserving neon aesthetic
+ * Create a custom theme with team colors while preserving luxury aesthetic
  */
 export function createTeamTheme(
   baseTheme: ColorTheme,

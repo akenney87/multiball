@@ -1,7 +1,7 @@
 /**
- * NEON PITCH Theme Context
+ * TROPHY ROOM Theme Context
  *
- * Provides theme values throughout the app with neon glow support.
+ * Provides theme values throughout the app with luxury accent support.
  */
 
 import React, { createContext, useContext, useState, useMemo, ReactNode } from 'react';
@@ -13,7 +13,7 @@ interface ThemeContextValue {
   isDark: boolean;
   toggleTheme: () => void;
   setTeamColors: (primary: string, secondary?: string) => void;
-  // Neon glow utilities
+  // Accent utilities
   getGlow: (type: 'primary' | 'secondary' | 'success' | 'warning' | 'error') => typeof glowShadows.primary;
   getSportGlow: (sport: 'basketball' | 'baseball' | 'soccer') => typeof glowShadows.primary;
 }
@@ -26,7 +26,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, initialDark = true }: ThemeProviderProps) {
-  // Default to dark mode for NEON PITCH (the primary experience)
+  // Default to dark mode for TROPHY ROOM (the primary experience)
   const [isDark, setIsDark] = useState(initialDark);
   const [teamPrimary, setTeamPrimary] = useState<string | null>(null);
   const [teamSecondary, setTeamSecondary] = useState<string | null>(null);
@@ -46,7 +46,7 @@ export function ThemeProvider({ children, initialDark = true }: ThemeProviderPro
     setTeamSecondary(secondary || null);
   };
 
-  // Dynamic glow shadow based on current theme colors
+  // Dynamic accent shadow based on current theme colors
   const getGlow = (type: 'primary' | 'secondary' | 'success' | 'warning' | 'error') => {
     const glowColors = {
       primary: colors.glowPrimary,
@@ -58,13 +58,13 @@ export function ThemeProvider({ children, initialDark = true }: ThemeProviderPro
     return {
       shadowColor: glowColors[type],
       shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.4,
-      shadowRadius: 12,
-      elevation: 8,
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 4,
     };
   };
 
-  // Sport-specific glow
+  // Sport-specific accent glow
   const getSportGlow = (sport: 'basketball' | 'baseball' | 'soccer') => {
     const sportColors = {
       basketball: colors.basketball,
@@ -74,9 +74,9 @@ export function ThemeProvider({ children, initialDark = true }: ThemeProviderPro
     return {
       shadowColor: sportColors[sport],
       shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.4,
-      shadowRadius: 12,
-      elevation: 8,
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 4,
     };
   };
 
@@ -102,7 +102,7 @@ export function useColors(): ColorTheme {
 }
 
 /**
- * Hook to get glow shadow styles
+ * Hook to get accent glow shadow styles
  */
 export function useGlow() {
   const { getGlow, getSportGlow } = useTheme();

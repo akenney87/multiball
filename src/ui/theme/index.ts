@@ -1,8 +1,8 @@
 /**
- * NEON PITCH Theme Module
+ * TROPHY ROOM Theme Module
  *
  * Exports all theme-related values and components.
- * Gaming-forward aesthetic with electric neon accents.
+ * Luxury editorial aesthetic with warm monochrome palette and gold accents.
  */
 
 // Colors
