@@ -1,7 +1,7 @@
 # Multiball - Living Project Context
 
-**Last Updated:** 2026-01-19
-**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅
+**Last Updated:** 2026-01-22
+**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅ | **Injury System COMPLETE** ✅ | **Transfer Negotiation System COMPLETE** ✅ | **Title Screen Redesign** ✅
 
 ---
 
@@ -32,6 +32,20 @@
 - Shared probability engine (`src/simulation/core/probability.ts`)
 - Sport-aware tactical settings (`SportTacticalSettings` union type)
 - Player `sportMetadata` for sport-specific data (handedness, preferred positions)
+
+---
+
+## Development Guidelines
+
+### UI/UX Changes
+**ALWAYS invoke the `frontend-design` skill for any UI changes**, including:
+- New screens or components
+- Layout fixes and centering adjustments
+- Styling changes (colors, spacing, typography)
+- Design iterations and revisions
+- Visual bug fixes
+
+The skill ensures high design quality and avoids generic "AI slop" aesthetics.
 
 ---
 
@@ -360,15 +374,25 @@ Corners and free kicks now lead to shot opportunities:
   - "Scout As Many Players As Possible" end: Wide ranges, less accurate, more players discovered
 - **Budget Impact:** Higher scouting budget = more simultaneous scouts, better depth/breadth options
 
-### Injury System
-- **Occurrence:** Can happen during matches or training
-- **Probability:** Based on durability attribute only (keep it simple)
+### Injury System (COMPLETE - 2026-01-21)
+- **Occurrence:** In-game injuries during match simulation for all three sports
+- **Probability Factors:**
+  - Base rate varies by sport (soccer highest due to contact, baseball lowest)
+  - Player durability attribute reduces injury chance
+  - Player fatigue increases injury risk
+  - Contact plays (tackles, collisions) have higher injury rates
+- **Severity Levels:**
+  - Minor: 1-2 weeks recovery
+  - Moderate: 3-4 weeks recovery
+  - Severe: 6-8 weeks recovery
 - **Process:**
-  1. Injury occurs
-  2. User receives doctor report (injury type, recovery window)
-  3. Player misses games during recovery
-  4. Player still paid full salary
-  5. Cannot be forced to play while injured
+  1. Injury occurs during match simulation
+  2. Player marked as injured with recovery time (in game days)
+  3. Injured players shown in separate section of lineup editor
+  4. System prevents assigning injured players to lineups
+  5. Medical budget allocation affects recovery speed
+  6. Recovery countdown decrements each game day
+- **UI:** Injured players section displays player name, injury type, and days remaining
 
 ### Youth Academy System
 - **Starting State:** User starts with youth academy from day 1
@@ -2768,7 +2792,7 @@ Stats page now supports all three sports with sport-specific statistics:
 4. **Transfer Market Polish**
    - Player comparison view during negotiations
    - AI team bidding war mechanics
-   - Contract counter-offer system
+   - ~~Contract counter-offer system~~ ✅ COMPLETE (2026-01-20)
 
 5. **Youth Academy Scouting Flow**
    - Visual scouting report cards
@@ -2855,3 +2879,79 @@ Fixed playing time bonus (was always 0) and clarified parameter naming.
 Files Modified:
 - `src/systems/weeklyProgressionProcessor.ts` - Fixed parameter naming, added weekly minutes
 - `src/ui/context/GameContext.tsx` - Weekly minutes calculation
+
+### 2026-01-20: Transfer Negotiation System & Contract Improvements
+
+**Transfer Negotiation System:**
+Implemented realistic multi-round transfer negotiations with AI personality-based responses.
+
+Features:
+- AI teams respond to offers with accept/reject/counter based on player value and asking price
+- Counter-offer system with negotiation history tracking
+- Player decision phase after team accepts (players can reject moves)
+- Personality-based player decisions (loyal players more likely to stay, ambitious seek better teams)
+- Walk-away detection when negotiations stall
+- Offer status tracking (pending, accepted, rejected, countered, expired)
+
+**Contract Negotiation Timeout:**
+Added 2-week timeout for pending contract negotiations.
+
+- Pending deals automatically expire after 2 weeks (14 game days)
+- Prevents indefinite pending states
+- Applies to both new contracts and extensions
+
+Files Modified:
+- `src/ui/context/gameReducer.ts` - Transfer negotiation actions, contract timeout logic
+- `src/data/types.ts` - TransferOffer interface with negotiation history
+- `src/ai/transferNegotiator.ts` - New file for AI negotiation logic
+- `src/ui/screens/TransferMarketScreen.tsx` - Negotiation UI
+- `src/ui/screens/ConnectedTransferMarketScreen.tsx` - Connected negotiation handlers
+
+### 2026-01-21: In-Game Injury System
+
+**Injury System Implementation:**
+Added realistic in-game injury system for all three sports.
+
+Features:
+- Injuries occur during match simulation based on durability attribute
+- Injury severity: Minor (1-2 weeks), Moderate (3-4 weeks), Severe (6-8 weeks)
+- Injured players section in lineup editor showing recovery time
+- Prevention of assigning injured players to lineups
+- Medical budget affects injury recovery speed
+- Injuries tracked in player state with recovery countdown
+
+Injury Probability Factors:
+- Base rate varies by sport (soccer highest, baseball lowest)
+- Player durability reduces injury chance
+- Fatigue increases injury risk
+- Contact plays have higher injury rates
+
+Files Modified:
+- `src/simulation/basketball/basketballSim.ts` - Injury checks during game
+- `src/simulation/baseball/baseballSim.ts` - Injury checks during at-bats
+- `src/simulation/soccer/soccerSim.ts` - Injury checks during plays
+- `src/systems/injurySystem.ts` - Core injury logic
+- `src/ui/screens/LineupEditorScreen.tsx` - Injured players section
+
+### 2026-01-22: Title Screen Redesign
+
+**Title Screen Design #3 - "Trophy Room":**
+Implemented luxury editorial aesthetic for the title screen.
+
+Design Features:
+- Warm black background (#0C0B09) with cream text (#F5F0E8)
+- Gold accent color (#C9A962) for emphasis
+- Ultra-light/bold typography contrast (weight 200 vs 600)
+- Sharp-edged buttons for editorial feel
+- Elegant gold diamond divider with animated entrance
+- Architectural line-drawing sport icons (basketball, baseball, soccer)
+- Staggered entrance animations with refined pacing
+
+Technical Fixes:
+- Letter-spacing compensation on all text elements (paddingLeft = letterSpacing/2)
+- Absolute positioning for pixel-perfect centering of divider diamond and baseball icon
+- Diamond animation: appears first, then lines extend outward from center
+- Masthead text: "AK INNOVATIONS"
+
+Files Modified:
+- `src/ui/screens/TitleScreen.tsx` - Complete redesign with new aesthetic
