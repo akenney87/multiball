@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { spacing } from '../theme';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // Luxury color palette - warm monochrome with gold
 const COLORS = {
@@ -54,7 +54,9 @@ export function TitleScreen({
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const titleScale = useRef(new Animated.Value(0.95)).current;
   const subtitleOpacity = useRef(new Animated.Value(0)).current;
-  const dividerWidth = useRef(new Animated.Value(0)).current;
+  const dividerDiamondOpacity = useRef(new Animated.Value(0)).current;
+  const dividerDiamondScale = useRef(new Animated.Value(0.5)).current;
+  const dividerLineWidth = useRef(new Animated.Value(0)).current;
   const iconsOpacity = useRef(new Animated.Value(0)).current;
   const buttonsOpacity = useRef(new Animated.Value(0)).current;
   const buttonsTranslateY = useRef(new Animated.Value(30)).current;
@@ -91,10 +93,23 @@ export function TitleScreen({
           useNativeDriver: true,
         }),
       ]),
-      // Divider line draws
-      Animated.timing(dividerWidth, {
+      // Diamond appears first (centered)
+      Animated.parallel([
+        Animated.timing(dividerDiamondOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(dividerDiamondScale, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Lines extend from diamond
+      Animated.timing(dividerLineWidth, {
         toValue: 1,
-        duration: 500,
+        duration: 400,
         useNativeDriver: false,
       }),
       // Subtitle and icons
@@ -148,7 +163,8 @@ export function TitleScreen({
     outputRange: ['0%', '100%'],
   });
 
-  const dividerAnimatedWidth = dividerWidth.interpolate({
+  // Lines grow from 0% to 100% of their container width
+  const dividerLineAnimatedWidth = dividerLineWidth.interpolate({
     inputRange: [0, 1],
     outputRange: ['0%', '100%'],
   });
@@ -171,7 +187,7 @@ export function TitleScreen({
           ]}
         >
           <View style={styles.mastheadLine} />
-          <Text style={styles.mastheadText}>EST. 2024</Text>
+          <Text style={styles.mastheadText}>AK INNOVATIONS</Text>
           <View style={styles.mastheadLine} />
         </Animated.View>
 
@@ -191,12 +207,39 @@ export function TitleScreen({
             <Text style={styles.titleAccent}>BALL</Text>
           </Animated.View>
 
-          {/* Elegant divider */}
-          <Animated.View style={[styles.divider, { width: dividerAnimatedWidth }]}>
-            <View style={styles.dividerLine} />
-            <View style={styles.dividerDiamond} />
-            <View style={styles.dividerLine} />
-          </Animated.View>
+          {/* Elegant divider - diamond absolutely centered on screen */}
+          <View style={styles.divider}>
+            {/* Left line grows from center outward */}
+            <View style={styles.dividerLineWrapper}>
+              <Animated.View
+                style={[
+                  styles.dividerLineLeft,
+                  { width: dividerLineAnimatedWidth }
+                ]}
+              />
+            </View>
+            {/* Spacer for diamond */}
+            <View style={styles.dividerDiamondSpacer} />
+            {/* Right line grows from center outward */}
+            <View style={styles.dividerLineWrapper}>
+              <Animated.View
+                style={[
+                  styles.dividerLineRight,
+                  { width: dividerLineAnimatedWidth }
+                ]}
+              />
+            </View>
+            {/* Diamond absolutely positioned at exact screen center */}
+            <Animated.View
+              style={[
+                styles.dividerDiamond,
+                {
+                  opacity: dividerDiamondOpacity,
+                  transform: [{ rotate: '45deg' }, { scale: dividerDiamondScale }],
+                }
+              ]}
+            />
+          </View>
 
           {/* Subtitle */}
           <Animated.Text style={[styles.subtitle, { opacity: subtitleOpacity }]}>
@@ -207,32 +250,44 @@ export function TitleScreen({
           <Animated.View style={[styles.iconRow, { opacity: iconsOpacity }]}>
             {/* Basketball - simple arc and lines */}
             <View style={styles.iconContainer}>
-              <View style={styles.iconCircle}>
-                <View style={styles.basketballLineH} />
-                <View style={styles.basketballLineV} />
-                <View style={styles.basketballArc} />
+              <View style={styles.iconWrapper}>
+                <View style={styles.iconCircle}>
+                  <View style={styles.basketballLineH} />
+                  <View style={styles.basketballLineV} />
+                  <View style={styles.basketballArc} />
+                </View>
               </View>
               <Text style={styles.iconLabel}>BASKETBALL</Text>
             </View>
 
             <View style={styles.iconDivider} />
 
-            {/* Baseball - diamond outline */}
+            {/* Baseball spacer - maintains flex layout */}
             <View style={styles.iconContainer}>
-              <View style={styles.baseballDiamond}>
-                <View style={styles.baseballInner} />
-              </View>
-              <Text style={styles.iconLabel}>BASEBALL</Text>
+              <View style={styles.iconWrapper} />
+              <Text style={styles.iconLabelInvisible}>BASEBALL</Text>
             </View>
 
             <View style={styles.iconDivider} />
 
             {/* Soccer - hexagon pattern hint */}
             <View style={styles.iconContainer}>
-              <View style={styles.soccerCircle}>
-                <View style={styles.soccerPentagon} />
+              <View style={styles.iconWrapper}>
+                <View style={styles.soccerCircle}>
+                  <View style={styles.soccerPentagon} />
+                </View>
               </View>
               <Text style={styles.iconLabel}>SOCCER</Text>
+            </View>
+
+            {/* Baseball - absolutely centered on screen */}
+            <View style={styles.baseballAbsolute}>
+              <View style={styles.iconWrapper}>
+                <View style={styles.baseballDiamond}>
+                  <View style={styles.baseballInner} />
+                </View>
+              </View>
+              <Text style={styles.iconLabel}>BASEBALL</Text>
             </View>
           </Animated.View>
         </View>
@@ -336,10 +391,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '500',
     letterSpacing: 4,
+    paddingLeft: 2, // Compensate for trailing letter-spacing
   },
 
   // Center section
   centerSection: {
+    alignSelf: 'stretch', // Explicit: take full content width
     alignItems: 'center',
     gap: spacing.lg,
   },
@@ -352,6 +409,8 @@ const styles = StyleSheet.create({
     fontWeight: '200', // Ultra light for elegance
     letterSpacing: 20,
     lineHeight: 80,
+    textAlign: 'center',
+    paddingLeft: 10, // Compensate for trailing letter-spacing
   },
   titleAccent: {
     color: COLORS.gold,
@@ -360,26 +419,47 @@ const styles = StyleSheet.create({
     letterSpacing: 20,
     lineHeight: 80,
     marginTop: -12,
+    textAlign: 'center',
+    paddingLeft: 10, // Compensate for trailing letter-spacing
   },
 
-  // Divider
+  // Divider - diamond absolutely centered on screen
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.xl,
+    alignSelf: 'stretch',
     marginTop: spacing.md,
-    gap: spacing.sm,
+    position: 'relative', // For absolute diamond positioning
   },
-  dividerLine: {
+  dividerLineWrapper: {
     flex: 1,
     height: 1,
+    justifyContent: 'center',
+  },
+  dividerLineLeft: {
+    height: 1,
     backgroundColor: COLORS.goldSubtle,
+    alignSelf: 'flex-end', // Grow from right edge outward
+    marginRight: spacing.sm,
+  },
+  dividerLineRight: {
+    height: 1,
+    backgroundColor: COLORS.goldSubtle,
+    alignSelf: 'flex-start', // Grow from left edge outward
+    marginLeft: spacing.sm,
+  },
+  dividerDiamondSpacer: {
+    width: 8 + spacing.sm * 2, // Diamond size + margins
+    height: 1,
   },
   dividerDiamond: {
+    position: 'absolute',
     width: 8,
     height: 8,
     backgroundColor: COLORS.gold,
-    transform: [{ rotate: '45deg' }],
+    // Absolute center on screen: (screenWidth/2) - contentPadding - halfDiamondSize
+    left: SCREEN_WIDTH / 2 - spacing.xl * 1.5 - 4,
+    top: -4, // Vertically center: (1px line - 8px diamond) / 2 = -3.5, rounded
   },
 
   // Subtitle
@@ -389,6 +469,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     letterSpacing: 6,
     marginTop: spacing.sm,
+    textAlign: 'center',
+    paddingLeft: 3, // Compensate for trailing letter-spacing
   },
 
   // Sport icons
@@ -396,10 +478,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.lg,
+    alignSelf: 'stretch',
     marginTop: spacing.xl * 1.5,
+    position: 'relative', // For absolute baseball positioning
   },
   iconContainer: {
+    flex: 1,
     alignItems: 'center',
     gap: spacing.sm,
   },
@@ -408,11 +492,35 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: COLORS.creamSubtle,
   },
+  // Fixed height container to normalize icon heights (rotated diamond is taller)
+  iconWrapper: {
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   iconLabel: {
     color: COLORS.creamMuted,
     fontSize: 8,
     fontWeight: '600',
     letterSpacing: 2,
+    textAlign: 'center',
+    paddingLeft: 1, // Compensate for trailing letter-spacing
+  },
+  iconLabelInvisible: {
+    fontSize: 8,
+    fontWeight: '600',
+    letterSpacing: 2,
+    color: 'transparent', // Invisible but maintains spacing
+  },
+  // Baseball absolutely positioned at exact screen center
+  baseballAbsolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0, // Stretch to full width of iconRow
+    alignItems: 'center', // Center the content horizontally
+    gap: spacing.sm,
   },
 
   // Basketball icon
@@ -497,6 +605,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 4,
+    textAlign: 'center',
+    paddingLeft: 2, // Compensate for trailing letter-spacing
   },
   buttonSecondary: {
     backgroundColor: 'transparent',
@@ -510,6 +620,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
     letterSpacing: 4,
+    textAlign: 'center',
+    paddingLeft: 2, // Compensate for trailing letter-spacing
   },
 
   // Loading
@@ -522,6 +634,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '500',
     letterSpacing: 6,
+    textAlign: 'center',
+    paddingLeft: 3, // Compensate for trailing letter-spacing
   },
   loadingBarBackground: {
     width: '100%',
@@ -551,6 +665,8 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '500',
     letterSpacing: 3,
+    textAlign: 'center',
+    paddingLeft: 1.5, // Compensate for trailing letter-spacing
   },
 });
 
