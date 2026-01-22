@@ -1,8 +1,9 @@
 /**
- * Title Screen
+ * Title Screen - Design #3
  *
- * "Stadium Broadcast" aesthetic - premium sports broadcast graphics feel.
- * Asymmetric composition with geometric sport symbols and diagonal energy.
+ * "Trophy Room" - Luxury Editorial aesthetic.
+ * High-fashion magazine meets elite sports heritage.
+ * Near-monochrome with warm gold accent. Refined and prestigious.
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -14,9 +15,21 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import { useColors, spacing, hexToRgba } from '../theme';
+import { spacing } from '../theme';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+// Luxury color palette - warm monochrome with gold
+const COLORS = {
+  background: '#0C0B09', // Warm black
+  surface: '#161513', // Slightly lighter warm black
+  cream: '#F5F0E8', // Warm cream for text
+  creamMuted: 'rgba(245, 240, 232, 0.5)',
+  creamSubtle: 'rgba(245, 240, 232, 0.15)',
+  gold: '#C9A962', // Refined gold accent
+  goldMuted: 'rgba(201, 169, 98, 0.6)',
+  goldSubtle: 'rgba(201, 169, 98, 0.2)',
+};
 
 interface TitleScreenProps {
   onContinue: () => void;
@@ -33,121 +46,92 @@ export function TitleScreen({
   isLoading = false,
   loadingProgress: externalProgress = 0,
 }: TitleScreenProps) {
-  const colors = useColors();
   const animatedProgress = useRef(new Animated.Value(0)).current;
 
-  // Animated values for staggered letter reveals
-  const letterAnims = useRef(
-    'MULTIBALL'.split('').map(() => ({
-      opacity: new Animated.Value(0),
-      translateX: new Animated.Value(-60),
-      skewY: new Animated.Value(-15),
-    }))
-  ).current;
-
-  // Other animations
+  // Refined, unhurried animations
+  const mastHeadOpacity = useRef(new Animated.Value(0)).current;
+  const mastHeadTranslateY = useRef(new Animated.Value(20)).current;
+  const titleOpacity = useRef(new Animated.Value(0)).current;
+  const titleScale = useRef(new Animated.Value(0.95)).current;
   const subtitleOpacity = useRef(new Animated.Value(0)).current;
-  const subtitleTranslateX = useRef(new Animated.Value(40)).current;
-  const buttonOpacity = useRef(new Animated.Value(0)).current;
-  const buttonTranslateY = useRef(new Animated.Value(30)).current;
-  const diagonalSlice = useRef(new Animated.Value(0)).current;
-  const scanLineOffset = useRef(new Animated.Value(0)).current;
-
-  // Sport symbol animations
-  const symbol1Opacity = useRef(new Animated.Value(0)).current;
-  const symbol1Scale = useRef(new Animated.Value(0.5)).current;
-  const symbol2Opacity = useRef(new Animated.Value(0)).current;
-  const symbol2Scale = useRef(new Animated.Value(0.5)).current;
-  const symbol3Opacity = useRef(new Animated.Value(0)).current;
-  const symbol3Scale = useRef(new Animated.Value(0.5)).current;
-
-  // Ambient pulse for symbols
-  const ambientPulse = useRef(new Animated.Value(0)).current;
+  const dividerWidth = useRef(new Animated.Value(0)).current;
+  const iconsOpacity = useRef(new Animated.Value(0)).current;
+  const buttonsOpacity = useRef(new Animated.Value(0)).current;
+  const buttonsTranslateY = useRef(new Animated.Value(30)).current;
+  const footerOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Diagonal slice reveals first
-    Animated.timing(diagonalSlice, {
-      toValue: 1,
-      duration: 400,
-      useNativeDriver: true,
-    }).start();
-
-    // Staggered letter entrance - each letter slices in
-    const letterAnimations = letterAnims.map((anim, index) =>
+    // Elegant staggered entrance - unhurried pacing
+    const sequence = Animated.sequence([
+      // Masthead fades in first
       Animated.parallel([
-        Animated.timing(anim.opacity, {
+        Animated.timing(mastHeadOpacity, {
           toValue: 1,
-          duration: 300,
-          delay: 200 + index * 60,
+          duration: 800,
           useNativeDriver: true,
         }),
-        Animated.timing(anim.translateX, {
+        Animated.timing(mastHeadTranslateY, {
           toValue: 0,
-          duration: 400,
-          delay: 200 + index * 60,
+          duration: 800,
           useNativeDriver: true,
         }),
-        Animated.timing(anim.skewY, {
-          toValue: 0,
-          duration: 400,
-          delay: 200 + index * 60,
+      ]),
+      // Brief pause
+      Animated.delay(200),
+      // Title scales and fades in
+      Animated.parallel([
+        Animated.timing(titleOpacity, {
+          toValue: 1,
+          duration: 600,
           useNativeDriver: true,
         }),
-      ])
-    );
-
-    Animated.stagger(60, letterAnimations).start();
-
-    // Sport symbols pop in after letters
-    setTimeout(() => {
-      Animated.stagger(150, [
-        Animated.parallel([
-          Animated.spring(symbol1Scale, { toValue: 1, friction: 8, useNativeDriver: true }),
-          Animated.timing(symbol1Opacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-        ]),
-        Animated.parallel([
-          Animated.spring(symbol2Scale, { toValue: 1, friction: 8, useNativeDriver: true }),
-          Animated.timing(symbol2Opacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-        ]),
-        Animated.parallel([
-          Animated.spring(symbol3Scale, { toValue: 1, friction: 8, useNativeDriver: true }),
-          Animated.timing(symbol3Opacity, { toValue: 1, duration: 300, useNativeDriver: true }),
-        ]),
-      ]).start();
-    }, 600);
-
-    // Subtitle slides in from right
-    setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(subtitleOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
-        Animated.timing(subtitleTranslateX, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]).start();
-    }, 900);
-
-    // Buttons fade up
-    setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(buttonOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(buttonTranslateY, { toValue: 0, duration: 500, useNativeDriver: true }),
-      ]).start();
-    }, 1100);
-
-    // Continuous scan line animation
-    Animated.loop(
-      Animated.timing(scanLineOffset, {
+        Animated.timing(titleScale, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Divider line draws
+      Animated.timing(dividerWidth, {
         toValue: 1,
-        duration: 8000,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+      // Subtitle and icons
+      Animated.parallel([
+        Animated.timing(subtitleOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(iconsOpacity, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Buttons rise up
+      Animated.parallel([
+        Animated.timing(buttonsOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(buttonsTranslateY, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Footer last
+      Animated.timing(footerOpacity, {
+        toValue: 1,
+        duration: 400,
         useNativeDriver: true,
-      })
-    ).start();
+      }),
+    ]);
 
-    // Ambient pulse for symbols
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(ambientPulse, { toValue: 1, duration: 2000, useNativeDriver: true }),
-        Animated.timing(ambientPulse, { toValue: 0, duration: 2000, useNativeDriver: true }),
-      ])
-    ).start();
+    sequence.start();
   }, []);
 
   // Loading bar animation
@@ -164,213 +148,111 @@ export function TitleScreen({
     outputRange: ['0%', '100%'],
   });
 
-  const scanLineTranslate = scanLineOffset.interpolate({
+  const dividerAnimatedWidth = dividerWidth.interpolate({
     inputRange: [0, 1],
-    outputRange: [-SCREEN_HEIGHT, SCREEN_HEIGHT * 2],
+    outputRange: ['0%', '100%'],
   });
-
-  const symbolPulseOpacity = ambientPulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.6, 1],
-  });
-
-  // Letter colors - alternating pattern with accent on key letters
-  const getLetterColor = (index: number) => {
-    // M-U-L-T-I-B-A-L-L
-    // Accent the M, T, B, L (last)
-    if (index === 0 || index === 3 || index === 5 || index === 8) {
-      return colors.primary;
-    }
-    return '#FFFFFF';
-  };
 
   return (
     <View style={styles.container}>
-      {/* Deep background with subtle gradient feel */}
-      <View style={styles.backgroundBase} />
+      {/* Subtle texture overlay */}
+      <View style={styles.textureOverlay} />
 
-      {/* Diagonal accent stripe - top right */}
-      <Animated.View
-        style={[
-          styles.diagonalStripe,
-          {
-            backgroundColor: hexToRgba(colors.primary, 0.08),
-            opacity: diagonalSlice,
-          },
-        ]}
-      />
-
-      {/* Secondary diagonal - bottom left */}
-      <Animated.View
-        style={[
-          styles.diagonalStripeSecondary,
-          {
-            backgroundColor: hexToRgba(colors.secondary, 0.05),
-            opacity: diagonalSlice,
-          },
-        ]}
-      />
-
-      {/* Scan line effect */}
-      <Animated.View
-        style={[
-          styles.scanLine,
-          {
-            transform: [{ translateY: scanLineTranslate }],
-          },
-        ]}
-      />
-
-      {/* Geometric sport symbols - positioned asymmetrically */}
-      {/* Basketball - hexagon with lines */}
-      <Animated.View
-        style={[
-          styles.sportSymbol,
-          styles.symbolBasketball,
-          {
-            opacity: Animated.multiply(symbol1Opacity, symbolPulseOpacity),
-            transform: [{ scale: symbol1Scale }],
-          },
-        ]}
-      >
-        <View style={[styles.hexagon, { borderColor: colors.basketball }]}>
-          <View style={[styles.hexLine, styles.hexLineH, { backgroundColor: hexToRgba(colors.basketball, 0.6) }]} />
-          <View style={[styles.hexLine, styles.hexLineV, { backgroundColor: hexToRgba(colors.basketball, 0.6) }]} />
-        </View>
-      </Animated.View>
-
-      {/* Baseball - diamond shape */}
-      <Animated.View
-        style={[
-          styles.sportSymbol,
-          styles.symbolBaseball,
-          {
-            opacity: Animated.multiply(symbol2Opacity, symbolPulseOpacity),
-            transform: [{ scale: symbol2Scale }, { rotate: '45deg' }],
-          },
-        ]}
-      >
-        <View style={[styles.diamond, { borderColor: colors.baseball }]}>
-          <View style={[styles.diamondInner, { borderColor: hexToRgba(colors.baseball, 0.5) }]} />
-        </View>
-      </Animated.View>
-
-      {/* Soccer - pentagon/hexagon pattern */}
-      <Animated.View
-        style={[
-          styles.sportSymbol,
-          styles.symbolSoccer,
-          {
-            opacity: Animated.multiply(symbol3Opacity, symbolPulseOpacity),
-            transform: [{ scale: symbol3Scale }],
-          },
-        ]}
-      >
-        <View style={[styles.soccerBall, { borderColor: colors.soccer }]}>
-          <View style={[styles.soccerInner, { backgroundColor: hexToRgba(colors.soccer, 0.3) }]} />
-        </View>
-      </Animated.View>
-
-      {/* Main content */}
+      {/* Content */}
       <View style={styles.content}>
-        {/* Title section - left aligned for asymmetry */}
-        <View style={styles.titleSection}>
-          <View style={styles.titleContainer}>
-            {/* MULTI on first line */}
-            <View style={styles.titleRow}>
-              {'MULTI'.split('').map((letter, index) => {
-                const anim = letterAnims[index];
-                if (!anim) return null;
-                return (
-                  <Animated.Text
-                    key={`multi-${index}`}
-                    style={[
-                      styles.titleLetter,
-                      {
-                        color: getLetterColor(index),
-                        opacity: anim.opacity,
-                        transform: [{ translateX: anim.translateX }],
-                        textShadowColor: getLetterColor(index) === colors.primary
-                          ? hexToRgba(colors.primary, 0.8)
-                          : 'transparent',
-                        textShadowOffset: { width: 0, height: 0 },
-                        textShadowRadius: getLetterColor(index) === colors.primary ? 20 : 0,
-                      },
-                    ]}
-                  >
-                    {letter}
-                  </Animated.Text>
-                );
-              })}
-            </View>
-            {/* BALL on second line - slightly offset */}
-            <View style={[styles.titleRow, styles.titleRowOffset]}>
-              {'BALL'.split('').map((letter, index) => {
-                const globalIndex = index + 5;
-                const anim = letterAnims[globalIndex];
-                if (!anim) return null;
-                return (
-                  <Animated.Text
-                    key={`ball-${index}`}
-                    style={[
-                      styles.titleLetter,
-                      {
-                        color: getLetterColor(globalIndex),
-                        opacity: anim.opacity,
-                        transform: [{ translateX: anim.translateX }],
-                        textShadowColor: getLetterColor(globalIndex) === colors.primary
-                          ? hexToRgba(colors.primary, 0.8)
-                          : 'transparent',
-                        textShadowOffset: { width: 0, height: 0 },
-                        textShadowRadius: getLetterColor(globalIndex) === colors.primary ? 20 : 0,
-                      },
-                    ]}
-                  >
-                    {letter}
-                  </Animated.Text>
-                );
-              })}
-            </View>
-          </View>
+        {/* Top section - Masthead */}
+        <Animated.View
+          style={[
+            styles.masthead,
+            {
+              opacity: mastHeadOpacity,
+              transform: [{ translateY: mastHeadTranslateY }],
+            },
+          ]}
+        >
+          <View style={styles.mastheadLine} />
+          <Text style={styles.mastheadText}>EST. 2024</Text>
+          <View style={styles.mastheadLine} />
+        </Animated.View>
 
-          {/* Subtitle with horizontal line */}
+        {/* Center section - Title treatment */}
+        <View style={styles.centerSection}>
+          {/* Main title - magazine masthead style */}
           <Animated.View
             style={[
-              styles.subtitleContainer,
+              styles.titleContainer,
               {
-                opacity: subtitleOpacity,
-                transform: [{ translateX: subtitleTranslateX }],
+                opacity: titleOpacity,
+                transform: [{ scale: titleScale }],
               },
             ]}
           >
-            <View style={[styles.subtitleLine, { backgroundColor: hexToRgba(colors.primary, 0.4) }]} />
-            <Text style={[styles.subtitle, { color: hexToRgba('#FFFFFF', 0.6) }]}>
-              FRANCHISE MANAGEMENT
-            </Text>
+            <Text style={styles.titleMain}>MULTI</Text>
+            <Text style={styles.titleAccent}>BALL</Text>
+          </Animated.View>
+
+          {/* Elegant divider */}
+          <Animated.View style={[styles.divider, { width: dividerAnimatedWidth }]}>
+            <View style={styles.dividerLine} />
+            <View style={styles.dividerDiamond} />
+            <View style={styles.dividerLine} />
+          </Animated.View>
+
+          {/* Subtitle */}
+          <Animated.Text style={[styles.subtitle, { opacity: subtitleOpacity }]}>
+            FRANCHISE MANAGEMENT
+          </Animated.Text>
+
+          {/* Minimal sport icons - architectural line drawings */}
+          <Animated.View style={[styles.iconRow, { opacity: iconsOpacity }]}>
+            {/* Basketball - simple arc and lines */}
+            <View style={styles.iconContainer}>
+              <View style={styles.iconCircle}>
+                <View style={styles.basketballLineH} />
+                <View style={styles.basketballLineV} />
+                <View style={styles.basketballArc} />
+              </View>
+              <Text style={styles.iconLabel}>BASKETBALL</Text>
+            </View>
+
+            <View style={styles.iconDivider} />
+
+            {/* Baseball - diamond outline */}
+            <View style={styles.iconContainer}>
+              <View style={styles.baseballDiamond}>
+                <View style={styles.baseballInner} />
+              </View>
+              <Text style={styles.iconLabel}>BASEBALL</Text>
+            </View>
+
+            <View style={styles.iconDivider} />
+
+            {/* Soccer - hexagon pattern hint */}
+            <View style={styles.iconContainer}>
+              <View style={styles.soccerCircle}>
+                <View style={styles.soccerPentagon} />
+              </View>
+              <Text style={styles.iconLabel}>SOCCER</Text>
+            </View>
           </Animated.View>
         </View>
 
-        {/* Buttons section */}
+        {/* Bottom section - Buttons */}
         <Animated.View
           style={[
             styles.buttonSection,
             {
-              opacity: buttonOpacity,
-              transform: [{ translateY: buttonTranslateY }],
+              opacity: buttonsOpacity,
+              transform: [{ translateY: buttonsTranslateY }],
             },
           ]}
         >
           {isLoading ? (
             <View style={styles.loadingContainer}>
-              <Text style={[styles.loadingText, { color: hexToRgba('#FFFFFF', 0.6) }]}>
-                LOADING
-              </Text>
+              <Text style={styles.loadingText}>LOADING</Text>
               <View style={styles.loadingBarBackground}>
                 <Animated.View
-                  style={[
-                    styles.loadingBarFill,
-                    { width: loadingBarWidth, backgroundColor: colors.primary },
-                  ]}
+                  style={[styles.loadingBarFill, { width: loadingBarWidth }]}
                 />
               </View>
             </View>
@@ -378,61 +260,42 @@ export function TitleScreen({
             <>
               {hasSaveData && (
                 <TouchableOpacity
-                  style={[styles.button, styles.primaryButton]}
+                  style={styles.buttonPrimary}
                   onPress={onContinue}
                   activeOpacity={0.8}
                 >
-                  <View style={[styles.buttonGlow, { backgroundColor: colors.primary }]} />
-                  <View style={[styles.buttonInner, { backgroundColor: colors.primary }]}>
-                    <Text style={styles.primaryButtonText}>CONTINUE</Text>
-                  </View>
-                  <View style={[styles.buttonAccent, { backgroundColor: hexToRgba(colors.primary, 0.3) }]} />
+                  <Text style={styles.buttonPrimaryText}>CONTINUE</Text>
                 </TouchableOpacity>
               )}
 
               <TouchableOpacity
                 style={[
-                  styles.button,
-                  hasSaveData ? styles.secondaryButton : styles.primaryButton,
+                  hasSaveData ? styles.buttonSecondary : styles.buttonPrimary,
                 ]}
                 onPress={onNewGame}
                 activeOpacity={0.8}
               >
-                {!hasSaveData && (
-                  <View style={[styles.buttonGlow, { backgroundColor: colors.primary }]} />
-                )}
-                <View
+                <Text
                   style={[
-                    styles.buttonInner,
                     hasSaveData
-                      ? { backgroundColor: 'transparent', borderWidth: 2, borderColor: hexToRgba('#FFFFFF', 0.3) }
-                      : { backgroundColor: colors.primary },
+                      ? styles.buttonSecondaryText
+                      : styles.buttonPrimaryText,
                   ]}
                 >
-                  <Text
-                    style={hasSaveData ? styles.secondaryButtonText : styles.primaryButtonText}
-                  >
-                    NEW GAME
-                  </Text>
-                </View>
-                {!hasSaveData && (
-                  <View style={[styles.buttonAccent, { backgroundColor: hexToRgba(colors.primary, 0.3) }]} />
-                )}
+                  NEW GAME
+                </Text>
               </TouchableOpacity>
             </>
           )}
         </Animated.View>
       </View>
 
-      {/* Bottom accent bar with gradient feel */}
-      <View style={styles.bottomAccent}>
-        <View style={[styles.accentSegment, { backgroundColor: colors.basketball, flex: 1 }]} />
-        <View style={[styles.accentSegment, { backgroundColor: colors.primary, flex: 2 }]} />
-        <View style={[styles.accentSegment, { backgroundColor: colors.soccer, flex: 1 }]} />
-      </View>
-
-      {/* Version - tucked into corner */}
-      <Text style={styles.versionText}>v1.0</Text>
+      {/* Footer */}
+      <Animated.View style={[styles.footer, { opacity: footerOpacity }]}>
+        <View style={styles.footerLine} />
+        <Text style={styles.versionText}>VERSION 1.0</Text>
+        <View style={styles.footerLine} />
+      </Animated.View>
     </View>
   );
 }
@@ -440,224 +303,254 @@ export function TitleScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
-    overflow: 'hidden',
-    backgroundColor: '#030306',
+    backgroundColor: COLORS.background,
   },
-  backgroundBase: {
+  textureOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#030306',
-  },
-  diagonalStripe: {
-    position: 'absolute',
-    top: -SCREEN_HEIGHT * 0.3,
-    right: -SCREEN_WIDTH * 0.3,
-    width: SCREEN_WIDTH * 1.2,
-    height: SCREEN_HEIGHT * 0.8,
-    transform: [{ rotate: '-20deg' }],
-  },
-  diagonalStripeSecondary: {
-    position: 'absolute',
-    bottom: -SCREEN_HEIGHT * 0.2,
-    left: -SCREEN_WIDTH * 0.4,
-    width: SCREEN_WIDTH * 1.0,
-    height: SCREEN_HEIGHT * 0.5,
-    transform: [{ rotate: '-20deg' }],
-  },
-  scanLine: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  },
-  sportSymbol: {
-    position: 'absolute',
-  },
-  symbolBasketball: {
-    top: SCREEN_HEIGHT * 0.08,
-    right: SCREEN_WIDTH * 0.08,
-  },
-  symbolBaseball: {
-    top: SCREEN_HEIGHT * 0.38,
-    right: SCREEN_WIDTH * 0.05,
-  },
-  symbolSoccer: {
-    top: SCREEN_HEIGHT * 0.22,
-    left: SCREEN_WIDTH * 0.06,
-  },
-  hexagon: {
-    width: 50,
-    height: 50,
-    borderWidth: 2,
-    borderRadius: 8,
-    transform: [{ rotate: '30deg' }],
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  hexLine: {
-    position: 'absolute',
-  },
-  hexLineH: {
-    width: '70%',
-    height: 2,
-  },
-  hexLineV: {
-    width: 2,
-    height: '70%',
-  },
-  diamond: {
-    width: 40,
-    height: 40,
-    borderWidth: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  diamondInner: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    transform: [{ rotate: '45deg' }],
-  },
-  soccerBall: {
-    width: 45,
-    height: 45,
-    borderWidth: 2,
-    borderRadius: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  soccerInner: {
-    width: 18,
-    height: 18,
-    borderRadius: 4,
-    transform: [{ rotate: '45deg' }],
+    // Subtle noise texture effect via very faint pattern
+    backgroundColor: 'transparent',
+    opacity: 0.03,
   },
   content: {
     flex: 1,
+    paddingHorizontal: spacing.xl * 1.5,
+    paddingTop: SCREEN_HEIGHT * 0.08,
+    paddingBottom: SCREEN_HEIGHT * 0.05,
     justifyContent: 'space-between',
-    paddingTop: SCREEN_HEIGHT * 0.15,
-    paddingBottom: SCREEN_HEIGHT * 0.1,
-    paddingHorizontal: spacing.xl,
   },
-  titleSection: {
-    alignItems: 'flex-start', // Left aligned for asymmetry
-  },
-  titleContainer: {
-    alignItems: 'flex-start',
-  },
-  titleRow: {
-    flexDirection: 'row',
-  },
-  titleRowOffset: {
-    marginLeft: spacing.lg, // Offset BALL slightly right
-    marginTop: -8, // Tighter line height
-  },
-  titleLetter: {
-    fontSize: 58,
-    fontWeight: '900',
-    letterSpacing: 4,
-  },
-  subtitleContainer: {
+
+  // Masthead
+  masthead: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: spacing.lg,
-    marginLeft: spacing.sm,
+    justifyContent: 'center',
+    gap: spacing.md,
   },
-  subtitleLine: {
-    width: 24,
-    height: 2,
-    marginRight: spacing.sm,
+  mastheadLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.creamSubtle,
   },
-  subtitle: {
-    fontSize: 11,
-    fontWeight: '600',
+  mastheadText: {
+    color: COLORS.creamMuted,
+    fontSize: 10,
+    fontWeight: '500',
     letterSpacing: 4,
   },
+
+  // Center section
+  centerSection: {
+    alignItems: 'center',
+    gap: spacing.lg,
+  },
+  titleContainer: {
+    alignItems: 'center',
+  },
+  titleMain: {
+    color: COLORS.cream,
+    fontSize: 72,
+    fontWeight: '200', // Ultra light for elegance
+    letterSpacing: 20,
+    lineHeight: 80,
+  },
+  titleAccent: {
+    color: COLORS.gold,
+    fontSize: 72,
+    fontWeight: '600', // Bold contrast
+    letterSpacing: 20,
+    lineHeight: 80,
+    marginTop: -12,
+  },
+
+  // Divider
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.xl,
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.goldSubtle,
+  },
+  dividerDiamond: {
+    width: 8,
+    height: 8,
+    backgroundColor: COLORS.gold,
+    transform: [{ rotate: '45deg' }],
+  },
+
+  // Subtitle
+  subtitle: {
+    color: COLORS.creamMuted,
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 6,
+    marginTop: spacing.sm,
+  },
+
+  // Sport icons
+  iconRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.lg,
+    marginTop: spacing.xl * 1.5,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  iconDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: COLORS.creamSubtle,
+  },
+  iconLabel: {
+    color: COLORS.creamMuted,
+    fontSize: 8,
+    fontWeight: '600',
+    letterSpacing: 2,
+  },
+
+  // Basketball icon
+  iconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: COLORS.goldMuted,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  basketballLineH: {
+    position: 'absolute',
+    width: '100%',
+    height: 1,
+    backgroundColor: COLORS.goldMuted,
+  },
+  basketballLineV: {
+    position: 'absolute',
+    width: 1,
+    height: '100%',
+    backgroundColor: COLORS.goldMuted,
+  },
+  basketballArc: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.goldMuted,
+    left: -5,
+  },
+
+  // Baseball icon
+  baseballDiamond: {
+    width: 28,
+    height: 28,
+    borderWidth: 1,
+    borderColor: COLORS.goldMuted,
+    transform: [{ rotate: '45deg' }],
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  baseballInner: {
+    width: 8,
+    height: 8,
+    borderWidth: 1,
+    borderColor: COLORS.goldMuted,
+  },
+
+  // Soccer icon
+  soccerCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: COLORS.goldMuted,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  soccerPentagon: {
+    width: 14,
+    height: 14,
+    backgroundColor: COLORS.goldSubtle,
+    transform: [{ rotate: '45deg' }],
+  },
+
+  // Buttons
   buttonSection: {
     gap: spacing.md,
   },
-  button: {
-    position: 'relative',
-    height: 56,
-  },
-  primaryButton: {},
-  secondaryButton: {},
-  buttonGlow: {
-    position: 'absolute',
-    top: 4,
-    left: 4,
-    right: 4,
-    bottom: 0,
-    borderRadius: 10,
-    opacity: 0.3,
-  },
-  buttonInner: {
-    flex: 1,
-    borderRadius: 8,
+  buttonPrimary: {
+    backgroundColor: COLORS.gold,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 0, // Sharp edges for editorial feel
   },
-  buttonAccent: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
-  },
-  primaryButtonText: {
-    color: '#000000',
-    fontSize: 16,
-    fontWeight: '800',
-    letterSpacing: 3,
-  },
-  secondaryButtonText: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 16,
+  buttonPrimaryText: {
+    color: COLORS.background,
+    fontSize: 13,
     fontWeight: '700',
-    letterSpacing: 3,
+    letterSpacing: 4,
   },
-  bottomAccent: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 4,
-    flexDirection: 'row',
+  buttonSecondary: {
+    backgroundColor: 'transparent',
+    paddingVertical: spacing.lg,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.creamSubtle,
   },
-  accentSegment: {
-    height: '100%',
-  },
-  versionText: {
-    position: 'absolute',
-    bottom: spacing.lg,
-    right: spacing.lg,
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.15)',
+  buttonSecondaryText: {
+    color: COLORS.cream,
+    fontSize: 13,
     fontWeight: '500',
-    letterSpacing: 1,
+    letterSpacing: 4,
   },
+
+  // Loading
   loadingContainer: {
     alignItems: 'center',
     gap: spacing.md,
   },
   loadingText: {
-    fontSize: 12,
-    fontWeight: '700',
+    color: COLORS.creamMuted,
+    fontSize: 11,
+    fontWeight: '500',
     letterSpacing: 6,
   },
   loadingBarBackground: {
     width: '100%',
-    height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 2,
-    overflow: 'hidden',
+    height: 2,
+    backgroundColor: COLORS.creamSubtle,
   },
   loadingBarFill: {
     height: '100%',
-    borderRadius: 2,
+    backgroundColor: COLORS.gold,
+  },
+
+  // Footer
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: spacing.xl * 1.5,
+    paddingBottom: spacing.lg,
+    gap: spacing.md,
+  },
+  footerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.creamSubtle,
+  },
+  versionText: {
+    color: COLORS.creamMuted,
+    fontSize: 9,
+    fontWeight: '500',
+    letterSpacing: 3,
   },
 });
 
