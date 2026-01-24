@@ -2794,41 +2794,62 @@ Stats page now supports all three sports with sport-specific statistics:
    - AI team bidding war mechanics
    - ~~Contract counter-offer system~~ ✅ COMPLETE (2026-01-20)
 
-5. **Youth Academy Scouting Flow**
-   - Visual scouting report cards
-   - Rival team interest indicators
-   - Scout assignment management
+5. **Youth Academy Overhaul**
+   - **Regional Scouting:** Send scouts to world regions (Americas, Europe, Africa, Asia, etc.)
+     - Depth based on distance from user's club (closer = deeper pool for same budget)
+     - Youth budget determines overall reach; home region always accessible
+     - Each region has tendencies (South America = technical, Africa = athletic, etc.)
+   - **Monthly Trials:** Optional $25k events with 30-day cooldown
+     - Trial Results screen with Sign / Invite to Next Trial / Pass options
+     - Each trial tightens attribute variance; invite indefinitely until ready to sign
+   - **Revised Costs:** $10k signing fee + $10k/year academy membership
+     - Lower barrier to sign, ongoing cost creates active management pressure
+     - Promotion via normal contract negotiation (no mandatory bonus)
+   - **Youth League:** Weekly auto-simulated matches with box scores and stats
+     - Track per-sport season stats for each prospect
+     - Stats become scouting tool (performance vs. scouted attributes)
+   - **Rival Interest Notifications:** Warnings when AI shows interest in your scouted prospect
+     - Creates urgency without premium costs or complex mechanics
+   - **Individual Development Focus:** Per-prospect training (balanced/sport/skill)
+     - Mirrors main squad training system
 
-6. **Season End Flow**
+6. **Loan System**
+   - Loan OUT squad players to other clubs for development/wages relief
+   - Loan IN players from other clubs to fill roster gaps
+   - Loan terms: duration, wage split, recall clause, buy option
+   - Loaned players gain XP based on simulated playing time
+   - NOT for academy players (only promoted squad members)
+
+7. **Season End Flow**
    - Promotion/relegation celebration screens
    - Season summary statistics
    - Award ceremonies (MVP, scoring leader, etc.)
 
 ### Lower Priority (Future Consideration)
 
-7. **Performance Optimization**
+8. **Performance Optimization**
    - Lazy load screens not in current tab
    - Memoize expensive stat calculations
    - Profile and optimize simulation speed
 
-8. **Accessibility**
+9. **Accessibility**
    - Screen reader support
    - High contrast mode option
    - Adjustable font sizes
 
-9. **Cloud Save Architecture**
+10. **Cloud Save Architecture**
    - Design sync protocol
    - Conflict resolution strategy
    - Account linking UI
 
 ### Technical Debt
 
-10. **Test Coverage**
+11. **Test Coverage**
     - Fix pre-existing TypeScript errors in test files
     - Add integration tests for multi-sport stats
     - Add UI component tests for new screens
 
-11. **Type Safety**
+12. **Type Safety**
     - Replace `any` types in stat row components with proper unions
     - Add type guards for sport-specific stat access
     - Consolidate stat type definitions
