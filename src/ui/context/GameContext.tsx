@@ -61,6 +61,11 @@ import {
   generateScoutingReports as generateYouthScoutingReports,
   advanceScoutingReport as advanceYouthScoutingReport,
   calculateReportsPerCycle,
+  calculateRegionalReports,
+  simulateYouthLeagueWeek,
+  mergeYouthLeagueStats,
+  checkRivalInterest,
+  getHomeRegion,
 } from '../../systems/youthAcademySystem';
 import {
   simulateSoccerMatchV2,
@@ -1248,7 +1253,14 @@ export function GameProvider({ children }: GameProviderProps) {
     const youthQualityMultiplier = youthBudgetAmount <= 0
       ? 0.5
       : 0.5 + Math.min(1.0, 0.5 * Math.log10(Math.max(1, youthBudgetAmount / 25000)));
-    const reportsPerCycle = calculateReportsPerCycle(youthBudgetAmount);
+
+    // Regional scouting: get home and selected regions
+    const homeRegion = youthAcademy?.homeRegion ?? getHomeRegion(youthState.userTeam.country);
+    const selectedRegion = youthAcademy?.selectedRegion ?? homeRegion;
+
+    // Adjust reports per cycle based on region distance
+    const baseReportsPerCycle = calculateReportsPerCycle(youthBudgetAmount);
+    const reportsPerCycle = calculateRegionalReports(baseReportsPerCycle, homeRegion, selectedRegion);
 
     // Check if it's time for new reports (every 4 weeks)
     const weeksSinceLastReport = youthState.season.currentWeek - (youthAcademy?.lastReportWeek || 0);
@@ -1287,14 +1299,15 @@ export function GameProvider({ children }: GameProviderProps) {
       // Calculate how many new report slots are available
       const availableSlots = Math.max(0, reportsPerCycle - continuingReports.length);
 
-      // Generate new reports only for available slots
+      // Generate new reports only for available slots (with regional settings)
       const newReports = availableSlots > 0
         ? generateYouthScoutingReports(
             youthState.season.currentWeek,
             availableSlots,
             youthQualityMultiplier,
             seed + 10000,
-            sportFocus
+            sportFocus,
+            selectedRegion
           )
         : [];
 
@@ -1309,6 +1322,12 @@ export function GameProvider({ children }: GameProviderProps) {
           lastReportWeek: youthState.season.currentWeek,
           initialized: true,
           scoutSportFocus: sportFocus,
+          // Regional scouting fields
+          homeRegion,
+          selectedRegion,
+          // Trial system fields (preserve existing or initialize)
+          trialProspects: youthAcademy?.trialProspects || [],
+          lastTrialWeek: youthAcademy?.lastTrialWeek || 0,
         },
       });
 
@@ -1328,6 +1347,78 @@ export function GameProvider({ children }: GameProviderProps) {
         dispatch({ type: 'ADD_EVENT', payload: event });
       }
 
+    }
+
+    // =========================================================================
+    // YOUTH LEAGUE SIMULATION (runs every week)
+    // =========================================================================
+    const youthLeagueState = stateRef.current;
+    const youthLeagueAcademy = youthLeagueState.youthAcademy;
+    const activeProspects = youthLeagueAcademy?.academyProspects?.filter(p => p.status === 'active') || [];
+
+    if (activeProspects.length > 0) {
+      const leagueSeed = Date.now() + youthLeagueState.season.currentWeek * 7777;
+      const weeklyStats = simulateYouthLeagueWeek(
+        activeProspects,
+        youthLeagueState.season.currentWeek,
+        leagueSeed
+      );
+
+      // Update each prospect's youth league stats
+      for (const update of weeklyStats) {
+        const prospect = activeProspects.find(p => p.id === update.prospectId);
+        if (prospect && prospect.youthLeagueStats) {
+          const mergedStats = mergeYouthLeagueStats(prospect.youthLeagueStats, {
+            basketball: update.basketball,
+            baseball: update.baseball,
+            soccer: update.soccer,
+          });
+          dispatch({
+            type: 'UPDATE_ACADEMY_PROSPECT',
+            payload: {
+              prospectId: update.prospectId,
+              prospect: { ...prospect, youthLeagueStats: mergedStats },
+            },
+          });
+        }
+      }
+
+      // Check for rival interest on random prospect (10% chance per week)
+      if (Math.random() < 0.10 && activeProspects.length > 0) {
+        const randomIndex = Math.floor(Math.random() * activeProspects.length);
+        const targetProspect = activeProspects[randomIndex];
+        if (targetProspect && !targetProspect.rivalInterest) {
+          const avgPotential = (
+            targetProspect.potentials.physical +
+            targetProspect.potentials.mental +
+            targetProspect.potentials.technical
+          ) / 3;
+          const interest = checkRivalInterest(
+            avgPotential,
+            youthLeagueState.season.currentWeek,
+            leagueSeed + 2000
+          );
+          if (interest) {
+            dispatch({
+              type: 'ADD_RIVAL_INTEREST',
+              payload: { prospectId: targetProspect.id, interest },
+            });
+            // News event for rival interest
+            const rivalEvent: NewsItem = {
+              id: `event-rival-interest-${Date.now()}-${targetProspect.id}`,
+              type: 'youth',
+              priority: 'important',
+              title: 'Rival Interest in Academy Prospect',
+              message: `${interest.teamName} has been spotted watching ${targetProspect.name} at youth league matches.`,
+              timestamp: new Date(),
+              read: false,
+              scope: 'team',
+              teamId: 'user',
+            };
+            dispatch({ type: 'ADD_EVENT', payload: rivalEvent });
+          }
+        }
+      }
     }
 
     // =========================================================================

@@ -28,6 +28,12 @@ import {
 } from '../../systems/contractSystem';
 import { createManagerCareer } from '../../systems/managerRatingSystem';
 import { DEFAULT_GAME_STRATEGY as DEFAULT_BASEBALL_STRATEGY } from '../../simulation/baseball/types';
+import {
+  getHomeRegion,
+  createEmptyYouthLeagueStats,
+  WEEKLY_ACADEMY_FEE,
+  type AcademyProspect,
+} from '../../systems/youthAcademySystem';
 
 /**
  * Initial/empty game state
@@ -203,7 +209,39 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const scoutInstructions = action.payload.scoutInstructions || DEFAULT_SCOUT_INSTRUCTIONS;
       const scoutingDepthSlider = action.payload.scoutingDepthSlider ?? 0.5;
       // Handle legacy saves that don't have youth academy
-      const youthAcademy = action.payload.youthAcademy || DEFAULT_YOUTH_ACADEMY_STATE;
+      const legacyYouthAcademy = action.payload.youthAcademy || DEFAULT_YOUTH_ACADEMY_STATE;
+
+      // Migrate youth academy to include new regional scouting and trial fields
+      const homeRegion = legacyYouthAcademy.homeRegion ?? getHomeRegion(action.payload.userTeam.country);
+      const currentSeason = action.payload.season?.number ?? 1;
+
+      // Migrate existing academy prospects to include new fields
+      const migratedProspects: AcademyProspect[] = (legacyYouthAcademy.academyProspects || []).map(prospect => ({
+        ...prospect,
+        trainingFocus: prospect.trainingFocus ?? null,
+        youthLeagueStats: prospect.youthLeagueStats ?? createEmptyYouthLeagueStats(currentSeason),
+        rivalInterest: prospect.rivalInterest ?? null,
+        source: prospect.source ?? 'scouting',
+        scoutedRegion: prospect.scoutedRegion ?? homeRegion,
+        weeklyCost: WEEKLY_ACADEMY_FEE, // Use new lower cost
+      }));
+
+      // Migrate scouting reports to include region field
+      const migratedReports = (legacyYouthAcademy.scoutingReports || []).map(report => ({
+        ...report,
+        region: report.region ?? homeRegion,
+        rivalInterest: report.rivalInterest ?? null,
+      }));
+
+      const youthAcademy = {
+        ...legacyYouthAcademy,
+        academyProspects: migratedProspects,
+        scoutingReports: migratedReports,
+        homeRegion,
+        selectedRegion: legacyYouthAcademy.selectedRegion ?? homeRegion,
+        trialProspects: legacyYouthAcademy.trialProspects ?? [],
+        lastTrialWeek: legacyYouthAcademy.lastTrialWeek ?? 0,
+      };
       // Handle legacy saves that don't have trophy/career data
       const trophies = action.payload.trophies || [];
       const playerAwards = action.payload.playerAwards || [];
@@ -2024,6 +2062,147 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         youthAcademy: {
           ...state.youthAcademy,
           scoutSportFocus: focus,
+        },
+      };
+    }
+
+    // =========================================================================
+    // REGIONAL SCOUTING
+    // =========================================================================
+
+    case 'SET_SCOUTING_REGION': {
+      const { region } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          selectedRegion: region,
+        },
+      };
+    }
+
+    // =========================================================================
+    // TRIAL SYSTEM
+    // =========================================================================
+
+    case 'HOLD_TRIAL_EVENT': {
+      const { week } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          lastTrialWeek: week,
+        },
+      };
+    }
+
+    case 'ADD_TRIAL_PROSPECTS': {
+      const { prospects } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          trialProspects: prospects,
+        },
+      };
+    }
+
+    case 'INVITE_TO_NEXT_TRIAL': {
+      const { prospectId } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          trialProspects: state.youthAcademy.trialProspects.map(p =>
+            p.id === prospectId
+              ? { ...p, invitedToNextTrial: true, status: 'invited' as const }
+              : p
+          ),
+        },
+      };
+    }
+
+    case 'SIGN_TRIAL_PROSPECT': {
+      const { prospectId, prospect } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          trialProspects: state.youthAcademy.trialProspects.filter(p => p.id !== prospectId),
+          academyProspects: [...state.youthAcademy.academyProspects, prospect],
+        },
+      };
+    }
+
+    case 'PASS_TRIAL_PROSPECT': {
+      const { prospectId } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          trialProspects: state.youthAcademy.trialProspects.filter(p => p.id !== prospectId),
+        },
+      };
+    }
+
+    case 'CLEAR_TRIAL_PROSPECTS': {
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          trialProspects: [],
+        },
+      };
+    }
+
+    // =========================================================================
+    // YOUTH LEAGUE & DEVELOPMENT
+    // =========================================================================
+
+    case 'UPDATE_YOUTH_LEAGUE_STATS': {
+      const { prospectId, stats } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          academyProspects: state.youthAcademy.academyProspects.map(p => {
+            if (p.id !== prospectId || !p.youthLeagueStats) return p;
+            return {
+              ...p,
+              youthLeagueStats: {
+                ...p.youthLeagueStats,
+                basketball: { ...p.youthLeagueStats.basketball, ...stats.basketball },
+                baseball: { ...p.youthLeagueStats.baseball, ...stats.baseball },
+                soccer: { ...p.youthLeagueStats.soccer, ...stats.soccer },
+              },
+            };
+          }),
+        },
+      };
+    }
+
+    case 'ADD_RIVAL_INTEREST': {
+      const { prospectId, interest } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          academyProspects: state.youthAcademy.academyProspects.map(p =>
+            p.id === prospectId ? { ...p, rivalInterest: interest } : p
+          ),
+        },
+      };
+    }
+
+    case 'SET_PROSPECT_TRAINING_FOCUS': {
+      const { prospectId, focus } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          academyProspects: state.youthAcademy.academyProspects.map(p =>
+            p.id === prospectId ? { ...p, trainingFocus: focus } : p
+          ),
         },
       };
     }

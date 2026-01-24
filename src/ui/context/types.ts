@@ -26,6 +26,11 @@ import type {
   ScoutingReport as YouthScoutingReport,
   AcademyProspect,
   ScoutSportFocus,
+  ScoutingRegion,
+  TrialProspect,
+  YouthLeagueStats,
+  RivalInterest,
+  ProspectTrainingFocus,
 } from '../../systems/youthAcademySystem';
 import type { AIConfig } from '../../ai/types';
 import type { Difficulty, NewGameConfig } from '../screens/NewGameScreen';
@@ -387,7 +392,7 @@ export interface MarketState {
 
 /**
  * Youth Academy state
- * Manages scouting reports and signed academy prospects
+ * Manages scouting reports, trials, and signed academy prospects
  */
 export interface YouthAcademyState {
   /** Current scouting reports (prospects being evaluated) */
@@ -404,6 +409,22 @@ export interface YouthAcademyState {
 
   /** Scout focus - which sport to prioritize when scouting */
   scoutSportFocus: ScoutSportFocus;
+
+  // =========== NEW REGIONAL SCOUTING ===========
+
+  /** User's home region (based on franchise country) */
+  homeRegion: ScoutingRegion;
+
+  /** Currently selected scouting region */
+  selectedRegion: ScoutingRegion;
+
+  // =========== NEW TRIAL SYSTEM ===========
+
+  /** Prospects discovered through trials */
+  trialProspects: TrialProspect[];
+
+  /** Week when last trial was held */
+  lastTrialWeek: number;
 }
 
 /**
@@ -560,7 +581,7 @@ export type GameAction =
   | { type: 'SET_SCOUT_INSTRUCTIONS'; payload: ScoutInstructions }
   | { type: 'SET_SCOUTING_DEPTH_SLIDER'; payload: number }
 
-  // Youth Academy
+  // Youth Academy - Existing
   | { type: 'SET_YOUTH_ACADEMY_STATE'; payload: YouthAcademyState }
   | { type: 'ADD_YOUTH_SCOUTING_REPORT'; payload: { report: YouthScoutingReport } }
   | { type: 'UPDATE_YOUTH_SCOUTING_REPORT'; payload: { reportId: string; report: YouthScoutingReport } }
@@ -570,6 +591,22 @@ export type GameAction =
   | { type: 'REMOVE_ACADEMY_PROSPECT'; payload: { prospectId: string } }
   | { type: 'SET_LAST_REPORT_WEEK'; payload: { week: number } }
   | { type: 'SET_SCOUT_SPORT_FOCUS'; payload: { focus: ScoutSportFocus } }
+
+  // Youth Academy - Regional Scouting
+  | { type: 'SET_SCOUTING_REGION'; payload: { region: ScoutingRegion } }
+
+  // Youth Academy - Trial System
+  | { type: 'HOLD_TRIAL_EVENT'; payload: { week: number } }
+  | { type: 'ADD_TRIAL_PROSPECTS'; payload: { prospects: TrialProspect[] } }
+  | { type: 'INVITE_TO_NEXT_TRIAL'; payload: { prospectId: string } }
+  | { type: 'SIGN_TRIAL_PROSPECT'; payload: { prospectId: string; prospect: AcademyProspect } }
+  | { type: 'PASS_TRIAL_PROSPECT'; payload: { prospectId: string } }
+  | { type: 'CLEAR_TRIAL_PROSPECTS' }
+
+  // Youth Academy - Youth League & Development
+  | { type: 'UPDATE_YOUTH_LEAGUE_STATS'; payload: { prospectId: string; stats: Partial<YouthLeagueStats> } }
+  | { type: 'ADD_RIVAL_INTEREST'; payload: { prospectId: string; interest: RivalInterest } }
+  | { type: 'SET_PROSPECT_TRAINING_FOCUS'; payload: { prospectId: string; focus: ProspectTrainingFocus } }
 
   // Player Progression
   | { type: 'SNAPSHOT_SEASON_ATTRIBUTES' }
@@ -1130,6 +1167,12 @@ export const DEFAULT_YOUTH_ACADEMY_STATE: YouthAcademyState = {
   lastReportWeek: 0,
   initialized: false,
   scoutSportFocus: 'balanced',
+  // Regional scouting (default to North America, will be set based on franchise)
+  homeRegion: 'north_america',
+  selectedRegion: 'north_america',
+  // Trial system
+  trialProspects: [],
+  lastTrialWeek: 0,
 };
 
 /**
