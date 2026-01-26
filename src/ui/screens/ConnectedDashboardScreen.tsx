@@ -336,10 +336,7 @@ export function ConnectedDashboardScreen({
           {isSimulating ? (
             <ActivityIndicator color={colors.primary} size="small" />
           ) : (
-            <>
-              <Text style={[styles.quickButtonIcon, { color: colors.primary }]}>{'⚡'}</Text>
-              <Text style={[styles.quickButtonText, { color: colors.text }]}>Sim Match</Text>
-            </>
+            <Text style={[styles.quickButtonText, { color: colors.text }]}>Sim Match</Text>
           )}
         </TouchableOpacity>
 
@@ -762,9 +759,6 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     borderWidth: 1,
     gap: spacing.xs,
-  },
-  quickButtonIcon: {
-    fontSize: 16,
   },
   quickButtonText: {
     fontSize: 13,

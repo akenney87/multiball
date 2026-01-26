@@ -120,8 +120,8 @@ export function WeekAdvanceControl({
           style={[
             styles.compactAdvanceButton,
             {
-              backgroundColor: disabled ? colors.surface : colors.secondary,
-              borderColor: disabled ? colors.border : colors.secondary,
+              backgroundColor: colors.surface,
+              borderColor: disabled ? colors.border : colors.primary,
               opacity: disabled ? 0.6 : 1,
             },
           ]}
@@ -130,9 +130,9 @@ export function WeekAdvanceControl({
           activeOpacity={0.8}
         >
           {externalIsAdvancing ? (
-            <ActivityIndicator color="#000" size="small" />
+            <ActivityIndicator color={colors.primary} size="small" />
           ) : (
-            <Text style={[styles.compactAdvanceText, { color: '#000000' }]}>
+            <Text style={[styles.compactAdvanceText, { color: colors.text }]}>
               Advance {weeksToAdvance} {weeksToAdvance === 1 ? 'Week' : 'Weeks'}
             </Text>
           )}
