@@ -281,16 +281,28 @@ function calculateSoccerPositionOverall(attrs: PlayerAttributes, position: Socce
   switch (position) {
     case 'GK': // Goalkeeper
       score =
-        attr(attrs, 'reactions') * 2.5 +
-        attr(attrs, 'jumping') * 2.0 +
-        attr(attrs, 'agility') * 1.5 +
-        attr(attrs, 'composure') * 1.5 +
-        attr(attrs, 'awareness') * 1.5 +
-        attr(attrs, 'bravery') * 1.0 +
-        attr(attrs, 'arm_strength') * 1.0 +  // Distribution
-        attr(attrs, 'height') * 1.0 +
-        attr(attrs, 'durability') * 0.5;
-      divisor = 12.5;
+        attr(attrs, 'grip_strength') * 2 +
+        attr(attrs, 'arm_strength') * 2 +
+        attr(attrs, 'core_strength') * 2 +
+        attr(attrs, 'agility') * 11 +
+        attr(attrs, 'jumping') * 7 +
+        attr(attrs, 'reactions') * 13 +
+        attr(attrs, 'balance') * 4 +
+        attr(attrs, 'height') * 13 +
+        attr(attrs, 'awareness') * 6 +
+        attr(attrs, 'determination') * 2 +
+        attr(attrs, 'bravery') * 3 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 4 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'hand_eye_coordination') * 6 +
+        attr(attrs, 'throw_accuracy') * 4 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 1 +
+        attr(attrs, 'deception') * 1 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 6;
+      divisor = 100;
       break;
 
     case 'CB': // Center Back
