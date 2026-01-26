@@ -187,13 +187,18 @@ function calculatePerformanceMultiplier(player: Player): number {
 /**
  * Calculates market value from a Player object
  * Uses the EXACT same logic as ConnectedPlayerDetailScreen.tsx to ensure consistency
+ *
+ * @param player - Player to calculate value for
+ * @param debug - Enable debug logging
+ * @param forTransferFee - If true, free agents return $0 (no transfer fee). If false, calculate actual value for salary purposes.
  */
-export function calculatePlayerMarketValue(player: Player, debug = false): number {
+export function calculatePlayerMarketValue(player: Player, debug = false, forTransferFee = true): number {
   const attrs = player.attributes;
   if (!attrs) return 5000; // Minimum market value
 
-  // Free agents show $0 market value
-  if (player.teamId === 'free_agent') return 0;
+  // Free agents show $0 market value for transfer fees only
+  // For salary calculations, we need their actual value
+  if (forTransferFee && player.teamId === 'free_agent') return 0;
 
   // Use the sport-averaged overall calculation
   const overall = calculateAllOveralls(player).overall;
@@ -482,7 +487,8 @@ export function createDefaultOffer(
   player: Player,
   squadRole: SquadRole = 'rotation_player'
 ): ContractOffer {
-  const marketValue = calculatePlayerMarketValue(player);
+  // Use forTransferFee=false to get actual value for salary calculation (free agents need real values)
+  const marketValue = calculatePlayerMarketValue(player, false, false);
   const salary = calculateAnnualSalary(marketValue);
   const agentFee = calculateAgentFee(salary, 50);
 
@@ -507,7 +513,8 @@ export function createRecommendedOffer(
   player: Player,
   demands: ContractDemands
 ): ContractOffer {
-  const marketValue = calculatePlayerMarketValue(player);
+  // Use forTransferFee=false for contract-related calculations
+  const marketValue = calculatePlayerMarketValue(player, false, false);
   const agentFee = calculateAgentFee(demands.idealSalary, 60);
 
   // Offer slightly below ideal but above minimum
@@ -846,7 +853,8 @@ export function createNegotiation(
   division?: number
 ): ContractNegotiation {
   const strategy = determineNegotiationStrategy(player, false, true);
-  const marketValue = calculatePlayerMarketValue(player);
+  // Use forTransferFee=false to get actual value for salary calculation (free agents need real values)
+  const marketValue = calculatePlayerMarketValue(player, false, false);
   const calculatedSalary = calculateAnnualSalary(marketValue);
 
   // Use division-based role expectations if division is provided
