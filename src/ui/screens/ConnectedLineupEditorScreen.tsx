@@ -18,6 +18,7 @@ import { calculateSoccerPositionOverall } from '../integration/gameInitializer';
 import { useGame } from '../context/GameContext';
 import type { SoccerFormation, BaseballPosition } from '../context/types';
 import type { BaseballPositionType } from '../../utils/overallRating';
+import { calculateSoccerOverall } from '../../utils/overallRating';
 import {
   aggregateSoccerPlayerStats,
   aggregateSoccerGoalkeeperStats,
@@ -591,6 +592,10 @@ function getSoccerStatValue(
 
   switch (stat) {
     case 'overall':
+      // Use soccer-specific overall, not multi-sport average
+      if (p?.attributes) {
+        return String(calculateSoccerOverall(p.attributes));
+      }
       return String(player.overall);
     case 'fitness':
       return `${Math.round(player.matchFitness)}%`;
