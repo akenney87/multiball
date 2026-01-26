@@ -307,107 +307,211 @@ function calculateSoccerPositionOverall(attrs: PlayerAttributes, position: Socce
 
     case 'CB': // Center Back
       score =
-        attr(attrs, 'awareness') * 2.0 +
-        attr(attrs, 'jumping') * 2.0 +
-        attr(attrs, 'core_strength') * 1.5 +
-        attr(attrs, 'determination') * 1.5 +
-        attr(attrs, 'bravery') * 1.5 +
-        attr(attrs, 'footwork') * 1.0 +      // Ball playing ability
-        attr(attrs, 'balance') * 1.0 +
-        attr(attrs, 'height') * 1.0 +
-        attr(attrs, 'top_speed') * 0.5;
-      divisor = 12.0;
+        attr(attrs, 'core_strength') * 13 +
+        attr(attrs, 'agility') * 8 +
+        attr(attrs, 'acceleration') * 6 +
+        attr(attrs, 'top_speed') * 6 +
+        attr(attrs, 'jumping') * 6 +
+        attr(attrs, 'reactions') * 6 +
+        attr(attrs, 'stamina') * 3 +
+        attr(attrs, 'balance') * 5 +
+        attr(attrs, 'height') * 6 +
+        attr(attrs, 'awareness') * 4 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 3 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 4 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 4 +
+        attr(attrs, 'deception') * 2 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'LB': // Left Back
     case 'RB': // Right Back
       score =
-        attr(attrs, 'stamina') * 2.0 +
-        attr(attrs, 'top_speed') * 2.0 +
-        attr(attrs, 'acceleration') * 1.5 +
-        attr(attrs, 'footwork') * 1.5 +      // Crossing, passing
-        attr(attrs, 'awareness') * 1.0 +
-        attr(attrs, 'determination') * 1.0 +
-        attr(attrs, 'agility') * 1.0 +
-        attr(attrs, 'balance') * 0.5;
-      divisor = 10.5;
+        attr(attrs, 'core_strength') * 7 +
+        attr(attrs, 'agility') * 9 +
+        attr(attrs, 'acceleration') * 10 +
+        attr(attrs, 'top_speed') * 10 +
+        attr(attrs, 'jumping') * 2 +
+        attr(attrs, 'reactions') * 5 +
+        attr(attrs, 'stamina') * 4 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 2 +
+        attr(attrs, 'awareness') * 4 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 3 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 3 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 5 +
+        attr(attrs, 'deception') * 4 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'CDM': // Defensive Midfielder
       score =
-        attr(attrs, 'awareness') * 2.0 +
-        attr(attrs, 'stamina') * 2.0 +
-        attr(attrs, 'footwork') * 1.5 +      // Passing, tackling technique
-        attr(attrs, 'determination') * 1.5 +
-        attr(attrs, 'composure') * 1.5 +
-        attr(attrs, 'core_strength') * 1.0 +
-        attr(attrs, 'teamwork') * 1.0 +
-        attr(attrs, 'balance') * 0.5;
-      divisor = 11.0;
+        attr(attrs, 'core_strength') * 9 +
+        attr(attrs, 'agility') * 8 +
+        attr(attrs, 'acceleration') * 7 +
+        attr(attrs, 'top_speed') * 5 +
+        attr(attrs, 'jumping') * 4 +
+        attr(attrs, 'reactions') * 6 +
+        attr(attrs, 'stamina') * 3 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 3 +
+        attr(attrs, 'awareness') * 6 +
+        attr(attrs, 'creativity') * 2 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 3 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 4 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 6 +
+        attr(attrs, 'deception') * 4 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'CM': // Central Midfielder
       score =
-        attr(attrs, 'stamina') * 2.0 +
-        attr(attrs, 'footwork') * 2.0 +      // Passing, ball control
-        attr(attrs, 'awareness') * 1.5 +
-        attr(attrs, 'composure') * 1.5 +
-        attr(attrs, 'teamwork') * 1.5 +
-        attr(attrs, 'creativity') * 1.0 +
-        attr(attrs, 'agility') * 0.5 +
-        attr(attrs, 'determination') * 0.5;
-      divisor = 10.5;
+        attr(attrs, 'core_strength') * 5 +
+        attr(attrs, 'agility') * 9 +
+        attr(attrs, 'acceleration') * 7 +
+        attr(attrs, 'top_speed') * 5 +
+        attr(attrs, 'jumping') * 3 +
+        attr(attrs, 'reactions') * 4 +
+        attr(attrs, 'stamina') * 3 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 3 +
+        attr(attrs, 'awareness') * 6 +
+        attr(attrs, 'creativity') * 4 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 3 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 4 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 5 +
+        attr(attrs, 'finesse') * 8 +
+        attr(attrs, 'deception') * 5 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'CAM': // Attacking Midfielder
       score =
-        attr(attrs, 'creativity') * 2.5 +
-        attr(attrs, 'footwork') * 2.0 +      // Passing, through balls
-        attr(attrs, 'finesse') * 1.5 +       // First touch, shooting
-        attr(attrs, 'awareness') * 1.5 +
-        attr(attrs, 'composure') * 1.5 +
-        attr(attrs, 'agility') * 1.0 +
-        attr(attrs, 'deception') * 0.5;
-      divisor = 10.5;
+        attr(attrs, 'core_strength') * 2 +
+        attr(attrs, 'agility') * 10 +
+        attr(attrs, 'acceleration') * 8 +
+        attr(attrs, 'top_speed') * 6 +
+        attr(attrs, 'jumping') * 2 +
+        attr(attrs, 'reactions') * 4 +
+        attr(attrs, 'stamina') * 3 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 2 +
+        attr(attrs, 'awareness') * 6 +
+        attr(attrs, 'creativity') * 4 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 2 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 4 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 6 +
+        attr(attrs, 'finesse') * 9 +
+        attr(attrs, 'deception') * 6 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'LM': // Left Midfielder
     case 'RM': // Right Midfielder
       score =
-        attr(attrs, 'stamina') * 2.0 +
-        attr(attrs, 'footwork') * 1.5 +      // Crossing, passing
-        attr(attrs, 'top_speed') * 1.5 +
-        attr(attrs, 'creativity') * 1.5 +
-        attr(attrs, 'teamwork') * 1.5 +
-        attr(attrs, 'agility') * 1.0 +
-        attr(attrs, 'acceleration') * 1.0 +
-        attr(attrs, 'awareness') * 0.5;
-      divisor = 10.5;
+        attr(attrs, 'core_strength') * 3 +
+        attr(attrs, 'agility') * 10 +
+        attr(attrs, 'acceleration') * 11 +
+        attr(attrs, 'top_speed') * 11 +
+        attr(attrs, 'jumping') * 1 +
+        attr(attrs, 'reactions') * 4 +
+        attr(attrs, 'stamina') * 4 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 1 +
+        attr(attrs, 'awareness') * 4 +
+        attr(attrs, 'creativity') * 4 +
+        attr(attrs, 'determination') * 2 +
+        attr(attrs, 'bravery') * 2 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 2 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 8 +
+        attr(attrs, 'deception') * 6 +
+        attr(attrs, 'teamwork') * 6 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'LW': // Left Winger
     case 'RW': // Right Winger
       score =
-        attr(attrs, 'acceleration') * 2.0 +
-        attr(attrs, 'top_speed') * 2.0 +
-        attr(attrs, 'agility') * 1.5 +
-        attr(attrs, 'deception') * 1.5 +     // Dribbling, skill moves
-        attr(attrs, 'finesse') * 1.5 +       // Crossing, shooting
-        attr(attrs, 'footwork') * 1.0 +      // Ball control
-        attr(attrs, 'creativity') * 1.0;
-      divisor = 10.5;
+        attr(attrs, 'core_strength') * 2 +
+        attr(attrs, 'agility') * 10 +
+        attr(attrs, 'acceleration') * 11 +
+        attr(attrs, 'top_speed') * 11 +
+        attr(attrs, 'jumping') * 1 +
+        attr(attrs, 'reactions') * 4 +
+        attr(attrs, 'stamina') * 3 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 1 +
+        attr(attrs, 'awareness') * 4 +
+        attr(attrs, 'creativity') * 4 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 2 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 4 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 8 +
+        attr(attrs, 'deception') * 6 +
+        attr(attrs, 'teamwork') * 5 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
 
     case 'ST': // Striker
       score =
-        attr(attrs, 'finesse') * 2.5 +       // Finishing, shooting
-        attr(attrs, 'composure') * 2.0 +     // Clinical in front of goal
-        attr(attrs, 'footwork') * 1.5 +      // First touch, control
-        attr(attrs, 'acceleration') * 1.5 +
-        attr(attrs, 'deception') * 1.0 +     // Movement, feints
-        attr(attrs, 'jumping') * 1.0 +       // Aerial ability
-        attr(attrs, 'bravery') * 0.5;
-      divisor = 10.0;
+        attr(attrs, 'core_strength') * 6 +
+        attr(attrs, 'agility') * 7 +
+        attr(attrs, 'acceleration') * 8 +
+        attr(attrs, 'top_speed') * 7 +
+        attr(attrs, 'jumping') * 5 +
+        attr(attrs, 'reactions') * 6 +
+        attr(attrs, 'stamina') * 2 +
+        attr(attrs, 'balance') * 6 +
+        attr(attrs, 'height') * 3 +
+        attr(attrs, 'awareness') * 4 +
+        attr(attrs, 'creativity') * 4 +
+        attr(attrs, 'determination') * 3 +
+        attr(attrs, 'bravery') * 2 +
+        attr(attrs, 'consistency') * 2 +
+        attr(attrs, 'composure') * 6 +
+        attr(attrs, 'patience') * 1 +
+        attr(attrs, 'form_technique') * 4 +
+        attr(attrs, 'finesse') * 7 +
+        attr(attrs, 'deception') * 6 +
+        attr(attrs, 'teamwork') * 3 +
+        attr(attrs, 'footwork') * 8;
+      divisor = 100;
       break;
   }
 
