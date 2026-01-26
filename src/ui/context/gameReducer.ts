@@ -32,6 +32,7 @@ import {
   getHomeRegion,
   createEmptyYouthLeagueStats,
   WEEKLY_ACADEMY_FEE,
+  TRIAL_COST,
   type AcademyProspect,
 } from '../../systems/youthAcademySystem';
 
@@ -2089,6 +2090,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const { week } = action.payload;
       return {
         ...state,
+        userTeam: {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget - TRIAL_COST,
+        },
         youthAcademy: {
           ...state.youthAcademy,
           lastTrialWeek: week,
@@ -2123,13 +2128,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'SIGN_TRIAL_PROSPECT': {
-      const { prospectId, prospect } = action.payload;
+      // Only removes from trial list - SIGN_PROSPECT_TO_ACADEMY handles adding to academy
+      const { prospectId } = action.payload;
       return {
         ...state,
         youthAcademy: {
           ...state.youthAcademy,
           trialProspects: state.youthAcademy.trialProspects.filter(p => p.id !== prospectId),
-          academyProspects: [...state.youthAcademy.academyProspects, prospect],
         },
       };
     }
@@ -2151,6 +2156,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         youthAcademy: {
           ...state.youthAcademy,
           trialProspects: [],
+        },
+      };
+    }
+
+    case 'RELEASE_ACADEMY_PROSPECT': {
+      const { prospectId } = action.payload;
+      return {
+        ...state,
+        youthAcademy: {
+          ...state.youthAcademy,
+          academyProspects: state.youthAcademy.academyProspects.map(p =>
+            p.id === prospectId ? { ...p, status: 'released' as const } : p
+          ),
         },
       };
     }

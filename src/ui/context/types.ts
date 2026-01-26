@@ -598,10 +598,11 @@ export type GameAction =
   // Youth Academy - Trial System
   | { type: 'HOLD_TRIAL_EVENT'; payload: { week: number } }
   | { type: 'ADD_TRIAL_PROSPECTS'; payload: { prospects: TrialProspect[] } }
-  | { type: 'INVITE_TO_NEXT_TRIAL'; payload: { prospectId: string } }
-  | { type: 'SIGN_TRIAL_PROSPECT'; payload: { prospectId: string; prospect: AcademyProspect } }
+  | { type: 'INVITE_TO_NEXT_TRIAL'; payload: { prospectId: string; prospect: TrialProspect } }
+  | { type: 'SIGN_TRIAL_PROSPECT'; payload: { prospectId: string } }
   | { type: 'PASS_TRIAL_PROSPECT'; payload: { prospectId: string } }
   | { type: 'CLEAR_TRIAL_PROSPECTS' }
+  | { type: 'RELEASE_ACADEMY_PROSPECT'; payload: { prospectId: string } }
 
   // Youth Academy - Youth League & Development
   | { type: 'UPDATE_YOUTH_LEAGUE_STATS'; payload: { prospectId: string; stats: Partial<YouthLeagueStats> } }
@@ -931,6 +932,36 @@ export interface GameContextValue {
    * Set the sport focus for youth scouts
    */
   setYouthScoutSportFocus: (focus: 'basketball' | 'baseball' | 'soccer' | 'balanced') => void;
+
+  /**
+   * Set the scouting region for youth academy
+   */
+  setScoutingRegion: (region: ScoutingRegion) => void;
+
+  /**
+   * Hold a youth trial event (deducts cost, generates trial prospects)
+   */
+  holdTrialEvent: () => TrialProspect[];
+
+  /**
+   * Sign a trial prospect to the academy
+   */
+  signTrialProspect: (prospectId: string) => void;
+
+  /**
+   * Invite a trial prospect to the next trial
+   */
+  inviteTrialProspectToNextTrial: (prospectId: string) => void;
+
+  /**
+   * Pass on a trial prospect (remove from trial list)
+   */
+  passTrialProspect: (prospectId: string) => void;
+
+  /**
+   * Release a prospect from the academy
+   */
+  releaseAcademyProspect: (prospectId: string) => void;
 
   /**
    * Set training focus (team-wide or per-player)

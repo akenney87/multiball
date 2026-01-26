@@ -28,8 +28,6 @@ import type {
 } from '../data/types';
 import { getExpectedRole } from './roleExpectationSystem';
 import { calculateAllOveralls } from '../utils/overallRating';
-// Import the EXACT same overall calculation that the UI uses
-import { calculatePlayerOverall } from '../ui/integration/gameInitializer';
 
 // =============================================================================
 // CONSTANTS
@@ -197,8 +195,8 @@ export function calculatePlayerMarketValue(player: Player, debug = false): numbe
   // Free agents show $0 market value
   if (player.teamId === 'free_agent') return 0;
 
-  // Use the EXACT same overall calculation as the UI
-  const overall = calculatePlayerOverall(player);
+  // Use the sport-averaged overall calculation
+  const overall = calculateAllOveralls(player).overall;
 
   // Calculate performance multiplier (awards + career games)
   const perfMultiplier = calculatePerformanceMultiplier(player);

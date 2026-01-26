@@ -2,14 +2,13 @@
  * Youth Academy Screen
  *
  * Two main sections:
- * 1. Scouting Reports - prospects with attribute ranges to evaluate
- * 2. Academy Roster - signed prospects (starts empty)
+ * 1. Scouting Reports - prospects from world regions with attribute ranges
+ * 2. Academy Roster - signed prospects with youth league stats
  *
  * Scouting Flow:
- * - New reports every 4 weeks
- * - Attributes shown as ranges (e.g., 20-40)
- * - Continue Scouting narrows range (risk: rival may sign)
- * - Sign adds to academy ($100k/year cost)
+ * - Scout regions with distance-based depth from home region
+ * - Hold trials ($25k) for local talent discovery
+ * - Sign prospects for $10k + $10k/year academy fee
  */
 
 import React, { useState } from 'react';
@@ -30,6 +29,8 @@ import type {
   AcademyInfo,
   AttributeRange,
   ScoutSportFocus,
+  ScoutingRegion,
+  TrialProspect,
 } from '../../systems/youthAcademySystem';
 import {
   formatHeight,
@@ -42,8 +43,13 @@ import {
   TECHNICAL_ATTRIBUTES,
   WEEKLY_PROSPECT_COST,
   MAX_SCOUTING_WEEKS,
+  SIGNING_FEE,
+  ANNUAL_ACADEMY_FEE,
 } from '../../systems/youthAcademySystem';
 import { calculateAllOverallsFromAttrs } from '../../utils/overallRating';
+import { RegionSelector } from '../components/youth/RegionSelector';
+import { TrialButton } from '../components/youth/TrialButton';
+import { YouthLeagueStatsCard } from '../components/youth/YouthLeagueStatsCard';
 
 // =============================================================================
 // TYPES
@@ -54,6 +60,20 @@ export interface YouthAcademyScreenProps {
   scoutingReports: ScoutingReport[];
   weeksUntilNextReports: number;
   currentWeek: number;
+
+  // Regional scouting
+  homeRegion: ScoutingRegion;
+  selectedRegion: ScoutingRegion;
+  onRegionChange: (region: ScoutingRegion) => void;
+
+  // Trial system
+  lastTrialWeek: number;
+  availableBudget: number;
+  trialProspects: TrialProspect[];
+  onHoldTrial: () => void;
+  onSignTrialProspect: (prospectId: string) => void;
+  onInviteToNextTrial: (prospectId: string) => void;
+  onPassTrialProspect: (prospectId: string) => void;
 
   // Academy
   academyInfo: AcademyInfo;
@@ -230,12 +250,27 @@ function ScoutingReportModal({
           <View style={[styles.costCard, { backgroundColor: colors.card }]}>
             <Text style={[styles.costLabel, { color: colors.textMuted }]}>Signing Cost</Text>
             <Text style={[styles.costValue, { color: colors.text }]}>
-              {formatMoney(WEEKLY_PROSPECT_COST * 52)}/year
+              {formatMoney(SIGNING_FEE)} signing fee
             </Text>
             <Text style={[styles.costNote, { color: colors.textMuted }]}>
-              (~{formatMoney(WEEKLY_PROSPECT_COST)}/week)
+              + {formatMoney(ANNUAL_ACADEMY_FEE)}/year academy fee
             </Text>
           </View>
+
+          {/* Rival Interest Warning */}
+          {report.rivalInterest && (
+            <View style={[styles.rivalWarningCard, { backgroundColor: colors.warning + '20' }]}>
+              <Text style={[styles.rivalWarningTitle, { color: colors.warning }]}>
+                RIVAL INTEREST
+              </Text>
+              <Text style={[styles.rivalWarningText, { color: colors.text }]}>
+                {report.rivalInterest.teamName} scouts spotted
+              </Text>
+              <Text style={[styles.rivalWarningHint, { color: colors.textMuted }]}>
+                Act fast or risk losing this prospect
+              </Text>
+            </View>
+          )}
 
           {/* Report Age */}
           {(() => {
@@ -471,7 +506,38 @@ function AcademyProspectModal({
                 </Text>
               </View>
             </View>
+            {prospect.source && (
+              <View style={[styles.sourceRow, { borderTopColor: colors.border }]}>
+                <Text style={[styles.sourceLabel, { color: colors.textMuted }]}>Source:</Text>
+                <Text style={[styles.sourceValue, { color: colors.primary }]}>
+                  {prospect.source === 'trial' ? 'Youth Trial' : 'Scouted'}
+                </Text>
+              </View>
+            )}
           </View>
+
+          {/* Rival Interest Warning */}
+          {prospect.rivalInterest && (
+            <View style={[styles.rivalWarningCard, { backgroundColor: colors.warning + '20', marginHorizontal: spacing.md }]}>
+              <Text style={[styles.rivalWarningTitle, { color: colors.warning }]}>
+                RIVAL INTEREST
+              </Text>
+              <Text style={[styles.rivalWarningText, { color: colors.text }]}>
+                {prospect.rivalInterest.teamName} is monitoring
+              </Text>
+              <Text style={[styles.rivalWarningHint, { color: colors.textMuted }]}>
+                Promote soon or they may attempt to poach
+              </Text>
+            </View>
+          )}
+
+          {/* Youth League Stats */}
+          {prospect.youthLeagueStats && (
+            <YouthLeagueStatsCard
+              stats={prospect.youthLeagueStats}
+              style={{ marginHorizontal: spacing.md, marginTop: spacing.md }}
+            />
+          )}
 
           {/* Attributes */}
           <View style={[styles.attributesCard, { backgroundColor: colors.card }]}>
@@ -505,6 +571,154 @@ function AcademyProspectModal({
 }
 
 // =============================================================================
+// TRIAL RESULTS MODAL
+// =============================================================================
+
+interface TrialResultsModalProps {
+  visible: boolean;
+  prospects: TrialProspect[];
+  onClose: () => void;
+  onSign: (prospectId: string) => void;
+  onInvite: (prospectId: string) => void;
+  onPass: (prospectId: string) => void;
+  canSign: boolean;
+}
+
+function TrialResultsModal({
+  visible,
+  prospects,
+  onClose,
+  onSign,
+  onInvite,
+  onPass,
+  canSign,
+}: TrialResultsModalProps) {
+  const colors = useColors();
+
+  if (prospects.length === 0) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={onClose}
+    >
+      <SafeAreaView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+        <View style={[styles.modalHeader, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Text style={[styles.closeText, { color: colors.primary }]}>Done</Text>
+          </TouchableOpacity>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>Trial Results</Text>
+          <View style={styles.closeButton} />
+        </View>
+
+        <ScrollView style={styles.modalContent}>
+          <View style={[styles.trialInfoCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.trialInfoTitle, { color: colors.text }]}>
+              Youth Trial Complete
+            </Text>
+            <Text style={[styles.trialInfoText, { color: colors.textMuted }]}>
+              {prospects.length} prospect{prospects.length !== 1 ? 's' : ''} attended.
+              Sign promising players or invite them to the next trial for better evaluation.
+            </Text>
+          </View>
+
+          {prospects.map((prospect) => {
+            const rangeValues = Object.values(prospect.attributeRanges);
+            const firstRange = rangeValues.length > 0 ? rangeValues[0] : null;
+            const rangeWidth = firstRange ? firstRange.max - firstRange.min : 24;
+
+            return (
+              <View
+                key={prospect.id}
+                style={[styles.trialProspectCard, { backgroundColor: colors.card }]}
+              >
+                <View style={styles.trialProspectHeader}>
+                  <View>
+                    <Text style={[styles.trialProspectName, { color: colors.text }]}>
+                      {prospect.name}
+                    </Text>
+                    <Text style={[styles.trialProspectMeta, { color: colors.textMuted }]}>
+                      Age {prospect.age} • {formatHeight(prospect.height)} • {prospect.nationality}
+                    </Text>
+                  </View>
+                  <View style={styles.trialBadgeContainer}>
+                    <Text style={[styles.trialAttendance, { color: colors.textMuted }]}>
+                      Trial #{prospect.trialsAttended}
+                    </Text>
+                    <Text style={[styles.trialRange, { color: colors.primary }]}>
+                      ±{Math.round(rangeWidth / 2)} range
+                    </Text>
+                  </View>
+                </View>
+
+                {prospect.invitedToNextTrial && (
+                  <View style={[styles.invitedBanner, { backgroundColor: colors.success + '20' }]}>
+                    <Text style={[styles.invitedText, { color: colors.success }]}>
+                      Invited to next trial
+                    </Text>
+                  </View>
+                )}
+
+                <View style={styles.trialActions}>
+                  <TouchableOpacity
+                    style={[
+                      styles.trialActionButton,
+                      { backgroundColor: canSign ? colors.success : colors.surface },
+                    ]}
+                    onPress={() => {
+                      if (canSign) {
+                        onSign(prospect.id);
+                      } else {
+                        Alert.alert('Academy Full', 'Release or promote a prospect first.');
+                      }
+                    }}
+                    disabled={!canSign}
+                  >
+                    <Text style={[styles.trialActionText, { color: canSign ? '#FFF' : colors.textMuted }]}>
+                      Sign
+                    </Text>
+                  </TouchableOpacity>
+
+                  {!prospect.invitedToNextTrial && (
+                    <TouchableOpacity
+                      style={[styles.trialActionButton, { backgroundColor: colors.primary }]}
+                      onPress={() => onInvite(prospect.id)}
+                    >
+                      <Text style={[styles.trialActionText, { color: '#FFF' }]}>
+                        Invite Again
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <TouchableOpacity
+                    style={[styles.trialActionButton, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border }]}
+                    onPress={() => onPass(prospect.id)}
+                  >
+                    <Text style={[styles.trialActionText, { color: colors.textMuted }]}>
+                      Pass
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          })}
+
+          <View style={[styles.trialCostInfo, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.trialCostText, { color: colors.textMuted }]}>
+              Signing cost: {formatMoney(SIGNING_FEE)} + {formatMoney(ANNUAL_ACADEMY_FEE)}/year
+            </Text>
+          </View>
+
+          <View style={{ height: spacing.xl }} />
+        </ScrollView>
+      </SafeAreaView>
+    </Modal>
+  );
+}
+
+// =============================================================================
 // MAIN COMPONENT
 // =============================================================================
 
@@ -520,6 +734,16 @@ export function YouthAcademyScreen({
   scoutingReports,
   weeksUntilNextReports,
   currentWeek,
+  homeRegion,
+  selectedRegion,
+  onRegionChange,
+  lastTrialWeek,
+  availableBudget,
+  trialProspects,
+  onHoldTrial,
+  onSignTrialProspect,
+  onInviteToNextTrial,
+  onPassTrialProspect,
   academyInfo,
   academyProspects,
   prospectsNeedingAction,
@@ -534,6 +758,7 @@ export function YouthAcademyScreen({
   const colors = useColors();
   const [selectedReport, setSelectedReport] = useState<ScoutingReport | null>(null);
   const [selectedProspect, setSelectedProspect] = useState<AcademyProspect | null>(null);
+  const [showTrialModal, setShowTrialModal] = useState(false);
 
   const activeProspects = academyProspects.filter(p => p.status === 'active');
   const needsActionIds = new Set(prospectsNeedingAction.map(p => p.id));
@@ -570,18 +795,36 @@ export function YouthAcademyScreen({
       {/* Scouting Reports Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Scouting Reports</Text>
-          <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
-            {weeksUntilNextReports === 0
-              ? 'New reports available now'
-              : `New reports in ${weeksUntilNextReports} week${weeksUntilNextReports !== 1 ? 's' : ''}`}
-          </Text>
+          <View>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Scouting Reports</Text>
+            <Text style={[styles.sectionSubtitle, { color: colors.textMuted }]}>
+              {weeksUntilNextReports === 0
+                ? 'New reports available now'
+                : `New reports in ${weeksUntilNextReports} week${weeksUntilNextReports !== 1 ? 's' : ''}`}
+            </Text>
+          </View>
+          <TrialButton
+            lastTrialWeek={lastTrialWeek}
+            currentWeek={currentWeek}
+            availableBudget={availableBudget}
+            onPress={() => {
+              onHoldTrial();
+              setShowTrialModal(true);
+            }}
+          />
         </View>
+
+        {/* Region Selector */}
+        <RegionSelector
+          selectedRegion={selectedRegion}
+          homeRegion={homeRegion}
+          onChange={onRegionChange}
+        />
 
         {/* Sport Focus Selector */}
         <View style={[styles.sportFocusContainer, { backgroundColor: colors.card }]}>
           <Text style={[styles.sportFocusLabel, { color: colors.textMuted }]}>
-            Scout Focus
+            Attribute Focus
           </Text>
           <View style={styles.sportFocusButtons}>
             {SPORT_FOCUS_OPTIONS.map((option) => {
@@ -612,7 +855,7 @@ export function YouthAcademyScreen({
           <Text style={[styles.sportFocusHint, { color: colors.textMuted }]}>
             {sportFocus === 'balanced'
               ? 'Scouts will find all-around athletes'
-              : `Scouts will prioritize ${sportFocus} prospects`}
+              : `Scouts will prioritize ${sportFocus} attributes`}
           </Text>
         </View>
 
@@ -629,16 +872,28 @@ export function YouthAcademyScreen({
         ) : (
           visibleReports.map((report) => {
             const reportAge = currentWeek - report.lastUpdatedWeek;
+            const hasRivalInterest = !!report.rivalInterest;
             return (
               <TouchableOpacity
                 key={report.id}
-                style={[styles.reportCard, { backgroundColor: colors.card }]}
+                style={[
+                  styles.reportCard,
+                  { backgroundColor: colors.card },
+                  hasRivalInterest && { borderLeftWidth: 3, borderLeftColor: colors.warning },
+                ]}
                 onPress={() => setSelectedReport(report)}
                 activeOpacity={0.7}
               >
                 <View style={styles.reportHeader}>
-                  <View>
-                    <Text style={[styles.reportName, { color: colors.text }]}>{report.name}</Text>
+                  <View style={{ flex: 1 }}>
+                    <View style={styles.nameRow}>
+                      <Text style={[styles.reportName, { color: colors.text }]}>{report.name}</Text>
+                      {hasRivalInterest && (
+                        <View style={[styles.rivalBadge, { backgroundColor: colors.warning }]}>
+                          <Text style={styles.rivalBadgeText}>!</Text>
+                        </View>
+                      )}
+                    </View>
                     <Text style={[styles.reportMeta, { color: colors.textMuted }]}>
                       Age {report.age} • {formatHeight(report.height)} • {report.nationality}
                     </Text>
@@ -653,6 +908,10 @@ export function YouthAcademyScreen({
                   {report.status === 'scouting' ? (
                     <Text style={[styles.scoutingLabel, { color: colors.primary }]}>
                       Scouting in progress...
+                    </Text>
+                  ) : hasRivalInterest ? (
+                    <Text style={[styles.reportAge, { color: colors.warning }]}>
+                      {report.rivalInterest!.teamName} interested
                     </Text>
                   ) : reportAge > 0 ? (
                     <Text style={[styles.reportAge, { color: colors.textMuted }]}>
@@ -695,6 +954,7 @@ export function YouthAcademyScreen({
         ) : (
           activeProspects.map((prospect) => {
             const needsAction = needsActionIds.has(prospect.id);
+            const hasRivalInterest = !!prospect.rivalInterest;
             const overalls = calculateAllOverallsFromAttrs(prospect.attributes);
             return (
               <TouchableOpacity
@@ -702,7 +962,7 @@ export function YouthAcademyScreen({
                 style={[
                   styles.prospectCard,
                   { backgroundColor: colors.card },
-                  needsAction && { borderLeftWidth: 3, borderLeftColor: colors.warning },
+                  (needsAction || hasRivalInterest) && { borderLeftWidth: 3, borderLeftColor: needsAction ? colors.warning : colors.error },
                 ]}
                 onPress={() => setSelectedProspect(prospect)}
                 activeOpacity={0.7}
@@ -716,10 +976,20 @@ export function YouthAcademyScreen({
                           <Text style={styles.attentionText}>!</Text>
                         </View>
                       )}
+                      {hasRivalInterest && !needsAction && (
+                        <View style={[styles.rivalBadge, { backgroundColor: colors.error }]}>
+                          <Text style={styles.rivalBadgeText}>R</Text>
+                        </View>
+                      )}
                     </View>
                     <Text style={[styles.prospectMeta, { color: colors.textMuted }]}>
                       Age {prospect.age} • {formatHeight(prospect.height)} • {prospect.nationality}
                     </Text>
+                    {hasRivalInterest && (
+                      <Text style={[styles.rivalAlert, { color: colors.error }]}>
+                        {prospect.rivalInterest!.teamName} watching
+                      </Text>
+                    )}
                   </View>
                   <View style={styles.prospectOveralls}>
                     <View style={styles.prospectOverallItem}>
@@ -775,6 +1045,17 @@ export function YouthAcademyScreen({
         onPromote={() => selectedProspect && onPromoteProspect(selectedProspect.id)}
         onRelease={() => selectedProspect && onReleaseProspect(selectedProspect.id)}
         needsAction={selectedProspect ? needsActionIds.has(selectedProspect.id) : false}
+      />
+
+      {/* Trial Results Modal */}
+      <TrialResultsModal
+        visible={showTrialModal}
+        prospects={trialProspects}
+        onClose={() => setShowTrialModal(false)}
+        onSign={onSignTrialProspect}
+        onInvite={onInviteToNextTrial}
+        onPass={onPassTrialProspect}
+        canSign={academyInfo.availableSlots > 0}
       />
     </ScrollView>
   );
@@ -1238,6 +1519,146 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     fontStyle: 'italic',
     textAlign: 'center',
+  },
+  // Rival interest styles
+  rivalBadge: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rivalBadgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  rivalAlert: {
+    fontSize: 11,
+    marginTop: 4,
+    fontStyle: 'italic',
+  },
+  rivalWarningCard: {
+    marginHorizontal: spacing.md,
+    marginTop: spacing.md,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+  },
+  rivalWarningTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginBottom: spacing.xs,
+  },
+  rivalWarningText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  rivalWarningHint: {
+    fontSize: 11,
+    marginTop: spacing.xs,
+    fontStyle: 'italic',
+  },
+  // Source styles
+  sourceRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+  },
+  sourceLabel: {
+    fontSize: 11,
+  },
+  sourceValue: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  // Trial modal styles
+  trialInfoCard: {
+    marginHorizontal: spacing.md,
+    marginTop: spacing.md,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+  },
+  trialInfoTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+  trialInfoText: {
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  trialProspectCard: {
+    marginHorizontal: spacing.md,
+    marginTop: spacing.md,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+  },
+  trialProspectHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  trialProspectName: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  trialProspectMeta: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  trialBadgeContainer: {
+    alignItems: 'flex-end',
+  },
+  trialAttendance: {
+    fontSize: 11,
+  },
+  trialRange: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  invitedBanner: {
+    marginTop: spacing.sm,
+    padding: spacing.sm,
+    borderRadius: borderRadius.sm,
+    alignItems: 'center',
+  },
+  invitedText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  trialActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  trialActionButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.sm,
+    alignItems: 'center',
+  },
+  trialActionText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  trialCostInfo: {
+    marginHorizontal: spacing.md,
+    marginTop: spacing.lg,
+    padding: spacing.md,
+    borderRadius: borderRadius.sm,
+    alignItems: 'center',
+  },
+  trialCostText: {
+    fontSize: 12,
   },
 });
 

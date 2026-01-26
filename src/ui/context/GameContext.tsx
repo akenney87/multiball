@@ -56,7 +56,10 @@ import { processWeeklyProgression, processAcademyTraining } from '../../systems/
 import {
   type AcademyProspect,
   type ScoutingReport as YouthScoutingReport,
+  type ScoutingRegion,
+  type TrialProspect,
   YEARLY_PROSPECT_COST,
+  SIGNING_FEE,
   SCOUTING_CYCLE_WEEKS,
   generateScoutingReports as generateYouthScoutingReports,
   advanceScoutingReport as advanceYouthScoutingReport,
@@ -66,6 +69,10 @@ import {
   mergeYouthLeagueStats,
   checkRivalInterest,
   getHomeRegion,
+  canHoldTrial,
+  generateTrialProspects,
+  signTrialProspectToAcademy,
+  inviteToNextTrial as inviteTrialProspect,
 } from '../../systems/youthAcademySystem';
 import {
   simulateSoccerMatchV2,
@@ -3581,6 +3588,78 @@ export function GameProvider({ children }: GameProviderProps) {
     dispatch({ type: 'SET_SCOUT_SPORT_FOCUS', payload: { focus } });
   }, []);
 
+  const setScoutingRegion = useCallback((region: ScoutingRegion) => {
+    dispatch({ type: 'SET_SCOUTING_REGION', payload: { region } });
+  }, []);
+
+  const holdTrialEvent = useCallback((): TrialProspect[] => {
+    const currentWeek = state.season?.currentWeek ?? 0;
+    const lastTrialWeek = state.youthAcademy?.lastTrialWeek ?? 0;
+    const homeRegion = state.youthAcademy?.homeRegion ?? getHomeRegion(state.userTeam.country);
+
+    // Check if trial can be held
+    const { canHold } = canHoldTrial(lastTrialWeek, currentWeek, state.userTeam.availableBudget);
+    if (!canHold) {
+      return [];
+    }
+
+    // Dispatch trial event (deducts cost, sets lastTrialWeek)
+    dispatch({ type: 'HOLD_TRIAL_EVENT', payload: { week: currentWeek } });
+
+    // Calculate budget for quality
+    const youthBudgetPct = state.userTeam.operationsBudget.youthDevelopment;
+    const operationsPool = Math.max(0, state.userTeam.totalBudget - state.userTeam.salaryCommitment);
+    const budgetAmount = operationsPool * (youthBudgetPct / 100);
+
+    // Generate trial prospects
+    const season = state.season?.number ?? 1;
+    const prospects = generateTrialProspects(currentWeek, homeRegion, budgetAmount, currentWeek + season * 1000);
+
+    // Add trial prospects
+    dispatch({ type: 'ADD_TRIAL_PROSPECTS', payload: { prospects } });
+
+    return prospects;
+  }, [state.season, state.youthAcademy, state.userTeam]);
+
+  const signTrialProspect = useCallback((prospectId: string) => {
+    const prospect = state.youthAcademy?.trialProspects?.find(p => p.id === prospectId);
+    if (!prospect) return;
+
+    // Check budget
+    if (state.userTeam.availableBudget < SIGNING_FEE) {
+      return;
+    }
+
+    const currentWeek = state.season?.currentWeek ?? 0;
+    const currentSeason = state.season?.number ?? 1;
+    const homeRegion = state.youthAcademy?.homeRegion ?? getHomeRegion(state.userTeam.country);
+
+    // Convert trial prospect to academy prospect
+    const academyProspect = signTrialProspectToAcademy(prospect, currentWeek, currentSeason, homeRegion);
+
+    // Sign to academy (this handles budget deduction)
+    dispatch({ type: 'SIGN_PROSPECT_TO_ACADEMY', payload: { prospect: academyProspect, signingCost: SIGNING_FEE } });
+
+    // Remove from trial list
+    dispatch({ type: 'SIGN_TRIAL_PROSPECT', payload: { prospectId } });
+  }, [state.youthAcademy, state.userTeam, state.season]);
+
+  const inviteTrialProspectToNextTrial = useCallback((prospectId: string) => {
+    const prospect = state.youthAcademy?.trialProspects?.find(p => p.id === prospectId);
+    if (!prospect) return;
+
+    const updated = inviteTrialProspect(prospect);
+    dispatch({ type: 'INVITE_TO_NEXT_TRIAL', payload: { prospectId, prospect: updated } });
+  }, [state.youthAcademy]);
+
+  const passTrialProspect = useCallback((prospectId: string) => {
+    dispatch({ type: 'PASS_TRIAL_PROSPECT', payload: { prospectId } });
+  }, []);
+
+  const releaseAcademyProspect = useCallback((prospectId: string) => {
+    dispatch({ type: 'RELEASE_ACADEMY_PROSPECT', payload: { prospectId } });
+  }, []);
+
   const setTrainingFocus = useCallback((focus: TrainingFocus, playerId?: string) => {
     dispatch({ type: 'SET_TRAINING_FOCUS', payload: { focus, playerId } });
   }, []);
@@ -3886,6 +3965,12 @@ export function GameProvider({ children }: GameProviderProps) {
       signProspectToAcademy,
       updateYouthScoutingReport,
       setYouthScoutSportFocus,
+      setScoutingRegion,
+      holdTrialEvent,
+      signTrialProspect,
+      inviteTrialProspectToNextTrial,
+      passTrialProspect,
+      releaseAcademyProspect,
       setTrainingFocus,
       getUserRoster,
       getPlayer,
@@ -3954,6 +4039,12 @@ export function GameProvider({ children }: GameProviderProps) {
       signProspectToAcademy,
       updateYouthScoutingReport,
       setYouthScoutSportFocus,
+      setScoutingRegion,
+      holdTrialEvent,
+      signTrialProspect,
+      inviteTrialProspectToNextTrial,
+      passTrialProspect,
+      releaseAcademyProspect,
       setTrainingFocus,
       getUserRoster,
       getPlayer,

@@ -15,6 +15,7 @@ import {
   AcademyProspect,
   AcademyInfo,
   ScoutSportFocus,
+  ScoutingRegion,
   getAcademyInfo,
   calculateAcademyCapacity,
   canSignProspect,
@@ -22,8 +23,9 @@ import {
   requestContinueScouting,
   stopScouting,
   getProspectsNeedingAction,
+  getHomeRegion,
   SCOUTING_CYCLE_WEEKS,
-  YEARLY_PROSPECT_COST,
+  SIGNING_FEE,
 } from '../../systems/youthAcademySystem';
 
 // =============================================================================
@@ -191,6 +193,12 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
     signProspectToAcademy,
     updateYouthScoutingReport,
     setYouthScoutSportFocus,
+    setScoutingRegion,
+    holdTrialEvent,
+    signTrialProspect,
+    inviteTrialProspectToNextTrial,
+    passTrialProspect,
+    releaseAcademyProspect,
   } = useGame();
 
   // Get youth academy state directly from context (reports are now generated in advanceWeek)
@@ -199,6 +207,14 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
   const academyProspects = youthAcademy?.academyProspects || [];
   const lastReportWeek = youthAcademy?.lastReportWeek || 0;
   const sportFocus = youthAcademy?.scoutSportFocus || 'balanced';
+
+  // Regional scouting state
+  const homeRegion = youthAcademy?.homeRegion || getHomeRegion(state.userTeam.country);
+  const selectedRegion = youthAcademy?.selectedRegion || homeRegion;
+
+  // Trial system state
+  const lastTrialWeek = youthAcademy?.lastTrialWeek || 0;
+  const trialProspects = youthAcademy?.trialProspects || [];
 
   // Calculate budget-based settings (using actual dollars, not percentage)
   const youthBudgetPct = state.userTeam.operationsBudget.youthDevelopment;
@@ -256,9 +272,9 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
     const report = scoutingReports.find(r => r.id === reportId);
     if (!report) return;
 
-    // Check budget first - signing costs $100k
-    if (state.userTeam.availableBudget < YEARLY_PROSPECT_COST) {
-      const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(YEARLY_PROSPECT_COST);
+    // Check budget first - signing costs $10k
+    if (state.userTeam.availableBudget < SIGNING_FEE) {
+      const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(SIGNING_FEE);
       Alert.alert('Insufficient Budget', `You need at least ${formatted} to sign a youth prospect. Current budget: ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(state.userTeam.availableBudget)}`);
       return;
     }
@@ -271,7 +287,7 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
     // Create the prospect from the scouting report
     const prospect = createProspectFromReport(report, currentWeek);
 
-    // Sign to academy via context (this also deducts $100k from budget)
+    // Sign to academy via context (this also deducts signing fee from budget)
     signProspectToAcademy(prospect);
 
     // Mark report as signed
@@ -300,15 +316,51 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
   const handleReleaseProspect = useCallback((prospectId: string) => {
     const prospect = academyProspects.find(p => p.id === prospectId);
     if (!prospect) return;
-    // TODO: Add a context function for releasing prospects
-    // For now, this would need to be handled via a dispatch
+    releaseAcademyProspect(prospectId);
     Alert.alert('Released', `${prospect.name} has been released from the academy.`);
-  }, [academyProspects]);
+  }, [academyProspects, releaseAcademyProspect]);
 
   // Handle sport focus change
   const handleSportFocusChange = useCallback((focus: ScoutSportFocus) => {
     setYouthScoutSportFocus(focus);
   }, [setYouthScoutSportFocus]);
+
+  // Handle region change
+  const handleRegionChange = useCallback((region: ScoutingRegion) => {
+    setScoutingRegion(region);
+  }, [setScoutingRegion]);
+
+  // Handle hold trial
+  const handleHoldTrial = useCallback(() => {
+    holdTrialEvent();
+  }, [holdTrialEvent]);
+
+  // Handle signing a trial prospect
+  const handleSignTrialProspect = useCallback((prospectId: string) => {
+    // Check budget
+    if (state.userTeam.availableBudget < SIGNING_FEE) {
+      Alert.alert('Insufficient Funds', `You need $${(SIGNING_FEE / 1000).toFixed(0)}K to sign a prospect.`);
+      return;
+    }
+
+    // Check capacity
+    if (!canSignProspect(academyProspects, capacity)) {
+      Alert.alert('Academy Full', 'Release or promote a prospect first.');
+      return;
+    }
+
+    signTrialProspect(prospectId);
+  }, [state.userTeam.availableBudget, academyProspects, capacity, signTrialProspect]);
+
+  // Handle inviting to next trial
+  const handleInviteToNextTrial = useCallback((prospectId: string) => {
+    inviteTrialProspectToNextTrial(prospectId);
+  }, [inviteTrialProspectToNextTrial]);
+
+  // Handle passing on a trial prospect
+  const handlePassTrialProspect = useCallback((prospectId: string) => {
+    passTrialProspect(prospectId);
+  }, [passTrialProspect]);
 
   // Loading state
   if (!state.initialized) {
@@ -327,6 +379,16 @@ export function ConnectedYouthAcademyScreen({ onBack: _onBack }: ConnectedYouthA
       scoutingReports={availableReports}
       weeksUntilNextReports={weeksUntilNextReports}
       currentWeek={currentWeek}
+      homeRegion={homeRegion}
+      selectedRegion={selectedRegion}
+      onRegionChange={handleRegionChange}
+      lastTrialWeek={lastTrialWeek}
+      availableBudget={state.userTeam.availableBudget}
+      trialProspects={trialProspects}
+      onHoldTrial={handleHoldTrial}
+      onSignTrialProspect={handleSignTrialProspect}
+      onInviteToNextTrial={handleInviteToNextTrial}
+      onPassTrialProspect={handlePassTrialProspect}
       academyInfo={academyInfo}
       academyProspects={activeProspects}
       prospectsNeedingAction={prospectsNeedingAction}
