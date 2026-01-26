@@ -52,19 +52,6 @@ interface NewGameScreenProps {
   hasSavedGame?: boolean;
 }
 
-const colorOptions = [
-  { name: 'Black', value: '#000000' },
-  { name: 'Blue', value: '#3B82F6' },
-  { name: 'Red', value: '#EF4444' },
-  { name: 'Green', value: '#10B981' },
-  { name: 'Purple', value: '#8B5CF6' },
-  { name: 'Orange', value: '#F97316' },
-  { name: 'Navy', value: '#1E3A5F' },
-  { name: 'Teal', value: '#14B8A6' },
-  { name: 'Gold', value: '#F59E0B' },
-  { name: 'Gray', value: '#6B7280' },
-];
-
 const difficultyOptions: { key: Difficulty; label: string; description: string }[] = [
   { key: 'easy', label: 'Easy', description: 'More forgiving, perfect for learning' },
   { key: 'normal', label: 'Normal', description: 'Balanced challenge for most players' },
@@ -116,8 +103,9 @@ export function NewGameScreen({
   const [selectedCity, setSelectedCity] = useState<CityData | null>(null);
   const [customTeamName, setCustomTeamName] = useState('');
   const [useCustomName, setUseCustomName] = useState(false);
-  const [primaryColor, setPrimaryColor] = useState('#3B82F6');
-  const [secondaryColor, setSecondaryColor] = useState('#FFFFFF');
+  // Default team colors (Trophy Room gold theme)
+  const primaryColor = '#C9A962';
+  const secondaryColor = '#F5F0E8';
   const [difficulty, setDifficulty] = useState<Difficulty>('normal');
   const [showOverwriteConfirm, setShowOverwriteConfirm] = useState(false);
   const [showCitySelector, setShowCitySelector] = useState(false);
@@ -206,49 +194,6 @@ export function NewGameScreen({
       startingDivision,
     });
   };
-
-  // Render functions
-  const renderColorPicker = (
-    label: string,
-    selectedColor: string,
-    onSelect: (color: string) => void,
-    excludeColor?: string
-  ) => (
-    <View style={styles.colorSection}>
-      <Text style={[styles.sectionLabel, { color: colors.text }]}>{label}</Text>
-      <View style={styles.colorGrid}>
-        {colorOptions
-          .filter((c) => c.value !== excludeColor)
-          .map((color) => (
-            <TouchableOpacity
-              key={color.value}
-              style={[
-                styles.colorButton,
-                { backgroundColor: color.value },
-                selectedColor === color.value && styles.colorButtonSelected,
-              ]}
-              onPress={() => onSelect(color.value)}
-            >
-              {selectedColor === color.value && (
-                <Text style={styles.checkmark}>{'\u2713'}</Text>
-              )}
-            </TouchableOpacity>
-          ))}
-        <TouchableOpacity
-          style={[
-            styles.colorButton,
-            { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: colors.border },
-            selectedColor === '#FFFFFF' && styles.colorButtonSelected,
-          ]}
-          onPress={() => onSelect('#FFFFFF')}
-        >
-          {selectedColor === '#FFFFFF' && (
-            <Text style={[styles.checkmark, { color: colors.text }]}>{'\u2713'}</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
 
   const renderCityItem = ({ item }: { item: { city: CityData; division: number } }) => {
     // Compare both name AND region to handle cities with same name in different states
@@ -453,12 +398,6 @@ export function NewGameScreen({
             </Text>
           </View>
         )}
-      </View>
-
-      {/* Colors */}
-      <View style={[styles.inputCard, { backgroundColor: colors.card }, shadows.sm]}>
-        {renderColorPicker('Primary Color', primaryColor, setPrimaryColor, secondaryColor)}
-        {renderColorPicker('Secondary Color', secondaryColor, setSecondaryColor, primaryColor)}
       </View>
 
       {/* Difficulty */}
@@ -816,32 +755,6 @@ const styles = StyleSheet.create({
   generatedNameHint: {
     fontSize: 12,
     marginTop: 2,
-  },
-
-  // Colors
-  colorSection: {
-    marginBottom: spacing.md,
-  },
-  colorGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  colorButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  colorButtonSelected: {
-    borderWidth: 3,
-    borderColor: '#000000',
-  },
-  checkmark: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '700',
   },
 
   // Difficulty

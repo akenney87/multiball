@@ -26,26 +26,27 @@ interface BudgetAllocationModalProps {
   onConfirm: (allocation: OperationsBudget) => void;
 }
 
-const categoryInfo = {
+// Category metadata - colors will be pulled from theme
+const categoryMeta = {
   training: {
     label: 'Training',
     description: 'Player development speed scales with $ spent',
-    color: '#3B82F6',
+    colorKey: 'info' as const,
   },
   scouting: {
     label: 'Scouting',
     description: 'Scout capacity and accuracy scale with $ spent',
-    color: '#10B981',
+    colorKey: 'success' as const,
   },
   medical: {
     label: 'Medical',
     description: 'Fitness recovery speed scales with $ spent',
-    color: '#8B5CF6',
+    colorKey: 'error' as const,
   },
   youthDevelopment: {
     label: 'Youth Development',
     description: 'Prospect quality scales with $ spent',
-    color: '#F59E0B',
+    colorKey: 'warning' as const,
   },
 };
 
@@ -198,10 +199,12 @@ export function BudgetAllocationModal({
             Must total 100% — Currently: {totalAllocation}%
           </Text>
 
-          {(Object.keys(categoryInfo) as (keyof typeof categoryInfo)[]).map((category) => {
-            const info = categoryInfo[category];
+          {(Object.keys(categoryMeta) as (keyof typeof categoryMeta)[]).map((category) => {
+            const meta = categoryMeta[category];
             const value = allocation[category];
             const dollarAmount = (operationsPool * value) / 100;
+            // Get the theme color for this category
+            const categoryColor = colors[meta.colorKey];
 
             return (
               <View
@@ -209,18 +212,18 @@ export function BudgetAllocationModal({
                 style={[styles.categoryCard, { backgroundColor: colors.surface, ...shadows.sm }]}
               >
                 <View style={styles.categoryRow}>
-                  <View style={[styles.colorDot, { backgroundColor: info.color }]} />
+                  <View style={[styles.colorDot, { backgroundColor: categoryColor }]} />
                   <View style={styles.categoryInfo}>
-                    <Text style={[styles.categoryLabel, { color: colors.text }]}>{info.label}</Text>
+                    <Text style={[styles.categoryLabel, { color: colors.text }]}>{meta.label}</Text>
                     <Text style={[styles.categoryDesc, { color: colors.textMuted }]}>
-                      {info.description}
+                      {meta.description}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.allocationRow}>
                   <AllocationStepper
                     value={value}
-                    color={info.color}
+                    color={categoryColor}
                     canIncrement={canIncrement}
                     onDecrement={() => handleDecrement(category)}
                     onIncrement={() => handleIncrement(category)}
