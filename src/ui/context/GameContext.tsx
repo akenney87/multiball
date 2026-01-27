@@ -34,7 +34,7 @@ import {
 import type { BaseballPosition } from './types';
 import { GameStorage } from '../persistence/gameStorage';
 import type { NewGameConfig } from '../screens/NewGameScreen';
-import type { Player, Match, MatchResult, TeamStanding, TrainingFocus, NewsItem, TacticalSettings, Injury } from '../../data/types';
+import type { Player, Match, MatchResult, TeamStanding, TrainingFocus, NewsItem, TacticalSettings, Injury, LoanTerms } from '../../data/types';
 import { GameSimulator } from '../../simulation';
 import { getInjuryConditionPenalty, InjurySeverity } from '../../systems/injurySystem';
 import {
@@ -3792,6 +3792,63 @@ export function GameProvider({ children }: GameProviderProps) {
   }, [state.userTeam.transferListPlayerIds, state.players]);
 
   // =========================================================================
+  // LOAN ACTIONS
+  // =========================================================================
+
+  const makeLoanOffer = useCallback((playerId: string, receivingTeamId: string, terms: LoanTerms) => {
+    dispatch({ type: 'MAKE_LOAN_OFFER', payload: { playerId, receivingTeamId, terms } });
+  }, []);
+
+  const respondToLoanOffer = useCallback((offerId: string, accept: boolean) => {
+    dispatch({ type: 'RESPOND_TO_LOAN_OFFER', payload: { offerId, accept } });
+  }, []);
+
+  const counterLoanOffer = useCallback((offerId: string, counterTerms: LoanTerms) => {
+    dispatch({ type: 'COUNTER_LOAN_OFFER', payload: { offerId, counterTerms } });
+  }, []);
+
+  const acceptCounterLoanOffer = useCallback((offerId: string) => {
+    dispatch({ type: 'ACCEPT_COUNTER_LOAN_OFFER', payload: { offerId } });
+    // Auto-complete the loan after accepting counter
+    dispatch({ type: 'COMPLETE_LOAN', payload: { offerId } });
+  }, []);
+
+  const recallLoan = useCallback((loanId: string) => {
+    dispatch({ type: 'RECALL_LOAN', payload: { loanId } });
+  }, []);
+
+  const exerciseBuyOption = useCallback((loanId: string) => {
+    dispatch({ type: 'EXERCISE_BUY_OPTION', payload: { loanId } });
+  }, []);
+
+  const listPlayerForLoan = useCallback((playerId: string) => {
+    dispatch({ type: 'LIST_PLAYER_FOR_LOAN', payload: { playerId } });
+  }, []);
+
+  const unlistPlayerForLoan = useCallback((playerId: string) => {
+    dispatch({ type: 'UNLIST_PLAYER_FOR_LOAN', payload: { playerId } });
+  }, []);
+
+  const getLoanListedPlayers = useCallback((): Player[] => {
+    const ids = state.loans.loanListedPlayerIds || [];
+    return ids
+      .map((id) => state.players[id])
+      .filter((p): p is Player => p !== undefined);
+  }, [state.loans.loanListedPlayerIds, state.players]);
+
+  const getActiveLoans = useCallback(() => {
+    return state.loans.activeLoans || [];
+  }, [state.loans.activeLoans]);
+
+  const getIncomingLoanOffers = useCallback(() => {
+    return state.loans.incomingLoanOffers || [];
+  }, [state.loans.incomingLoanOffers]);
+
+  const getOutgoingLoanOffers = useCallback(() => {
+    return state.loans.outgoingLoanOffers || [];
+  }, [state.loans.outgoingLoanOffers]);
+
+  // =========================================================================
   // SCOUTING ACTIONS
   // =========================================================================
 
@@ -3989,6 +4046,20 @@ export function GameProvider({ children }: GameProviderProps) {
       removeFromTransferList,
       getTransferListedPlayers,
 
+      // Loan Actions
+      makeLoanOffer,
+      respondToLoanOffer,
+      counterLoanOffer,
+      acceptCounterLoanOffer,
+      recallLoan,
+      exerciseBuyOption,
+      listPlayerForLoan,
+      unlistPlayerForLoan,
+      getLoanListedPlayers,
+      getActiveLoans,
+      getIncomingLoanOffers,
+      getOutgoingLoanOffers,
+
       // Scouting Actions
       addScoutingTarget,
       removeScoutingTarget,
@@ -4060,6 +4131,18 @@ export function GameProvider({ children }: GameProviderProps) {
       addToTransferList,
       removeFromTransferList,
       getTransferListedPlayers,
+      makeLoanOffer,
+      respondToLoanOffer,
+      counterLoanOffer,
+      acceptCounterLoanOffer,
+      recallLoan,
+      exerciseBuyOption,
+      listPlayerForLoan,
+      unlistPlayerForLoan,
+      getLoanListedPlayers,
+      getActiveLoans,
+      getIncomingLoanOffers,
+      getOutgoingLoanOffers,
       addScoutingTarget,
       removeScoutingTarget,
       setScoutInstructions,

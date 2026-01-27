@@ -16,9 +16,20 @@ import {
   DEFAULT_TRAINING_FOCUS,
   DEFAULT_SCOUT_INSTRUCTIONS,
   DEFAULT_YOUTH_ACADEMY_STATE,
+  DEFAULT_LOAN_STATE,
   SAVE_VERSION,
 } from './types';
-import type { Player, TransferOffer, ContractNegotiation, Contract, NewsItem } from '../../data/types';
+import type { Player, TransferOffer, ContractNegotiation, Contract, NewsItem, LoanOffer, ActiveLoan } from '../../data/types';
+import {
+  createLoanOffer,
+  activateLoan,
+  completeLoan,
+  recallLoan,
+  exerciseBuyOption,
+  recordLoanAppearance,
+  expireOldLoanOffers,
+  LOAN_OFFER_EXPIRY_WEEKS,
+} from '../../systems/loanSystem';
 import {
   createNegotiation,
   processNegotiationRound,
@@ -59,6 +70,7 @@ export const initialGameState: GameState = {
     rosterIds: [],
     lineup: {
       basketballStarters: ['', '', '', '', ''],
+      basketballFormation: '2-2-1',
       baseballLineup: {
         battingOrder: ['', '', '', '', '', '', '', '', '', ''],
         positions: {},
@@ -126,6 +138,8 @@ export const initialGameState: GameState = {
     negotiationHistory: [],
   },
 
+  loans: DEFAULT_LOAN_STATE,
+
   youthAcademy: DEFAULT_YOUTH_ACADEMY_STATE,
 
   events: [],
@@ -188,6 +202,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           activeNegotiation: null,
           negotiationHistory: [],
         },
+        loans: DEFAULT_LOAN_STATE,
         youthAcademy: DEFAULT_YOUTH_ACADEMY_STATE,
         events: [],
         settings: {
@@ -250,6 +265,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         createManagerCareer(action.payload.userTeam.name, action.payload.userTeam.division);
 
       // Migrate players to have matchFitness fields (v2 migration)
+      // and loanStatus field (loan system migration)
       const migratedPlayers: Record<string, Player> = {};
       for (const [playerId, player] of Object.entries(action.payload.players || {})) {
         migratedPlayers[playerId] = {
@@ -258,20 +274,37 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           matchFitness: player.matchFitness ?? 100,
           lastMatchDate: player.lastMatchDate ?? null,
           lastMatchSport: player.lastMatchSport ?? null,
+          // Add loanStatus if missing (loan system migration)
+          loanStatus: player.loanStatus ?? null,
         };
       }
 
+      // Handle legacy saves that don't have loan state
+      const loans = action.payload.loans || DEFAULT_LOAN_STATE;
+
       // Handle legacy saves that don't have AI team strategies (v3 migration)
       const aiTeamStrategies = action.payload.season?.aiTeamStrategies || {};
+
+      // Migrate lineup to include basketball formation if missing
+      const legacyLineup = action.payload.userTeam?.lineup || {};
+      const migratedLineup = {
+        ...legacyLineup,
+        basketballFormation: legacyLineup.basketballFormation || '2-2-1',
+      };
 
       return {
         ...action.payload,
         initialized: true,
         players: migratedPlayers,
+        userTeam: {
+          ...action.payload.userTeam,
+          lineup: migratedLineup,
+        },
         season: {
           ...action.payload.season,
           aiTeamStrategies,
         },
+        loans,
         scoutedPlayerIds,
         scoutingTargetIds,
         scoutingReports,
@@ -683,6 +716,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         basketballStarters: currentLineup.basketballStarters.map((id) =>
           id === playerId ? '' : id
         ) as [string, string, string, string, string],
+        basketballFormation: currentLineup.basketballFormation || '2-2-1',
         baseballLineup: {
           battingOrder: currentLineup.baseballLineup.battingOrder.map((id) =>
             id === playerId ? '' : id
@@ -1440,6 +1474,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           basketballStarters: currentLineup.basketballStarters.map((id) =>
             id === playerId ? '' : id
           ) as [string, string, string, string, string],
+          basketballFormation: currentLineup.basketballFormation || '2-2-1',
           baseballLineup: {
             battingOrder: currentLineup.baseballLineup.battingOrder.map((id) =>
               id === playerId ? '' : id
@@ -2965,6 +3000,810 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         managerCareer: action.payload,
+      };
+    }
+
+    // =========================================================================
+    // LOAN SYSTEM
+    // =========================================================================
+
+    case 'MAKE_LOAN_OFFER': {
+      const { playerId, receivingTeamId, terms } = action.payload;
+      const currentWeek = state.season.currentWeek;
+
+      const newOffer = createLoanOffer(
+        'user', // User is offering to loan in
+        receivingTeamId, // Owner of the player
+        playerId,
+        terms,
+        currentWeek
+      );
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanOffers: [...state.loans.loanOffers, newOffer],
+          outgoingLoanOffers: [...state.loans.outgoingLoanOffers, newOffer],
+        },
+      };
+    }
+
+    case 'RESPOND_TO_LOAN_OFFER': {
+      const { offerId, accept } = action.payload;
+      const offer = state.loans.incomingLoanOffers.find(o => o.id === offerId);
+
+      if (!offer) return state;
+
+      const updatedStatus: LoanOffer['status'] = accept ? 'accepted' : 'rejected';
+
+      const updateOffer = (o: LoanOffer): LoanOffer =>
+        o.id === offerId ? { ...o, status: updatedStatus } : o;
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanOffers: state.loans.loanOffers.map(updateOffer),
+          incomingLoanOffers: state.loans.incomingLoanOffers.map(updateOffer),
+        },
+      };
+    }
+
+    case 'COUNTER_LOAN_OFFER': {
+      const { offerId, counterTerms } = action.payload;
+      const offer = state.loans.incomingLoanOffers.find(o => o.id === offerId);
+
+      if (!offer) return state;
+
+      const currentWeek = state.season.currentWeek;
+      const updateOffer = (o: LoanOffer): LoanOffer =>
+        o.id === offerId
+          ? {
+              ...o,
+              status: 'countered',
+              counterTerms,
+              negotiationHistory: [
+                ...o.negotiationHistory,
+                { terms: counterTerms, from: 'user', week: currentWeek },
+              ],
+            }
+          : o;
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanOffers: state.loans.loanOffers.map(updateOffer),
+          incomingLoanOffers: state.loans.incomingLoanOffers.map(updateOffer),
+        },
+      };
+    }
+
+    case 'ACCEPT_COUNTER_LOAN_OFFER': {
+      // User accepts a counter offer on their outgoing loan offer
+      const { offerId } = action.payload;
+      const offer = state.loans.outgoingLoanOffers.find(o => o.id === offerId);
+
+      if (!offer || offer.status !== 'countered' || !offer.counterTerms) return state;
+
+      // Update offer to accepted with counter terms as the final terms
+      const updatedOffer: LoanOffer = {
+        ...offer,
+        status: 'accepted',
+        terms: offer.counterTerms, // Counter terms become the agreed terms
+      };
+
+      const updateOffer = (o: LoanOffer): LoanOffer =>
+        o.id === offerId ? updatedOffer : o;
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanOffers: state.loans.loanOffers.map(updateOffer),
+          outgoingLoanOffers: state.loans.outgoingLoanOffers.map(updateOffer),
+        },
+      };
+    }
+
+    case 'COMPLETE_LOAN': {
+      const { offerId } = action.payload;
+      const offer = state.loans.loanOffers.find(o => o.id === offerId);
+
+      if (!offer || offer.status !== 'accepted') return state;
+
+      const player = state.players[offer.playerId];
+      if (!player) return state;
+
+      const currentWeek = state.season.currentWeek;
+      const currentSeason = state.season.number;
+
+      const { updatedPlayer, activeLoan } = activateLoan(
+        player,
+        offer,
+        currentWeek,
+        currentSeason
+      );
+
+      // Track which team is which
+      const loanClubId = offer.offeringTeamId; // Team borrowing the player
+      const parentClubId = offer.receivingTeamId; // Team that owns the player
+      const isUserLoaningIn = loanClubId === 'user';
+      const isUserLoaningOut = parentClubId === 'user';
+
+      let newUserTeam = state.userTeam;
+      let newTeams = state.league.teams;
+
+      if (isUserLoaningIn) {
+        // User is borrowing - deduct loan fee, add to roster
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget - offer.terms.loanFee,
+          rosterIds: [...state.userTeam.rosterIds, player.id],
+        };
+        // AI parent receives loan fee, removes player from roster
+        newTeams = newTeams.map((team) => {
+          if (team.id === parentClubId) {
+            return {
+              ...team,
+              rosterIds: team.rosterIds.filter((id) => id !== player.id),
+              budget: {
+                ...team.budget,
+                available: team.budget.available + offer.terms.loanFee,
+              },
+            };
+          }
+          return team;
+        });
+      } else if (isUserLoaningOut) {
+        // User owns player - receive loan fee, remove from roster
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget + offer.terms.loanFee,
+          rosterIds: state.userTeam.rosterIds.filter(id => id !== player.id),
+        };
+        // AI loan club pays fee, adds player to roster
+        newTeams = newTeams.map((team) => {
+          if (team.id === loanClubId) {
+            return {
+              ...team,
+              rosterIds: [...team.rosterIds, player.id],
+              budget: {
+                ...team.budget,
+                available: team.budget.available - offer.terms.loanFee,
+              },
+            };
+          }
+          return team;
+        });
+      } else {
+        // AI to AI loan - update both teams
+        newTeams = newTeams.map((team) => {
+          if (team.id === parentClubId) {
+            return {
+              ...team,
+              rosterIds: team.rosterIds.filter((id) => id !== player.id),
+              budget: {
+                ...team.budget,
+                available: team.budget.available + offer.terms.loanFee,
+              },
+            };
+          }
+          if (team.id === loanClubId) {
+            return {
+              ...team,
+              rosterIds: [...team.rosterIds, player.id],
+              budget: {
+                ...team.budget,
+                available: team.budget.available - offer.terms.loanFee,
+              },
+            };
+          }
+          return team;
+        });
+      }
+
+      // Remove accepted offer from active offers
+      const updateOffer = (o: LoanOffer): LoanOffer =>
+        o.id === offerId ? { ...o, status: 'accepted' as const } : o;
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [player.id]: updatedPlayer,
+        },
+        userTeam: newUserTeam,
+        league: {
+          ...state.league,
+          teams: newTeams,
+        },
+        loans: {
+          ...state.loans,
+          loanOffers: state.loans.loanOffers.map(updateOffer),
+          incomingLoanOffers: state.loans.incomingLoanOffers.filter(o => o.id !== offerId),
+          outgoingLoanOffers: state.loans.outgoingLoanOffers.filter(o => o.id !== offerId),
+          activeLoans: [...state.loans.activeLoans, activeLoan],
+          allActiveLoans: [...state.loans.allActiveLoans, activeLoan],
+        },
+      };
+    }
+
+    case 'RECALL_LOAN': {
+      const { loanId } = action.payload;
+      const loan = state.loans.activeLoans.find(l => l.id === loanId);
+
+      if (!loan) return state;
+
+      const player = state.players[loan.playerId];
+      if (!player) return state;
+
+      const currentWeek = state.season.currentWeek;
+      const result = recallLoan(loan, player, currentWeek);
+
+      if ('error' in result) {
+        console.warn('[Recall Loan]', result.error);
+        return state;
+      }
+
+      const { updatedPlayer, updatedLoan, recallFee } = result;
+
+      const isUserParent = loan.parentClubId === 'user';
+      const isUserLoanClub = loan.loanClubId === 'user';
+
+      let newUserTeam = state.userTeam;
+      let newTeams = state.league.teams;
+
+      if (isUserParent) {
+        // User recalling their player - pay recall fee, add to roster
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget - recallFee,
+          rosterIds: [...state.userTeam.rosterIds, player.id],
+        };
+        // AI loan club receives recall fee, removes player from roster
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.loanClubId) {
+            return {
+              ...team,
+              rosterIds: team.rosterIds.filter((id) => id !== player.id),
+              budget: {
+                ...team.budget,
+                available: team.budget.available + recallFee,
+              },
+            };
+          }
+          return team;
+        });
+      } else if (isUserLoanClub) {
+        // User losing loaned player - receive recall fee, remove from roster
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget + recallFee,
+          rosterIds: state.userTeam.rosterIds.filter(id => id !== player.id),
+        };
+        // AI parent pays recall fee, adds player to roster
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.parentClubId) {
+            return {
+              ...team,
+              rosterIds: [...team.rosterIds, player.id],
+              budget: {
+                ...team.budget,
+                available: team.budget.available - recallFee,
+              },
+            };
+          }
+          return team;
+        });
+      } else {
+        // AI to AI recall - update both teams
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.parentClubId) {
+            return {
+              ...team,
+              rosterIds: [...team.rosterIds, player.id],
+              budget: {
+                ...team.budget,
+                available: team.budget.available - recallFee,
+              },
+            };
+          }
+          if (team.id === loan.loanClubId) {
+            return {
+              ...team,
+              rosterIds: team.rosterIds.filter((id) => id !== player.id),
+              budget: {
+                ...team.budget,
+                available: team.budget.available + recallFee,
+              },
+            };
+          }
+          return team;
+        });
+      }
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [player.id]: updatedPlayer,
+        },
+        userTeam: newUserTeam,
+        league: {
+          ...state.league,
+          teams: newTeams,
+        },
+        loans: {
+          ...state.loans,
+          activeLoans: state.loans.activeLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+          allActiveLoans: state.loans.allActiveLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+        },
+      };
+    }
+
+    case 'EXERCISE_BUY_OPTION': {
+      const { loanId } = action.payload;
+      const loan = state.loans.activeLoans.find(l => l.id === loanId);
+
+      if (!loan) return state;
+
+      const player = state.players[loan.playerId];
+      if (!player) return state;
+
+      const result = exerciseBuyOption(loan, player);
+
+      if ('error' in result) {
+        console.warn('[Exercise Buy Option]', result.error);
+        return state;
+      }
+
+      const { updatedPlayer, updatedLoan, transferFee } = result;
+
+      const isUserLoanClub = loan.loanClubId === 'user';
+      const isUserParent = loan.parentClubId === 'user';
+
+      let newUserTeam = state.userTeam;
+      let newTeams = state.league.teams;
+
+      // Buy option = permanent transfer from parent to loan club
+      // Player already on loan club's roster, just need to handle payment
+
+      if (isUserLoanClub) {
+        // User exercising buy option - pay fee (player already on user roster)
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget - transferFee,
+        };
+        // AI parent receives payment
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.parentClubId) {
+            return {
+              ...team,
+              budget: {
+                ...team.budget,
+                available: team.budget.available + transferFee,
+              },
+            };
+          }
+          return team;
+        });
+      } else if (isUserParent) {
+        // User receiving buy option fee (player already off user roster from loan start)
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget + transferFee,
+        };
+        // AI loan club pays fee
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.loanClubId) {
+            return {
+              ...team,
+              budget: {
+                ...team.budget,
+                available: team.budget.available - transferFee,
+              },
+            };
+          }
+          return team;
+        });
+      } else {
+        // AI to AI buy option - update both teams' budgets
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.parentClubId) {
+            return {
+              ...team,
+              budget: {
+                ...team.budget,
+                available: team.budget.available + transferFee,
+              },
+            };
+          }
+          if (team.id === loan.loanClubId) {
+            return {
+              ...team,
+              budget: {
+                ...team.budget,
+                available: team.budget.available - transferFee,
+              },
+            };
+          }
+          return team;
+        });
+      }
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [player.id]: updatedPlayer,
+        },
+        userTeam: newUserTeam,
+        league: {
+          ...state.league,
+          teams: newTeams,
+        },
+        loans: {
+          ...state.loans,
+          activeLoans: state.loans.activeLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+          allActiveLoans: state.loans.allActiveLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+        },
+      };
+    }
+
+    case 'END_LOAN': {
+      const { loanId, reason } = action.payload;
+      const loan = state.loans.activeLoans.find(l => l.id === loanId);
+
+      if (!loan) return state;
+
+      const player = state.players[loan.playerId];
+      if (!player) return state;
+
+      const { updatedPlayer, updatedLoan } = completeLoan(loan, player);
+
+      const isUserParent = loan.parentClubId === 'user';
+      const isUserLoanClub = loan.loanClubId === 'user';
+
+      let newUserTeam = state.userTeam;
+      let newTeams = state.league.teams;
+
+      // Loan ended = player returns to parent club (removed from loan club, added to parent)
+
+      if (isUserParent) {
+        // Player returning to user
+        newUserTeam = {
+          ...state.userTeam,
+          rosterIds: [...state.userTeam.rosterIds, player.id],
+        };
+        // Remove from AI loan club's roster
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.loanClubId) {
+            return {
+              ...team,
+              rosterIds: team.rosterIds.filter((id) => id !== player.id),
+            };
+          }
+          return team;
+        });
+      } else if (isUserLoanClub) {
+        // Player leaving user
+        newUserTeam = {
+          ...state.userTeam,
+          rosterIds: state.userTeam.rosterIds.filter(id => id !== player.id),
+        };
+        // Add to AI parent's roster
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.parentClubId) {
+            return {
+              ...team,
+              rosterIds: [...team.rosterIds, player.id],
+            };
+          }
+          return team;
+        });
+      } else {
+        // AI to AI loan end - update both teams
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.parentClubId) {
+            return {
+              ...team,
+              rosterIds: [...team.rosterIds, player.id],
+            };
+          }
+          if (team.id === loan.loanClubId) {
+            return {
+              ...team,
+              rosterIds: team.rosterIds.filter((id) => id !== player.id),
+            };
+          }
+          return team;
+        });
+      }
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [player.id]: updatedPlayer,
+        },
+        userTeam: newUserTeam,
+        league: {
+          ...state.league,
+          teams: newTeams,
+        },
+        loans: {
+          ...state.loans,
+          activeLoans: state.loans.activeLoans.map(l =>
+            l.id === loanId ? { ...updatedLoan, status: reason === 'bought' ? 'bought' : 'completed' } as ActiveLoan : l
+          ),
+          allActiveLoans: state.loans.allActiveLoans.map(l =>
+            l.id === loanId ? { ...updatedLoan, status: reason === 'bought' ? 'bought' : 'completed' } as ActiveLoan : l
+          ),
+        },
+      };
+    }
+
+    case 'LIST_PLAYER_FOR_LOAN': {
+      const { playerId } = action.payload;
+
+      if (state.loans.loanListedPlayerIds.includes(playerId)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanListedPlayerIds: [...state.loans.loanListedPlayerIds, playerId],
+        },
+      };
+    }
+
+    case 'UNLIST_PLAYER_FOR_LOAN': {
+      const { playerId } = action.payload;
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanListedPlayerIds: state.loans.loanListedPlayerIds.filter(id => id !== playerId),
+        },
+      };
+    }
+
+    case 'PROCESS_LOAN_EXPIRIES': {
+      const { currentWeek } = action.payload;
+
+      // Expire old loan offers
+      const expiredOffers = expireOldLoanOffers(state.loans.loanOffers, currentWeek);
+
+      // End loans that have reached their end week
+      const loansToEnd = state.loans.activeLoans.filter(
+        loan => loan.status === 'active' && currentWeek >= loan.terms.endWeek
+      );
+
+      let updatedPlayers = { ...state.players };
+      let updatedLoans = state.loans.activeLoans.map(loan => {
+        if (loansToEnd.find(l => l.id === loan.id)) {
+          const player = updatedPlayers[loan.playerId];
+          if (player) {
+            const { updatedPlayer, updatedLoan } = completeLoan(loan, player);
+            updatedPlayers[loan.playerId] = updatedPlayer;
+            return updatedLoan;
+          }
+        }
+        return loan;
+      });
+
+      return {
+        ...state,
+        players: updatedPlayers,
+        loans: {
+          ...state.loans,
+          loanOffers: expiredOffers,
+          incomingLoanOffers: expiredOffers.filter(o => o.receivingTeamId === 'user'),
+          outgoingLoanOffers: expiredOffers.filter(o => o.offeringTeamId === 'user'),
+          activeLoans: updatedLoans,
+          allActiveLoans: state.loans.allActiveLoans.map(loan => {
+            const updated = updatedLoans.find(l => l.id === loan.id);
+            return updated || loan;
+          }),
+        },
+      };
+    }
+
+    case 'RECORD_LOAN_APPEARANCE': {
+      const { loanId, sport } = action.payload;
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          activeLoans: state.loans.activeLoans.map(loan =>
+            loan.id === loanId ? recordLoanAppearance(loan, sport) : loan
+          ),
+          allActiveLoans: state.loans.allActiveLoans.map(loan =>
+            loan.id === loanId ? recordLoanAppearance(loan, sport) : loan
+          ),
+        },
+      };
+    }
+
+    case 'AI_MAKE_LOAN_OFFER': {
+      const { offeringTeamId, receivingTeamId, playerId, terms } = action.payload;
+      const currentWeek = state.season.currentWeek;
+
+      const newOffer = createLoanOffer(
+        offeringTeamId,
+        receivingTeamId,
+        playerId,
+        terms,
+        currentWeek
+      );
+
+      // If offer is to user (user owns the player), add to incoming
+      const isToUser = receivingTeamId === 'user';
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanOffers: [...state.loans.loanOffers, newOffer],
+          incomingLoanOffers: isToUser
+            ? [...state.loans.incomingLoanOffers, newOffer]
+            : state.loans.incomingLoanOffers,
+        },
+      };
+    }
+
+    case 'AI_RESPOND_TO_LOAN_OFFER': {
+      const { offerId, decision, counterTerms } = action.payload;
+      const currentWeek = state.season.currentWeek;
+
+      const updateOffer = (o: LoanOffer): LoanOffer => {
+        if (o.id !== offerId) return o;
+
+        if (decision === 'accept') {
+          return { ...o, status: 'accepted' };
+        } else if (decision === 'reject') {
+          return { ...o, status: 'rejected' };
+        } else if (decision === 'counter' && counterTerms) {
+          return {
+            ...o,
+            status: 'countered',
+            counterTerms,
+            negotiationHistory: [
+              ...o.negotiationHistory,
+              { terms: counterTerms, from: o.receivingTeamId, week: currentWeek },
+            ],
+          };
+        }
+        return o;
+      };
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanOffers: state.loans.loanOffers.map(updateOffer),
+          outgoingLoanOffers: state.loans.outgoingLoanOffers.map(updateOffer),
+        },
+      };
+    }
+
+    case 'AI_RECALL_LOAN': {
+      const { loanId } = action.payload;
+      const loan = state.loans.allActiveLoans.find(l => l.id === loanId);
+
+      if (!loan) return state;
+
+      const player = state.players[loan.playerId];
+      if (!player) return state;
+
+      const currentWeek = state.season.currentWeek;
+      const result = recallLoan(loan, player, currentWeek);
+
+      if ('error' in result) return state;
+
+      const { updatedPlayer, updatedLoan, recallFee } = result;
+
+      // Handle user team if involved
+      let newUserTeam = state.userTeam;
+      if (loan.loanClubId === 'user') {
+        // User losing player, receiving fee
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget + recallFee,
+          rosterIds: state.userTeam.rosterIds.filter(id => id !== player.id),
+        };
+      }
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [player.id]: updatedPlayer,
+        },
+        userTeam: newUserTeam,
+        loans: {
+          ...state.loans,
+          activeLoans: state.loans.activeLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+          allActiveLoans: state.loans.allActiveLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+        },
+      };
+    }
+
+    case 'AI_EXERCISE_BUY_OPTION': {
+      const { loanId } = action.payload;
+      const loan = state.loans.allActiveLoans.find(l => l.id === loanId);
+
+      if (!loan) return state;
+
+      const player = state.players[loan.playerId];
+      if (!player) return state;
+
+      const result = exerciseBuyOption(loan, player);
+
+      if ('error' in result) return state;
+
+      const { updatedPlayer, updatedLoan, transferFee } = result;
+
+      // Handle user team if involved
+      let newUserTeam = state.userTeam;
+      if (loan.parentClubId === 'user') {
+        // User receiving buy option fee
+        newUserTeam = {
+          ...state.userTeam,
+          availableBudget: state.userTeam.availableBudget + transferFee,
+        };
+      }
+
+      return {
+        ...state,
+        players: {
+          ...state.players,
+          [player.id]: updatedPlayer,
+        },
+        userTeam: newUserTeam,
+        loans: {
+          ...state.loans,
+          activeLoans: state.loans.activeLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+          allActiveLoans: state.loans.allActiveLoans.map(l =>
+            l.id === loanId ? updatedLoan : l
+          ),
+        },
+      };
+    }
+
+    case 'AI_LIST_PLAYER_FOR_LOAN': {
+      const { playerId } = action.payload;
+
+      if (state.loans.loanListedPlayerIds.includes(playerId)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        loans: {
+          ...state.loans,
+          loanListedPlayerIds: [...state.loans.loanListedPlayerIds, playerId],
+        },
       };
     }
 

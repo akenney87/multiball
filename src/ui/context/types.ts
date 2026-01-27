@@ -20,6 +20,9 @@ import type {
   PlayerAwardRecord,
   ManagerCareer,
   Injury,
+  LoanOffer,
+  ActiveLoan,
+  LoanTerms,
 } from '../../data/types';
 import type { BaseballGameStrategy } from '../../simulation/baseball/types';
 import type {
@@ -55,6 +58,42 @@ export type BaseballPosition = 'P' | 'C' | '1B' | '2B' | '3B' | 'SS' | 'LF' | 'C
  * Soccer formations
  */
 export type SoccerFormation = '4-4-2' | '4-3-3' | '3-5-2' | '4-2-3-1' | '5-3-2' | '4-1-4-1';
+
+/**
+ * Basketball formations (guards-wings-bigs)
+ * Must sum to 5 players
+ */
+export type BasketballFormation = '2-2-1' | '1-3-1' | '3-1-1' | '1-2-2' | '2-1-2';
+
+/**
+ * Basketball formation configuration
+ */
+export interface BasketballFormationConfig {
+  guards: number;
+  wings: number;
+  bigs: number;
+}
+
+/**
+ * Parse basketball formation string to config
+ */
+export function parseBasketballFormation(formation: BasketballFormation): BasketballFormationConfig {
+  const [guards, wings, bigs] = formation.split('-').map(Number);
+  return { guards, wings, bigs };
+}
+
+/**
+ * Get slot labels for a basketball formation
+ * Returns array of 'Guard' | 'Wing' | 'Big' labels for each slot
+ */
+export function getBasketballSlotLabels(formation: BasketballFormation): ('Guard' | 'Wing' | 'Big')[] {
+  const { guards, wings, bigs } = parseBasketballFormation(formation);
+  const labels: ('Guard' | 'Wing' | 'Big')[] = [];
+  for (let i = 0; i < guards; i++) labels.push('Guard');
+  for (let i = 0; i < wings; i++) labels.push('Wing');
+  for (let i = 0; i < bigs; i++) labels.push('Big');
+  return labels;
+}
 
 /**
  * Baseball bullpen role types
@@ -119,8 +158,11 @@ export interface SoccerLineupConfig {
  * Lineup configuration for matches (supports all sports)
  */
 export interface LineupConfig {
-  /** Basketball: Starting 5 player IDs in position order (PG, SG, SF, PF, C) */
+  /** Basketball: Starting 5 player IDs in slot order (based on formation) */
   basketballStarters: [string, string, string, string, string];
+
+  /** Basketball formation (guards-wings-bigs), default '2-2-1' */
+  basketballFormation: BasketballFormation;
 
   /** Baseball lineup configuration */
   baseballLineup: BaseballLineupConfig;
@@ -391,6 +433,29 @@ export interface MarketState {
 }
 
 /**
+ * Loan state (FM-style loan system)
+ */
+export interface LoanState {
+  /** All loan offers in the system */
+  loanOffers: LoanOffer[];
+
+  /** Incoming loan offers (others want our players) */
+  incomingLoanOffers: LoanOffer[];
+
+  /** Outgoing loan offers (we want their players) */
+  outgoingLoanOffers: LoanOffer[];
+
+  /** Active loans involving user team (either as parent or loan club) */
+  activeLoans: ActiveLoan[];
+
+  /** All active loans in the league */
+  allActiveLoans: ActiveLoan[];
+
+  /** Player IDs listed as available for loan */
+  loanListedPlayerIds: string[];
+}
+
+/**
  * Youth Academy state
  * Manages scouting reports, trials, and signed academy prospects
  */
@@ -477,6 +542,9 @@ export interface GameState {
 
   /** Market state */
   market: MarketState;
+
+  /** Loan state (FM-style loan system) */
+  loans: LoanState;
 
   /** Youth Academy state */
   youthAcademy: YouthAcademyState;
@@ -720,6 +788,40 @@ export type GameAction =
   | { type: 'REMOVE_FROM_SHORTLIST'; payload: { playerId: string } }
   | { type: 'ADD_TO_TRANSFER_LIST'; payload: { playerId: string; askingPrice: number } }
   | { type: 'REMOVE_FROM_TRANSFER_LIST'; payload: { playerId: string } }
+
+  // Loan System
+  | { type: 'MAKE_LOAN_OFFER'; payload: { playerId: string; receivingTeamId: string; terms: LoanTerms } }
+  | { type: 'RESPOND_TO_LOAN_OFFER'; payload: { offerId: string; accept: boolean } }
+  | { type: 'COUNTER_LOAN_OFFER'; payload: { offerId: string; counterTerms: LoanTerms } }
+  | { type: 'ACCEPT_COUNTER_LOAN_OFFER'; payload: { offerId: string } }
+  | { type: 'COMPLETE_LOAN'; payload: { offerId: string } }
+  | { type: 'RECALL_LOAN'; payload: { loanId: string } }
+  | { type: 'EXERCISE_BUY_OPTION'; payload: { loanId: string } }
+  | { type: 'END_LOAN'; payload: { loanId: string; reason: 'completed' | 'recalled' | 'bought' } }
+  | { type: 'LIST_PLAYER_FOR_LOAN'; payload: { playerId: string } }
+  | { type: 'UNLIST_PLAYER_FOR_LOAN'; payload: { playerId: string } }
+  | { type: 'PROCESS_LOAN_EXPIRIES'; payload: { currentWeek: number } }
+  | { type: 'RECORD_LOAN_APPEARANCE'; payload: { loanId: string; sport: 'basketball' | 'baseball' | 'soccer' } }
+  | {
+      type: 'AI_MAKE_LOAN_OFFER';
+      payload: {
+        offeringTeamId: string;
+        receivingTeamId: string;
+        playerId: string;
+        terms: LoanTerms;
+      };
+    }
+  | {
+      type: 'AI_RESPOND_TO_LOAN_OFFER';
+      payload: {
+        offerId: string;
+        decision: 'accept' | 'reject' | 'counter';
+        counterTerms?: LoanTerms;
+      };
+    }
+  | { type: 'AI_RECALL_LOAN'; payload: { loanId: string } }
+  | { type: 'AI_EXERCISE_BUY_OPTION'; payload: { loanId: string } }
+  | { type: 'AI_LIST_PLAYER_FOR_LOAN'; payload: { teamId: string; playerId: string } }
 
   // Offseason
   | {
@@ -1152,6 +1254,70 @@ export interface GameContextValue {
    * Get user team standing
    */
   getUserStanding: () => TeamStanding | null;
+
+  // =========================================================================
+  // LOAN ACTIONS
+  // =========================================================================
+
+  /**
+   * Make a loan offer for a player
+   */
+  makeLoanOffer: (playerId: string, receivingTeamId: string, terms: LoanTerms) => void;
+
+  /**
+   * Respond to an incoming loan offer (as parent club)
+   */
+  respondToLoanOffer: (offerId: string, accept: boolean) => void;
+
+  /**
+   * Counter a loan offer with different terms
+   */
+  counterLoanOffer: (offerId: string, counterTerms: LoanTerms) => void;
+
+  /**
+   * Accept a counter offer on an outgoing loan offer
+   */
+  acceptCounterLoanOffer: (offerId: string) => void;
+
+  /**
+   * Recall a player from loan (requires recall clause)
+   */
+  recallLoan: (loanId: string) => void;
+
+  /**
+   * Exercise buy option on a loaned player
+   */
+  exerciseBuyOption: (loanId: string) => void;
+
+  /**
+   * List a player as available for loan
+   */
+  listPlayerForLoan: (playerId: string) => void;
+
+  /**
+   * Remove a player from loan list
+   */
+  unlistPlayerForLoan: (playerId: string) => void;
+
+  /**
+   * Get players available for loan (from all teams)
+   */
+  getLoanListedPlayers: () => Player[];
+
+  /**
+   * Get active loans involving user team
+   */
+  getActiveLoans: () => import('../../data/types').ActiveLoan[];
+
+  /**
+   * Get incoming loan offers (others want user's players)
+   */
+  getIncomingLoanOffers: () => import('../../data/types').LoanOffer[];
+
+  /**
+   * Get outgoing loan offers (user wants their players)
+   */
+  getOutgoingLoanOffers: () => import('../../data/types').LoanOffer[];
 }
 
 // =============================================================================
@@ -1204,6 +1370,18 @@ export const DEFAULT_YOUTH_ACADEMY_STATE: YouthAcademyState = {
   // Trial system
   trialProspects: [],
   lastTrialWeek: 0,
+};
+
+/**
+ * Default loan state
+ */
+export const DEFAULT_LOAN_STATE: LoanState = {
+  loanOffers: [],
+  incomingLoanOffers: [],
+  outgoingLoanOffers: [],
+  activeLoans: [],
+  allActiveLoans: [],
+  loanListedPlayerIds: [],
 };
 
 /**

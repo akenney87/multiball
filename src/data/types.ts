@@ -701,6 +701,16 @@ export interface Player {
    * 1.0 = realistic, >1.0 = overestimates ability, <1.0 = humble
    */
   ambition: number;
+
+  // =========================================================================
+  // LOAN STATUS
+  // =========================================================================
+
+  /**
+   * Loan status for players on loan or loaned out
+   * null if player is not involved in any loan
+   */
+  loanStatus: PlayerLoanStatus | null;
 }
 
 // =============================================================================
@@ -1844,6 +1854,172 @@ export interface TransferOffer {
 
   /** Was the player on transfer list when offer was made? */
   isTransferListed?: boolean;
+}
+
+// =============================================================================
+// LOANS
+// =============================================================================
+
+/**
+ * Loan duration options (uses weeks for consistency with transfer system)
+ */
+export type LoanDuration =
+  | { type: 'fixed'; weeks: number }     // Fixed number of weeks
+  | { type: 'end_of_season' };           // Until current season ends
+
+/**
+ * Loan terms negotiated between clubs
+ */
+export interface LoanTerms {
+  /** Upfront fee to parent club */
+  loanFee: number;
+
+  /** Percentage of wages parent club pays (0-100) */
+  wageContribution: number;
+
+  /** Duration of the loan */
+  duration: LoanDuration;
+
+  /** Week loan starts */
+  startWeek: number;
+
+  /** Week loan ends */
+  endWeek: number;
+
+  /** Optional buy option at end of loan */
+  buyOption?: {
+    /** Price to purchase player permanently */
+    price: number;
+    /** If true, loan club MUST buy (may have condition) */
+    mandatory: boolean;
+    /** Condition that triggers mandatory purchase */
+    mandatoryCondition?: { type: 'appearances'; threshold: number };
+  };
+
+  /** Optional recall clause allowing parent to bring player back early */
+  recallClause?: {
+    /** Minimum weeks before parent can recall */
+    minWeeksBeforeRecall: number;
+    /** Fee paid to loan club if recalled */
+    recallFee: number;
+  };
+
+  /** Optional playing time guarantee */
+  playingTimeClause?: {
+    /** Minimum appearances required */
+    minAppearances: number;
+    /** Which sport (or all) */
+    sport: 'basketball' | 'baseball' | 'soccer' | 'all';
+    /** Penalty paid to parent if clause not met */
+    penaltyAmount: number;
+  };
+
+  /** Optional injury protection clause */
+  injuryClause?: {
+    /** If player is injured for more than N weeks, parent can recall */
+    canRecallIfInjuredWeeks: number;
+  };
+}
+
+/**
+ * Loan offer (similar to TransferOffer structure)
+ */
+export interface LoanOffer {
+  /** Offer ID (UUID) */
+  id: string;
+
+  /** Team wanting to borrow the player */
+  offeringTeamId: string;
+
+  /** Team that owns the player */
+  receivingTeamId: string;
+
+  /** Player ID */
+  playerId: string;
+
+  /** Proposed loan terms */
+  terms: LoanTerms;
+
+  /** Current offer status */
+  status: 'pending' | 'accepted' | 'rejected' | 'countered' | 'expired';
+
+  /** Week offer was made */
+  createdWeek: number;
+
+  /** Week offer expires (typically 2 weeks after creation) */
+  expiryWeek: number;
+
+  /** Counter-proposed terms (if status is 'countered') */
+  counterTerms?: LoanTerms;
+
+  /** Full negotiation history */
+  negotiationHistory: Array<{ terms: LoanTerms; from: string; week: number }>;
+}
+
+/**
+ * Active loan record (after offer accepted)
+ */
+export interface ActiveLoan {
+  /** Loan ID (UUID) */
+  id: string;
+
+  /** Player on loan */
+  playerId: string;
+
+  /** Team that owns the player (parent club) */
+  parentClubId: string;
+
+  /** Team player is currently playing for (loan club) */
+  loanClubId: string;
+
+  /** Agreed loan terms */
+  terms: LoanTerms;
+
+  /** Current loan status */
+  status: 'active' | 'recalled' | 'completed' | 'bought';
+
+  /** Week loan started */
+  startWeek: number;
+
+  /** Season loan started */
+  startSeason: number;
+
+  /** Appearances by sport (for playing time clause tracking) */
+  appearances: { basketball: number; baseball: number; soccer: number };
+
+  /** Has buy option been exercised? */
+  buyOptionExercised: boolean;
+
+  /** Was loan ended early via recall? */
+  recalledEarly: boolean;
+
+  /** Week recalled (if applicable) */
+  recalledWeek?: number;
+
+  /** Weekly wage responsibility split (calculated from terms.wageContribution) */
+  weeklyWageResponsibility: {
+    /** Amount parent club pays per week */
+    parentClubAmount: number;
+    /** Amount loan club pays per week */
+    loanClubAmount: number;
+  };
+}
+
+/**
+ * Player loan status (added to Player interface)
+ */
+export interface PlayerLoanStatus {
+  /** Is player currently on loan? */
+  isOnLoan: boolean;
+
+  /** Active loan record ID */
+  activeLoanId?: string;
+
+  /** Team that owns the player (if on loan) */
+  parentClubId?: string;
+
+  /** Team player is playing for (if on loan) */
+  loanClubId?: string;
 }
 
 // =============================================================================

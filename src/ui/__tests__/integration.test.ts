@@ -251,6 +251,7 @@ describe('gameReducer', () => {
 
       const newLineup = {
         basketballStarters: ['p1', 'p2', 'p3', 'p4', 'p5'] as [string, string, string, string, string],
+        basketballFormation: '2-2-1' as const,
         baseballLineup: {
           battingOrder: ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9'],
           positions: {},

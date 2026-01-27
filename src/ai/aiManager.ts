@@ -5,7 +5,7 @@
  * Uses the full AIPersonality traits to drive intelligent behavior.
  */
 
-import type { Player, AIPersonality } from '../data/types';
+import type { Player, AIPersonality, LoanTerms } from '../data/types';
 import type { DecisionContext, Position, AIConfig } from './types';
 import { calculateOverallRating } from './evaluation';
 import { getDecisionThresholds } from './personality';
@@ -175,6 +175,22 @@ export interface AIWeeklyActions {
   offerResponses: OfferResponse[];
   releases: PlayerRelease[];
   transferListings: TransferListing[];
+
+  // Loan system actions
+  loanOffers: Array<{
+    targetPlayerId: string;
+    targetTeamId: string;
+    terms: LoanTerms;
+    priority: 'high' | 'medium' | 'low';
+  }>;
+  loanOfferResponses: Array<{
+    offerId: string;
+    decision: 'accept' | 'reject' | 'counter';
+    counterTerms?: LoanTerms;
+  }>;
+  loanRecalls: Array<{ loanId: string }>;
+  buyOptionExercises: Array<{ loanId: string }>;
+  playersToLoanList: string[];
 }
 
 /**
@@ -1731,6 +1747,12 @@ export function processAIWeek(
     offerResponses: [],
     releases: [],
     transferListings: [],
+    // Loan system (populated by loanManager)
+    loanOffers: [],
+    loanOfferResponses: [],
+    loanRecalls: [],
+    buyOptionExercises: [],
+    playersToLoanList: [],
   };
 
   // Always respond to incoming offers (can't ignore them)

@@ -8,8 +8,15 @@
 import { useCallback, useMemo } from 'react';
 import { useGame } from '../context/GameContext';
 import { calculatePlayerOverall, calculateSoccerPositionOverall } from '../integration/gameInitializer';
-import type { SoccerFormation, BaseballPosition, BullpenRole, BaseballBullpenConfig } from '../context/types';
-import { calculateBasketballOverall, calculateBaseballPositionOverall, type BaseballPositionType } from '../../utils/overallRating';
+import type { SoccerFormation, BaseballPosition, BullpenRole, BaseballBullpenConfig, BasketballFormation } from '../context/types';
+import { parseBasketballFormation } from '../context/types';
+import {
+  calculateBasketballOverall,
+  calculateBaseballPositionOverall,
+  calculateBasketballPositionOverall,
+  type BaseballPositionType,
+  type BasketballPositionType,
+} from '../../utils/overallRating';
 import { applyFitnessDegradation } from '../../systems/matchFitnessSystem';
 import type { Player } from '../../data/types';
 
@@ -391,46 +398,79 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
 
   /**
    * Calculate optimal basketball lineup and apply it.
-   * Uses the same fitness degradation formula as match simulations to calculate effective ratings.
+   * Uses position-specific ratings (guard/wing/big) based on the current formation.
+   * Also applies fitness degradation formula from match simulations.
    */
   const applyOptimalBasketballLineup = useCallback(() => {
     const roster = getUserRoster();
+    const currentLineup = activeLineup;
+    const formation = currentLineup.basketballFormation || '2-2-1';
+    const { guards: numGuards, wings: numWings, bigs: numBigs } = parseBasketballFormation(formation);
 
-    // Calculate effective overall for each player using the simulation formula
-    // applyFitnessDegradation reduces physical attributes based on matchFitness
+    // Calculate position-specific ratings for each non-injured player
     const availablePlayers = roster
       .filter((p) => p.injury === null)
       .map((p) => {
         // Apply fitness degradation to get effective attributes (same as in-match)
         const degradedPlayer = applyFitnessDegradation(p);
+        const attrs = degradedPlayer.attributes;
         return {
           id: p.id,
-          effectiveOverall: calculatePlayerOverall(degradedPlayer),
-          rawOverall: calculatePlayerOverall(p),
-          height: p.height ?? 72,
+          player: p,
+          guardRating: calculateBasketballPositionOverall(attrs, 'guard'),
+          wingRating: calculateBasketballPositionOverall(attrs, 'wing'),
+          bigRating: calculateBasketballPositionOverall(attrs, 'big'),
         };
-      })
-      .sort((a, b) => b.effectiveOverall - a.effectiveOverall);
+      });
 
-    // Select top 5 by effective overall
-    const top5 = availablePlayers.slice(0, 5);
+    // Track which players have been assigned
+    const usedIds = new Set<string>();
+    const starterIds: string[] = [];
 
-    // Sort selected 5 by height (shortest to tallest) for position assignment
-    // PG (slot 0) = shortest, SG (slot 1) = 2nd shortest, ..., C (slot 4) = tallest
-    const top5ByHeight = [...top5].sort((a, b) => a.height - b.height);
-
-    // Build the 5-tuple of starter IDs arranged by height
-    const starterIds: [string, string, string, string, string] = ['', '', '', '', ''];
-    for (let i = 0; i < 5 && i < top5ByHeight.length; i++) {
-      const player = top5ByHeight[i];
+    // 1. Fill guard slots with players who have highest guard ratings
+    const bestGuards = [...availablePlayers]
+      .filter((p) => !usedIds.has(p.id))
+      .sort((a, b) => b.guardRating - a.guardRating);
+    for (let i = 0; i < numGuards && i < bestGuards.length; i++) {
+      const player = bestGuards[i];
       if (player) {
-        starterIds[i] = player.id;
+        starterIds.push(player.id);
+        usedIds.add(player.id);
       }
     }
 
+    // 2. Fill wing slots with players who have highest wing ratings (from remaining)
+    const bestWings = [...availablePlayers]
+      .filter((p) => !usedIds.has(p.id))
+      .sort((a, b) => b.wingRating - a.wingRating);
+    for (let i = 0; i < numWings && i < bestWings.length; i++) {
+      const player = bestWings[i];
+      if (player) {
+        starterIds.push(player.id);
+        usedIds.add(player.id);
+      }
+    }
+
+    // 3. Fill big slots with players who have highest big ratings (from remaining)
+    const bestBigs = [...availablePlayers]
+      .filter((p) => !usedIds.has(p.id))
+      .sort((a, b) => b.bigRating - a.bigRating);
+    for (let i = 0; i < numBigs && i < bestBigs.length; i++) {
+      const player = bestBigs[i];
+      if (player) {
+        starterIds.push(player.id);
+        usedIds.add(player.id);
+      }
+    }
+
+    // Ensure we have exactly 5 slots (pad with empty if needed)
+    while (starterIds.length < 5) {
+      starterIds.push('');
+    }
+
     // Use setFullBasketballLineup which handles minutes allocation
-    setFullBasketballLineup(starterIds);
-  }, [getUserRoster, setFullBasketballLineup]);
+    setFullBasketballLineup(starterIds.slice(0, 5) as [string, string, string, string, string]);
+  }, [getUserRoster, setFullBasketballLineup, activeLineup]);
 
   const basketballTotalMinutes = useMemo(() => {
     return basketballPlayers.reduce((sum, p) => sum + p.targetMinutes, 0);
@@ -473,6 +513,21 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
       });
     },
     [activeLineup, activeSetLineup, basketballTotalMinutes, basketballPlayers]
+  );
+
+  /**
+   * Set the basketball formation (guards-wings-bigs configuration).
+   * This determines how the 5 starter slots are categorized.
+   */
+  const setBasketballFormation = useCallback(
+    (formation: BasketballFormation) => {
+      const currentLineup = activeLineup;
+      activeSetLineup({
+        ...currentLineup,
+        basketballFormation: formation,
+      });
+    },
+    [activeLineup, activeSetLineup]
   );
 
   // =========================================================================
@@ -2028,6 +2083,7 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
   }
 
   // Default: basketball
+  const basketballFormation = activeLineup.basketballFormation || '2-2-1';
   return {
     players: basketballPlayers,
     starters: basketballStarters,
@@ -2035,13 +2091,13 @@ export function useLineup(sport: SportType = 'basketball', options: UseLineupOpt
     reserves: basketballReserves,
     injured: basketballInjured,
     currentLineup: activeLineup,
-    formation: undefined,
+    formation: basketballFormation,
     formationPositions: undefined,
     setStarter: setBasketballStarter,
     moveToBench: moveBasketballToBench,
     swapPlayers: swapBasketballPlayers,
     swapStarters: swapBasketballStarterPositions,
-    setFormation: undefined,
+    setFormation: setBasketballFormation,
     setFullLineup: setFullBasketballLineup,
     applyOptimalLineup: applyOptimalBasketballLineup,
     setTargetMinutes: setBasketballTargetMinutes,

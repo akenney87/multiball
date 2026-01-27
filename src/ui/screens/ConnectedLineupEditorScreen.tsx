@@ -16,9 +16,14 @@ import { useColors, spacing, shadows } from '../theme';
 import { useLineup, LineupPlayer, FORMATION_POSITIONS } from '../hooks/useLineup';
 import { calculateSoccerPositionOverall } from '../integration/gameInitializer';
 import { useGame } from '../context/GameContext';
-import type { SoccerFormation, BaseballPosition } from '../context/types';
-import type { BaseballPositionType } from '../../utils/overallRating';
-import { calculateSoccerOverall } from '../../utils/overallRating';
+import type { SoccerFormation, BaseballPosition, BasketballFormation } from '../context/types';
+import { getBasketballSlotLabels } from '../context/types';
+import type { BaseballPositionType, BasketballPositionType } from '../../utils/overallRating';
+import {
+  calculateSoccerOverall,
+  calculateBasketballPositionOverall,
+  getBasketballPositionCategoryLabel,
+} from '../../utils/overallRating';
 import {
   aggregateSoccerPlayerStats,
   aggregateSoccerGoalkeeperStats,
@@ -425,7 +430,7 @@ const unifiedStyles = StyleSheet.create({
   },
 })
 
-const BASKETBALL_POSITIONS = ['PG', 'SG', 'SF', 'PF', 'C'] as const;
+const BASKETBALL_FORMATIONS: BasketballFormation[] = ['2-2-1', '1-3-1', '3-1-1', '1-2-2', '2-1-2'];
 const SOCCER_FORMATIONS: SoccerFormation[] = ['4-4-2', '4-3-3', '3-5-2', '4-2-3-1', '5-3-2', '4-1-4-1'];
 
 /** Format height from inches to feet'inches" (e.g., 72 -> 6'0") */
@@ -448,12 +453,18 @@ function getFitnessColor(fitness: number, colors: ReturnType<typeof useColors>):
 
 /** Basketball stat options for dropdown */
 type BasketballStatOption =
-  | 'overall' | 'shooting' | 'athleticism' | 'defense' | 'playmaking' | 'fitness'
+  | 'position' | 'overall' | 'guard' | 'wing' | 'big'
+  | 'shooting' | 'athleticism' | 'defense' | 'playmaking' | 'fitness'
   | 'ppg' | 'rpg' | 'apg' | 'spg' | 'bpg' | 'fgPct' | 'fg3Pct' | 'ftPct' | 'eff' | 'mpg';
 
 const BASKETBALL_STAT_OPTIONS: { value: BasketballStatOption; label: string }[] = [
-  // Attributes
+  // Position ratings
+  { value: 'position', label: 'Position' },
   { value: 'overall', label: 'Overall' },
+  { value: 'guard', label: 'Guard' },
+  { value: 'wing', label: 'Wing' },
+  { value: 'big', label: 'Big' },
+  // Skill composites
   { value: 'shooting', label: 'Shooting' },
   { value: 'athleticism', label: 'Athletic' },
   { value: 'defense', label: 'Defense' },
@@ -478,7 +489,8 @@ function getBasketballStatValue(
   player: LineupPlayer | null | undefined,
   stat: BasketballStatOption,
   playersRecord?: Record<string, Player>,
-  aggregatedStatsMap?: Map<string, AggregatedPlayerStats>
+  aggregatedStatsMap?: Map<string, AggregatedPlayerStats>,
+  slotPosition?: 'Guard' | 'Wing' | 'Big'
 ): string {
   if (!player) return '-';
 
@@ -492,8 +504,28 @@ function getBasketballStatValue(
   const aggStats = aggregatedStatsMap?.get(player.id);
 
   switch (stat) {
+    case 'position':
+      // Show contextual position rating based on slot
+      if (!p?.attributes) return String(player.overall);
+      if (slotPosition === 'Guard') {
+        return String(calculateBasketballPositionOverall(p.attributes, 'guard'));
+      } else if (slotPosition === 'Wing') {
+        return String(calculateBasketballPositionOverall(p.attributes, 'wing'));
+      } else if (slotPosition === 'Big') {
+        return String(calculateBasketballPositionOverall(p.attributes, 'big'));
+      }
+      return String(player.overall);
     case 'overall':
       return String(player.overall);
+    case 'guard':
+      if (!p?.attributes) return String(player.overall);
+      return String(calculateBasketballPositionOverall(p.attributes, 'guard'));
+    case 'wing':
+      if (!p?.attributes) return String(player.overall);
+      return String(calculateBasketballPositionOverall(p.attributes, 'wing'));
+    case 'big':
+      if (!p?.attributes) return String(player.overall);
+      return String(calculateBasketballPositionOverall(p.attributes, 'big'));
     case 'shooting':
       if (!p?.attributes) return String(player.overall);
       // Shooting composite: throw_accuracy + form_technique
@@ -870,7 +902,14 @@ function BasketballLineupEditor({
     isValidLineup,
     swapBenchWithReserve,
     addToBench,
+    formation,
+    setFormation,
   } = useLineup('basketball', { isGameday });
+
+  // Compute slot labels based on current formation (e.g., 2-2-1 -> [Guard, Guard, Wing, Wing, Big])
+  const slotLabels = useMemo(() => {
+    return getBasketballSlotLabels(formation as BasketballFormation);
+  }, [formation]);
 
   const { state } = useGame();
   const allPlayers = state.players;
@@ -898,7 +937,7 @@ function BasketballLineupEditor({
   const [selectedBenchReserve, setSelectedBenchReserve] = useState<{ id: string; isBench: boolean } | null>(null);
 
   // Stat display selection for each section
-  const [starterStatSelection, setStarterStatSelection] = useState<BasketballStatOption>('overall');
+  const [starterStatSelection, setStarterStatSelection] = useState<BasketballStatOption>('position');
   const [benchStatSelection, setBenchStatSelection] = useState<BasketballStatOption>('overall');
   const [showStatPicker, setShowStatPicker] = useState<'starters' | 'bench' | null>(null);
 
@@ -908,6 +947,13 @@ function BasketballLineupEditor({
     name: string;
     current: number;
     maxAllowed: number;
+  } | null>(null);
+
+  // Position ratings popup modal state (similar to soccer)
+  const [positionRatingsPlayer, setPositionRatingsPlayer] = useState<{
+    id: string;
+    name: string;
+    attributes: Player['attributes'];
   } | null>(null);
 
   // Handle tapping a bench or reserve player's badge for swap
@@ -989,7 +1035,7 @@ function BasketballLineupEditor({
   // Get instruction message based on selection state
   const getInstructionMessage = () => {
     if (selectedSlotIndex !== null) {
-      return `Tap another position to swap, or tap bench player to assign to ${BASKETBALL_POSITIONS[selectedSlotIndex]}`;
+      return `Tap another position to swap, or tap bench player to assign to ${slotLabels[selectedSlotIndex]}`;
     }
     if (selectedBenchReserve !== null) {
       return selectedBenchReserve.isBench
@@ -1002,6 +1048,47 @@ function BasketballLineupEditor({
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        {/* Formation Picker */}
+        <View style={[styles.section, { backgroundColor: colors.card }, shadows.md]}>
+          <View style={styles.formationHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Formation</Text>
+            <Text style={[styles.formationHint, { color: colors.textMuted }]}>
+              (Guards-Wings-Bigs)
+            </Text>
+          </View>
+          <View style={styles.formationPicker}>
+            {BASKETBALL_FORMATIONS.map((f) => {
+              const isSelected = f === formation;
+              return (
+                <TouchableOpacity
+                  key={f}
+                  style={[
+                    styles.formationButton,
+                    {
+                      borderColor: isSelected ? colors.primary : colors.border,
+                      backgroundColor: isSelected ? colors.primary + '20' : 'transparent',
+                    },
+                  ]}
+                  onPress={() => {
+                    if (setFormation) {
+                      (setFormation as (formation: BasketballFormation) => void)(f);
+                    }
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.formationButtonText,
+                      { color: isSelected ? colors.primary : colors.text },
+                    ]}
+                  >
+                    {f}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
         {/* Unified Instruction Bar */}
         <LineupInstructionBar
           sport="basketball"
@@ -1020,12 +1107,12 @@ function BasketballLineupEditor({
             onStatPress={() => setShowStatPicker('starters')}
             onAutoFill={insertOptimalLineup}
           />
-          {BASKETBALL_POSITIONS.map((position, index) => {
+          {slotLabels.map((slotLabel, index) => {
             const starter = starters[index];
             const isSlotSelected = selectedSlotIndex === index;
             return (
               <TouchableOpacity
-                key={position}
+                key={`slot-${index}`}
                 style={[
                   styles.playerRow,
                   { borderBottomColor: colors.border },
@@ -1034,15 +1121,36 @@ function BasketballLineupEditor({
                 onPress={() => handleSlotPress(index, starter)}
                 activeOpacity={0.7}
               >
-                <View style={[
-                  styles.positionBadgeLarge,
-                  { backgroundColor: isSlotSelected ? colors.primary : colors.primary + '20' },
-                ]}>
+                <TouchableOpacity
+                  style={[
+                    styles.positionBadgeLarge,
+                    { backgroundColor: isSlotSelected ? colors.primary : colors.primary + '20' },
+                  ]}
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    handleSlotPress(index, starter);
+                  }}
+                  onLongPress={(e) => {
+                    e.stopPropagation();
+                    if (starter) {
+                      const fullPlayer = allPlayers[starter.id];
+                      if (fullPlayer?.attributes) {
+                        setPositionRatingsPlayer({
+                          id: starter.id,
+                          name: starter.name,
+                          attributes: fullPlayer.attributes,
+                        });
+                      }
+                    }
+                  }}
+                  delayLongPress={300}
+                  activeOpacity={0.7}
+                >
                   <Text style={[
                     styles.positionBadgeTextLarge,
                     { color: isSlotSelected ? '#000' : colors.primary }
-                  ]}>{position}</Text>
-                </View>
+                  ]}>{slotLabel}</Text>
+                </TouchableOpacity>
                 {starter ? (
                   <>
                     <TouchableOpacity
@@ -1090,7 +1198,7 @@ function BasketballLineupEditor({
                     </TouchableOpacity>
                     <View style={styles.basketballStatColumn}>
                       <Text style={[styles.basketballStatValue, { color: colors.primary }]}>
-                        {getBasketballStatValue(starter, starterStatSelection, allPlayers, aggregatedStatsMap)}
+                        {getBasketballStatValue(starter, starterStatSelection, allPlayers, aggregatedStatsMap, slotLabel)}
                       </Text>
                     </View>
                   </>
@@ -1155,6 +1263,19 @@ function BasketballLineupEditor({
                         handleBenchReserveBadgePress(player.id, true);
                       }
                     }}
+                    onLongPress={(e) => {
+                      e.stopPropagation();
+                      const fullPlayer = allPlayers[player.id];
+                      if (fullPlayer?.attributes) {
+                        setPositionRatingsPlayer({
+                          id: player.id,
+                          name: player.name,
+                          attributes: fullPlayer.attributes,
+                        });
+                      }
+                    }}
+                    delayLongPress={300}
+                    activeOpacity={0.7}
                   >
                     <Text style={[
                       styles.positionBadgeTextLarge,
@@ -1258,6 +1379,19 @@ function BasketballLineupEditor({
                         handleBenchReserveBadgePress(player.id, false);
                       }
                     }}
+                    onLongPress={(e) => {
+                      e.stopPropagation();
+                      const fullPlayer = allPlayers[player.id];
+                      if (fullPlayer?.attributes) {
+                        setPositionRatingsPlayer({
+                          id: player.id,
+                          name: player.name,
+                          attributes: fullPlayer.attributes,
+                        });
+                      }
+                    }}
+                    delayLongPress={300}
+                    activeOpacity={0.7}
                   >
                     <Text style={[
                       styles.positionBadgeTextLarge,
@@ -1307,7 +1441,7 @@ function BasketballLineupEditor({
               colors={colors}
             />
             {injured.map((player) => {
-              const fullPlayer = allPlayers.find(p => p.id === player.id);
+              const fullPlayer = allPlayers[player.id];
               const injuryName = fullPlayer?.injury?.injuryName || 'Injured';
               const recoveryWeeks = fullPlayer?.injury?.recoveryWeeks || 0;
               return (
@@ -1525,6 +1659,58 @@ function BasketballLineupEditor({
               <Text style={styles.minutesModalDoneText}>Done</Text>
             </TouchableOpacity>
           </View>
+        </Pressable>
+      </Modal>
+
+      {/* Basketball Position Ratings Modal */}
+      <Modal
+        visible={positionRatingsPlayer !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setPositionRatingsPlayer(null)}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setPositionRatingsPlayer(null)}
+        >
+          <Pressable
+            style={[styles.positionPickerModal, { backgroundColor: colors.card }, shadows.lg]}
+            onPress={() => {}}
+          >
+            <Text style={[styles.positionPickerTitle, { color: colors.text }]}>
+              Position Ratings for {positionRatingsPlayer?.name || 'Player'}
+            </Text>
+            <Text style={[styles.sectionSubtitle, { color: colors.textMuted, textAlign: 'center', marginBottom: spacing.md }]}>
+              How well this player fits each role
+            </Text>
+            <View style={styles.positionPickerGrid}>
+              {positionRatingsPlayer && (['guard', 'wing', 'big'] as BasketballPositionType[]).map((pos) => {
+                const rating = calculateBasketballPositionOverall(positionRatingsPlayer.attributes, pos);
+                return (
+                  <View
+                    key={pos}
+                    style={[
+                      styles.positionPickerButton,
+                      { borderColor: colors.border, minWidth: 90 },
+                    ]}
+                  >
+                    <Text style={[styles.positionPickerButtonText, { color: colors.text, fontWeight: '600' }]}>
+                      {getBasketballPositionCategoryLabel(pos)}
+                    </Text>
+                    <Text style={[styles.positionPickerButtonRating, { color: colors.primary, fontWeight: '700', fontSize: 18 }]}>
+                      {rating}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+            <TouchableOpacity
+              style={[styles.positionPickerCancel, { borderTopColor: colors.border }]}
+              onPress={() => setPositionRatingsPlayer(null)}
+            >
+              <Text style={[styles.positionPickerCancelText, { color: colors.textMuted }]}>Close</Text>
+            </TouchableOpacity>
+          </Pressable>
         </Pressable>
       </Modal>
     </View>
@@ -2019,6 +2205,13 @@ function SoccerLineupEditor({
                         handleBenchReserveBadgePress(player.id, true);
                       }
                     }}
+                    onLongPress={(e) => {
+                      e.stopPropagation();
+                      // Long press opens position picker (shows positional ratings)
+                      handlePositionBadgePress(player, 0);
+                    }}
+                    delayLongPress={300}
+                    activeOpacity={0.7}
                   >
                     <Text style={[
                       styles.positionBadgeTextLarge,
@@ -2117,6 +2310,13 @@ function SoccerLineupEditor({
                         handleBenchReserveBadgePress(player.id, false);
                       }
                     }}
+                    onLongPress={(e) => {
+                      e.stopPropagation();
+                      // Long press opens position picker (shows positional ratings)
+                      handlePositionBadgePress(player, 0);
+                    }}
+                    delayLongPress={300}
+                    activeOpacity={0.7}
                   >
                     <Text style={[
                       styles.positionBadgeTextLarge,
@@ -2176,7 +2376,7 @@ function SoccerLineupEditor({
               colors={colors}
             />
             {injured.map((player) => {
-              const fullPlayer = state.players.find(p => p.id === player.id);
+              const fullPlayer = state.players[player.id];
               const injuryName = fullPlayer?.injury?.injuryName || 'Injured';
               const recoveryWeeks = fullPlayer?.injury?.recoveryWeeks || 0;
               return (
@@ -2191,7 +2391,7 @@ function SoccerLineupEditor({
                     <Text style={[styles.positionBadgeTextLarge, { color: '#fff' }]}>INJ</Text>
                   </View>
                   <TouchableOpacity
-                    style={styles.soccerPlayerInfo}
+                    style={styles.playerMainInfo}
                     onPress={() => onPlayerPress?.(player.id)}
                     activeOpacity={0.7}
                   >
@@ -3277,6 +3477,13 @@ function BaseballLineupEditor({
                         handleBenchReserveBadgePress(player.id, true);
                       }
                     }}
+                    onLongPress={(e) => {
+                      e.stopPropagation();
+                      // Long press opens position picker (shows all positional ratings)
+                      setPositionPickerPlayerId(player.id);
+                    }}
+                    delayLongPress={300}
+                    activeOpacity={0.7}
                   >
                     <Text style={[
                       styles.positionBadgeTextLarge,
@@ -3380,6 +3587,13 @@ function BaseballLineupEditor({
                         handleBenchReserveBadgePress(player.id, false);
                       }
                     }}
+                    onLongPress={(e) => {
+                      e.stopPropagation();
+                      // Long press opens position picker (shows all positional ratings)
+                      setPositionPickerPlayerId(player.id);
+                    }}
+                    delayLongPress={300}
+                    activeOpacity={0.7}
                   >
                     <Text style={[
                       styles.positionBadgeText,
@@ -3438,7 +3652,7 @@ function BaseballLineupEditor({
               colors={colors}
             />
             {injured.map((player) => {
-              const fullPlayer = allPlayers.find(p => p.id === player.id);
+              const fullPlayer = allPlayers[player.id];
               const injuryName = fullPlayer?.injury?.injuryName || 'Injured';
               const recoveryWeeks = fullPlayer?.injury?.recoveryWeeks || 0;
               return (
@@ -3687,6 +3901,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  formationHint: {
+    fontSize: 12,
+    fontStyle: 'italic',
   },
   averageOverallBadge: {
     paddingHorizontal: spacing.sm,

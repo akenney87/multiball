@@ -117,6 +117,123 @@ export function calculateBasketballOverall(attrs: PlayerAttributes): number {
 }
 
 // =============================================================================
+// BASKETBALL POSITION OVERALLS (Guards / Wings / Bigs)
+// =============================================================================
+
+export type BasketballPositionType = 'guard' | 'wing' | 'big';
+
+/**
+ * Calculate basketball position-specific overall
+ *
+ * Guards (PG, SG): Shooting, ball handling, court vision, perimeter defense
+ * Wings (SF): Versatility - shooting, defense, finishing, athleticism
+ * Bigs (PF, C): Rebounding, post play, rim protection, interior presence
+ */
+export function calculateBasketballPositionOverall(attrs: PlayerAttributes, position: BasketballPositionType): number {
+  let score: number;
+
+  switch (position) {
+    case 'guard': // Point Guard / Shooting Guard
+      // Emphasis: shooting, ball handling, playmaking, speed
+      score =
+        attr(attrs, 'form_technique') * 14 +
+        attr(attrs, 'throw_accuracy') * 14 +
+        attr(attrs, 'finesse') * 10 +
+        attr(attrs, 'hand_eye_coordination') * 12 +
+        attr(attrs, 'awareness') * 10 +
+        attr(attrs, 'agility') * 8 +
+        attr(attrs, 'acceleration') * 6 +
+        attr(attrs, 'top_speed') * 4 +
+        attr(attrs, 'reactions') * 6 +
+        attr(attrs, 'composure') * 6 +
+        attr(attrs, 'creativity') * 6 +
+        attr(attrs, 'balance') * 4;
+      break;
+
+    case 'wing': // Small Forward
+      // Emphasis: versatility - can shoot, handle, defend, and attack rim
+      score =
+        attr(attrs, 'form_technique') * 10 +
+        attr(attrs, 'throw_accuracy') * 10 +
+        attr(attrs, 'finesse') * 9 +
+        attr(attrs, 'agility') * 10 +
+        attr(attrs, 'acceleration') * 8 +
+        attr(attrs, 'deception') * 6 +
+        attr(attrs, 'balance') * 7 +
+        attr(attrs, 'height') * 5 +
+        attr(attrs, 'reactions') * 8 +
+        attr(attrs, 'awareness') * 8 +
+        attr(attrs, 'jumping') * 6 +
+        attr(attrs, 'determination') * 5 +
+        attr(attrs, 'composure') * 5 +
+        attr(attrs, 'hand_eye_coordination') * 3;
+      break;
+
+    case 'big': // Power Forward / Center
+      // Emphasis: rebounding, post play, rim protection, interior presence
+      score =
+        attr(attrs, 'height') * 16 +
+        attr(attrs, 'jumping') * 12 +
+        attr(attrs, 'core_strength') * 10 +
+        attr(attrs, 'grip_strength') * 8 +
+        attr(attrs, 'arm_strength') * 6 +
+        attr(attrs, 'reactions') * 10 +
+        attr(attrs, 'awareness') * 10 +
+        attr(attrs, 'bravery') * 5 +
+        attr(attrs, 'determination') * 6 +
+        attr(attrs, 'footwork') * 7 +
+        attr(attrs, 'balance') * 5 +
+        attr(attrs, 'stamina') * 5;
+      break;
+  }
+
+  return Math.round(score / 100);
+}
+
+/**
+ * Get all basketball position ratings for a player
+ */
+export function getAllBasketballPositionRatings(attrs: PlayerAttributes): Record<BasketballPositionType, number> {
+  return {
+    guard: calculateBasketballPositionOverall(attrs, 'guard'),
+    wing: calculateBasketballPositionOverall(attrs, 'wing'),
+    big: calculateBasketballPositionOverall(attrs, 'big'),
+  };
+}
+
+/**
+ * Map traditional basketball position to position category
+ */
+export function getBasketballPositionCategory(position: string): BasketballPositionType {
+  switch (position) {
+    case 'PG':
+    case 'SG':
+      return 'guard';
+    case 'SF':
+      return 'wing';
+    case 'PF':
+    case 'C':
+      return 'big';
+    default:
+      return 'wing'; // Default to wing for unknown positions
+  }
+}
+
+/**
+ * Get display name for basketball position category
+ */
+export function getBasketballPositionCategoryLabel(category: BasketballPositionType): string {
+  switch (category) {
+    case 'guard':
+      return 'Guard';
+    case 'wing':
+      return 'Wing';
+    case 'big':
+      return 'Big';
+  }
+}
+
+// =============================================================================
 // BASEBALL POSITION OVERALLS
 // =============================================================================
 

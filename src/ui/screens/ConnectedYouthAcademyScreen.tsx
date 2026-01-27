@@ -150,6 +150,8 @@ function convertProspectToPlayer(
     transferRequestDate: null,
     weeksDisgruntled: 0,
     ambition: 0.9 + Math.random() * 0.2, // 0.9-1.1 range for youth
+    // Loan status - null for new players
+    loanStatus: null,
   };
 }
 

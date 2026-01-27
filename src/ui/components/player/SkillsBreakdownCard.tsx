@@ -16,6 +16,11 @@ import {
   type Sport,
   type CalculatedSkill,
 } from '../../../utils/skillComposites';
+import {
+  calculateBasketballOverall,
+  calculateBaseballOverall,
+  calculateSoccerOverall,
+} from '../../../utils/overallRating';
 
 // =============================================================================
 // TYPES
@@ -56,12 +61,18 @@ export function SkillsBreakdownCard({ player, hidden = false }: SkillsBreakdownC
     }
   };
 
-  // Get overall for selected sport
+  // Get overall for selected sport (using same formula as rest of app)
   const sportOverall = useMemo(() => {
     if (hidden) return '??';
-    const avg = skills.reduce((sum, s) => sum + s.value, 0) / (skills.length || 1);
-    return Math.round(avg);
-  }, [skills, hidden]);
+    switch (selectedSport) {
+      case 'basketball':
+        return calculateBasketballOverall(player.attributes);
+      case 'baseball':
+        return calculateBaseballOverall(player.attributes);
+      case 'soccer':
+        return calculateSoccerOverall(player.attributes);
+    }
+  }, [player.attributes, selectedSport, hidden]);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.card }, shadows.md]}>

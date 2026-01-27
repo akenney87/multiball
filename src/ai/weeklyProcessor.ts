@@ -15,7 +15,7 @@
  * - Distant divisions still drain/add to player pool but less frequently
  */
 
-import type { Player, AIPersonality } from '../data/types';
+import type { Player, AIPersonality, LoanTerms, LoanOffer, ActiveLoan } from '../data/types';
 import type { AIConfig } from './types';
 import {
   AIWeeklyActions,
@@ -157,6 +157,42 @@ export interface ResolvedTransferListing {
 /**
  * All resolved actions after conflict resolution
  */
+/** Resolved loan offer */
+export interface ResolvedLoanOffer {
+  offerId: string;
+  offeringTeamId: string;
+  offeringTeamName: string;
+  receivingTeamId: string;
+  playerId: string;
+  playerName: string;
+  terms: LoanTerms;
+}
+
+/** Resolved loan offer response */
+export interface ResolvedLoanResponse {
+  offerId: string;
+  teamId: string;
+  decision: 'accept' | 'reject' | 'counter';
+  counterTerms?: LoanTerms;
+}
+
+/** Resolved loan recall */
+export interface ResolvedLoanRecall {
+  loanId: string;
+  parentClubId: string;
+  loanClubId: string;
+  playerId: string;
+}
+
+/** Resolved buy option exercise */
+export interface ResolvedBuyOption {
+  loanId: string;
+  buyingTeamId: string;
+  sellingTeamId: string;
+  playerId: string;
+  fee: number;
+}
+
 export interface ResolvedActions {
   signings: ResolvedSigning[];
   transferBids: ResolvedTransferBid[];
@@ -165,11 +201,18 @@ export interface ResolvedActions {
   transferListings: ResolvedTransferListing[];
   /** Actions that were blocked due to conflicts */
   blockedActions: {
-    type: 'signing' | 'transfer';
+    type: 'signing' | 'transfer' | 'loan';
     teamId: string;
     playerId: string;
     reason: string;
   }[];
+  // Loan system
+  loanOffers: ResolvedLoanOffer[];
+  loanResponses: ResolvedLoanResponse[];
+  loanRecalls: ResolvedLoanRecall[];
+  buyOptionExercises: ResolvedBuyOption[];
+  loanCompletions: Array<{ loanId: string; reason: 'expired' | 'bought' }>;
+  playersListedForLoan: Array<{ teamId: string; playerId: string }>;
 }
 
 // =============================================================================
@@ -492,6 +535,13 @@ export function resolveConflicts(allActions: AIWeeklyActions[]): ResolvedActions
     releases: [],
     transferListings: [],
     blockedActions: [],
+    // Loan system
+    loanOffers: [],
+    loanResponses: [],
+    loanRecalls: [],
+    buyOptionExercises: [],
+    loanCompletions: [],
+    playersListedForLoan: [],
   };
 
   // Track claimed free agents

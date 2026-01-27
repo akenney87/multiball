@@ -1134,6 +1134,7 @@ function createUserTeam(
     rosterIds,
     lineup: {
       basketballStarters,
+      basketballFormation: '2-2-1',
       baseballLineup,
       soccerLineup,
       bench,
