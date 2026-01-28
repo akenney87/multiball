@@ -1,7 +1,7 @@
 # Multiball - Living Project Context
 
-**Last Updated:** 2026-01-22
-**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅ | **Injury System COMPLETE** ✅ | **Transfer Negotiation System COMPLETE** ✅ | **Title Screen Redesign** ✅
+**Last Updated:** 2026-01-28
+**Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅ | **Injury System COMPLETE** ✅ | **Transfer Negotiation System COMPLETE** ✅ | **Title Screen Redesign** ✅ | **Player Loan System COMPLETE** ✅
 
 ---
 
@@ -2976,3 +2976,91 @@ Technical Fixes:
 
 Files Modified:
 - `src/ui/screens/TitleScreen.tsx` - Complete redesign with new aesthetic
+
+
+### 2026-01-28: Player Loan System
+
+**Full Football Manager-Style Loan System Implementation:**
+Comprehensive loan system allowing teams to temporarily loan players to/from other clubs.
+
+**Core Features:**
+- Loan offers with fees, wage splits (0-100% parent contribution), and configurable duration
+- Buy options: mandatory or optional, with price and conditions
+- Recall clauses: parent club can bring player back early (with fee and minimum weeks)
+- Playing time clauses: penalty amounts if minimum appearances not met
+- Full negotiation flow: offer → counter → accept/reject
+- Week-based duration tracking (consistent with transfer system)
+
+**UI Components:**
+- `LoanMarketScreen.tsx` - Main loan market with 5 tabs:
+  - Loan In: Browse loan-listed players from other teams
+  - Loan Out: List your players as available for loan
+  - My Offers: Track outgoing loan offers
+  - Incoming: Respond to offers for your players
+  - Active: Manage current loans (recall, buy options)
+- `LoanOffersModal.tsx` - Player-specific loan status/actions
+- `ConnectedLoanMarketScreen.tsx` - GameContext connector
+
+**State Management:**
+- New `LoanState` in GameState with:
+  - `loanOffers`: All loan offers
+  - `incomingLoanOffers`: Offers for user's players
+  - `outgoingLoanOffers`: User's offers for other players
+  - `activeLoans`: User team's active loans (as parent or loan club)
+  - `allActiveLoans`: All league loans (for AI-to-AI tracking)
+  - `loanListedPlayerIds`: Players available for loan
+
+**New Types (src/data/types.ts):**
+- `LoanTerms`: Fee, wage contribution, duration, buy option, recall clause, playing time clause
+- `LoanOffer`: Full offer with status, negotiation history, expiry
+- `ActiveLoan`: Active loan record with appearances, wage responsibility split
+- `PlayerLoanStatus`: Added to Player interface (isOnLoan, parentClubId, loanClubId)
+
+**Reducer Actions:**
+- `MAKE_LOAN_OFFER`, `RESPOND_TO_LOAN_OFFER`, `COUNTER_LOAN_OFFER`, `ACCEPT_COUNTER_LOAN_OFFER`
+- `COMPLETE_LOAN`, `RECALL_LOAN`, `EXERCISE_BUY_OPTION`, `END_LOAN`
+- `LIST_PLAYER_FOR_LOAN`, `UNLIST_PLAYER_FOR_LOAN`
+- `PROCESS_LOAN_EXPIRIES`, `RECORD_LOAN_APPEARANCE`
+- AI actions: `AI_MAKE_LOAN_OFFER`, `AI_RESPOND_TO_LOAN_OFFER`
+
+**AI Foundation (not yet integrated into advanceWeek):**
+- `src/ai/loanManager.ts` - AI loan decision logic:
+  - Who to loan out: youth development, blocked by star, wage offload, no permanent buyer
+  - Who to loan in: position gaps, quality boost, development partner, injury cover
+- `src/systems/loanSystem.ts` - Core calculations:
+  - `calculateRecommendedLoanFee()`, `calculateRecommendedWageContribution()`
+  - `canPlayerBeLoaned()`, `canTeamLoanIn()`
+  - `activateLoan()`, `completeLoan()`, `recallLoan()`, `exerciseBuyOption()`
+
+**Files Created:**
+- `src/ai/loanManager.ts` - AI loan decision logic
+- `src/systems/loanSystem.ts` - Core loan calculations and lifecycle
+- `src/ui/screens/LoanMarketScreen.tsx` - Main loan market UI
+- `src/ui/screens/ConnectedLoanMarketScreen.tsx` - GameContext connector
+- `src/ui/components/loan/LoanOffersModal.tsx` - Player loan modal
+
+**Files Modified:**
+- `src/data/types.ts` - Loan types (+176 lines)
+- `src/ui/context/types.ts` - LoanState, GameActions (+180 lines)
+- `src/ui/context/gameReducer.ts` - All loan reducer cases (+841 lines)
+- `src/ui/context/GameContext.tsx` - Loan context methods (+85 lines)
+- `src/ai/aiManager.ts` - AIWeeklyActions loan types
+- `src/ai/weeklyProcessor.ts` - ResolvedActions loan types
+- `src/ui/screens/ConnectedYouthAcademyScreen.tsx` - Added loanStatus to player creation
+
+**Code Review Fixes Applied:**
+1. AI roster updates in RECALL_LOAN, EXERCISE_BUY_OPTION, END_LOAN, COMPLETE_LOAN
+2. AI budget deductions/credits for all loan transactions
+3. Counter offer acceptance no longer creates duplicate offers (new ACCEPT_COUNTER_LOAN_OFFER action)
+4. Buy option button disabled when user budget insufficient
+
+**NEXT STEPS (Not Yet Implemented):**
+- Integrate AI loan processing into `advanceWeek()` in GameContext.tsx
+  - Process `aiResolvedActions.loanOffers` (AI making loan offers)
+  - Process `aiResolvedActions.loanResponses` (AI responding to offers)
+  - Process `aiResolvedActions.loanRecalls` and `buyOptionExercises`
+- Add loan market access point in main navigation/dashboard
+- Test AI-to-AI loans end-to-end
+- Add loan-related news events
+
+**Plan File:** `C:\Users\alexa\.claude\plans\tranquil-wishing-snail.md` (comprehensive implementation plan)
