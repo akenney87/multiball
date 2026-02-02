@@ -1,6 +1,6 @@
 # Multiball - Living Project Context
 
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-02-02
 **Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅ | **Injury System COMPLETE** ✅ | **Transfer Negotiation System COMPLETE** ✅ | **Title Screen Redesign** ✅ | **Player Loan System COMPLETE** ✅
 
 ---
@@ -3023,7 +3023,7 @@ Comprehensive loan system allowing teams to temporarily loan players to/from oth
 - `PROCESS_LOAN_EXPIRIES`, `RECORD_LOAN_APPEARANCE`
 - AI actions: `AI_MAKE_LOAN_OFFER`, `AI_RESPOND_TO_LOAN_OFFER`
 
-**AI Foundation (not yet integrated into advanceWeek):**
+**AI Logic (integrated into advanceWeek - see 2026-02-02 entry):**
 - `src/ai/loanManager.ts` - AI loan decision logic:
   - Who to loan out: youth development, blocked by star, wage offload, no permanent buyer
   - Who to loan in: position gaps, quality boost, development partner, injury cover
@@ -3055,12 +3055,40 @@ Comprehensive loan system allowing teams to temporarily loan players to/from oth
 4. Buy option button disabled when user budget insufficient
 
 **NEXT STEPS (Not Yet Implemented):**
-- Integrate AI loan processing into `advanceWeek()` in GameContext.tsx
-  - Process `aiResolvedActions.loanOffers` (AI making loan offers)
-  - Process `aiResolvedActions.loanResponses` (AI responding to offers)
-  - Process `aiResolvedActions.loanRecalls` and `buyOptionExercises`
 - Add loan market access point in main navigation/dashboard
 - Test AI-to-AI loans end-to-end
-- Add loan-related news events
 
 **Plan File:** `C:\Users\alexa\.claude\plans\tranquil-wishing-snail.md` (comprehensive implementation plan)
+
+### 2026-02-02: Loan System advanceWeek Integration & Code Review Fixes
+
+**Loan System Wired Into Weekly Processing:**
+Integrated the full AI loan lifecycle into `advanceWeek()` in GameContext.tsx (~330 lines added). Each week now processes:
+
+1. **Loan offer expiries** - Dispatches `PROCESS_LOAN_EXPIRIES` to expire stale offers
+2. **Expiring active loans** - Auto-completes loans at end of duration:
+   - Checks mandatory buy options (with affordability validation)
+   - Falls back to normal loan completion if buy can't be afforded
+   - Calculates and applies playing time penalties via END_LOAN payload
+3. **AI loan decisions** - For each AI team, calls `processAILoanWeek()` then executes:
+   - `LIST_PLAYER_FOR_LOAN` - AI listing surplus players
+   - `AI_MAKE_LOAN_OFFER` - AI pursuing loan targets
+   - `AI_RESPOND_TO_LOAN_OFFER` - AI accepting/rejecting/countering incoming offers
+   - `RECALL_LOAN` - AI recalling players from loan
+   - `EXERCISE_BUY_OPTION` - AI exercising buy clauses
+4. **News events** - Generated for all loan actions affecting the user (offers, responses, recalls, buy options, loan completions)
+
+**Code Review Fixes Applied:**
+1. **Budget null safety** - All `team.budget.available` accesses in COMPLETE_LOAN, RECALL_LOAN, and EXERCISE_BUY_OPTION now guard against undefined budget (`team.budget ? ... : undefined`)
+2. **Playing time penalty implemented** - Added optional `playingTimePenalty` field to END_LOAN action; reducer transfers funds from loan club to parent club
+3. **Recall budget validation** - Reducer rejects recall if user can't afford the recall fee
+4. **Mandatory buy affordability check** - advanceWeek checks loan club budget before auto-exercising mandatory buy options; if insufficient, loan ends normally
+5. **Roster duplicate prevention** - All roster additions in END_LOAN and RECALL_LOAN check `includes()` before pushing player ID
+6. **Removed unused imports** - Cleaned up `AILoanWeeklyActions`, `expireOldLoanOffers`, `LOAN_OFFER_EXPIRY_WEEKS`
+7. **Fixed type mismatch** - END_LOAN reason changed from invalid `'expired'` to `'completed'`
+8. **Fixed AITeamState property access** - Changed `team.aiPersonality` to `team.aiConfig` with `configToPersonality()` conversion
+
+**Files Modified:**
+- `src/ui/context/GameContext.tsx` - Loan processing section in advanceWeek (+330 lines)
+- `src/ui/context/gameReducer.ts` - Budget null safety, playing time penalty in END_LOAN, roster guards, recall budget check
+- `src/ui/context/types.ts` - Added `playingTimePenalty?: number` to END_LOAN payload type
