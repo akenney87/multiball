@@ -118,6 +118,16 @@ import {
 } from '../../systems/managerRatingSystem';
 import { calculatePlayerMarketValue } from '../../systems/contractSystem';
 import type { TrophyRecord } from '../../data/types';
+import {
+  processAILoanWeek,
+  type AILoanContext,
+} from '../../ai/loanManager';
+import {
+  getExpiringLoans,
+  getLoansForTeam,
+  checkMandatoryBuyOption,
+  calculatePlayingTimePenalty,
+} from '../../systems/loanSystem';
 
 /**
  * Get ordinal suffix for a number (1st, 2nd, 3rd, etc.)
@@ -1970,6 +1980,335 @@ export function GameProvider({ children }: GameProviderProps) {
           })),
         },
       });
+    }
+
+    // =========================================================================
+    // LOAN SYSTEM PROCESSING
+    // =========================================================================
+    const loanState = stateRef.current;
+
+    // 1. Process loan offer expiries
+    dispatch({
+      type: 'PROCESS_LOAN_EXPIRIES',
+      payload: { currentWeek: loanState.season.currentWeek },
+    });
+
+    // 2. Check for expiring loans and auto-complete them
+    const expiringLoans = getExpiringLoans(loanState.loans.allActiveLoans, loanState.season.currentWeek);
+    for (const loan of expiringLoans) {
+      // Check if mandatory buy option should trigger
+      if (checkMandatoryBuyOption(loan)) {
+        const player = loanState.players[loan.playerId];
+        if (player && loan.terms.buyOption) {
+          const transferFee = loan.terms.buyOption.price || 0;
+
+          // Check if loan club can afford the mandatory buy
+          let canAfford = true;
+          if (loan.loanClubId === 'user') {
+            canAfford = loanState.userTeam.availableBudget >= transferFee;
+          } else {
+            const loanClub = loanState.league.teams.find(t => t.id === loan.loanClubId);
+            canAfford = (loanClub?.budget?.available ?? 0) >= transferFee;
+          }
+
+          if (canAfford) {
+            // Auto-exercise mandatory buy option
+            dispatch({
+              type: 'EXERCISE_BUY_OPTION',
+              payload: { loanId: loan.id },
+            });
+
+            // Create news event
+            const buyOptionEvent: NewsItem = {
+              id: `event-loan-mandatory-buy-${Date.now()}-${loan.id}`,
+              type: 'transfer',
+              priority: loan.loanClubId === 'user' || loan.parentClubId === 'user' ? 'important' : 'info',
+              title: 'Mandatory Buy Option Triggered',
+              message: `${player.name}'s mandatory buy option has been triggered. Transfer fee: $${(transferFee / 1000000).toFixed(1)}M.`,
+              timestamp: new Date(),
+              read: false,
+              relatedEntityId: loan.playerId,
+              scope: loan.loanClubId === 'user' || loan.parentClubId === 'user' ? 'team' : 'division',
+              teamId: loan.loanClubId === 'user' ? 'user' : loan.parentClubId === 'user' ? 'user' : loan.loanClubId,
+            };
+            dispatch({ type: 'ADD_EVENT', payload: buyOptionEvent });
+          } else {
+            // Can't afford mandatory buy - loan ends normally, player returns
+            console.log(`[Loan] Mandatory buy option skipped - insufficient funds for ${player.name}`);
+            dispatch({
+              type: 'END_LOAN',
+              payload: { loanId: loan.id, reason: 'completed' },
+            });
+          }
+        }
+      } else {
+        // Normal loan completion - player returns to parent club
+        const player = loanState.players[loan.playerId];
+
+        // Check for playing time penalty
+        const penalty = calculatePlayingTimePenalty(loan);
+        if (penalty > 0 && player) {
+          console.log(`[Loan] Playing time penalty: $${penalty} for ${player.name}`);
+        }
+
+        dispatch({
+          type: 'END_LOAN',
+          payload: {
+            loanId: loan.id,
+            reason: 'completed',
+            ...(penalty > 0 ? { playingTimePenalty: penalty } : {}),
+          },
+        });
+
+        // Create news event for loan end
+        if (player) {
+          const loanEndEvent: NewsItem = {
+            id: `event-loan-end-${Date.now()}-${loan.id}`,
+            type: 'transfer',
+            priority: loan.parentClubId === 'user' || loan.loanClubId === 'user' ? 'info' : 'info',
+            title: 'Loan Spell Ends',
+            message: `${player.name}'s loan spell has ended. They return to their parent club.`,
+            timestamp: new Date(),
+            read: false,
+            relatedEntityId: loan.playerId,
+            scope: loan.parentClubId === 'user' || loan.loanClubId === 'user' ? 'team' : 'division',
+            teamId: loan.parentClubId === 'user' ? 'user' : loan.loanClubId === 'user' ? 'user' : loan.parentClubId,
+          };
+          dispatch({ type: 'ADD_EVENT', payload: loanEndEvent });
+        }
+      }
+    }
+
+    // 3. Process AI loan decisions
+    const loanStateForAI = stateRef.current;
+    const seasonEndWeek = 40; // Regular season length
+
+    // Build list of players available for loan (listed by AI teams)
+    const availableLoanPlayers: Player[] = [];
+    for (const team of loanStateForAI.league.teams) {
+      for (const playerId of loanStateForAI.loans.loanListedPlayerIds) {
+        const player = loanStateForAI.players[playerId];
+        if (player && player.teamId === team.id) {
+          availableLoanPlayers.push(player);
+        }
+      }
+    }
+    // Add user's loan-listed players
+    for (const playerId of loanStateForAI.loans.loanListedPlayerIds) {
+      const player = loanStateForAI.players[playerId];
+      if (player && player.teamId === 'user') {
+        availableLoanPlayers.push(player);
+      }
+    }
+
+    // Process each AI team's loan decisions
+    for (const team of loanStateForAI.league.teams) {
+      if (!team.aiConfig) continue;
+
+      const personality = configToPersonality(team.aiConfig);
+
+      // Build AI loan context
+      const teamRoster = team.rosterIds
+        .map(id => loanStateForAI.players[id])
+        .filter((p): p is Player => p !== undefined);
+
+      const salaryCommitment = teamRoster.reduce((sum, p) => sum + (p.contract?.salary || 0), 0);
+      const teamBudget = team.budget?.available || 1000000;
+
+      // Get team standings
+      const teamStanding = loanStateForAI.season.standings[team.id];
+      const leaguePosition = teamStanding?.rank || 10;
+      const isInPromotionRace = leaguePosition <= 3;
+      const isInRelegationBattle = leaguePosition >= 18;
+
+      // Get active loans where this team is parent or loan club
+      const loansAsParent = getLoansForTeam(loanStateForAI.loans.allActiveLoans, team.id, 'parent');
+      const loansAsLoanClub = getLoansForTeam(loanStateForAI.loans.allActiveLoans, team.id, 'loan_club');
+
+      // Get incoming loan offers for this team
+      const incomingLoanOffers = loanStateForAI.loans.loanOffers.filter(
+        o => o.receivingTeamId === team.id && o.status === 'pending'
+      );
+
+      const context: AILoanContext = {
+        teamId: team.id,
+        teamName: team.name,
+        personality,
+        roster: teamRoster,
+        budget: teamBudget,
+        division: team.division || 5,
+        leaguePosition,
+        currentWeek: loanStateForAI.season.currentWeek,
+        seasonEndWeek,
+        weeksRemaining: Math.max(0, seasonEndWeek - loanStateForAI.season.currentWeek),
+        isInPromotionRace,
+        isInRelegationBattle,
+        salaryCommitment,
+        positionNeeds: [], // Simplified - could calculate from roster gaps
+        playersLoanedOut: loansAsParent,
+        playersLoanedIn: loansAsLoanClub,
+      };
+
+      const loanActions = processAILoanWeek(
+        context,
+        availableLoanPlayers.filter(p => p.teamId !== team.id), // Exclude own players
+        incomingLoanOffers,
+        loansAsParent,
+        loansAsLoanClub
+      );
+
+      // Execute AI loan actions
+
+      // a) List players for loan
+      for (const playerId of loanActions.playersToLoanList) {
+        const player = loanStateForAI.players[playerId];
+        if (player && !loanStateForAI.loans.loanListedPlayerIds.includes(playerId)) {
+          dispatch({
+            type: 'LIST_PLAYER_FOR_LOAN',
+            payload: { playerId },
+          });
+          console.log(`[AI Loan] ${team.name} listed ${player.name} for loan`);
+        }
+      }
+
+      // b) Make loan offers
+      for (const offer of loanActions.loanOffers) {
+        dispatch({
+          type: 'AI_MAKE_LOAN_OFFER',
+          payload: {
+            offeringTeamId: team.id,
+            receivingTeamId: offer.targetTeamId,
+            playerId: offer.targetPlayerId,
+            terms: offer.terms,
+          },
+        });
+
+        const player = loanStateForAI.players[offer.targetPlayerId];
+        console.log(`[AI Loan] ${team.name} made loan offer for ${player?.name || 'Unknown'}`);
+
+        // If offer is for user's player, create news event
+        if (offer.targetTeamId === 'user' && player) {
+          const offerEvent: NewsItem = {
+            id: `event-loan-offer-${Date.now()}-${offer.targetPlayerId}`,
+            type: 'transfer',
+            priority: 'important',
+            title: 'Loan Offer Received',
+            message: `${team.name} want to loan ${player.name}. Fee: $${(offer.terms.loanFee / 1000).toFixed(0)}K, Wage split: ${offer.terms.wageContribution}% parent contribution.`,
+            timestamp: new Date(),
+            read: false,
+            relatedEntityId: offer.targetPlayerId,
+            scope: 'team',
+            teamId: 'user',
+          };
+          dispatch({ type: 'ADD_EVENT', payload: offerEvent });
+        }
+      }
+
+      // c) Respond to loan offers
+      for (const response of loanActions.loanOfferResponses) {
+        dispatch({
+          type: 'AI_RESPOND_TO_LOAN_OFFER',
+          payload: {
+            offerId: response.offerId,
+            decision: response.decision,
+            counterTerms: response.counterTerms,
+          },
+        });
+
+        const offer = incomingLoanOffers.find(o => o.id === response.offerId);
+        if (offer) {
+          const player = loanStateForAI.players[offer.playerId];
+          console.log(`[AI Loan] ${team.name} ${response.decision}ed loan offer for ${player?.name || 'Unknown'}`);
+
+          // If this was user's offer, create news event
+          if (offer.offeringTeamId === 'user' && player) {
+            let message: string;
+            if (response.decision === 'accept') {
+              message = `${team.name} have accepted your loan offer for ${player.name}!`;
+            } else if (response.decision === 'counter') {
+              message = `${team.name} have countered your loan offer for ${player.name}.`;
+            } else {
+              message = `${team.name} have rejected your loan offer for ${player.name}.`;
+            }
+
+            const responseEvent: NewsItem = {
+              id: `event-loan-response-${Date.now()}-${response.offerId}`,
+              type: 'transfer',
+              priority: response.decision === 'accept' ? 'important' : 'info',
+              title: response.decision === 'accept' ? 'Loan Offer Accepted!' : response.decision === 'counter' ? 'Loan Counter Offer' : 'Loan Offer Rejected',
+              message,
+              timestamp: new Date(),
+              read: false,
+              relatedEntityId: offer.playerId,
+              scope: 'team',
+              teamId: 'user',
+            };
+            dispatch({ type: 'ADD_EVENT', payload: responseEvent });
+          }
+        }
+      }
+
+      // d) Recall players from loan
+      for (const recall of loanActions.loanRecalls) {
+        const loan = loansAsParent.find(l => l.id === recall.loanId);
+        if (loan) {
+          dispatch({
+            type: 'RECALL_LOAN',
+            payload: { loanId: recall.loanId },
+          });
+
+          const player = loanStateForAI.players[loan.playerId];
+          console.log(`[AI Loan] ${team.name} recalled ${player?.name || 'Unknown'} from loan`);
+
+          // News event if affects user
+          if ((loan.loanClubId === 'user' || loan.parentClubId === 'user') && player) {
+            const recallEvent: NewsItem = {
+              id: `event-loan-recall-${Date.now()}-${loan.id}`,
+              type: 'transfer',
+              priority: 'important',
+              title: 'Player Recalled from Loan',
+              message: `${player.name} has been recalled from their loan spell.`,
+              timestamp: new Date(),
+              read: false,
+              relatedEntityId: loan.playerId,
+              scope: 'team',
+              teamId: 'user',
+            };
+            dispatch({ type: 'ADD_EVENT', payload: recallEvent });
+          }
+        }
+      }
+
+      // e) Exercise buy options
+      for (const buyOption of loanActions.buyOptionExercises) {
+        const loan = loansAsLoanClub.find(l => l.id === buyOption.loanId);
+        if (loan && loan.terms.buyOption) {
+          dispatch({
+            type: 'EXERCISE_BUY_OPTION',
+            payload: { loanId: buyOption.loanId },
+          });
+
+          const player = loanStateForAI.players[loan.playerId];
+          console.log(`[AI Loan] ${team.name} exercised buy option for ${player?.name || 'Unknown'}`);
+
+          // News event
+          if (player) {
+            const buyEvent: NewsItem = {
+              id: `event-loan-buy-${Date.now()}-${loan.id}`,
+              type: 'transfer',
+              priority: loan.parentClubId === 'user' ? 'critical' : 'info',
+              title: 'Buy Option Exercised',
+              message: `${team.name} have exercised the buy option for ${player.name}. Fee: $${((loan.terms.buyOption.price || 0) / 1000000).toFixed(1)}M.`,
+              timestamp: new Date(),
+              read: false,
+              relatedEntityId: loan.playerId,
+              scope: loan.parentClubId === 'user' ? 'team' : 'division',
+              teamId: loan.parentClubId === 'user' ? 'user' : team.id,
+            };
+            dispatch({ type: 'ADD_EVENT', payload: buyEvent });
+          }
+        }
+      }
     }
 
     // =========================================================================

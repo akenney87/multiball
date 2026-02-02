@@ -28,7 +28,6 @@ import {
   exerciseBuyOption,
   recordLoanAppearance,
   expireOldLoanOffers,
-  LOAN_OFFER_EXPIRY_WEEKS,
 } from '../../systems/loanSystem';
 import {
   createNegotiation,
@@ -3148,10 +3147,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             return {
               ...team,
               rosterIds: team.rosterIds.filter((id) => id !== player.id),
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available + offer.terms.loanFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3169,10 +3168,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             return {
               ...team,
               rosterIds: [...team.rosterIds, player.id],
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available - offer.terms.loanFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3184,20 +3183,20 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             return {
               ...team,
               rosterIds: team.rosterIds.filter((id) => id !== player.id),
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available + offer.terms.loanFee,
-              },
+              } : undefined,
             };
           }
           if (team.id === loanClubId) {
             return {
               ...team,
               rosterIds: [...team.rosterIds, player.id],
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available - offer.terms.loanFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3257,10 +3256,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       if (isUserParent) {
         // User recalling their player - pay recall fee, add to roster
+        if (state.userTeam.availableBudget < recallFee) {
+          console.warn('[Recall Loan] Insufficient budget for recall fee');
+          return state;
+        }
         newUserTeam = {
           ...state.userTeam,
           availableBudget: state.userTeam.availableBudget - recallFee,
-          rosterIds: [...state.userTeam.rosterIds, player.id],
+          rosterIds: state.userTeam.rosterIds.includes(player.id)
+            ? state.userTeam.rosterIds
+            : [...state.userTeam.rosterIds, player.id],
         };
         // AI loan club receives recall fee, removes player from roster
         newTeams = newTeams.map((team) => {
@@ -3268,10 +3273,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             return {
               ...team,
               rosterIds: team.rosterIds.filter((id) => id !== player.id),
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available + recallFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3288,11 +3293,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.parentClubId) {
             return {
               ...team,
-              rosterIds: [...team.rosterIds, player.id],
-              budget: {
+              rosterIds: team.rosterIds.includes(player.id)
+                ? team.rosterIds
+                : [...team.rosterIds, player.id],
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available - recallFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3303,21 +3310,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.parentClubId) {
             return {
               ...team,
-              rosterIds: [...team.rosterIds, player.id],
-              budget: {
+              rosterIds: team.rosterIds.includes(player.id)
+                ? team.rosterIds
+                : [...team.rosterIds, player.id],
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available - recallFee,
-              },
+              } : undefined,
             };
           }
           if (team.id === loan.loanClubId) {
             return {
               ...team,
               rosterIds: team.rosterIds.filter((id) => id !== player.id),
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available + recallFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3385,10 +3394,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.parentClubId) {
             return {
               ...team,
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available + transferFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3404,10 +3413,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.loanClubId) {
             return {
               ...team,
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available - transferFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3418,19 +3427,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.parentClubId) {
             return {
               ...team,
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available + transferFee,
-              },
+              } : undefined,
             };
           }
           if (team.id === loan.loanClubId) {
             return {
               ...team,
-              budget: {
+              budget: team.budget ? {
                 ...team.budget,
                 available: team.budget.available - transferFee,
-              },
+              } : undefined,
             };
           }
           return team;
@@ -3461,7 +3470,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'END_LOAN': {
-      const { loanId, reason } = action.payload;
+      const { loanId, reason, playingTimePenalty = 0 } = action.payload;
       const loan = state.loans.activeLoans.find(l => l.id === loanId);
 
       if (!loan) return state;
@@ -3477,13 +3486,46 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let newUserTeam = state.userTeam;
       let newTeams = state.league.teams;
 
+      // Apply playing time penalty (loan club pays parent club)
+      if (playingTimePenalty > 0) {
+        if (isUserLoanClub) {
+          newUserTeam = {
+            ...newUserTeam,
+            availableBudget: newUserTeam.availableBudget - playingTimePenalty,
+          };
+        } else if (isUserParent) {
+          newUserTeam = {
+            ...newUserTeam,
+            availableBudget: newUserTeam.availableBudget + playingTimePenalty,
+          };
+        }
+        // AI budget updates for penalty
+        newTeams = newTeams.map((team) => {
+          if (team.id === loan.loanClubId && team.budget) {
+            return {
+              ...team,
+              budget: { ...team.budget, available: team.budget.available - playingTimePenalty },
+            };
+          }
+          if (team.id === loan.parentClubId && team.budget) {
+            return {
+              ...team,
+              budget: { ...team.budget, available: team.budget.available + playingTimePenalty },
+            };
+          }
+          return team;
+        });
+      }
+
       // Loan ended = player returns to parent club (removed from loan club, added to parent)
 
       if (isUserParent) {
         // Player returning to user
         newUserTeam = {
           ...state.userTeam,
-          rosterIds: [...state.userTeam.rosterIds, player.id],
+          rosterIds: state.userTeam.rosterIds.includes(player.id)
+            ? state.userTeam.rosterIds
+            : [...state.userTeam.rosterIds, player.id],
         };
         // Remove from AI loan club's roster
         newTeams = newTeams.map((team) => {
@@ -3506,7 +3548,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.parentClubId) {
             return {
               ...team,
-              rosterIds: [...team.rosterIds, player.id],
+              rosterIds: team.rosterIds.includes(player.id)
+                ? team.rosterIds
+                : [...team.rosterIds, player.id],
             };
           }
           return team;
@@ -3517,7 +3561,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (team.id === loan.parentClubId) {
             return {
               ...team,
-              rosterIds: [...team.rosterIds, player.id],
+              rosterIds: team.rosterIds.includes(player.id)
+                ? team.rosterIds
+                : [...team.rosterIds, player.id],
             };
           }
           if (team.id === loan.loanClubId) {

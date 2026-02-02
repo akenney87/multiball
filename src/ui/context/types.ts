@@ -797,7 +797,7 @@ export type GameAction =
   | { type: 'COMPLETE_LOAN'; payload: { offerId: string } }
   | { type: 'RECALL_LOAN'; payload: { loanId: string } }
   | { type: 'EXERCISE_BUY_OPTION'; payload: { loanId: string } }
-  | { type: 'END_LOAN'; payload: { loanId: string; reason: 'completed' | 'recalled' | 'bought' } }
+  | { type: 'END_LOAN'; payload: { loanId: string; reason: 'completed' | 'recalled' | 'bought'; playingTimePenalty?: number } }
   | { type: 'LIST_PLAYER_FOR_LOAN'; payload: { playerId: string } }
   | { type: 'UNLIST_PLAYER_FOR_LOAN'; payload: { playerId: string } }
   | { type: 'PROCESS_LOAN_EXPIRIES'; payload: { currentWeek: number } }
