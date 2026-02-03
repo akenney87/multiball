@@ -1,6 +1,6 @@
 # Multiball - Living Project Context
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-02-03
 **Status:** Phase 5 COMPLETE ✅ | Youth Academy COMPLETE ✅ | Training System COMPLETE ✅ | Academy Training COMPLETE ✅ | **Baseball Simulation COMPLETE** ✅ | Match Fitness COMPLETE ✅ | **Soccer Simulation FEATURE COMPLETE** ✅ | **UI Overhaul (NEON PITCH) COMPLETE** ✅ | **Multi-Sport Stats COMPLETE** ✅ | **AI Transfer Bidding Overhaul** ✅ | **Injury System COMPLETE** ✅ | **Transfer Negotiation System COMPLETE** ✅ | **Title Screen Redesign** ✅ | **Player Loan System COMPLETE** ✅
 
 ---
@@ -3055,7 +3055,6 @@ Comprehensive loan system allowing teams to temporarily loan players to/from oth
 4. Buy option button disabled when user budget insufficient
 
 **NEXT STEPS (Not Yet Implemented):**
-- Add loan market access point in main navigation/dashboard
 - Test AI-to-AI loans end-to-end
 
 **Plan File:** `C:\Users\alexa\.claude\plans\tranquil-wishing-snail.md` (comprehensive implementation plan)
@@ -3092,3 +3091,23 @@ Integrated the full AI loan lifecycle into `advanceWeek()` in GameContext.tsx (~
 - `src/ui/context/GameContext.tsx` - Loan processing section in advanceWeek (+330 lines)
 - `src/ui/context/gameReducer.ts` - Budget null safety, playing time penalty in END_LOAN, roster guards, recall budget check
 - `src/ui/context/types.ts` - Added `playingTimePenalty?: number` to END_LOAN payload type
+
+### 2026-02-03: Loan System UI Navigation Wiring
+
+**Connected Loan Market to Main Navigation:**
+The loan system UI (LoanMarketScreen + ConnectedLoanMarketScreen) was fully built but had no navigation entry point. Wired it up with two changes:
+
+1. **ManageTabScreen.tsx** - Added "Loans" as third sub-segment under Market tab (Transfers | Scouting | Loans). Renders `ConnectedLoanMarketScreen` inline, following the same pattern as Transfers and Scouting.
+
+2. **ConnectedPlayerDetailScreen.tsx** - Added "Add to Loan List" / "Listed for Loan (Tap to Remove)" toggle button on player detail screen, placed after the transfer list button. Hidden for players currently on loan. Players can be on both the transfer list and loan list simultaneously.
+
+**User Can Now:**
+- Access loan market via Manage > Market > Loans (all 5 tabs: Loan In, Loan Out, My Offers, Incoming, Active)
+- List own players for loan from player detail screen
+- Browse AI loan-listed players in the "Loan In" tab
+- Make loan offers with configurable terms (duration, fee, wage split, buy option)
+- Respond to incoming offers, manage active loans (recall, exercise buy options)
+
+**Files Modified:**
+- `src/ui/screens/ManageTabScreen.tsx` - Added Loans sub-segment import and rendering
+- `src/ui/screens/ConnectedPlayerDetailScreen.tsx` - Added loan list toggle button and isOnLoanList state
