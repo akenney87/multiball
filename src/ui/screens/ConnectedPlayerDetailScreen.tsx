@@ -63,7 +63,7 @@ export function ConnectedPlayerDetailScreen({
   onNavigateToNegotiation,
 }: ConnectedPlayerDetailScreenProps) {
   const colors = useColors();
-  const { state, getPlayer, releasePlayer, makeTransferOffer, addScoutingTarget, removeScoutingTarget, startNegotiation, setTrainingFocus, addToShortlist, removeFromShortlist, addToTransferList, removeFromTransferList } = useGame();
+  const { state, getPlayer, releasePlayer, makeTransferOffer, addScoutingTarget, removeScoutingTarget, startNegotiation, setTrainingFocus, addToShortlist, removeFromShortlist, addToTransferList, removeFromTransferList, listPlayerForLoan, unlistPlayerForLoan } = useGame();
 
   const [showReleaseConfirm, setShowReleaseConfirm] = useState(false);
   const [showTransferOfferModal, setShowTransferOfferModal] = useState(false);
@@ -148,6 +148,12 @@ export function ConnectedPlayerDetailScreen({
   const isOnTransferList = useMemo(
     () => (state.userTeam.transferListPlayerIds || []).includes(playerId),
     [playerId, state.userTeam.transferListPlayerIds]
+  );
+
+  // Check if player is on the loan list
+  const isOnLoanList = useMemo(
+    () => (state.loans.loanListedPlayerIds || []).includes(playerId),
+    [playerId, state.loans.loanListedPlayerIds]
   );
 
   // Check if there's an ongoing negotiation for this player
@@ -988,6 +994,29 @@ export function ConnectedPlayerDetailScreen({
                   Add to Transfer List
                 </Text>
               </TouchableOpacity>
+            )}
+
+            {/* Loan List Button - only show if player is not currently on loan */}
+            {!player.loanStatus?.isOnLoan && (
+              isOnLoanList ? (
+                <TouchableOpacity
+                  style={[styles.transferListButton, { borderColor: colors.warning, backgroundColor: colors.warning + '15' }]}
+                  onPress={() => unlistPlayerForLoan(playerId)}
+                >
+                  <Text style={[styles.transferListText, { color: colors.warning }]}>
+                    Listed for Loan (Tap to Remove)
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.transferListButton, { borderColor: colors.textMuted }]}
+                  onPress={() => listPlayerForLoan(playerId)}
+                >
+                  <Text style={[styles.transferListText, { color: colors.text }]}>
+                    Add to Loan List
+                  </Text>
+                </TouchableOpacity>
+              )
             )}
 
             <TouchableOpacity

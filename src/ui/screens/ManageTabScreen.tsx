@@ -18,13 +18,14 @@ import { ConnectedStatsScreen } from './ConnectedStatsScreen';
 import { ConnectedLineupsScreen } from './ConnectedLineupsScreen';
 import { ConnectedTransferMarketScreen } from './ConnectedTransferMarketScreen';
 import { ConnectedScoutingScreen } from './ConnectedScoutingScreen';
+import { ConnectedLoanMarketScreen } from './ConnectedLoanMarketScreen';
 import { ConnectedTrainingScreen } from './ConnectedTrainingScreen';
 import { ConnectedTrophyCaseScreen } from './ConnectedTrophyCaseScreen';
 import { ConnectedLeaderboardScreen } from './ConnectedLeaderboardScreen';
 
 type ManageSegment = 'squad' | 'market' | 'career';
 type SquadSubSegment = 'roster' | 'lineups' | 'stats' | 'training';
-type MarketSubSegment = 'transfers' | 'scouting';
+type MarketSubSegment = 'transfers' | 'scouting' | 'loans';
 type CareerSubSegment = 'trophies' | 'leaderboard';
 
 interface ManageTabScreenProps {
@@ -111,6 +112,7 @@ export function ManageTabScreen({
               segments={[
                 { key: 'transfers', label: 'Transfers' },
                 { key: 'scouting', label: 'Scouting' },
+                { key: 'loans', label: 'Loans' },
               ]}
               selectedKey={marketSubSegment}
               onChange={setMarketSubSegment}
@@ -130,6 +132,13 @@ export function ManageTabScreen({
           {marketSubSegment === 'scouting' && (
             <ConnectedScoutingScreen
               onNavigateToBudget={onNavigateToBudget}
+              onPlayerPress={onPlayerPress}
+            />
+          )}
+
+          {/* Loans */}
+          {marketSubSegment === 'loans' && (
+            <ConnectedLoanMarketScreen
               onPlayerPress={onPlayerPress}
             />
           )}
