@@ -3111,3 +3111,23 @@ The loan system UI (LoanMarketScreen + ConnectedLoanMarketScreen) was fully buil
 **Files Modified:**
 - `src/ui/screens/ManageTabScreen.tsx` - Added Loans sub-segment import and rendering
 - `src/ui/screens/ConnectedPlayerDetailScreen.tsx` - Added loan list toggle button and isOnLoanList state
+
+### 2026-02-03: Unified Make Offer Modal (Transfer + Loan)
+
+**Combined Transfer and Loan Offers Into Single Flow:**
+Previously, tapping a non-user player only showed "Make Transfer Offer" with no way to make a loan offer from the player detail screen.
+
+**Changes:**
+- Renamed button from "Make Transfer Offer" to "Make Offer"
+- Modal now has a Transfer | Loan segment control (using existing SegmentControl component)
+- **Transfer tab**: Unchanged — estimated value, amount input, quick multiplier buttons (0.8x/1.0x/1.2x/1.5x)
+- **Loan tab**: Full loan terms configuration matching LoanMarketScreen pattern:
+  - Duration selector (8/16/24/40 weeks)
+  - Loan fee with +/- stepper controls
+  - Wage contribution % with +/- controls and weekly cost display
+  - Optional buy option toggle with price and mandatory sub-options
+- Submit button text reflects offer type ("Submit Transfer Offer" / "Submit Loan Offer")
+- Modal defaults to Transfer tab on open, preserves each tab's state within the session
+
+**Files Modified:**
+- `src/ui/screens/ConnectedPlayerDetailScreen.tsx` - Unified offer modal, loan state variables, `handleMakeLoanOffer` handler, `makeLoanOffer` context destructure, `LoanTerms` type import, new loan form styles
