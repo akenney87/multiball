@@ -24,6 +24,7 @@ import { PlayerTrainingPanel } from '../components/training';
 import { useGame } from '../context/GameContext';
 import { createBalancedFocus } from '../../utils/trainingFocusMapper';
 import { isNewTrainingFocus } from '../../data/types';
+import type { LoanTerms } from '../../data/types';
 import { calculateAllOveralls } from '../../utils/overallRating';
 import { calculatePlayerMarketValue } from '../../systems/contractSystem';
 import { getVisibleAttributesForUnscouted } from '../utils/scoutingUtils';
@@ -63,13 +64,20 @@ export function ConnectedPlayerDetailScreen({
   onNavigateToNegotiation,
 }: ConnectedPlayerDetailScreenProps) {
   const colors = useColors();
-  const { state, getPlayer, releasePlayer, makeTransferOffer, addScoutingTarget, removeScoutingTarget, startNegotiation, setTrainingFocus, addToShortlist, removeFromShortlist, addToTransferList, removeFromTransferList, listPlayerForLoan, unlistPlayerForLoan } = useGame();
+  const { state, getPlayer, releasePlayer, makeTransferOffer, makeLoanOffer, addScoutingTarget, removeScoutingTarget, startNegotiation, setTrainingFocus, addToShortlist, removeFromShortlist, addToTransferList, removeFromTransferList, listPlayerForLoan, unlistPlayerForLoan } = useGame();
 
   const [showReleaseConfirm, setShowReleaseConfirm] = useState(false);
   const [showTransferOfferModal, setShowTransferOfferModal] = useState(false);
   const [showTransferListModal, setShowTransferListModal] = useState(false);
   const [offerAmount, setOfferAmount] = useState('');
   const [askingPriceInput, setAskingPriceInput] = useState('');
+  const [offerType, setOfferType] = useState<'transfer' | 'loan'>('transfer');
+  const [loanDuration, setLoanDuration] = useState(16);
+  const [loanFee, setLoanFee] = useState(0);
+  const [wageContribution, setWageContribution] = useState(50);
+  const [includeBuyOption, setIncludeBuyOption] = useState(false);
+  const [buyOptionPrice, setBuyOptionPrice] = useState(0);
+  const [buyOptionMandatory, setBuyOptionMandatory] = useState(false);
   const [selectedTab, setSelectedTab] = useState<PlayerDetailTab>('profile');
 
   // Get player data
@@ -203,6 +211,30 @@ export function ConnectedPlayerDetailScreen({
       setOfferAmount('');
     }
   }, [playerId, offerAmount, makeTransferOffer]);
+
+  // Handle making a loan offer (for players on other teams)
+  const handleMakeLoanOffer = useCallback(() => {
+    if (!player) return;
+    const terms: LoanTerms = {
+      loanFee,
+      wageContribution,
+      duration: { type: 'fixed' as const, weeks: loanDuration },
+      startWeek: state.season.currentWeek,
+      endWeek: state.season.currentWeek + loanDuration,
+    };
+    if (includeBuyOption) {
+      terms.buyOption = { price: buyOptionPrice, mandatory: buyOptionMandatory };
+    }
+    makeLoanOffer(playerId, player.teamId, terms);
+    setShowTransferOfferModal(false);
+    // Reset loan state
+    setLoanDuration(16);
+    setLoanFee(0);
+    setWageContribution(50);
+    setIncludeBuyOption(false);
+    setBuyOptionPrice(0);
+    setBuyOptionMandatory(false);
+  }, [playerId, player, loanFee, wageContribution, loanDuration, includeBuyOption, buyOptionPrice, buyOptionMandatory, makeLoanOffer, state.season.currentWeek]);
 
   // Handle adding to transfer list with asking price
   const handleAddToTransferList = useCallback(() => {
@@ -1135,10 +1167,11 @@ export function ConnectedPlayerDetailScreen({
                 style={[styles.makeOfferButton, { backgroundColor: colors.primary }]}
                 onPress={() => {
                   setOfferAmount(estimatedTransferValue.toString());
+                  setOfferType('transfer');
                   setShowTransferOfferModal(true);
                 }}
               >
-                <Text style={styles.makeOfferText}>Make Transfer Offer</Text>
+                <Text style={styles.makeOfferText}>Make Offer</Text>
               </TouchableOpacity>
             )}
 
@@ -1208,7 +1241,7 @@ export function ConnectedPlayerDetailScreen({
         onCancel={() => setShowReleaseConfirm(false)}
       />
 
-      {/* Transfer Offer Modal (for players on other teams, NOT free agents) */}
+      {/* Unified Offer Modal (Transfer or Loan) */}
       <Modal
         visible={showTransferOfferModal}
         animationType="fade"
@@ -1218,52 +1251,239 @@ export function ConnectedPlayerDetailScreen({
         <View style={styles.modalOverlay}>
           <View style={[styles.offerModalContent, { backgroundColor: colors.card }]}>
             <Text style={[styles.offerModalTitle, { color: colors.text }]}>
-              Make Transfer Offer
+              Make Offer
             </Text>
             <Text style={[styles.offerModalPlayer, { color: colors.textSecondary }]}>
               {player.name}
             </Text>
 
-            <View style={styles.offerModalInfo}>
-              <Text style={[styles.offerModalLabel, { color: colors.textMuted }]}>
-                Estimated Value
-              </Text>
-              <Text style={[styles.offerModalValue, { color: colors.text }]}>
-                {formatCurrency(estimatedTransferValue)}
-              </Text>
+            {/* Offer Type Selector */}
+            <View style={styles.offerTypeSegment}>
+              <SegmentControl
+                segments={[
+                  { key: 'transfer', label: 'Transfer' },
+                  { key: 'loan', label: 'Loan' },
+                ]}
+                selectedKey={offerType}
+                onChange={setOfferType}
+                size="compact"
+              />
             </View>
 
-            <View style={styles.offerInputContainer}>
-              <Text style={[styles.offerInputLabel, { color: colors.textMuted }]}>
-                Your Offer
-              </Text>
-              <View style={[styles.offerInputWrapper, { borderColor: colors.border, backgroundColor: colors.background }]}>
-                <Text style={[styles.offerInputPrefix, { color: colors.textMuted }]}>$</Text>
-                <TextInput
-                  style={[styles.offerInput, { color: colors.text }]}
-                  value={offerAmount}
-                  onChangeText={setOfferAmount}
-                  keyboardType="numeric"
-                  placeholder="Enter amount"
-                  placeholderTextColor={colors.textMuted}
-                />
-              </View>
-            </View>
+            <ScrollView style={styles.offerModalScroll}>
+              {offerType === 'transfer' ? (
+                <>
+                  {/* Transfer Offer Content */}
+                  <View style={styles.offerModalInfo}>
+                    <Text style={[styles.offerModalLabel, { color: colors.textMuted }]}>
+                      Estimated Value
+                    </Text>
+                    <Text style={[styles.offerModalValue, { color: colors.text }]}>
+                      {formatCurrency(estimatedTransferValue)}
+                    </Text>
+                  </View>
 
-            {/* Quick amount buttons */}
-            <View style={styles.quickAmounts}>
-              {[0.8, 1.0, 1.2, 1.5].map((multiplier) => (
-                <TouchableOpacity
-                  key={multiplier}
-                  style={[styles.quickAmountButton, { borderColor: colors.border }]}
-                  onPress={() => setOfferAmount(Math.round(estimatedTransferValue * multiplier).toString())}
-                >
-                  <Text style={[styles.quickAmountText, { color: colors.text }]}>
-                    {formatCurrency(Math.round(estimatedTransferValue * multiplier))}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+                  <View style={styles.offerInputContainer}>
+                    <Text style={[styles.offerInputLabel, { color: colors.textMuted }]}>
+                      Your Offer
+                    </Text>
+                    <View style={[styles.offerInputWrapper, { borderColor: colors.border, backgroundColor: colors.background }]}>
+                      <Text style={[styles.offerInputPrefix, { color: colors.textMuted }]}>$</Text>
+                      <TextInput
+                        style={[styles.offerInput, { color: colors.text }]}
+                        value={offerAmount}
+                        onChangeText={setOfferAmount}
+                        keyboardType="numeric"
+                        placeholder="Enter amount"
+                        placeholderTextColor={colors.textMuted}
+                      />
+                    </View>
+                  </View>
+
+                  {/* Quick amount buttons */}
+                  <View style={styles.quickAmounts}>
+                    {[0.8, 1.0, 1.2, 1.5].map((multiplier) => (
+                      <TouchableOpacity
+                        key={multiplier}
+                        style={[styles.quickAmountButton, { borderColor: colors.border }]}
+                        onPress={() => setOfferAmount(Math.round(estimatedTransferValue * multiplier).toString())}
+                      >
+                        <Text style={[styles.quickAmountText, { color: colors.text }]}>
+                          {formatCurrency(Math.round(estimatedTransferValue * multiplier))}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              ) : (
+                <>
+                  {/* Loan Offer Content */}
+                  {/* Duration */}
+                  <View style={styles.loanFormSection}>
+                    <Text style={[styles.loanFormLabel, { color: colors.text }]}>Loan Duration</Text>
+                    <View style={styles.loanDurationOptions}>
+                      {[
+                        { label: '8 Weeks', value: 8 },
+                        { label: '16 Weeks', value: 16 },
+                        { label: '24 Weeks', value: 24 },
+                        { label: 'Full Season', value: 40 },
+                      ].map((opt) => (
+                        <TouchableOpacity
+                          key={opt.value}
+                          style={[
+                            styles.loanDurationOption,
+                            { borderColor: loanDuration === opt.value ? colors.primary : colors.border },
+                            loanDuration === opt.value && { backgroundColor: colors.primary + '20' },
+                          ]}
+                          onPress={() => setLoanDuration(opt.value)}
+                        >
+                          <Text
+                            style={[
+                              styles.loanDurationOptionText,
+                              { color: loanDuration === opt.value ? colors.primary : colors.text },
+                            ]}
+                          >
+                            {opt.label}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+
+                  {/* Loan Fee */}
+                  <View style={styles.loanFormSection}>
+                    <Text style={[styles.loanFormLabel, { color: colors.text }]}>Loan Fee</Text>
+                    <View style={styles.loanInputRow}>
+                      <TouchableOpacity
+                        style={[styles.loanAdjustButton, { backgroundColor: colors.surface }]}
+                        onPress={() => setLoanFee(Math.max(0, loanFee - 50000))}
+                      >
+                        <Text style={[styles.loanAdjustButtonText, { color: colors.text }]}>-</Text>
+                      </TouchableOpacity>
+                      <TextInput
+                        style={[styles.loanValueInput, { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border }]}
+                        value={formatCurrency(loanFee)}
+                        onChangeText={(text) => {
+                          const num = parseInt(text.replace(/[^0-9]/g, ''), 10);
+                          if (!isNaN(num)) setLoanFee(num);
+                        }}
+                        keyboardType="numeric"
+                      />
+                      <TouchableOpacity
+                        style={[styles.loanAdjustButton, { backgroundColor: colors.surface }]}
+                        onPress={() => setLoanFee(loanFee + 50000)}
+                      >
+                        <Text style={[styles.loanAdjustButtonText, { color: colors.text }]}>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  {/* Wage Contribution */}
+                  <View style={styles.loanFormSection}>
+                    <Text style={[styles.loanFormLabel, { color: colors.text }]}>Wage Contribution (You pay)</Text>
+                    <View style={styles.loanInputRow}>
+                      <TouchableOpacity
+                        style={[styles.loanAdjustButton, { backgroundColor: colors.surface }]}
+                        onPress={() => setWageContribution(Math.max(0, wageContribution - 10))}
+                      >
+                        <Text style={[styles.loanAdjustButtonText, { color: colors.text }]}>-</Text>
+                      </TouchableOpacity>
+                      <View style={[styles.loanPercentInput, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                        <Text style={[styles.loanPercentText, { color: colors.text }]}>{wageContribution}%</Text>
+                      </View>
+                      <TouchableOpacity
+                        style={[styles.loanAdjustButton, { backgroundColor: colors.surface }]}
+                        onPress={() => setWageContribution(Math.min(100, wageContribution + 10))}
+                      >
+                        <Text style={[styles.loanAdjustButtonText, { color: colors.text }]}>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                    {player.contract && (
+                      <Text style={[styles.loanHint, { color: colors.textMuted }]}>
+                        Weekly cost: {formatCurrency((player.contract.salary / 52) * (wageContribution / 100))}
+                      </Text>
+                    )}
+                  </View>
+
+                  {/* Buy Option Toggle */}
+                  <View style={styles.loanFormSection}>
+                    <TouchableOpacity
+                      style={styles.loanToggleRow}
+                      onPress={() => setIncludeBuyOption(!includeBuyOption)}
+                    >
+                      <View
+                        style={[
+                          styles.loanCheckbox,
+                          { borderColor: colors.border },
+                          includeBuyOption && { backgroundColor: colors.primary, borderColor: colors.primary },
+                        ]}
+                      >
+                        {includeBuyOption && <Text style={styles.loanCheckmark}>✓</Text>}
+                      </View>
+                      <Text style={[styles.loanToggleLabel, { color: colors.text }]}>
+                        Include Buy Option
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  {includeBuyOption && (
+                    <>
+                      {/* Buy Option Price */}
+                      <View style={styles.loanFormSection}>
+                        <Text style={[styles.loanFormLabel, { color: colors.text }]}>Buy Option Price</Text>
+                        <View style={styles.loanInputRow}>
+                          <TouchableOpacity
+                            style={[styles.loanAdjustButton, { backgroundColor: colors.surface }]}
+                            onPress={() => setBuyOptionPrice(Math.max(100000, buyOptionPrice - 100000))}
+                          >
+                            <Text style={[styles.loanAdjustButtonText, { color: colors.text }]}>-</Text>
+                          </TouchableOpacity>
+                          <TextInput
+                            style={[styles.loanValueInput, { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border }]}
+                            value={formatCurrency(buyOptionPrice)}
+                            onChangeText={(text) => {
+                              const num = parseInt(text.replace(/[^0-9]/g, ''), 10);
+                              if (!isNaN(num)) setBuyOptionPrice(num);
+                            }}
+                            keyboardType="numeric"
+                          />
+                          <TouchableOpacity
+                            style={[styles.loanAdjustButton, { backgroundColor: colors.surface }]}
+                            onPress={() => setBuyOptionPrice(buyOptionPrice + 100000)}
+                          >
+                            <Text style={[styles.loanAdjustButtonText, { color: colors.text }]}>+</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      {/* Mandatory Toggle */}
+                      <View style={styles.loanFormSection}>
+                        <TouchableOpacity
+                          style={styles.loanToggleRow}
+                          onPress={() => setBuyOptionMandatory(!buyOptionMandatory)}
+                        >
+                          <View
+                            style={[
+                              styles.loanCheckbox,
+                              { borderColor: colors.border },
+                              buyOptionMandatory && { backgroundColor: colors.warning, borderColor: colors.warning },
+                            ]}
+                          >
+                            {buyOptionMandatory && <Text style={styles.loanCheckmark}>✓</Text>}
+                          </View>
+                          <Text style={[styles.loanToggleLabel, { color: colors.text }]}>
+                            Mandatory Buy Option
+                          </Text>
+                        </TouchableOpacity>
+                        <Text style={[styles.loanHint, { color: colors.textMuted }]}>
+                          If mandatory, you must purchase at end of loan
+                        </Text>
+                      </View>
+                    </>
+                  )}
+                </>
+              )}
+            </ScrollView>
 
             <View style={styles.offerModalActions}>
               <TouchableOpacity
@@ -1274,9 +1494,11 @@ export function ConnectedPlayerDetailScreen({
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.offerModalSubmit, { backgroundColor: colors.primary }]}
-                onPress={handleMakeTransferOffer}
+                onPress={offerType === 'transfer' ? handleMakeTransferOffer : handleMakeLoanOffer}
               >
-                <Text style={styles.offerModalSubmitText}>Submit Offer</Text>
+                <Text style={styles.offerModalSubmitText}>
+                  {offerType === 'transfer' ? 'Submit Transfer Offer' : 'Submit Loan Offer'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1805,6 +2027,98 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#000000',
+  },
+  offerTypeSegment: {
+    marginBottom: spacing.md,
+  },
+  offerModalScroll: {
+    maxHeight: 400,
+  },
+  loanFormSection: {
+    marginBottom: spacing.md,
+  },
+  loanFormLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+  },
+  loanDurationOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  loanDurationOption: {
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    borderRadius: borderRadius.sm,
+    borderWidth: 1,
+  },
+  loanDurationOptionText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  loanInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  loanAdjustButton: {
+    width: 36,
+    height: 36,
+    borderRadius: borderRadius.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loanAdjustButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  loanValueInput: {
+    flex: 1,
+    height: 36,
+    borderRadius: borderRadius.sm,
+    borderWidth: 1,
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  loanPercentInput: {
+    flex: 1,
+    height: 36,
+    borderRadius: borderRadius.sm,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loanPercentText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  loanHint: {
+    fontSize: 11,
+    marginTop: spacing.xs,
+  },
+  loanToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  loanCheckbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loanCheckmark: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  loanToggleLabel: {
+    fontSize: 14,
+    fontWeight: '500',
   },
   scoutingTargetButton: {
     paddingVertical: spacing.md,
